@@ -1,0 +1,6 @@
+<launch>
+    <node name="node_comm_end" pkg="rotms_robot_ros_comm" type="node_comm_end" output="screen"/>
+    <node name="node_medimg_comm_in" pkg="rotms_robot_ros_comm" type="node_medimg_comm_in" output="screen"/>
+    <node name="node_robctrl_comm_in" pkg="rotms_robot_ros_comm" type="node_robctrl_comm_in" output="screen"/>
+    <node name="node_targetviz_comm_in" pkg="rotms_robot_ros_comm" type="node_targetviz_comm_in" output="screen"/>
+</launch>

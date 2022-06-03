@@ -3,7 +3,7 @@
 
 int main(int argc, char **argv)
 {
-	ros::init(argc, argv, "MedImgCommIn");
+	ros::init(argc, argv, "CommInMedImg");
     ros::NodeHandle n;
 
     CommNodeIniter(n, "MEDIMG");
