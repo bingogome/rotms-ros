@@ -1,0 +1,31 @@
+CONNECT: 1 # ROS1 connection flag
+
+# Medical Image Plan module communication configs
+
+PORT_OUT_MEDIMG: 8532 # Port number for data stream out from ROS
+PORT_IN_MEDIMG: 8537 # Port number for data stream into ROS
+MSG_END_MEDIMG: "_msg_end__" # communication messege starts with this means end the port
+MSG_SIZE_MEDIMG: 150 # change the ros_side_in.hpp and ros_side_out.hpp {boost::array<char, ...> recv_buffer_} field when chaning this number
+PUBLISHER_NAME_MEDIMG: "/MedImgComm/msg_received" # Messege ROS publisher name (ROSSideIn received)
+SUBSCRIBER_NAME_MEDIMG: "/MedImgComm/msg_to_send" # Messege ROS subscriber name (ROSSideOut to send)
+VERBOSE_MEDIMG: 1
+
+# Robot Control module communication configs
+
+PORT_OUT_ROBCTRL: 8532 # Port number for data stream out from ROS
+PORT_IN_ROBCTRL: 8537 # Port number for data stream into ROS
+MSG_END_ROBCTRL: "_msg_end__" # communication messege starts with this means end the port
+MSG_SIZE_ROBCTRL: 150 # change the ros_side_in.hpp and ros_side_out.hpp {boost::array<char, ...> recv_buffer_} field when chaning this number
+PUBLISHER_NAME_ROBCTRL: "/RobCtrlComm/msg_received" # Messege ROS publisher name (ROSSideIn received)
+SUBSCRIBER_NAME_ROBCTRL: "/RobCtrlComm/msg_to_send" # Messege ROS subscriber name (ROSSideOut to send)
+VERBOSE_ROBCTRL: 1
+
+# Target Visualization module communication configs
+
+PORT_OUT_TARGETVIZ: 8532 # Port number for data stream out from ROS
+PORT_IN_TARGETVIZ: 8537 # Port number for data stream into ROS
+MSG_END_TARGETVIZ: "_msg_end__" # communication messege starts with this means end the port
+MSG_SIZE_TARGETVIZ: 150 # change the ros_side_in.hpp and ros_side_out.hpp {boost::array<char, ...> recv_buffer_} field when chaning this number
+PUBLISHER_NAME_TARGETVIZ: "/TargetVizComm/msg_received" # Messege ROS publisher name (ROSSideIn received)
+SUBSCRIBER_NAME_TARGETVIZ: "/TargetVizComm/msg_to_send" # Messege ROS subscriber name (ROSSideOut to send)
+VERBOSE_TARGETVIZ: 1
