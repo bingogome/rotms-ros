@@ -1,0 +1,41 @@
+
+"MEDIMG_CMDS":
+
+  # Medical Image Plan module commands
+  {
+    "START_AUTO_DIGITIZE": "start_autodigitzat",
+    "START_REGISTRATION": "start_registration",
+    "USE_PREV_REGISTRATION": "start_useprevregis",
+    "CURRENT_FIDUCIAL_ON_IMG": "img_fid_pnt",
+    "NUM_OF_FIDUCIAL_ON_IMG": "img_fid_num",
+    "TARGET_POSE_ORIENTATION": "target_rot",
+    "TARGET_POSE_TRANSLATION": "target_tsl",
+  }
+
+"ROBCTRL_CMDS":
+
+  # Robot Control module commands
+  {
+    "GET_JNT_ANGS": "get_jnt_angs",
+    "GET_EFF_POSE": "get_eff_pose",
+    "EXECUTE_MOTION": "execute_motion",
+    "EXECUTE_MOVE_CONFIRM": "execute_confirm",
+    "END_SESSION": "end_session",
+    "MAN_ADJUST_BACKWARD": "adjust_back",
+    "MAN_ADJUST_CLOSER": "adjust_close",
+    "MAN_ADJUST_FARTHER": "adjust_away",
+    "MAN_ADJUST_FORWARD": "adjust_forw",
+    "MAN_ADJUST_LEFT": "adjust_left",
+    "MAN_ADJUST_PITCH": "adjust_pitch",
+    "MAN_ADJUST_RIGHT": "adjust_right",
+    "MAN_ADJUST_ROLL": "adjust_roll",
+    "MAN_ADJUST_YAW": "adjust_yaw"
+  }
+
+"TARGETVIZ_CMDS":
+
+  # Target Visualization module commands
+  {
+    "START_VISUALIZE": "start_visualize",
+    "STOP_VISUALIZE": "stop_visualize"
+  }
