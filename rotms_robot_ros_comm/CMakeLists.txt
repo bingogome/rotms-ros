@@ -26,6 +26,7 @@ add_library(${PROJECT_NAME}
   src/ros_side_in.cpp
   src/ros_side_out.cpp
   src/ros_side_in_node.cpp
+  src/ros_side_out_node.cpp
   )
 
 target_include_directories(${PROJECT_NAME} PUBLIC 

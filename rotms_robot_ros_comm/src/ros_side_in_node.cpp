@@ -5,7 +5,7 @@
 #include <yaml-cpp/yaml.h>
 #include <boost/asio.hpp>
 
-void CommNodeIniter(ros::NodeHandle& n, std::string modulesuffix)
+void CommNodeInIniter(ros::NodeHandle& n, std::string modulesuffix)
 {
     boost::asio::io_context io_context;
 

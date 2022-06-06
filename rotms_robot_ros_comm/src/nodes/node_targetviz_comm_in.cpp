@@ -6,7 +6,7 @@ int main(int argc, char **argv)
 	ros::init(argc, argv, "CommInTargetViz");
     ros::NodeHandle n;
 
-    CommNodeIniter(n, "TARGETVIZ");
+    CommNodeInIniter(n, "TARGETVIZ");
 
 	return 0;
 }
