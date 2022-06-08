@@ -68,7 +68,7 @@ private:
 	// asio related members
 	udp::socket socket_;
 	udp::endpoint remote_endpoint_;
-	boost::array<char, 150> recv_buffer_; // TODO: make this configurable 55 chars in an encoded command
+	boost::array<char, 150> recv_buffer_;
 	// TODO: make socket array so that multiple channels are possible (or dynamic expansion)
 	// TODO: make TCP optional
 

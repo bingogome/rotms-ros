@@ -29,7 +29,8 @@ std::map<std::string, std::string> LoadCmdsConfig(const std::string modulesuffix
     return cmddict;
 }
 
-CommDecoder::CommDecoder(ros::NodeHandle& n, const std::string modulesuffix) : n_(n), cmddict_(LoadCmdsConfig(modulesuffix))
+CommDecoder::CommDecoder(ros::NodeHandle& n, const std::string modulesuffix) : 
+    n_(n), cmddict_(LoadCmdsConfig(modulesuffix)), opsdict_()
 {
     // Load ros_comm (ros_side_in) configuration
     std::string packpath_comm = ros::package::getPath("rotms_robot_ros_comm");

@@ -14,6 +14,7 @@ protected:
     virtual void CmdsProcess();
     ros::NodeHandle& n_;
 	ros::Subscriber sub_;
-    const std::map<std::string, std::string> cmddict_;
+    const std::map<std::string, std::string> cmddict_; // lookup table for cmd->CMD
+    const std::map<std::string, void(*)(ros::Publisher&)> opsdict_; // lookup table for CMD->operation
     std::string ss_str_; // whole msg
 };
