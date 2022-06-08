@@ -39,6 +39,7 @@ ROSSideOut CommNodeOutIniter(ros::NodeHandle& n, std::string modulesuffix)
 	cfg.port_out = f["PORT_OUT_"+modulesuffix].as<int>();
 	cfg.msg_size = f["MSG_SIZE_"+modulesuffix].as<int>();
 	cfg.subscriber_name = f["SUBSCRIBER_NAME_"+modulesuffix].as<std::string>();
+	cfg.publisher_name = f["PUBLISHER_NAME_"+modulesuffix].as<std::string>();
 	cfg.verbose = f["VERBOSE_"+modulesuffix].as<int>();
 
 	ROSSideOut server(n, io_context, cfg);
