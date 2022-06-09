@@ -15,7 +15,13 @@ protected:
     // according to the config file config_comm_decode.yaml
     void CmdsProcess() override 
     {
-        
+        std::stringstream sscmd;
+        std::stringstream ss;
+        for(int i=0;i<16;i++) // msg header length is 16
+		    sscmd << ss_str_[i];
+        for(int i=16;ss_str_[i]!='\n';i++)
+            ss << ss_str_[i];
+        opsdict_[cmddict_[sscmd]](ss);
     }
 
 };

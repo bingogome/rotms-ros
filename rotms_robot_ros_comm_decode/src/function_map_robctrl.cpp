@@ -33,72 +33,86 @@ const FuncMap GetFuncMapRobCtrl()
     return fm;
 }
 
-void GetJntAngs()
+void GetJntAngs(ros::Publisher& pub)
 {
-
+    msg.data = "get_jnt";
+    pub.publish(msg);
 }
 
-void GetEffPose()
+void GetEffPose(ros::Publisher& pub)
 {
-
+    msg.data = "get_eff";
+    pub.publish(msg);
 }
 
-void ExecuteMotion()
+void ExecuteMotion(ros::Publisher& pub)
 {
-
+    msg.data = "get_jnt";
+    pub.publish(msg);
 }
 
-void ExecuteMoveConfirm()
+void ExecuteMoveConfirm(ros::Publisher& pub)
 {
-
+    msg.data = "get_jnt";
+    pub.publish(msg);
 }
 
-void SessionEnd()
+void SessionEnd(ros::Publisher& pub)
 {
-
+    msg.data = "get_jnt";
+    pub.publish(msg);
 }
 
-void ManualAdjustBackwards()
+void ManualAdjustBackwards(ros::Publisher& pub)
 {
-
+    msg.data = "get_jnt";
+    pub.publish(msg);
 }
 
-void ManualAdjustApproach()
+void ManualAdjustApproach(ros::Publisher& pub)
 {
-
+    msg.data = "get_jnt";
+    pub.publish(msg);
 }
 
-void ManualAdjustAway()
+void ManualAdjustAway(ros::Publisher& pub)
 {
-
+    msg.data = "get_jnt";
+    pub.publish(msg);
 }
 
-void ManualAdjustForward()
+void ManualAdjustForward(ros::Publisher& pub)
 {
-
+    msg.data = "get_jnt";
+    pub.publish(msg);
 }
 
-void ManualAdjustLeft()
+void ManualAdjustLeft(ros::Publisher& pub)
 {
-
+    msg.data = "get_jnt";
+    pub.publish(msg);
 }
 
-void ManualAdjustPitch()
+void ManualAdjustPitch(ros::Publisher& pub)
 {
-
+    msg.data = "get_jnt";
+    pub.publish(msg);
 }
 
-void ManualAdjustRight()
+void ManualAdjustRight(ros::Publisher& pub)
 {
-
+    msg.data = "get_jnt";
+    pub.publish(msg);
 }
 
-void ManualAdjustRoll()
+void ManualAdjustRoll(ros::Publisher& pub)
 {
-
+    msg.data = "get_jnt";
+    pub.publish(msg);
 }
 
-void ManualAdjustYaw()
+void ManualAdjustYaw(ros::Publisher& pub)
 {
-
+    msg.data = "get_jnt";
+    pub.publish(msg);
 }
