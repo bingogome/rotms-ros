@@ -38,7 +38,8 @@ using boost::asio::ip::udp;
 struct ROSSideOutConfig
 {
 	int port_out;
-	std::string subscriber_name;
+	std::string subscriber_name; // msg to send
+	std::string publisher_name; // acknowledge when receive from ros_side_in
 	int verbose;
 	int msg_size;
 };
@@ -53,11 +54,15 @@ public:
 
 private:
 
+	// msg to send
 	void SubCallBack(const std_msgs::String::ConstPtr& msg);
+	// acknowledge when receive from ros_side_in
+	void AckCallBack(const std_msgs::String::ConstPtr& msg);
 
 	// ros related members
 	ros::NodeHandle& n_;
-	ros::Subscriber sub_;
+	ros::Subscriber sub_; // msg to send
+	ros::Subscriber sub_ack_; // acknowledge when receive from ros_side_in
 	std_msgs::String msg_test_;
 
 	// asio related members

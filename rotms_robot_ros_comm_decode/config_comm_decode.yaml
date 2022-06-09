@@ -1,41 +1,42 @@
+# 16-char cmds
 
-"MEDIMG_CMDS":
+"MEDIMG_CMDS": 
 
   # Medical Image Plan module commands
   {
-    "START_AUTO_DIGITIZE": "start_autodigitzat",
-    "START_REGISTRATION": "start_registration",
-    "USE_PREV_REGISTRATION": "start_useprevregis",
-    "CURRENT_FIDUCIAL_ON_IMG": "img_fid_pnt",
-    "NUM_OF_FIDUCIAL_ON_IMG": "img_fid_num",
-    "TARGET_POSE_ORIENTATION": "target_rot",
-    "TARGET_POSE_TRANSLATION": "target_tsl",
+    "START_AUTO_DIGITIZE": "start_autodigitz",
+    "START_REGISTRATION": "start_registrati",
+    "START_USE_PREV_REGISTRATION": "start_useprevreg",
+    "FIDUCIAL_CURRENT_ON_IMG": "img_fid_pntxxxxx",
+    "FIDUCIAL_NUM_OF_ON_IMG": "img_fid_numxxxxx",
+    "TARGET_POSE_ORIENTATION": "target_rotxxxxxx",
+    "TARGET_POSE_TRANSLATION": "target_tslxxxxxx",
   }
 
 "ROBCTRL_CMDS":
 
   # Robot Control module commands
   {
-    "GET_JNT_ANGS": "get_jnt_angs",
-    "GET_EFF_POSE": "get_eff_pose",
-    "EXECUTE_MOTION": "execute_motion",
-    "EXECUTE_MOVE_CONFIRM": "execute_confirm",
-    "END_SESSION": "end_session",
-    "MAN_ADJUST_BACKWARD": "adjust_back",
-    "MAN_ADJUST_CLOSER": "adjust_close",
-    "MAN_ADJUST_FARTHER": "adjust_away",
-    "MAN_ADJUST_FORWARD": "adjust_forw",
-    "MAN_ADJUST_LEFT": "adjust_left",
-    "MAN_ADJUST_PITCH": "adjust_pitch",
-    "MAN_ADJUST_RIGHT": "adjust_right",
-    "MAN_ADJUST_ROLL": "adjust_roll",
-    "MAN_ADJUST_YAW": "adjust_yaw"
+    "GET_JNT_ANGS": "get_jnt_angsxxxx",
+    "GET_EFF_POSE": "get_eff_posexxxx",
+    "EXECUTE_MOTION": "execute_motionxx",
+    "EXECUTE_MOVE_CONFIRM": "execute_confirmx",
+    "SESSION_END": "end_sessionxxxxx",
+    "MAN_ADJUST_BACKWARD": "adjust_backxxxxx",
+    "MAN_ADJUST_CLOSER": "adjust_closexxxx",
+    "MAN_ADJUST_FARTHER": "adjust_awayxxxxx",
+    "MAN_ADJUST_FORWARD": "adjust_forwxxxxx",
+    "MAN_ADJUST_LEFT": "adjust_leftxxxxx",
+    "MAN_ADJUST_PITCH": "adjust_pitchxxxx",
+    "MAN_ADJUST_RIGHT": "adjust_rightxxxx",
+    "MAN_ADJUST_ROLL": "adjust_rollxxxxx",
+    "MAN_ADJUST_YAW": "adjust_yawxxxxxx"
   }
 
 "TARGETVIZ_CMDS":
 
   # Target Visualization module commands
   {
-    "START_VISUALIZE": "start_visualize",
-    "STOP_VISUALIZE": "stop_visualize"
+    "VISUALIZE_START": "start_visualizex",
+    "VISUALIZE_STOP": "stop_visualizexx"
   }
