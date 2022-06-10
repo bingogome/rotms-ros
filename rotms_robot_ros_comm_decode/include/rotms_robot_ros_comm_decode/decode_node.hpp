@@ -9,7 +9,7 @@ public:
     CommDecoderPubs();
 };
 
-typedef void (*OperationFunc)(CommDecoderPubs&, std::string&);
+typedef void (*OperationFunc)(std::string&);
 typedef std::map<std::string, OperationFunc> FuncMap;
 
 class CommDecoder

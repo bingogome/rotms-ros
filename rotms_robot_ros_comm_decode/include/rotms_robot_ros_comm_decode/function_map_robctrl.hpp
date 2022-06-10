@@ -33,32 +33,32 @@ public:
     int a = 1;
 };
 
-const std::map<std::string, void(*)(CommDecoderPubs&, std::string&)> GetFuncMapRobCtrl();
+const std::map<std::string, void(*)(std::string&)> GetFuncMapRobCtrl();
 
-void GetJntAngs(CommDecoderPubs& pubs, std::string& ss);
+void GetJntAngs(std::string& ss);
 
-void GetEffPose(CommDecoderPubs& pubs, std::string& ss);
+void GetEffPose(std::string& ss);
 
-void ExecuteMotion(CommDecoderPubs& pubs, std::string& ss);
+void ExecuteMotion(std::string& ss);
 
-void ExecuteMoveConfirm(CommDecoderPubs& pubs, std::string& ss);
+void ExecuteMoveConfirm(std::string& ss);
 
-void SessionEnd(CommDecoderPubs& pubs, std::string& ss);
+void SessionEnd(std::string& ss);
 
-void ManualAdjustBackwards(CommDecoderPubs& pubs, std::string& ss);
+void ManualAdjustBackwards(std::string& ss);
 
-void ManualAdjustApproach(CommDecoderPubs& pubs, std::string& ss);
+void ManualAdjustApproach(std::string& ss);
 
-void ManualAdjustAway(CommDecoderPubs& pubs, std::string& ss);
+void ManualAdjustAway(std::string& ss);
 
-void ManualAdjustForward(CommDecoderPubs& pubs, std::string& ss);
+void ManualAdjustForward(std::string& ss);
 
-void ManualAdjustLeft(CommDecoderPubs& pubs, std::string& ss);
+void ManualAdjustLeft(std::string& ss);
 
-void ManualAdjustPitch(CommDecoderPubs& pubs, std::string& ss);
+void ManualAdjustPitch(std::string& ss);
 
-void ManualAdjustRight(CommDecoderPubs& pubs, std::string& ss);
+void ManualAdjustRight(std::string& ss);
 
-void ManualAdjustRoll(CommDecoderPubs& pubs, std::string& ss);
+void ManualAdjustRoll(std::string& ss);
 
-void ManualAdjustYaw(CommDecoderPubs& pubs, std::string& ss);
+void ManualAdjustYaw(std::string& ss);

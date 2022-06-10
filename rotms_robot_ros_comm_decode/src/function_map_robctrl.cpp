@@ -11,9 +11,9 @@ CommDecoderPubsRobCtrl::CommDecoderPubsRobCtrl() : CommDecoderPubs() {}
 * This maps the functions to the received cmd.
 */
 
-const std::map<std::string, void(*)(CommDecoderPubs&, std::string&)> GetFuncMapRobCtrl()
+const std::map<std::string, void(*)(std::string&)> GetFuncMapRobCtrl()
 {
-    std::map<std::string, void(*)(CommDecoderPubs&, std::string&)> fm;
+    std::map<std::string, void(*)(std::string&)> fm;
 
     fm["GET_JNT_ANGS"] = GetJntAngs;
     fm["GET_EFF_POSE"] = GetEffPose;
