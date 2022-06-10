@@ -23,7 +23,34 @@ SOFTWARE.
 ***/
 
 #pragma once
-#include <ros/ros.h>
-#include <ros_side_out.hpp>
+#include <map>
 
-ROSSideOut CommNodeOutIniter(ros::NodeHandle& n, std::string modulesuffix);
+const std::map<std::string, void(*)(CommDecoderPubs&, std::string&)> GetFuncMapRobCtrl();
+
+void GetJntAngs(CommDecoderPubs& pubs, std::string& ss);
+
+void GetEffPose(CommDecoderPubs& pubs, std::string& ss);
+
+void ExecuteMotion(CommDecoderPubs& pubs, std::string& ss);
+
+void ExecuteMoveConfirm(CommDecoderPubs& pubs, std::string& ss);
+
+void SessionEnd(CommDecoderPubs& pubs, std::string& ss);
+
+void ManualAdjustBackwards(CommDecoderPubs& pubs, std::string& ss);
+
+void ManualAdjustApproach(CommDecoderPubs& pubs, std::string& ss);
+
+void ManualAdjustAway(CommDecoderPubs& pubs, std::string& ss);
+
+void ManualAdjustForward(CommDecoderPubs& pubs, std::string& ss);
+
+void ManualAdjustLeft(CommDecoderPubs& pubs, std::string& ss);
+
+void ManualAdjustPitch(CommDecoderPubs& pubs, std::string& ss);
+
+void ManualAdjustRight(CommDecoderPubs& pubs, std::string& ss);
+
+void ManualAdjustRoll(CommDecoderPubs& pubs, std::string& ss);
+
+void ManualAdjustYaw(CommDecoderPubs& pubs, std::string& ss);

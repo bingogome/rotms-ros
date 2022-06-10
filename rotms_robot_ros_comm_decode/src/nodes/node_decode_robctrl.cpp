@@ -1,29 +1,13 @@
 #include <ros/ros.h>
 #include "decode_node.hpp"
+#include "function_map_robctrl.hpp"
 
-
-class CommDecoderRobCtrl : public CommDecoder
+class CommDecoderPubsRobCtrl : public CommDecoderPubs
 {
-
-public:
-
-    CommDecoderRobCtrl(ros::NodeHandle& n) : CommDecoder(n,"ROBCTRL") {}
-
-protected:
-
-    // Modify this method to process the commands from ros_comm (ros_side_in)
-    // according to the config file config_comm_decode.yaml
-    void CmdsProcess() override 
+    CommDecoderPubsRobCtrl() : CommDecoderPubs()
     {
-        std::stringstream sscmd;
-        std::stringstream ss;
-        for(int i=0;i<16;i++) // msg header length is 16
-		    sscmd << ss_str_[i];
-        for(int i=16;ss_str_[i]!='\n';i++)
-            ss << ss_str_[i];
-        opsdict_[cmddict_[sscmd]](ss);
-    }
 
+    }
 };
 
 int main(int argc, char **argv)
@@ -32,7 +16,9 @@ int main(int argc, char **argv)
     ros::NodeHandle nh;
 
     std::map<std::string, std::string> cmddict;
-    CommDecoderRobCtrl dcdr = CommDecoderRobCtrl(nh);
+    CommDecoderPubsRobCtrl dcdr_pubs = CommDecoderPubsRobCtrl();
+    FuncMap funcs = GetFuncMapRobCtrl();
+    CommDecoder dcdr = CommDecoder(nh, "ROBCTRL", dcdr_pubs, funcs);
 
     ros::spin();
     return 0;

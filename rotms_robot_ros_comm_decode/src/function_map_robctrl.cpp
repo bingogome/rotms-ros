@@ -1,17 +1,15 @@
 #include <map>
 #include <string>
 #include <ros/ros.h>
+#include "function_map_robctrl.hpp"
 
 /**
 * This maps the functions to the received cmd.
 */
 
-
-typedef std::map<std::string, void(*)(ros::Publisher&)> FuncMap;
-
-const FuncMap GetFuncMapRobCtrl()
+const std::map<std::string, void(*)(CommDecoderPubs&, std::string&)> GetFuncMapRobCtrl()
 {
-    FuncMap fm;
+    std::map<std::string, void(*)(CommDecoderPubs&, std::string&)> fm;
 
     fm["GET_JNT_ANGS"] = GetJntAngs;
     fm["GET_EFF_POSE"] = GetEffPose;
@@ -33,86 +31,72 @@ const FuncMap GetFuncMapRobCtrl()
     return fm;
 }
 
-void GetJntAngs(ros::Publisher& pub)
+void GetJntAngs(CommDecoderPubs& pubs, std::string& ss)
 {
     msg.data = "get_jnt";
-    pub.publish(msg);
 }
 
-void GetEffPose(ros::Publisher& pub)
+void GetEffPose(CommDecoderPubs& pubs, std::string& ss)
 {
     msg.data = "get_eff";
-    pub.publish(msg);
 }
 
-void ExecuteMotion(ros::Publisher& pub)
+void ExecuteMotion(CommDecoderPubs& pubs, std::string& ss)
 {
-    msg.data = "get_jnt";
-    pub.publish(msg);
+
 }
 
-void ExecuteMoveConfirm(ros::Publisher& pub)
+void ExecuteMoveConfirm(CommDecoderPubs& pubs, std::string& ss)
 {
-    msg.data = "get_jnt";
-    pub.publish(msg);
+
 }
 
-void SessionEnd(ros::Publisher& pub)
+void SessionEnd(CommDecoderPubs& pubs, std::string& ss)
 {
-    msg.data = "get_jnt";
-    pub.publish(msg);
+
 }
 
-void ManualAdjustBackwards(ros::Publisher& pub)
+void ManualAdjustBackwards(CommDecoderPubs& pubs, std::string& ss)
 {
-    msg.data = "get_jnt";
-    pub.publish(msg);
+
 }
 
-void ManualAdjustApproach(ros::Publisher& pub)
+void ManualAdjustApproach(CommDecoderPubs& pubs, std::string& ss)
 {
-    msg.data = "get_jnt";
-    pub.publish(msg);
+
 }
 
-void ManualAdjustAway(ros::Publisher& pub)
+void ManualAdjustAway(CommDecoderPubs& pubs, std::string& ss)
 {
-    msg.data = "get_jnt";
-    pub.publish(msg);
+
 }
 
-void ManualAdjustForward(ros::Publisher& pub)
+void ManualAdjustForward(CommDecoderPubs& pubs, std::string& ss)
 {
-    msg.data = "get_jnt";
-    pub.publish(msg);
+
 }
 
-void ManualAdjustLeft(ros::Publisher& pub)
+void ManualAdjustLeft(CommDecoderPubs& pubs, std::string& ss)
 {
-    msg.data = "get_jnt";
-    pub.publish(msg);
+
 }
 
-void ManualAdjustPitch(ros::Publisher& pub)
+void ManualAdjustPitch(CommDecoderPubs& pubs, std::string& ss)
 {
-    msg.data = "get_jnt";
-    pub.publish(msg);
+
 }
 
-void ManualAdjustRight(ros::Publisher& pub)
+void ManualAdjustRight(CommDecoderPubs& pubs, std::string& ss)
 {
-    msg.data = "get_jnt";
-    pub.publish(msg);
+
 }
 
-void ManualAdjustRoll(ros::Publisher& pub)
+void ManualAdjustRoll(CommDecoderPubs& pubs, std::string& ss)
 {
-    msg.data = "get_jnt";
-    pub.publish(msg);
+
 }
 
-void ManualAdjustYaw(ros::Publisher& pub)
+void ManualAdjustYaw(CommDecoderPubs& pubs, std::string& ss)
 {
-    msg.data = "get_jnt";
-    pub.publish(msg);
+
 }

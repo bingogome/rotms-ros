@@ -19,7 +19,6 @@ std::map<std::string, std::string> LoadCmdsConfig(const std::string modulesuffix
     
     for(YAML::const_iterator it=ff.begin(); it!=ff.end(); ++it)
     {
-        
         std::string key = it->first.as<std::string>();
         std::string value = it->second.as<std::string>();
         // switch key and value for the CommDecode to easily do function dispatch
@@ -29,8 +28,16 @@ std::map<std::string, std::string> LoadCmdsConfig(const std::string modulesuffix
     return cmddict;
 }
 
-CommDecoder::CommDecoder(ros::NodeHandle& n, const std::string modulesuffix) : 
-    n_(n), cmddict_(LoadCmdsConfig(modulesuffix)), opsdict_()
+CommDecoder::CommDecoder(
+    ros::NodeHandle& n, 
+    const std::string modulesuffix, 
+    CommDecoderPubs& pubs,
+    FuncMap opsdict
+    ) 
+    : 
+    n_(n), pubs_(pubs),
+    cmddict_(LoadCmdsConfig(modulesuffix)), 
+    opsdict_(opsdict)
 {
     // Load ros_comm (ros_side_in) configuration
     std::string packpath_comm = ros::package::getPath("rotms_robot_ros_comm");
@@ -45,8 +52,18 @@ void CommDecoder::SubCallBack(const std_msgs::String::ConstPtr& msg)
     CmdsProcess();
 }
 
-// needs to be overridden
 void CommDecoder::CmdsProcess()
 {
-    ROS_INFO_STREAM("MSG: Did not override CmdsProcess \n received: "+ss_str_);
+    std::stringstream sscmd;
+    std::stringstream ss;
+    for(int i=0;i<16;i++) // msg header length is 16
+        sscmd << ss_str_[i];
+    for(int i=16;ss_str_[i]!='\n';i++)
+        ss << ss_str_[i];
+    opsdict_[cmddict_[sscmd]](pubs_, ss);
+}
+
+CommDecoderPubs::CommDecoderPubs()
+{
+
 }
