@@ -2,13 +2,6 @@
 #include "decode_node.hpp"
 #include "function_map_robctrl.hpp"
 
-class CommDecoderPubsRobCtrl : public CommDecoderPubs
-{
-    CommDecoderPubsRobCtrl() : CommDecoderPubs()
-    {
-
-    }
-};
 
 int main(int argc, char **argv)
 {

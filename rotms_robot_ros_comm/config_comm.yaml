@@ -1,3 +1,7 @@
+# ("\n" next line char cannot be typed in command line if you want to test using rostopic pub ........ )
+CMDS_EOM: "\n" # note: Change it to something else for testing in command line 
+CMDS_MSGLEN: 150
+
 CONNECT: 1 # ROS1 connection flag
 
 # Medical Image Plan module communication configs

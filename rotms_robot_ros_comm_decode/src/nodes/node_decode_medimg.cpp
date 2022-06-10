@@ -1,22 +1,13 @@
 #include <ros/ros.h>
 #include "decode_node.hpp"
 
-
-class CommDecoderMedImg : public CommDecoder
+class CommDecoderPubsMedImg : public CommDecoderPubs
 {
-
 public:
-
-    CommDecoderMedImg(ros::NodeHandle& n) : CommDecoder(n,"MEDIMG") {}
-
-protected:
-
-    // Modify this method to process the commands from ros_comm (ros_side_in)
-    void CmdsProcess() override 
+    CommDecoderPubsMedImg() : CommDecoderPubs()
     {
-        
-    }
 
+    }
 };
 
 int main(int argc, char **argv)
@@ -25,7 +16,7 @@ int main(int argc, char **argv)
     ros::NodeHandle nh;
 
     std::map<std::string, std::string> cmddict;
-    CommDecoderMedImg dcdr = CommDecoderMedImg(nh);
+    CommDecoderPubsMedImg dcdr_pubs = CommDecoderPubsMedImg();
 
     ros::spin();
     return 0;

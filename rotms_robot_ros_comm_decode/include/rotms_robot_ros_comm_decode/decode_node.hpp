@@ -3,7 +3,14 @@
 #include <ros/ros.h>
 #include <std_msgs/String.h>
 
-typedef std::map<std::string, void(*)(CommDecoderPubs&, std::string&)> FuncMap;
+class CommDecoderPubs // a dummy class to be inhereted.
+{ // The child class should contain the ROS publishers needed for the module
+public:
+    CommDecoderPubs();
+};
+
+typedef void (*OperationFunc)(CommDecoderPubs&, std::string&);
+typedef std::map<std::string, OperationFunc> FuncMap;
 
 class CommDecoder
 {
@@ -17,7 +24,7 @@ public:
         FuncMap opsdict
         );
 
-protected:
+private:
 
     void SubCallBack(const std_msgs::String::ConstPtr& msg);
     void CmdsProcess();
@@ -25,15 +32,12 @@ protected:
 	ros::Subscriber sub_;
     CommDecoderPubs& pubs_;
 
+    char eom_; // End of message indicator
+    int msglen_; // general msg length
+
     const std::map<std::string, std::string> cmddict_; // lookup table for cmd->CMD
     const FuncMap opsdict_; // lookup table for CMD->operation
     
     std::string ss_str_; // whole msg
 };
 
-class CommDecoderPubs
-{
-public:
-    CommDecoderPubs();
-protected:
-};

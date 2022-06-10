@@ -2,6 +2,10 @@
 #include <string>
 #include <ros/ros.h>
 #include "function_map_robctrl.hpp"
+#include "decode_node.hpp"
+
+
+CommDecoderPubsRobCtrl::CommDecoderPubsRobCtrl() : CommDecoderPubs() {}
 
 /**
 * This maps the functions to the received cmd.
@@ -31,72 +35,72 @@ const std::map<std::string, void(*)(CommDecoderPubs&, std::string&)> GetFuncMapR
     return fm;
 }
 
-void GetJntAngs(CommDecoderPubs& pubs, std::string& ss)
+void GetJntAngs(CommDecoderPubsRobCtrl& pubs, std::string& ss)
 {
-    msg.data = "get_jnt";
+    ROS_INFO_STREAM(pubs.a);
 }
 
-void GetEffPose(CommDecoderPubs& pubs, std::string& ss)
+void GetEffPose(CommDecoderPubsRobCtrl& pubs, std::string& ss)
 {
-    msg.data = "get_eff";
+    
 }
 
-void ExecuteMotion(CommDecoderPubs& pubs, std::string& ss)
-{
-
-}
-
-void ExecuteMoveConfirm(CommDecoderPubs& pubs, std::string& ss)
+void ExecuteMotion(CommDecoderPubsRobCtrl& pubs, std::string& ss)
 {
 
 }
 
-void SessionEnd(CommDecoderPubs& pubs, std::string& ss)
+void ExecuteMoveConfirm(CommDecoderPubsRobCtrl& pubs, std::string& ss)
 {
 
 }
 
-void ManualAdjustBackwards(CommDecoderPubs& pubs, std::string& ss)
+void SessionEnd(CommDecoderPubsRobCtrl& pubs, std::string& ss)
 {
 
 }
 
-void ManualAdjustApproach(CommDecoderPubs& pubs, std::string& ss)
+void ManualAdjustBackwards(CommDecoderPubsRobCtrl& pubs, std::string& ss)
 {
 
 }
 
-void ManualAdjustAway(CommDecoderPubs& pubs, std::string& ss)
+void ManualAdjustApproach(CommDecoderPubsRobCtrl& pubs, std::string& ss)
 {
 
 }
 
-void ManualAdjustForward(CommDecoderPubs& pubs, std::string& ss)
+void ManualAdjustAway(CommDecoderPubsRobCtrl& pubs, std::string& ss)
 {
 
 }
 
-void ManualAdjustLeft(CommDecoderPubs& pubs, std::string& ss)
+void ManualAdjustForward(CommDecoderPubsRobCtrl& pubs, std::string& ss)
 {
 
 }
 
-void ManualAdjustPitch(CommDecoderPubs& pubs, std::string& ss)
+void ManualAdjustLeft(CommDecoderPubsRobCtrl& pubs, std::string& ss)
 {
 
 }
 
-void ManualAdjustRight(CommDecoderPubs& pubs, std::string& ss)
+void ManualAdjustPitch(CommDecoderPubsRobCtrl& pubs, std::string& ss)
 {
 
 }
 
-void ManualAdjustRoll(CommDecoderPubs& pubs, std::string& ss)
+void ManualAdjustRight(CommDecoderPubsRobCtrl& pubs, std::string& ss)
 {
 
 }
 
-void ManualAdjustYaw(CommDecoderPubs& pubs, std::string& ss)
+void ManualAdjustRoll(CommDecoderPubsRobCtrl& pubs, std::string& ss)
+{
+
+}
+
+void ManualAdjustYaw(CommDecoderPubsRobCtrl& pubs, std::string& ss)
 {
 
 }

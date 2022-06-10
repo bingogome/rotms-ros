@@ -24,6 +24,14 @@ SOFTWARE.
 
 #pragma once
 #include <map>
+#include "decode_node.hpp"
+
+class CommDecoderPubsRobCtrl : public CommDecoderPubs
+{
+public:
+    CommDecoderPubsRobCtrl();
+    int a = 1;
+};
 
 const std::map<std::string, void(*)(CommDecoderPubs&, std::string&)> GetFuncMapRobCtrl();
 

@@ -1,21 +1,13 @@
 #include <ros/ros.h>
 #include "decode_node.hpp"
 
-
-class CommDecoderTargetViz : public CommDecoder
+class CommDecoderPubsTargetViz : public CommDecoderPubs
 {
-
 public:
-
-    CommDecoderTargetViz(ros::NodeHandle& n) : CommDecoder(n,"TargetViz") {}
-
-protected:
-
-    void CmdsProcess() override 
+    CommDecoderPubsTargetViz() : CommDecoderPubs()
     {
-        
-    }
 
+    }
 };
 
 int main(int argc, char **argv)
@@ -24,7 +16,7 @@ int main(int argc, char **argv)
     ros::NodeHandle nh;
 
     std::map<std::string, std::string> cmddict;
-    CommDecoderTargetViz dcdr = CommDecoderTargetViz(nh);
+    CommDecoderPubsTargetViz dcdr_pubs = CommDecoderPubsTargetViz();
 
     ros::spin();
     return 0;
