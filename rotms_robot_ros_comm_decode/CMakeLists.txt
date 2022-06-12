@@ -19,6 +19,8 @@ catkin_package(
 add_library(${PROJECT_NAME} 
   src/decode_node.cpp
   src/function_map_robctrl.cpp
+  src/function_map_medimg.cpp
+  src/function_map_targetviz.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
