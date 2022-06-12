@@ -4,16 +4,30 @@
 #include "function_map_robctrl.hpp"
 #include "decode_node.hpp"
 
-
-CommDecoderPubsRobCtrl::CommDecoderPubsRobCtrl() : CommDecoderPubs() {}
-
 /**
 * This maps the functions to the received cmd.
 */
 
-const std::map<std::string, void(*)(std::string&)> GetFuncMapRobCtrl()
+CommDecoderRobCtrl::CommDecoderRobCtrl(
+    ros::NodeHandle& n, 
+    const std::string modulesuffix,
+    FuncMap opsdict) 
+    : 
+    CommDecoder(n, modulesuffix, opsdict) 
 {
-    std::map<std::string, void(*)(std::string&)> fm;
+    pubs_.push_back(
+        n_.advertise<std_msgs::String>("/RobCtrl/GetInfo", 5));
+    pubs_.push_back(
+        n_.advertise<std_msgs::String>("/RobCtrl/Motion", 5));
+    pubs_.push_back(
+        n_.advertise<std_msgs::String>("/RobCtrl/Adjust", 5));
+    pubs_.push_back(
+        n_.advertise<std_msgs::String>("/RobCtrl/Session", 5));
+}
+
+FuncMap GetFuncMapRobCtrl()
+{
+    FuncMap fm;
 
     fm["GET_JNT_ANGS"] = GetJntAngs;
     fm["GET_EFF_POSE"] = GetEffPose;
@@ -35,72 +49,78 @@ const std::map<std::string, void(*)(std::string&)> GetFuncMapRobCtrl()
     return fm;
 }
 
-void GetJntAngs(CommDecoderPubsRobCtrl& pubs, std::string& ss)
+void GetJntAngs(std::string& ss, PublisherVec& pubs)
 {
-    ROS_INFO_STREAM(pubs.a);
+    std_msgs::String msg_test;
+    msg_test.data = "JNTS";
+    // pubs[0] is the publisher /RobCtrl/GetInfo
+    pubs[0].publish(msg_test);
 }
 
-void GetEffPose(CommDecoderPubsRobCtrl& pubs, std::string& ss)
+void GetEffPose(std::string& ss, PublisherVec& pubs)
 {
-    
+    std_msgs::String msg_test;
+    msg_test.data = "EFF";
+    // pubs[0] is the publisher /RobCtrl/GetInfo
+    pubs[0].publish(msg_test);
 }
 
-void ExecuteMotion(CommDecoderPubsRobCtrl& pubs, std::string& ss)
-{
-
-}
-
-void ExecuteMoveConfirm(CommDecoderPubsRobCtrl& pubs, std::string& ss)
-{
-
-}
-
-void SessionEnd(CommDecoderPubsRobCtrl& pubs, std::string& ss)
+void ExecuteMotion(std::string& ss, PublisherVec& pubs)
 {
 
 }
 
-void ManualAdjustBackwards(CommDecoderPubsRobCtrl& pubs, std::string& ss)
+void ExecuteMoveConfirm(std::string& ss, PublisherVec& pubs)
 {
 
 }
 
-void ManualAdjustApproach(CommDecoderPubsRobCtrl& pubs, std::string& ss)
+void SessionEnd(std::string& ss, PublisherVec& pubs)
 {
 
 }
 
-void ManualAdjustAway(CommDecoderPubsRobCtrl& pubs, std::string& ss)
+void ManualAdjustBackwards(std::string& ss, PublisherVec& pubs)
 {
 
 }
 
-void ManualAdjustForward(CommDecoderPubsRobCtrl& pubs, std::string& ss)
+void ManualAdjustApproach(std::string& ss, PublisherVec& pubs)
 {
 
 }
 
-void ManualAdjustLeft(CommDecoderPubsRobCtrl& pubs, std::string& ss)
+void ManualAdjustAway(std::string& ss, PublisherVec& pubs)
 {
 
 }
 
-void ManualAdjustPitch(CommDecoderPubsRobCtrl& pubs, std::string& ss)
+void ManualAdjustForward(std::string& ss, PublisherVec& pubs)
 {
 
 }
 
-void ManualAdjustRight(CommDecoderPubsRobCtrl& pubs, std::string& ss)
+void ManualAdjustLeft(std::string& ss, PublisherVec& pubs)
 {
 
 }
 
-void ManualAdjustRoll(CommDecoderPubsRobCtrl& pubs, std::string& ss)
+void ManualAdjustPitch(std::string& ss, PublisherVec& pubs)
 {
 
 }
 
-void ManualAdjustYaw(CommDecoderPubsRobCtrl& pubs, std::string& ss)
+void ManualAdjustRight(std::string& ss, PublisherVec& pubs)
+{
+
+}
+
+void ManualAdjustRoll(std::string& ss, PublisherVec& pubs)
+{
+
+}
+
+void ManualAdjustYaw(std::string& ss, PublisherVec& pubs)
 {
 
 }

@@ -26,39 +26,48 @@ SOFTWARE.
 #include <map>
 #include "decode_node.hpp"
 
-class CommDecoderPubsRobCtrl : public CommDecoderPubs
+
+
+class CommDecoderRobCtrl : public CommDecoder
 {
+
 public:
-    CommDecoderPubsRobCtrl();
-    int a = 1;
+
+    CommDecoderRobCtrl(
+        ros::NodeHandle& n, 
+        const std::string modulesuffix,
+        FuncMap opsdict
+        );
+
 };
 
-const std::map<std::string, void(*)(std::string&)> GetFuncMapRobCtrl();
+FuncMap GetFuncMapRobCtrl();
 
-void GetJntAngs(std::string& ss);
+void GetJntAngs(std::string& ss, PublisherVec& pubs);
 
-void GetEffPose(std::string& ss);
+void GetEffPose(std::string& ss, PublisherVec& pubs);
 
-void ExecuteMotion(std::string& ss);
+void ExecuteMotion(std::string& ss, PublisherVec& pubs);
 
-void ExecuteMoveConfirm(std::string& ss);
+void ExecuteMoveConfirm(std::string& ss, PublisherVec& pubs);
 
-void SessionEnd(std::string& ss);
+void SessionEnd(std::string& ss, PublisherVec& pubs);
 
-void ManualAdjustBackwards(std::string& ss);
+void ManualAdjustBackwards(std::string& ss, PublisherVec& pubs);
 
-void ManualAdjustApproach(std::string& ss);
+void ManualAdjustApproach(std::string& ss, PublisherVec& pubs);
 
-void ManualAdjustAway(std::string& ss);
+void ManualAdjustAway(std::string& ss, PublisherVec& pubs);
 
-void ManualAdjustForward(std::string& ss);
+void ManualAdjustForward(std::string& ss, PublisherVec& pubs);
 
-void ManualAdjustLeft(std::string& ss);
+void ManualAdjustLeft(std::string& ss, PublisherVec& pubs);
 
-void ManualAdjustPitch(std::string& ss);
+void ManualAdjustPitch(std::string& ss, PublisherVec& pubs);
 
-void ManualAdjustRight(std::string& ss);
+void ManualAdjustRight(std::string& ss, PublisherVec& pubs);
 
-void ManualAdjustRoll(std::string& ss);
+void ManualAdjustRoll(std::string& ss, PublisherVec& pubs);
 
-void ManualAdjustYaw(std::string& ss);
+void ManualAdjustYaw(std::string& ss, PublisherVec& pubs);
+

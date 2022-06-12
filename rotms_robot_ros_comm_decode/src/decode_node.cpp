@@ -5,9 +5,6 @@
 #include <ros/package.h>
 #include <map>
 
-CommDecoderPubs::CommDecoderPubs(){} // a dummy class to be inhereted.
-// The child class should contain the ROS publishers needed for the module
-
 /**
 * CommDecoder: The decoder for the msg received from ros_comm (ros_side_in)
 */
@@ -33,13 +30,12 @@ std::map<std::string, std::string> LoadCmdsConfig(const std::string modulesuffix
 
 CommDecoder::CommDecoder(
     ros::NodeHandle& n, 
-    const std::string modulesuffix, 
-    CommDecoderPubs& pubs,
+    const std::string modulesuffix,
     FuncMap opsdict
     ) 
     : 
-    n_(n), pubs_(pubs),
-    cmddict_(LoadCmdsConfig(modulesuffix)), 
+    n_(n), 
+    cmddict_(LoadCmdsConfig(modulesuffix)),
     opsdict_(opsdict)
 {
     // Load ros_comm (ros_side_in) configuration
@@ -47,8 +43,8 @@ CommDecoder::CommDecoder(
     YAML::Node f_comm = YAML::LoadFile(packpath_comm + "/config_comm.yaml");
     // End of message character
     eom_ = f_comm["CMDS_EOM"].as<char>();
-    // General msg total length
-    msglen_ = f_comm["CMDS_MSGLEN"].as<int>();
+    // msg total length
+    msglen_ = f_comm["MSG_SIZE_"+modulesuffix].as<int>();
     // Message received subscriber
     sub_ = n.subscribe(f_comm["PUBLISHER_NAME_"+modulesuffix].as<std::string>(), 
         10, &CommDecoder::SubCallBack, this);    
@@ -57,25 +53,24 @@ CommDecoder::CommDecoder(
 void CommDecoder::SubCallBack(const std_msgs::String::ConstPtr& msg)
 {
     ss_str_ = msg->data.c_str();
-    CommDecoder::CmdsProcess();
-}
-
-void CommDecoder::CmdsProcess()
-{
+    
     std::stringstream sscmd;
     std::stringstream ss;
-    for(int i=0;i<16;i++) // msg header length is 16
-    {
-        sscmd << ss_str_[i];
-    }
-    for(int i=16; ss_str_[i]!=eom_ && i<msglen_; i++)
+    // msg header length is msgheaderlen_
+    for(int i=0;i<msgheaderlen_;i++) sscmd << ss_str_[i];
+    for(int i=msgheaderlen_; ss_str_[i]!=eom_ && i<msglen_; i++)
     {
         ss << ss_str_[i];
     }
-        
     std::string lookupkey = cmddict_.at(sscmd.str());
-    OperationFunc operation = opsdict_.at(lookupkey);
     std::string msgcontent = ss.str();
-    (*operation)(pubs_, msgcontent);
+
+    CmdsProcess(lookupkey, msgcontent);
+}
+
+void CommDecoder::CmdsProcess(std::string& lookupkey, std::string& msgcontent)
+{
+    OperationFunc operation = opsdict_.at(lookupkey);
+    (*operation)(msgcontent, pubs_);
 }
 
