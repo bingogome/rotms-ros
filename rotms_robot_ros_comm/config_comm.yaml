@@ -1,5 +1,5 @@
 # ("\n" next line char cannot be typed in command line if you want to test using rostopic pub ........ )
-CMDS_EOM: "+" # note: Change it to something else for testing in command line 
+CMDS_EOM: ";" # note: Change it to something else for testing in command line 
 
 CONNECT: 1 # ROS1 connection flag
 

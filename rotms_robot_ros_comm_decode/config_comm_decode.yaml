@@ -30,15 +30,8 @@
 
     "SESSION_END": "end_sessionxxxxx",
     
-    "MAN_ADJUST_BACKWARD": "adjust_backxxxxx",
-    "MAN_ADJUST_CLOSER": "adjust_closexxxx",
-    "MAN_ADJUST_FARTHER": "adjust_awayxxxxx",
-    "MAN_ADJUST_FORWARD": "adjust_forwxxxxx",
-    "MAN_ADJUST_LEFT": "adjust_leftxxxxx",
-    "MAN_ADJUST_PITCH": "adjust_pitchxxxx",
-    "MAN_ADJUST_RIGHT": "adjust_rightxxxx",
-    "MAN_ADJUST_ROLL": "adjust_rollxxxxx",
-    "MAN_ADJUST_YAW": "adjust_yawxxxxxx"
+    "MAN_ADJUST_T": "adjust_tranxxxxx",
+    "MAN_ADJUST_R": "adjust_oriexxxxx"
   }
 
 "TARGETVIZ_CMDS":
