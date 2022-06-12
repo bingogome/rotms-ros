@@ -54,13 +54,5 @@ void ExecuteBackOffset(std::string& ss, PublisherVec& pubs);
 
 void SessionEnd(std::string& ss, PublisherVec& pubs);
 
-void ManualAdjustBackwards(std::string& ss, PublisherVec& pubs);
-void ManualAdjustApproach(std::string& ss, PublisherVec& pubs);
-void ManualAdjustAway(std::string& ss, PublisherVec& pubs);
-void ManualAdjustForward(std::string& ss, PublisherVec& pubs);
-void ManualAdjustLeft(std::string& ss, PublisherVec& pubs);
-void ManualAdjustPitch(std::string& ss, PublisherVec& pubs);
-void ManualAdjustRight(std::string& ss, PublisherVec& pubs);
-void ManualAdjustRoll(std::string& ss, PublisherVec& pubs);
-void ManualAdjustYaw(std::string& ss, PublisherVec& pubs);
-
+void ManualAdjustT(std::string& ss, PublisherVec& pubs);
+void ManualAdjustR(std::string& ss, PublisherVec& pubs);
