@@ -58,6 +58,9 @@ FuncMap GetFuncMapRobCtrl()
 
     fm["EXECUTE_MOTION"] = ExecuteMotion;
     fm["EXECUTE_MOVE_CONFIRM"] = ExecuteMoveConfirm;
+    fm["EXECUTE_ENDBACK"] = ExecuteEndAndBack;
+    fm["EXECUTE_BACKINIT"] = ExecuteBackInit;
+    fm["EXECUTE_BACKOFFSET"] = ExecuteBackOffset;
 
     fm["SESSION_END"] = SessionEnd;
 
@@ -91,22 +94,53 @@ void GetEffPose(std::string& ss, PublisherVec& pubs)
 
 void ExecuteMotion(std::string& ss, PublisherVec& pubs)
 {
-
+    std_msgs::String msg_test;
+    msg_test.data = "Execute";
+    // pubs[1] is the publisher /RobCtrl/Motion
+    pubs[1].publish(msg_test);
 }
 
 void ExecuteMoveConfirm(std::string& ss, PublisherVec& pubs)
 {
+    std_msgs::String msg_test;
+    msg_test.data = "Confirm";
+    // pubs[1] is the publisher /RobCtrl/Motion
+    pubs[1].publish(msg_test);
+}
 
+void ExecuteEndAndBack(std::string& ss, PublisherVec& pubs)
+{
+    SessionEnd(ss, pubs);
+    ExecuteBackInit(ss, pubs);
+}
+
+void ExecuteBackInit(std::string& ss, PublisherVec& pubs)
+{
+    std_msgs::String msg_test;
+    msg_test.data = "Backinit";
+    // pubs[1] is the publisher /RobCtrl/Motion
+    pubs[1].publish(msg_test);
+}
+
+void ExecuteBackOffset(std::string& ss, PublisherVec& pubs)
+{
+    std_msgs::String msg_test;
+    msg_test.data = "Backoffs";
+    // pubs[1] is the publisher /RobCtrl/Motion
+    pubs[1].publish(msg_test);
 }
 
 void SessionEnd(std::string& ss, PublisherVec& pubs)
 {
-
+    std_msgs::String msg_test;
+    msg_test.data = "End";
+    // pubs[3] is the publisher /RobCtrl/Session
+    pubs[3].publish(msg_test);
 }
 
 void ManualAdjustBackwards(std::string& ss, PublisherVec& pubs)
 {
-
+    
 }
 
 void ManualAdjustApproach(std::string& ss, PublisherVec& pubs)

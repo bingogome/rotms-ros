@@ -44,30 +44,23 @@ public:
 FuncMap GetFuncMapRobCtrl();
 
 void GetJntAngs(std::string& ss, PublisherVec& pubs);
-
 void GetEffPose(std::string& ss, PublisherVec& pubs);
 
 void ExecuteMotion(std::string& ss, PublisherVec& pubs);
-
 void ExecuteMoveConfirm(std::string& ss, PublisherVec& pubs);
+void ExecuteEndAndBack(std::string& ss, PublisherVec& pubs);
+void ExecuteBackInit(std::string& ss, PublisherVec& pubs);
+void ExecuteBackOffset(std::string& ss, PublisherVec& pubs);
 
 void SessionEnd(std::string& ss, PublisherVec& pubs);
 
 void ManualAdjustBackwards(std::string& ss, PublisherVec& pubs);
-
 void ManualAdjustApproach(std::string& ss, PublisherVec& pubs);
-
 void ManualAdjustAway(std::string& ss, PublisherVec& pubs);
-
 void ManualAdjustForward(std::string& ss, PublisherVec& pubs);
-
 void ManualAdjustLeft(std::string& ss, PublisherVec& pubs);
-
 void ManualAdjustPitch(std::string& ss, PublisherVec& pubs);
-
 void ManualAdjustRight(std::string& ss, PublisherVec& pubs);
-
 void ManualAdjustRoll(std::string& ss, PublisherVec& pubs);
-
 void ManualAdjustYaw(std::string& ss, PublisherVec& pubs);
 

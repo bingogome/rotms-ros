@@ -7,8 +7,10 @@
     "START_AUTO_DIGITIZE": "start_autodigitz",
     "START_REGISTRATION": "start_registrati",
     "START_USE_PREV_REGISTRATION": "start_useprevreg",
+
     "FIDUCIAL_CURRENT_ON_IMG": "img_fid_pntxxxxx",
     "FIDUCIAL_NUM_OF_ON_IMG": "img_fid_numxxxxx",
+
     "TARGET_POSE_ORIENTATION": "target_rotxxxxxx",
     "TARGET_POSE_TRANSLATION": "target_tslxxxxxx",
   }
@@ -19,9 +21,15 @@
   {
     "GET_JNT_ANGS": "get_jnt_angsxxxx",
     "GET_EFF_POSE": "get_eff_posexxxx",
+
     "EXECUTE_MOTION": "execute_motionxx",
     "EXECUTE_MOVE_CONFIRM": "execute_confirmx",
+    "EXECUTE_ENDBACK": "end_session_back",
+    "EXECUTE_BACKINIT": "execute_backinit",
+    "EXECUTE_BACKOFFSET": "execute_bkoffset",
+
     "SESSION_END": "end_sessionxxxxx",
+    
     "MAN_ADJUST_BACKWARD": "adjust_backxxxxx",
     "MAN_ADJUST_CLOSER": "adjust_closexxxx",
     "MAN_ADJUST_FARTHER": "adjust_awayxxxxx",
