@@ -43,6 +43,7 @@ void endPort(int portnum)
     socket_.open(udp::v4());
     ss_str_ = "_msg_end__";
 	socket_.send_to(boost::asio::buffer(ss_str_),remote_endpoint_);
+    ros::spinOnce();
 
 }
 

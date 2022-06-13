@@ -7,6 +7,8 @@ find_package(catkin REQUIRED COMPONENTS
   roslaunch
   )
 
+find_package(Boost REQUIRED COMPONENTS system)
+
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(YAML_CPP REQUIRED yaml-cpp)
 
@@ -20,16 +22,21 @@ catkin_package(
 )
 
 add_library(${PROJECT_NAME} 
-  src/dummy.cpp
+  src/kst_servoing.cpp
+  src/rotms_robot_ros_interface.cpp
+
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   include/rotms_robot_ros_interface
   ${catkin_INCLUDE_DIRS} 
   ${YAML_CPP_INCLUDEDIR} 
+  ${Boost_INCLUDE_DIRS}
   )
 
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} yaml-cpp)
 
-add_executable(node src/nodes/node.cpp)
-target_link_libraries(node ${PROJECT_NAME})
+add_executable(node_robot src/nodes/node_robot.cpp)
+target_link_libraries(node_robot ${PROJECT_NAME})
+add_executable(node_robot_end src/nodes/node_robot_end.cpp)
+target_link_libraries(node_robot_end ${PROJECT_NAME})

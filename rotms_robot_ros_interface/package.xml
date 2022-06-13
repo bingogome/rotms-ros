@@ -13,6 +13,7 @@
 
   <depend>roslaunch</depend>
   <depend>roscpp</depend>
+  <depend>Boost</depend>
   <depend>yaml-cpp</depend>
 
 </package>

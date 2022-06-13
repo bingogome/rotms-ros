@@ -1,0 +1,4 @@
+<launch>
+    <node name="node_robot" pkg="rotms_robot_ros_interface" type="node_robot" output="screen"/>
+    <node name="node_robot_end" pkg="rotms_robot_ros_interface" type="node_robot_end" output="screen"/>
+</launch>
