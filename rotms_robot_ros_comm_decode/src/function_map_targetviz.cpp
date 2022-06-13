@@ -22,57 +22,43 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
+#include <map>
+#include <string>
 #include <ros/ros.h>
-#include <signal.h>
-#include <ros/package.h>
+#include "function_map_targetviz.hpp"
+#include "decode_node.hpp"
 
-#include <boost/array.hpp>
-#include <boost/asio.hpp>
+/**
+* This maps the functions to the received cmd.
+*/
 
-#include <yaml-cpp/yaml.h>
-
-using boost::asio::ip::udp;
-
-void endPort(int portnum)
+CommDecoderTargetViz::CommDecoderTargetViz(
+    ros::NodeHandle& n, 
+    const std::string modulesuffix,
+    FuncMap opsdict) 
+    : 
+    CommDecoder(n, modulesuffix, opsdict) 
 {
-    boost::asio::io_context io_context;
-    udp::socket socket_(io_context);;
-	udp::endpoint remote_endpoint_(udp::v4(), portnum);
-    std::string ss_str_;
+    pubs_.push_back(
+        n_.advertise<std_msgs::String>("/TargetViz/Visualize", 5));
+}
 
-    socket_.open(udp::v4());
-    ss_str_ = "_msg_end__";
-	socket_.send_to(boost::asio::buffer(ss_str_),remote_endpoint_);
-    ros::spinOnce();
+FuncMap GetFuncMapTargetViz()
+{
+    FuncMap fm;
+
+    fm["VISUALIZE_START"] = VisualizeStart;
+    fm["VISUALIZE_STOP"] = VisualizeStop;
+
+    return fm;
+}
+
+void VisualizeStart(std::string& ss, PublisherVec& pubs)
+{
 
 }
 
-void endSigintHandler(int sig)
-{
-
-    std::string packpath = ros::package::getPath("rotms_robot_ros_comm");
-	YAML::Node f = YAML::LoadFile(packpath + "/config_comm.yaml");
-
-    std::vector<int> portvec;
-	portvec.push_back(f["PORT_IN_MEDIMG"].as<int>());
-    portvec.push_back(f["PORT_IN_ROBCTRL"].as<int>());
-    portvec.push_back(f["PORT_IN_TARGETVIZ"].as<int>());
-
-    for(int i=0;i<portvec.size();i++)
-    {
-        endPort(portvec[i]);
-    }
-
-    ros::shutdown();
-}
-
-int main(int argc, char** argv)
+void VisualizeStop(std::string& ss, PublisherVec& pubs)
 {
     
-    ros::init(argc, argv, "CommEnd", ros::init_options::NoSigintHandler);
-    ros::NodeHandle nh;
-
-    signal(SIGINT, endSigintHandler);
-    ros::spin();
-    return 0;
 }

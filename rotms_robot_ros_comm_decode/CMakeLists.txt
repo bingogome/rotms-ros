@@ -4,10 +4,13 @@ project(rotms_robot_ros_comm_decode)
 find_package(catkin REQUIRED COMPONENTS 
   roscpp
   roslib
+  roslaunch
   )
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(YAML_CPP REQUIRED yaml-cpp)
+
+roslaunch_add_file_check(launch)
 
 catkin_package(
   INCLUDE_DIRS include 
@@ -19,6 +22,8 @@ catkin_package(
 add_library(${PROJECT_NAME} 
   src/decode_node.cpp
   src/function_map_robctrl.cpp
+  src/function_map_medimg.cpp
+  src/function_map_targetviz.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC

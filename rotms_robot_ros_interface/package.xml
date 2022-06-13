@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>rotms_robot_ros_comm_decode</name>
+  <name>rotms_robot_ros_interface</name>
   <version>0.0.0</version>
-  <description>The rotms_robot_ros_comm_decode package</description>
+  <description>The rotms_robot_ros_interface package</description>
   <maintainer email="yliu333@jhu.edu">yl</maintainer>
 
   <!-- One license tag required, multiple allowed, one license per tag -->
@@ -13,6 +13,7 @@
 
   <depend>roslaunch</depend>
   <depend>roscpp</depend>
+  <depend>Boost</depend>
   <depend>yaml-cpp</depend>
 
 </package>

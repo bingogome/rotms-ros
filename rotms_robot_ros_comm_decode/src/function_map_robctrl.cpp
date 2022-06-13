@@ -1,3 +1,27 @@
+/***
+MIT License
+
+Copyright (c) 2022 Yihao Liu, Johns Hopkins University
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+***/
+
 #include <map>
 #include <string>
 #include <ros/ros.h>
@@ -34,18 +58,15 @@ FuncMap GetFuncMapRobCtrl()
 
     fm["EXECUTE_MOTION"] = ExecuteMotion;
     fm["EXECUTE_MOVE_CONFIRM"] = ExecuteMoveConfirm;
+    fm["EXECUTE_ENDBACK"] = ExecuteEndAndBack;
+    fm["EXECUTE_BACKINIT"] = ExecuteBackInit;
+    fm["EXECUTE_BACKOFFSET"] = ExecuteBackOffset;
 
     fm["SESSION_END"] = SessionEnd;
 
-    fm["MAN_ADJUST_BACKWARD"] = ManualAdjustBackwards;
-    fm["MAN_ADJUST_CLOSER"] = ManualAdjustApproach;
-    fm["MAN_ADJUST_FARTHER"] = ManualAdjustAway;
-    fm["MAN_ADJUST_FORWARD"] = ManualAdjustForward;
-    fm["MAN_ADJUST_LEFT"] = ManualAdjustLeft;
-    fm["MAN_ADJUST_PITCH"] = ManualAdjustPitch;
-    fm["MAN_ADJUST_RIGHT"] = ManualAdjustRight;
-    fm["MAN_ADJUST_ROLL"] = ManualAdjustRoll;
-    fm["MAN_ADJUST_YAW"] = ManualAdjustYaw;
+    fm["MAN_ADJUST_T"] = ManualAdjustT;
+    fm["MAN_ADJUST_R"] = ManualAdjustR;
+
     return fm;
 }
 
@@ -67,60 +88,57 @@ void GetEffPose(std::string& ss, PublisherVec& pubs)
 
 void ExecuteMotion(std::string& ss, PublisherVec& pubs)
 {
-
+    std_msgs::String msg_test;
+    msg_test.data = "Execute";
+    // pubs[1] is the publisher /RobCtrl/Motion
+    pubs[1].publish(msg_test);
 }
 
 void ExecuteMoveConfirm(std::string& ss, PublisherVec& pubs)
 {
+    std_msgs::String msg_test;
+    msg_test.data = "Confirm";
+    // pubs[1] is the publisher /RobCtrl/Motion
+    pubs[1].publish(msg_test);
+}
 
+void ExecuteEndAndBack(std::string& ss, PublisherVec& pubs)
+{
+    SessionEnd(ss, pubs);
+    ExecuteBackInit(ss, pubs);
+}
+
+void ExecuteBackInit(std::string& ss, PublisherVec& pubs)
+{
+    std_msgs::String msg_test;
+    msg_test.data = "Backinit";
+    // pubs[1] is the publisher /RobCtrl/Motion
+    pubs[1].publish(msg_test);
+}
+
+void ExecuteBackOffset(std::string& ss, PublisherVec& pubs)
+{
+    std_msgs::String msg_test;
+    msg_test.data = "Backoffs";
+    // pubs[1] is the publisher /RobCtrl/Motion
+    pubs[1].publish(msg_test);
 }
 
 void SessionEnd(std::string& ss, PublisherVec& pubs)
 {
-
+    std_msgs::String msg_test;
+    msg_test.data = "End";
+    // pubs[3] is the publisher /RobCtrl/Session
+    pubs[3].publish(msg_test);
 }
 
-void ManualAdjustBackwards(std::string& ss, PublisherVec& pubs)
+void ManualAdjustT(std::string& ss, PublisherVec& pubs)
+{
+    
+}
+
+void ManualAdjustR(std::string& ss, PublisherVec& pubs)
 {
 
 }
 
-void ManualAdjustApproach(std::string& ss, PublisherVec& pubs)
-{
-
-}
-
-void ManualAdjustAway(std::string& ss, PublisherVec& pubs)
-{
-
-}
-
-void ManualAdjustForward(std::string& ss, PublisherVec& pubs)
-{
-
-}
-
-void ManualAdjustLeft(std::string& ss, PublisherVec& pubs)
-{
-
-}
-
-void ManualAdjustPitch(std::string& ss, PublisherVec& pubs)
-{
-
-}
-
-void ManualAdjustRight(std::string& ss, PublisherVec& pubs)
-{
-
-}
-
-void ManualAdjustRoll(std::string& ss, PublisherVec& pubs)
-{
-
-}
-
-void ManualAdjustYaw(std::string& ss, PublisherVec& pubs)
-{
-
-}

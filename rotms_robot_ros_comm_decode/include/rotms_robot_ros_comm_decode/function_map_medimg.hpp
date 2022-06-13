@@ -26,14 +26,12 @@ SOFTWARE.
 #include <map>
 #include "decode_node.hpp"
 
-
-
-class CommDecoderRobCtrl : public CommDecoder
+class CommDecoderMedImg : public CommDecoder
 {
 
 public:
 
-    CommDecoderRobCtrl(
+    CommDecoderMedImg(
         ros::NodeHandle& n, 
         const std::string modulesuffix,
         FuncMap opsdict
@@ -41,18 +39,18 @@ public:
 
 };
 
-FuncMap GetFuncMapRobCtrl();
+FuncMap GetFuncMapMedImg();
 
-void GetJntAngs(std::string& ss, PublisherVec& pubs);
-void GetEffPose(std::string& ss, PublisherVec& pubs);
+void StartAutoDigitize(std::string& ss, PublisherVec& pubs);
 
-void ExecuteMotion(std::string& ss, PublisherVec& pubs);
-void ExecuteMoveConfirm(std::string& ss, PublisherVec& pubs);
-void ExecuteEndAndBack(std::string& ss, PublisherVec& pubs);
-void ExecuteBackInit(std::string& ss, PublisherVec& pubs);
-void ExecuteBackOffset(std::string& ss, PublisherVec& pubs);
+void StartRegistration(std::string& ss, PublisherVec& pubs);
 
-void SessionEnd(std::string& ss, PublisherVec& pubs);
+void StartUsePrevRegistration(std::string& ss, PublisherVec& pubs);
 
-void ManualAdjustT(std::string& ss, PublisherVec& pubs);
-void ManualAdjustR(std::string& ss, PublisherVec& pubs);
+void FiducialCurrentOnImg(std::string& ss, PublisherVec& pubs);
+
+void FiducialNumOnImg(std::string& ss, PublisherVec& pubs);
+
+void TargetPoseOrientation(std::string& ss, PublisherVec& pubs);
+
+void TargetPoseTranslation(std::string& ss, PublisherVec& pubs);

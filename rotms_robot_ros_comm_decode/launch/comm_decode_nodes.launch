@@ -1,0 +1,5 @@
+<launch>
+    <node name="node_decode_medimg" pkg="rotms_robot_ros_comm_decode" type="node_decode_medimg" output="screen"/>
+    <node name="node_decode_robctrl" pkg="rotms_robot_ros_comm_decode" type="node_decode_robctrl" output="screen"/>
+    <node name="node_decode_targetviz" pkg="rotms_robot_ros_comm_decode" type="node_decode_targetviz" output="screen"/>
+</launch>

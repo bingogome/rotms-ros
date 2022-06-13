@@ -26,14 +26,12 @@ SOFTWARE.
 #include <map>
 #include "decode_node.hpp"
 
-
-
-class CommDecoderRobCtrl : public CommDecoder
+class CommDecoderTargetViz : public CommDecoder
 {
 
 public:
 
-    CommDecoderRobCtrl(
+    CommDecoderTargetViz(
         ros::NodeHandle& n, 
         const std::string modulesuffix,
         FuncMap opsdict
@@ -41,18 +39,8 @@ public:
 
 };
 
-FuncMap GetFuncMapRobCtrl();
+FuncMap GetFuncMapTargetViz();
 
-void GetJntAngs(std::string& ss, PublisherVec& pubs);
-void GetEffPose(std::string& ss, PublisherVec& pubs);
+void VisualizeStart(std::string& ss, PublisherVec& pubs);
 
-void ExecuteMotion(std::string& ss, PublisherVec& pubs);
-void ExecuteMoveConfirm(std::string& ss, PublisherVec& pubs);
-void ExecuteEndAndBack(std::string& ss, PublisherVec& pubs);
-void ExecuteBackInit(std::string& ss, PublisherVec& pubs);
-void ExecuteBackOffset(std::string& ss, PublisherVec& pubs);
-
-void SessionEnd(std::string& ss, PublisherVec& pubs);
-
-void ManualAdjustT(std::string& ss, PublisherVec& pubs);
-void ManualAdjustR(std::string& ss, PublisherVec& pubs);
+void VisualizeStop(std::string& ss, PublisherVec& pubs);
