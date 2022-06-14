@@ -11,9 +11,9 @@ private:
     KstServoing& kst_;
     ros::NodeHandle& n_;
     ros::Subscriber sub_end_ = n_.subscribe(
-        "/RobInterface/EndConnections", 10, 
-        &RobotROSInterface::RobotEndConnectionCallBack, this);
-    bool flag_end_received_ = false;
+        "/RobInterface/TerminateNode", 10, 
+        &RobotROSInterface::RobotTerminateNodeCallBack, this);
+    bool flag_end_handshaked_ = false;
         
-    void RobotEndConnectionCallBack(const std_msgs::String::ConstPtr& msg);
+    void RobotTerminateNodeCallBack(const std_msgs::String::ConstPtr& msg);
 };

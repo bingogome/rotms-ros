@@ -1,0 +1,5 @@
+ROBOT_NODE_TERMINATE:
+{
+  END_HANDSHAKE_EFFORTS_NUM: 15, # Try how many times when publish terminate signal
+  END_HANDSHAKE_EFFORTS_RATE: 50 # hz
+}
