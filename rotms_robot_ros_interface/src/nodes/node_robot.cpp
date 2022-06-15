@@ -36,7 +36,12 @@ int main(int argc, char **argv)
     signal(SIGINT, endSigintHandler);
 
     boost::asio::io_context io_context;
-    KstServoing kst = KstServoing("172.31.1.147", io_context);
+    
+    std::string packpath = ros::package::getPath("rotms_robot_ros_interface");
+	YAML::Node f = YAML::LoadFile(packpath + "/config.yaml");
+    YAML::Node ff = f["ROBOT"];
+
+    KstServoing kst = KstServoing(ff["IP_ADDRESS"].as<std::string>(), io_context);
     RobotROSInterface ri = RobotROSInterface(kst, nh);
 
     ros::spin();
