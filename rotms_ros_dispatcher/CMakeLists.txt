@@ -32,5 +32,5 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} yaml-cpp)
 
-add_executable(node src/nodes/node.cpp)
-target_link_libraries(node ${PROJECT_NAME})
+add_executable(node_dispatcher src/nodes/node_dispatcher.cpp)
+target_link_libraries(node_dispatcher ${PROJECT_NAME})
