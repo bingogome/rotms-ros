@@ -1,10 +1,80 @@
 #include "registration_funcs.hpp"
+
 #include <vector>
 #include <tuple>
+#include <time.h>
+#include <yaml-cpp/yaml.h>
+
+#include <iostream>
+#include <iomanip>
+#include <fstream>
 #include <math.h>
 #include <limits>
 
-std::tuple<std::vector<std::vector<double>>, std::vector<double>> getRegistrationResult(std::vector<std::vector<double>> a, std::vector<std::vector<double>> b)
+#include <ros/ros.h>
+
+std::vector<double> rotm2quat(const std::vector<std::vector<double>>& R)
+{
+    double qw = sqrt(1.0+R[0][0]+R[1][1]+R[2][2]) / 2.0 * 4.0;
+    // x y z w
+    std::vector<double> ans{ 
+        (R[2][1] - R[1][2]) / qw,
+        (R[0][2] - R[2][0]) / qw,
+        (R[1][0] - R[0][1]) / qw,
+        qw/4
+    };
+    return ans;
+}
+
+void SaveRegistrationData(
+    const std::vector<double>& quat, const std::vector<double>& p, const std::string& f)
+{
+	std::ofstream filesave(f);
+	if(filesave.is_open())
+	{
+        filesave << "TRANSLATION: # translation: x,y,z\n";
+        filesave << "\n";
+        filesave << "  {\n";
+		filesave << "    x: " << FormatDouble2String(p[0], 16) << ",\n";
+		filesave << "    y: " << FormatDouble2String(p[1], 16) << ",\n";
+		filesave << "    z: " << FormatDouble2String(p[2], 16) << "\n";
+		filesave << "  }\n";
+        filesave << "\n";
+		filesave << "ROTATION: # quat: x,y,z,w\n";
+        filesave << "\n";
+        filesave << "  {\n";
+		filesave << "    x: " << FormatDouble2String(quat[0], 16) << ",\n";
+		filesave << "    y: " << FormatDouble2String(quat[1], 16) << ",\n";
+		filesave << "    z: " << FormatDouble2String(quat[2], 16) << ",\n";
+        filesave << "    w: " << FormatDouble2String(quat[3], 16) << "\n";
+        filesave << "  }\n";
+		filesave.close();
+	}
+}
+
+std::string FormatDouble2String(double a, int dec)
+{
+	std::stringstream stream;
+    stream << std::fixed << std::setprecision(dec) << a;
+    std::string s = stream.str();
+    return s;
+}
+
+std::string GetTimeString()
+{
+	time_t rawtime;
+	struct tm * timeinfo;
+	char buffer [80];
+
+	time(&rawtime);
+	timeinfo = localtime(&rawtime);
+	strftime (buffer,80,"%Y%m%d_%I%M%p",timeinfo);
+
+	return buffer;
+}
+
+std::tuple<std::vector<std::vector<double>>, std::vector<double>> getRegistrationResult(
+    const std::vector<std::vector<double>>& a, const std::vector<std::vector<double>>& b)
 {
     int sz1 = a.size();
     std::vector<double>  a_centroid = getCentroid(a);
@@ -24,16 +94,21 @@ std::tuple<std::vector<std::vector<double>>, std::vector<double>> getRegistratio
 		H[2][1] += A_tilda[i][2]*B_tilda[i][1];
 		H[2][2] += A_tilda[i][2]*B_tilda[i][2];
 	}
+    
 	std::tuple<std::vector<std::vector<double>>, std::vector<std::vector<double>>, std::vector<std::vector<double>>> USV = svdSim3by3(H);
+    ROS_INFO_STREAM(std::get<2>(USV)[0][0]);
 	std::vector<std::vector<double>> R = matrixMult3by3(std::get<2>(USV), transpose3by3(std::get<0>(USV)));
+    
 	if(det3by3(R) < 0)
 	{
 		std::vector<std::vector<double>> V = std::get<2>(USV);
 		V[0][0] = -V[0][0]; V[0][1] = -V[0][1]; V[0][2] = -V[0][2];
         V[1][0] = -V[1][0]; V[1][1] = -V[1][1]; V[1][2] = -V[1][2];
         V[2][0] = -V[2][0]; V[2][1] = -V[2][1]; V[2][2] = -V[2][2];
+
         R = matrixMult3by3(V, transpose3by3(std::get<0>(USV)));
 	}
+    
 	std::vector<double> p{0.0,0.0,0.0};
 	p[0] = b_centroid[0] - (
 	    R[0][0] * a_centroid[0] + R[0][1] * a_centroid[1] + R[0][2] * a_centroid[2]);
@@ -74,7 +149,7 @@ std::vector<std::vector<double>> getEye3by3()
 	return H;
 }
 
-std::vector<std::vector<double>> getDiag3by3(std::vector<double> v)
+std::vector<std::vector<double>> getDiag3by3(const std::vector<double>& v)
 {
 	std::vector<std::vector<double>> D = getZeros3by3();
 	D[0][0] = v[0];
@@ -83,7 +158,7 @@ std::vector<std::vector<double>> getDiag3by3(std::vector<double> v)
     return D;
 }
 
-std::vector<std::vector<double>> matrixMult3by3(std::vector<std::vector<double>> X, std::vector<std::vector<double>> Y)
+std::vector<std::vector<double>> matrixMult3by3(const std::vector<std::vector<double>>& X, const std::vector<std::vector<double>>& Y)
 {
 	std::vector<std::vector<double>> A = getZeros3by3();
 	for (int i = 0; i < 3; i++)
@@ -93,7 +168,7 @@ std::vector<std::vector<double>> matrixMult3by3(std::vector<std::vector<double>>
     return A;
 }
 
-std::vector<std::vector<double>> transpose3by3(std::vector<std::vector<double>> A)
+std::vector<std::vector<double>> transpose3by3(const std::vector<std::vector<double>>& A)
 {
 	std::vector<std::vector<double>> H = getZeros3by3();
 	for (int i = 0; i < 3; i++)
@@ -102,12 +177,12 @@ std::vector<std::vector<double>> transpose3by3(std::vector<std::vector<double>> 
     return H;
 }
 
-double det3by3(std::vector<std::vector<double>> R)
+double det3by3(const std::vector<std::vector<double>>& R)
 {
 	return R[0][2] * (R[1][0] * R[2][1] - R[1][1] * R[2][0]) - R[0][1] * (R[1][0] * R[2][2] - R[1][2] * R[2][0]) + R[0][0] * (R[1][1] * R[2][2] - R[1][2] * R[2][1]);
 }
 
-std::vector<double> getCentroid(std::vector<std::vector<double>> A)
+std::vector<double> getCentroid(const std::vector<std::vector<double>>& A)
 {
 	int n = A.size();
 	std::vector<double> aCentroid{0.0,0.0,0.0};
@@ -123,7 +198,7 @@ std::vector<double> getCentroid(std::vector<std::vector<double>> A)
     return aCentroid;
 } 
 
-std::vector<std::vector<double>> getDeviations(std::vector<std::vector<double>> A, std::vector<double> aCentroid)
+std::vector<std::vector<double>> getDeviations(const std::vector<std::vector<double>>& A, const std::vector<double>& aCentroid)
 {
 	int n = A.size();
 	std::vector<std::vector<double>> aTilda = getZeros(n);
@@ -136,7 +211,7 @@ std::vector<std::vector<double>> getDeviations(std::vector<std::vector<double>> 
     return aTilda;
 }
 
-std::tuple<std::vector<std::vector<double>>, std::vector<std::vector<double>>> qrSim3by3(std::vector<std::vector<double>> A)
+std::tuple<std::vector<std::vector<double>>, std::vector<std::vector<double>>> qrSim3by3(const std::vector<std::vector<double>>& A)
 {
 	std::vector<std::vector<double>> Q = getZeros3by3();
     std::vector<std::vector<double>> R = getZeros3by3();
@@ -181,7 +256,7 @@ std::tuple<std::vector<std::vector<double>>, std::vector<std::vector<double>>> q
 	return std::make_tuple(Q, R);
 }
 
-std::tuple<std::vector<std::vector<double>>, std::vector<std::vector<double>>, std::vector<std::vector<double>>> svdSim3by3(std::vector<std::vector<double>> A)
+std::tuple<std::vector<std::vector<double>>, std::vector<std::vector<double>>, std::vector<std::vector<double>>> svdSim3by3(const std::vector<std::vector<double>>& A)
 {
 	std::vector<std::vector<double>> U;
 	std::vector<std::vector<double>> S;

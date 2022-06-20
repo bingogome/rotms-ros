@@ -40,10 +40,11 @@ void WorkState::Registered(){TransitionNotPossible();}
 void WorkState::ClearFiducials(){TransitionNotPossible();}
 void WorkState::ClearDigitization(){TransitionNotPossible();}
 void WorkState::ClearRegistration(){TransitionNotPossible();}
+void WorkState::ClearToolPosePlan(){TransitionNotPossible();}
 
 void WorkState::RePlanFiducials(){TransitionNotPossible();}
 void WorkState::ReDigitize(){TransitionNotPossible();}
-void WorkState::RePlanPose(){TransitionNotPossible();}
+void WorkState::RePlanToolPose(){TransitionNotPossible();}
 
 void WorkState::TransitionNotPossible(){TransitionNotPossible();}
 

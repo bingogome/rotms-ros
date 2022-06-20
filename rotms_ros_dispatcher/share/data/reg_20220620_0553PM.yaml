@@ -1,0 +1,16 @@
+TRANSLATION: # translation: x,y,z
+
+  {
+    x: -nan,
+    y: -nan,
+    z: -nan
+  }
+
+ROTATION: # quat: x,y,z,w
+
+  {
+    x: -nan,
+    y: -nan,
+    z: -nan,
+    w: -nan
+  }

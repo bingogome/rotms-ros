@@ -51,6 +51,9 @@ class State0010 : public WorkState
 public:
     State0010(std::vector<WorkState>& v);
 private:
+    void FiducialsPlanned() override;
+    void ClearToolPosePlan() override;
+    void RePlanToolPose() override;
 };
 
 class State1010 : public WorkState
@@ -58,6 +61,11 @@ class State1010 : public WorkState
 public:
     State1010(std::vector<WorkState>& v);
 private:
+    void ClearToolPosePlan() override;
+    void ClearFiducials() override;
+    void RePlanToolPose() override;
+    void RePlanFiducials() override;
+    void FiducialsDigitized() override;
 };
 
 class State1110 : public WorkState
@@ -65,6 +73,12 @@ class State1110 : public WorkState
 public:
     State1110(std::vector<WorkState>& v);
 private:
+    void ClearToolPosePlan() override;
+    void ReDigitize() override;
+    void RePlanToolPose() override;
+    void ClearDigitization() override;
+    void ClearFiducials() override;
+    void Registered() override;
 };
 
 class State1111 : public WorkState
@@ -72,4 +86,8 @@ class State1111 : public WorkState
 public:
     State1111(std::vector<WorkState>& v);
 private:
+    void ClearToolPosePlan() override;
+    void RePlanToolPose() override;
+    void ClearRegistration() override;
+    void ClearFiducials() override;
 };

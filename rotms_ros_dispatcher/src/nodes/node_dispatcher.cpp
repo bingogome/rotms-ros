@@ -1,4 +1,4 @@
-#include "registration_funcs.hpp"
+#include "rotms_dispatcher.hpp"
 #include <ros/ros.h>
 #include <tuple>
 
@@ -8,7 +8,9 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "DummyNode");
     ros::NodeHandle nh;
 
+    Dispatcher d = Dispatcher(nh);
 
+    d.RegistrationCallBack();
 
     ros::spin();
     return 0;

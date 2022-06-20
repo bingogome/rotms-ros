@@ -110,27 +110,59 @@ State1100::State1100(std::vector<WorkState>& v) : WorkState(v)
     state_num_ = 0B1100;
 }
 
+void State1100::ToolPosePlanned(){};
+void State1100::Registered(){};
+void State1100::ClearDigitization(){};
+void State1100::ClearFiducials(){};
+void State1100::ReDigitize(){};
+
 State1101::State1101(std::vector<WorkState>& v) : WorkState(v) 
 {
     state_num_ = 0B1101;
 }
+
+void State1101::ToolPosePlanned(){};
+void State1101::ClearRegistration(){};
+void State1101::ClearFiducials(){};
 
 State0010::State0010(std::vector<WorkState>& v) : WorkState(v) 
 {
     state_num_ = 0B0010;
 }
 
+void State0010::FiducialsPlanned(){};
+void State0010::ClearToolPosePlan(){};
+void State0010::RePlanToolPose(){};
+
 State1010::State1010(std::vector<WorkState>& v) : WorkState(v) 
 {
     state_num_ = 0B1010;
 }
+
+void State1010::ClearToolPosePlan(){};
+void State1010::ClearFiducials(){};
+void State1010::RePlanToolPose(){};
+void State1010::RePlanFiducials(){};
+void State1010::FiducialsDigitized(){};
 
 State1110::State1110(std::vector<WorkState>& v) : WorkState(v) 
 {
     state_num_ = 0B1110;
 }
 
+void State1110::ClearToolPosePlan(){};
+void State1110::ReDigitize(){};
+void State1110::RePlanToolPose(){};
+void State1110::ClearDigitization(){};
+void State1110::ClearFiducials(){};
+void State1110::Registered(){};
+
 State1111::State1111(std::vector<WorkState>& v) : WorkState(v) 
 {
     state_num_ = 0B1111;
 }
+
+void State1111::ClearToolPosePlan(){};
+void State1111::RePlanToolPose(){};
+void State1111::ClearRegistration(){};
+void State1111::ClearFiducials(){};

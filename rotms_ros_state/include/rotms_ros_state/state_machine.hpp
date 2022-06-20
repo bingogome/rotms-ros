@@ -39,10 +39,11 @@ protected:
     virtual void ClearFiducials();
     virtual void ClearDigitization();
     virtual void ClearRegistration();
+    virtual void ClearToolPosePlan();
 
     virtual void RePlanFiducials();
     virtual void ReDigitize();
-    virtual void RePlanPose();
+    virtual void RePlanToolPose();
     
     virtual void TransitionNotPossible();
 

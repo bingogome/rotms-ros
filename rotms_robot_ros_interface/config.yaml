@@ -1,11 +1,13 @@
 ROBOT:
-{
-  # IP_ADDRESS: "172.31.1.147"
-  IP_ADDRESS: "127.0.0.1" # localhost for testing
-}
+
+  {
+    # IP_ADDRESS: "172.31.1.147"
+    IP_ADDRESS: "127.0.0.1" # localhost for testing
+  }
 
 ROBOT_NODE_TERMINATE:
-{
-  END_HANDSHAKE_EFFORTS_NUM: 15, # Try how many times when publish terminate signal
-  END_HANDSHAKE_EFFORTS_RATE: 50 # hz
-}
+
+  {
+    END_HANDSHAKE_EFFORTS_NUM: 15, # Try how many times when publish terminate signal
+    END_HANDSHAKE_EFFORTS_RATE: 50 # hz
+  }

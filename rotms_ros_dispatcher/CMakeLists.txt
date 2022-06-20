@@ -21,6 +21,7 @@ catkin_package(
 
 add_library(${PROJECT_NAME} 
   src/registration_funcs.cpp
+  src/rotms_dispatcher.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
