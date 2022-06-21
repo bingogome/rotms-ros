@@ -37,7 +37,6 @@ void Dispatcher::RegistrationCallBack()
                 value["y"].as<double>(),
                 value["z"].as<double>()
             };
-            ROS_INFO_STREAM(temppnt[1]-1.1);
             cloudpln.push_back(temppnt);
         }
 

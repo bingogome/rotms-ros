@@ -77,8 +77,14 @@ std::tuple<std::vector<std::vector<double>>, std::vector<double>> getRegistratio
     const std::vector<std::vector<double>>& a, const std::vector<std::vector<double>>& b)
 {
     int sz1 = a.size();
-    std::vector<double>  a_centroid = getCentroid(a);
-	std::vector<double>  b_centroid = getCentroid(b);
+    int sz2 = b.size();
+
+    if(sz1!=sz2)
+        throw std::runtime_error(
+            "Planned point cloud and the digitized point cloud have different size!");
+
+    std::vector<double> a_centroid = getCentroid(a);
+	std::vector<double> b_centroid = getCentroid(b);
 	std::vector<std::vector<double>> A_tilda = getDeviations(a, a_centroid);
 	std::vector<std::vector<double>> B_tilda = getDeviations(b, b_centroid);
 	std::vector<std::vector<double>> H = getZeros3by3();
@@ -96,7 +102,6 @@ std::tuple<std::vector<std::vector<double>>, std::vector<double>> getRegistratio
 	}
     
 	std::tuple<std::vector<std::vector<double>>, std::vector<std::vector<double>>, std::vector<std::vector<double>>> USV = svdSim3by3(H);
-    ROS_INFO_STREAM(std::get<2>(USV)[0][0]);
 	std::vector<std::vector<double>> R = matrixMult3by3(std::get<2>(USV), transpose3by3(std::get<0>(USV)));
     
 	if(det3by3(R) < 0)
@@ -213,7 +218,8 @@ std::vector<std::vector<double>> getDeviations(const std::vector<std::vector<dou
 
 std::tuple<std::vector<std::vector<double>>, std::vector<std::vector<double>>> qrSim3by3(const std::vector<std::vector<double>>& A)
 {
-	std::vector<std::vector<double>> Q = getZeros3by3();
+
+    std::vector<std::vector<double>> Q = getZeros3by3();
     std::vector<std::vector<double>> R = getZeros3by3();
 
     std::vector<std::vector<double>> X = getZeros3by3();
@@ -249,6 +255,14 @@ std::tuple<std::vector<std::vector<double>>, std::vector<std::vector<double>>> q
 		Q[2][i] = Y[2][i] / n;
 		vecY[i] = n;
 	}
+
+    // ROS_INFO_STREAM(Q[0][0] << "\t" << Q[0][1] << "\t" << Q[0][2]);
+    // ROS_INFO_STREAM(Q[1][0] << "\t" << Q[1][1] << "\t" << Q[1][2]);
+    // ROS_INFO_STREAM(Q[2][0] << "\t" << Q[2][1] << "\t" << Q[2][2]);
+
+    // ROS_INFO_STREAM(Y[0][0] << "\t" << Y[0][1] << "\t" << Y[0][2]);
+    // ROS_INFO_STREAM(Y[1][0] << "\t" << Y[1][1] << "\t" << Y[1][2]);
+    // ROS_INFO_STREAM(Y[2][0] << "\t" << Y[2][1] << "\t" << Y[2][2]);
 
 	std::vector<std::vector<double>> diagY = getDiag3by3(vecY);
 	R = matrixMult3by3(diagY, K);
@@ -297,9 +311,11 @@ std::tuple<std::vector<std::vector<double>>, std::vector<std::vector<double>>, s
             F = 1;
         err = E / F;
         loopcount++;
+
     }
 
     std::vector<double> SS{S[0][0], S[1][1], S[2][2]};
+
     for (int i = 0; i < 3; i++)
     {
         double SSi = abs(SS[i]);
@@ -311,6 +327,8 @@ std::tuple<std::vector<std::vector<double>>, std::vector<std::vector<double>>, s
             U[2][i] = -U[2][i];
         }
     }
+    
+
 
     return std::make_tuple(U, S, V);
 }
