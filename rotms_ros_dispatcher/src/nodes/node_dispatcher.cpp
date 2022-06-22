@@ -10,8 +10,6 @@ int main(int argc, char **argv)
 
     Dispatcher d = Dispatcher(nh);
 
-    d.RegistrationCallBack();
-
     ros::spin();
     return 0;
 }

@@ -3,7 +3,6 @@
 #include <vector>
 #include <tuple>
 #include <time.h>
-#include <yaml-cpp/yaml.h>
 
 #include <iostream>
 #include <iomanip>
@@ -11,9 +10,7 @@
 #include <math.h>
 #include <limits>
 
-#include <ros/ros.h>
-
-std::vector<double> rotm2quat(const std::vector<std::vector<double>>& R)
+std::vector<double> rotm2quat(const Matrixnbym& R)
 {
     double qw = sqrt(1.0+R[0][0]+R[1][1]+R[2][2]) / 2.0 * 4.0;
     // x y z w
@@ -73,8 +70,8 @@ std::string GetTimeString()
 	return buffer;
 }
 
-std::tuple<std::vector<std::vector<double>>, std::vector<double>> getRegistrationResult(
-    const std::vector<std::vector<double>>& a, const std::vector<std::vector<double>>& b)
+std::tuple<Matrixnbym, std::vector<double>> getRegistrationResult(
+    const Matrixnbym& a, const Matrixnbym& b)
 {
     int sz1 = a.size();
     int sz2 = b.size();
@@ -85,9 +82,9 @@ std::tuple<std::vector<std::vector<double>>, std::vector<double>> getRegistratio
 
     std::vector<double> a_centroid = getCentroid(a);
 	std::vector<double> b_centroid = getCentroid(b);
-	std::vector<std::vector<double>> A_tilda = getDeviations(a, a_centroid);
-	std::vector<std::vector<double>> B_tilda = getDeviations(b, b_centroid);
-	std::vector<std::vector<double>> H = getZeros3by3();
+	Matrixnbym A_tilda = getDeviations(a, a_centroid);
+	Matrixnbym B_tilda = getDeviations(b, b_centroid);
+	Matrixnbym H = getZeros3by3();
 	for(int i=0;i<sz1;i++)
 	{
 		H[0][0] += A_tilda[i][0]*B_tilda[i][0];
@@ -101,12 +98,12 @@ std::tuple<std::vector<std::vector<double>>, std::vector<double>> getRegistratio
 		H[2][2] += A_tilda[i][2]*B_tilda[i][2];
 	}
     
-	std::tuple<std::vector<std::vector<double>>, std::vector<std::vector<double>>, std::vector<std::vector<double>>> USV = svdSim3by3(H);
-	std::vector<std::vector<double>> R = matrixMult3by3(std::get<2>(USV), transpose3by3(std::get<0>(USV)));
+	std::tuple<Matrixnbym, Matrixnbym, Matrixnbym> USV = svdSim3by3(H);
+	Matrixnbym R = matrixMult3by3(std::get<2>(USV), transpose3by3(std::get<0>(USV)));
     
 	if(det3by3(R) < 0)
 	{
-		std::vector<std::vector<double>> V = std::get<2>(USV);
+		Matrixnbym V = std::get<2>(USV);
 		V[0][0] = -V[0][0]; V[0][1] = -V[0][1]; V[0][2] = -V[0][2];
         V[1][0] = -V[1][0]; V[1][1] = -V[1][1]; V[1][2] = -V[1][2];
         V[2][0] = -V[2][0]; V[2][1] = -V[2][1]; V[2][2] = -V[2][2];
@@ -125,18 +122,18 @@ std::tuple<std::vector<std::vector<double>>, std::vector<double>> getRegistratio
     return std::make_tuple(R, p);
 }
 
-std::vector<std::vector<double>> getZeros3by3()
+Matrixnbym getZeros3by3()
 {
 	std::vector<double> vec1{0.0, 0.0, 0.0};
 	std::vector<double> vec2{0.0, 0.0, 0.0};
 	std::vector<double> vec3{0.0, 0.0, 0.0};
-	std::vector<std::vector<double>> H{vec1, vec2, vec3};
+	Matrixnbym H{vec1, vec2, vec3};
 	return H;
 }
 
-std::vector<std::vector<double>> getZeros(int n)
+Matrixnbym getZeros(int n)
 {
-	std::vector<std::vector<double>> I;
+	Matrixnbym I;
     for(int i = 0; i < n; i++)
     {
     	std::vector<double> vec{ 0.0f, 0.0f, 0.0f };
@@ -145,27 +142,43 @@ std::vector<std::vector<double>> getZeros(int n)
     return I;
 }
 
-std::vector<std::vector<double>> getEye3by3()
+Matrixnbym getEye3by3()
 {
 	std::vector<double> vec1{1.0, 0.0, 0.0};
 	std::vector<double> vec2{0.0, 1.0, 0.0};
 	std::vector<double> vec3{0.0, 0.0, 1.0};
-	std::vector<std::vector<double>> H{vec1, vec2, vec3};
+	Matrixnbym H{vec1, vec2, vec3};
 	return H;
 }
 
-std::vector<std::vector<double>> getDiag3by3(const std::vector<double>& v)
+Matrixnbym getEye(int n)
 {
-	std::vector<std::vector<double>> D = getZeros3by3();
+    Matrixnbym H;
+    for(int i=0;i<n;i++){
+        std::vector<double> temp;
+        for(int j=0;j<n;j++){
+            if(i==j)
+                temp.push_back(1.0);
+            else
+                temp.push_back(0.0);
+        }
+        H.push_back(temp);
+    }
+	return H;
+}
+
+Matrixnbym getDiag3by3(const std::vector<double>& v)
+{
+	Matrixnbym D = getZeros3by3();
 	D[0][0] = v[0];
     D[1][1] = v[1];
     D[2][2] = v[2];
     return D;
 }
 
-std::vector<std::vector<double>> matrixMult3by3(const std::vector<std::vector<double>>& X, const std::vector<std::vector<double>>& Y)
+Matrixnbym matrixMult3by3(const Matrixnbym& X, const Matrixnbym& Y)
 {
-	std::vector<std::vector<double>> A = getZeros3by3();
+	Matrixnbym A = getZeros3by3();
 	for (int i = 0; i < 3; i++)
         for (int j = 0; j < 3; j++)
             for (int k = 0; k < 3; k++)
@@ -173,21 +186,31 @@ std::vector<std::vector<double>> matrixMult3by3(const std::vector<std::vector<do
     return A;
 }
 
-std::vector<std::vector<double>> transpose3by3(const std::vector<std::vector<double>>& A)
+Matrixnbym matrixMult(const Matrixnbym& X, const Matrixnbym& Y)
 {
-	std::vector<std::vector<double>> H = getZeros3by3();
+	Matrixnbym A = getZeros(X.size());
+	for (int i = 0; i < X.size(); i++)
+        for (int j = 0; j < X.size(); j++)
+            for (int k = 0; k < X.size(); k++)
+                A[i][j] += X[i][k] * Y[k][j];
+    return A;
+}
+
+Matrixnbym transpose3by3(const Matrixnbym& A)
+{
+	Matrixnbym H = getZeros3by3();
 	for (int i = 0; i < 3; i++)
         for (int j = 0; j < 3; j++)
             H[j][i] = A[i][j];
     return H;
 }
 
-double det3by3(const std::vector<std::vector<double>>& R)
+double det3by3(const Matrixnbym& R)
 {
 	return R[0][2] * (R[1][0] * R[2][1] - R[1][1] * R[2][0]) - R[0][1] * (R[1][0] * R[2][2] - R[1][2] * R[2][0]) + R[0][0] * (R[1][1] * R[2][2] - R[1][2] * R[2][1]);
 }
 
-std::vector<double> getCentroid(const std::vector<std::vector<double>>& A)
+std::vector<double> getCentroid(const Matrixnbym& A)
 {
 	int n = A.size();
 	std::vector<double> aCentroid{0.0,0.0,0.0};
@@ -203,10 +226,10 @@ std::vector<double> getCentroid(const std::vector<std::vector<double>>& A)
     return aCentroid;
 } 
 
-std::vector<std::vector<double>> getDeviations(const std::vector<std::vector<double>>& A, const std::vector<double>& aCentroid)
+Matrixnbym getDeviations(const Matrixnbym& A, const std::vector<double>& aCentroid)
 {
 	int n = A.size();
-	std::vector<std::vector<double>> aTilda = getZeros(n);
+	Matrixnbym aTilda = getZeros(n);
     for (int i = 0; i < n; i++)
     {
         aTilda[i][0] = A[i][0] - aCentroid[0];
@@ -216,66 +239,129 @@ std::vector<std::vector<double>> getDeviations(const std::vector<std::vector<dou
     return aTilda;
 }
 
-std::tuple<std::vector<std::vector<double>>, std::vector<std::vector<double>>> qrSim3by3(const std::vector<std::vector<double>>& A)
+// https://rosettacode.org/wiki/QR_decomposition
+std::tuple<Matrixnbym, Matrixnbym> qrSim3by3(const Matrixnbym& A)
 {
-
-    std::vector<std::vector<double>> Q = getZeros3by3();
-    std::vector<std::vector<double>> R = getZeros3by3();
-
-    std::vector<std::vector<double>> X = getZeros3by3();
-    std::vector<std::vector<double>> Y = getZeros3by3();
-    std::vector<std::vector<double>> K = getEye3by3();
-
-    for (int i = 0; i < 3; i++)
-        for (int j = 0; j < 3; j++)
-            X[i][j] = A[i][j];
-
-    for (int i = 0; i < 3; i++)
-        for (int j = 0; j < 3; j++)
-            Y[i][j] = A[i][j];
-
-    for (int i = 0; i < 3; i++)
-    {
-        for (int j = 0; j < i; j++)
-        {
-            K[j][i] = (X[0][i] * Y[0][j] + X[1][i] * Y[1][j] + X[2][i] * Y[2][j]) / (Y[0][j] * Y[0][j] + Y[1][j] * Y[1][j] + Y[2][j] * Y[2][j]);
-            Y[0][i] = Y[0][i] - K[j][i] * Y[0][j];
-            Y[1][i] = Y[1][i] - K[j][i] * Y[1][j];
-            Y[2][i] = Y[2][i] - K[j][i] * Y[2][j];
+    Matrixnbym R = getZeros3by3();
+    for(int i=0;i<3;i++){
+        for(int j=0;j<3;j++){
+            R[i][j] = A[i][j];
         }
     }
-
-    std::vector<double> vecY{0.0,0.0,0.0};
-
-	for (int i = 0; i < 3; i++)
-	{
-		double n = (double)sqrt(Y[0][i] * Y[0][i] + Y[1][i] * Y[1][i] + Y[2][i] * Y[2][i]);
-		Q[0][i] = Y[0][i] / n;
-		Q[1][i] = Y[1][i] / n;
-		Q[2][i] = Y[2][i] / n;
-		vecY[i] = n;
-	}
-
-    // ROS_INFO_STREAM(Q[0][0] << "\t" << Q[0][1] << "\t" << Q[0][2]);
-    // ROS_INFO_STREAM(Q[1][0] << "\t" << Q[1][1] << "\t" << Q[1][2]);
-    // ROS_INFO_STREAM(Q[2][0] << "\t" << Q[2][1] << "\t" << Q[2][2]);
-
-    // ROS_INFO_STREAM(Y[0][0] << "\t" << Y[0][1] << "\t" << Y[0][2]);
-    // ROS_INFO_STREAM(Y[1][0] << "\t" << Y[1][1] << "\t" << Y[1][2]);
-    // ROS_INFO_STREAM(Y[2][0] << "\t" << Y[2][1] << "\t" << Y[2][2]);
-
-	std::vector<std::vector<double>> diagY = getDiag3by3(vecY);
-	R = matrixMult3by3(diagY, K);
+    Matrixnbym Q = getEye3by3();
+    for(int i=0;i<2;i++)
+    {
+        Matrixnbym H = getEye3by3();
+        std::vector<double> a;
+        for(int j=i;j<3;j++){
+            a.push_back(R[j][i]);
+        }
+        Matrixnbym H_ = qrhelper(a);
+        
+        for(int j=i;j<3;j++){
+            for(int q=i;q<3;q++){
+                H[j][q] = H_[j-i][q-i];
+            }
+        }
+        
+        Q = matrixMult(Q,H);
+        R = matrixMult(H,R);
+        
+    }
 
 	return std::make_tuple(Q, R);
+
 }
 
-std::tuple<std::vector<std::vector<double>>, std::vector<std::vector<double>>, std::vector<std::vector<double>>> svdSim3by3(const std::vector<std::vector<double>>& A)
+Matrixnbym qrhelper(const std::vector<double>& a)
 {
-	std::vector<std::vector<double>> U;
-	std::vector<std::vector<double>> S;
-	std::vector<std::vector<double>> V;
-	std::vector<std::vector<double>> Q;
+    double a_norm = 0.0;
+    for(int i=0;i<a.size();i++){
+        a_norm += a[i] * a[i];
+    }
+    a_norm = sqrt(a_norm);
+    
+    std::vector<double> v;
+    for(int i=0;i<a.size();i++){
+        v.push_back(a[i] / (a[0] + std::copysign(a_norm,a[0])));
+    }
+    v[0] = 1.0;
+    Matrixnbym H = getEye(a.size());
+    Matrixnbym V;
+    for(int i=0;i<v.size();i++){
+        std::vector<double> temp;
+        for(int j=0;j<v.size();j++){
+            temp.push_back(v[i]*v[j]);
+        }
+        V.push_back(temp);
+    }
+    
+
+    double v_norm = 0.0;
+    for(int i=0;i<v.size();i++){
+        v_norm += v[i] * v[i];
+    }
+    for(int i=0;i<v.size();i++){
+        for(int j=0;j<v.size();j++){
+            H[i][j] -= 2.0 / v_norm * V[i][j];
+        }
+    }
+    return H;
+}
+
+// Old implementation. Results can be incorrect in some edge cases.
+// std::tuple<Matrixnbym, Matrixnbym> qrSim3by3(const Matrixnbym& A)
+// {
+
+//     Matrixnbym Q = getZeros3by3();
+//     Matrixnbym R = getZeros3by3();
+
+//     Matrixnbym X = getZeros3by3();
+//     Matrixnbym Y = getZeros3by3();
+//     Matrixnbym K = getEye3by3();
+
+//     for (int i = 0; i < 3; i++)
+//         for (int j = 0; j < 3; j++)
+//             X[i][j] = A[i][j];
+
+//     for (int i = 0; i < 3; i++)
+//         for (int j = 0; j < 3; j++)
+//             Y[i][j] = A[i][j];
+
+//     for (int i = 0; i < 3; i++)
+//     {
+//         for (int j = 0; j < i; j++)
+//         {
+//             K[j][i] = (X[0][i] * Y[0][j] + X[1][i] * Y[1][j] + X[2][i] * Y[2][j]) / (Y[0][j] * Y[0][j] + Y[1][j] * Y[1][j] + Y[2][j] * Y[2][j]);
+//             Y[0][i] = Y[0][i] - K[j][i] * Y[0][j];
+//             Y[1][i] = Y[1][i] - K[j][i] * Y[1][j];
+//             Y[2][i] = Y[2][i] - K[j][i] * Y[2][j];
+//         }
+//     }
+
+//     std::vector<double> vecY{0.0,0.0,0.0};
+
+// 	for (int i = 0; i < 3; i++)
+// 	{
+// 		double n = (double)sqrt(Y[0][i] * Y[0][i] + Y[1][i] * Y[1][i] + Y[2][i] * Y[2][i]);
+// 		Q[0][i] = Y[0][i] / n;
+// 		Q[1][i] = Y[1][i] / n;
+// 		Q[2][i] = Y[2][i] / n;
+// 		vecY[i] = n;
+// 	}
+
+// 	Matrixnbym diagY = getDiag3by3(vecY);
+// 	R = matrixMult3by3(diagY, K);
+
+// 	return std::make_tuple(Q, R);
+// }
+
+std::tuple<Matrixnbym, Matrixnbym, Matrixnbym> svdSim3by3(const Matrixnbym& A)
+{
+	Matrixnbym U;
+	Matrixnbym S;
+	Matrixnbym V;
+	Matrixnbym Q;
 
 	double tol = 2.2204E-16f * 1024;  // eps floating-point relative accuracy 
 	int loopmax = 300;
@@ -289,7 +375,7 @@ std::tuple<std::vector<std::vector<double>>, std::vector<std::vector<double>>, s
 
     while (err > tol && loopcount < loopmax)
     {
-    	std::tuple<std::vector<std::vector<double>>, std::vector<std::vector<double>>> tulp = qrSim3by3(transpose3by3(S));
+    	std::tuple<Matrixnbym, Matrixnbym> tulp = qrSim3by3(transpose3by3(S));
     	Q = std::get<0>(tulp);
     	S = std::get<1>(tulp);
     	U = matrixMult3by3(U, Q);
@@ -299,7 +385,7 @@ std::tuple<std::vector<std::vector<double>>, std::vector<std::vector<double>>, s
     	S = std::get<1>(tulp);
     	V = matrixMult3by3(V, Q);
 
-    	std::vector<std::vector<double>> e = getZeros3by3();
+    	Matrixnbym e = getZeros3by3();
     	e[0][1] = S[0][1];
         e[0][2] = S[0][2];
         e[1][2] = S[1][2];
@@ -327,8 +413,6 @@ std::tuple<std::vector<std::vector<double>>, std::vector<std::vector<double>>, s
             U[2][i] = -U[2][i];
         }
     }
-    
-
 
     return std::make_tuple(U, S, V);
 }

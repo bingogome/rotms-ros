@@ -3,7 +3,9 @@
 #include <vector>
 #include <tuple>
 
-std::vector<double> rotm2quat(const std::vector<std::vector<double>>& R);
+typedef std::vector<std::vector<double>> Matrixnbym;
+
+std::vector<double> rotm2quat(const Matrixnbym& R);
 
 void SaveRegistrationData(
     const std::vector<double>& quat, const std::vector<double>& p, const std::string& f);
@@ -12,27 +14,33 @@ std::string FormatDouble2String(double a, int dec);
 
 std::string GetTimeString();
 
-std::tuple<std::vector<std::vector<double>>, std::vector<double>> getRegistrationResult(
-    const std::vector<std::vector<double>>& a, const std::vector<std::vector<double>>& b);
+std::tuple<Matrixnbym, std::vector<double>> getRegistrationResult(
+    const Matrixnbym& a, const Matrixnbym& b);
 
-std::vector<std::vector<double>> getZeros3by3();
+Matrixnbym getZeros3by3();
 
-std::vector<std::vector<double>> getZeros(int n);
+Matrixnbym getZeros(int n);
 
-std::vector<std::vector<double>> getEye3by3();
+Matrixnbym getEye3by3();
 
-std::vector<std::vector<double>> getDiag3by3(const std::vector<double>& v);
+Matrixnbym getEye(int n);
 
-std::vector<std::vector<double>> matrixMult3by3(const std::vector<std::vector<double>>& X, const std::vector<std::vector<double>>& Y);
+Matrixnbym getDiag3by3(const std::vector<double>& v);
 
-std::vector<std::vector<double>> transpose3by3(const std::vector<std::vector<double>>& A);
+Matrixnbym matrixMult3by3(const Matrixnbym& X, const Matrixnbym& Y);
 
-double det3by3(const std::vector<std::vector<double>>& R);
+Matrixnbym matrixMult(const Matrixnbym& X, const Matrixnbym& Y);
 
-std::vector<double> getCentroid(const std::vector<std::vector<double>>& A);
+Matrixnbym transpose3by3(const Matrixnbym& A);
 
-std::vector<std::vector<double>> getDeviations(const std::vector<std::vector<double>>& A, const std::vector<double>& aCentroid);
+double det3by3(const Matrixnbym& R);
 
-std::tuple<std::vector<std::vector<double>>, std::vector<std::vector<double>>> qrSim3by3(const std::vector<std::vector<double>>& A);
+std::vector<double> getCentroid(const Matrixnbym& A);
 
-std::tuple<std::vector<std::vector<double>>, std::vector<std::vector<double>>, std::vector<std::vector<double>>> svdSim3by3(const std::vector<std::vector<double>>& A);
+Matrixnbym getDeviations(const Matrixnbym& A, const std::vector<double>& aCentroid);
+
+std::tuple<Matrixnbym, Matrixnbym> qrSim3by3(const Matrixnbym& A);
+
+Matrixnbym qrhelper (const std::vector<double>& a);
+
+std::tuple<Matrixnbym, Matrixnbym, Matrixnbym> svdSim3by3(const Matrixnbym& A);

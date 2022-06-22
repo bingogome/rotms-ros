@@ -14,11 +14,9 @@
 
 Dispatcher::Dispatcher(ros::NodeHandle& n) : n_(n){}
 
-// void Dispatcher::RegistrationCallBack(const std_msgs::String::ConstPtr& msg)
-void Dispatcher::RegistrationCallBack()
+void Dispatcher::RegistrationCallBack(const std_msgs::String::ConstPtr& msg)
 {
-    // if (msg->data.compare("_end_robot_connection_")==0)
-    if (true)
+    if (msg->data.compare("_end_robot_connection_")==0)
     {
         std::string packpath = ros::package::getPath("rotms_ros_dispatcher");
         
