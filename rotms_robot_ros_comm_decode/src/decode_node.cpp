@@ -13,7 +13,7 @@ std::map<std::string, std::string> LoadCmdsConfig(const std::string modulesuffix
 {
     // Load config file and commands dictionary
     std::string packpath = ros::package::getPath("rotms_robot_ros_comm_decode");
-	YAML::Node f = YAML::LoadFile(packpath + "/config_comm_decode.yaml");
+    YAML::Node f = YAML::LoadFile(packpath + "/config_comm_decode.yaml");
     YAML::Node ff = f[modulesuffix+"_CMDS"];
     std::map<std::string, std::string> cmddict;
     

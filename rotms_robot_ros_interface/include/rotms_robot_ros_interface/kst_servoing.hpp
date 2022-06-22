@@ -31,6 +31,7 @@ public:
     // PTP motion
     void PTPJointSpace(std::vector<double> jpos , double relVel);
     void PTPLineEEF(std::vector<double> epos, double vel); // vel: mm/sec
+    // epos: x y z rz ry rx
 
     // Smart and direct servo methods
     void ServoDirectCartesianStart();
