@@ -1,13 +1,14 @@
 #pragma once
+#include "flag_machine.hpp"
 #include "state_machine.hpp"
 #include <vector>
 
-std::vector<WorkState> GetStatesVector();
+const std::vector<WorkState> GetStatesVector(FlagMachine& f);
 
 class State0000 : public WorkState
 {
 public:
-    State0000(std::vector<WorkState>& v);
+    State0000(std::vector<WorkState>& v, FlagMachine& f);
 private:
     void FiducialsPlanned() override;
     void ToolPosePlanned() override;
@@ -16,7 +17,7 @@ private:
 class State1000 : public WorkState
 {
 public:
-    State1000(std::vector<WorkState>& v);
+    State1000(std::vector<WorkState>& v, FlagMachine& f);
 private:
     void FiducialsDigitized() override;
     void ToolPosePlanned() override;
@@ -27,7 +28,7 @@ private:
 class State1100 : public WorkState
 {
 public:
-    State1100(std::vector<WorkState>& v);
+    State1100(std::vector<WorkState>& v, FlagMachine& f);
 private:
     void ToolPosePlanned() override;
     void Registered() override;
@@ -39,7 +40,7 @@ private:
 class State1101 : public WorkState
 {
 public:
-    State1101(std::vector<WorkState>& v);
+    State1101(std::vector<WorkState>& v, FlagMachine& f);
 private:
     void ToolPosePlanned() override;
     void ClearRegistration() override;
@@ -49,7 +50,7 @@ private:
 class State0010 : public WorkState
 {
 public:
-    State0010(std::vector<WorkState>& v);
+    State0010(std::vector<WorkState>& v, FlagMachine& f);
 private:
     void FiducialsPlanned() override;
     void ClearToolPosePlan() override;
@@ -59,7 +60,7 @@ private:
 class State1010 : public WorkState
 {
 public:
-    State1010(std::vector<WorkState>& v);
+    State1010(std::vector<WorkState>& v, FlagMachine& f);
 private:
     void ClearToolPosePlan() override;
     void ClearFiducials() override;
@@ -71,7 +72,7 @@ private:
 class State1110 : public WorkState
 {
 public:
-    State1110(std::vector<WorkState>& v);
+    State1110(std::vector<WorkState>& v, FlagMachine& f);
 private:
     void ClearToolPosePlan() override;
     void ReDigitize() override;
@@ -84,7 +85,7 @@ private:
 class State1111 : public WorkState
 {
 public:
-    State1111(std::vector<WorkState>& v);
+    State1111(std::vector<WorkState>& v, FlagMachine& f);
 private:
     void ClearToolPosePlan() override;
     void RePlanToolPose() override;

@@ -22,6 +22,7 @@ catkin_package(
 add_library(${PROJECT_NAME} 
   src/state_machine.cpp
   src/state_machine_states.cpp
+  src/flag_machine.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
@@ -32,5 +33,5 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} yaml-cpp)
 
-add_executable(node src/nodes/node.cpp)
-target_link_libraries(node ${PROJECT_NAME})
+add_executable(node_state src/nodes/node_state.cpp)
+target_link_libraries(node_state ${PROJECT_NAME})

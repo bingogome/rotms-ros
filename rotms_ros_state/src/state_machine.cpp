@@ -1,5 +1,7 @@
+#include "flag_machine.hpp"
 #include "state_machine.hpp"
 #include <vector>
+#include <functional>
 
 /***
 * Current design: 
@@ -12,7 +14,8 @@
 * nested siwch-case.
 ***/
 
-WorkState::WorkState(std::vector<WorkState>& v) : states_(v)
+WorkState::WorkState(int state_num, std::vector<WorkState>& v, FlagMachine& f) 
+    : state_num_(state_num), states_(v), flags_(f)
 {
     Deactivate();
 }
@@ -20,17 +23,37 @@ WorkState::WorkState(std::vector<WorkState>& v) : states_(v)
 bool WorkState::CheckActivated(){return activated_;}
 void WorkState::Activate(){activated_=true;}
 void WorkState::Deactivate(){activated_=false;}
-void WorkState::SetStateNum(int i){state_num_=i;}
 int WorkState::GetStateNum(){return state_num_;}
-bool WorkState::CheckIfUniqueActivation()
+bool WorkState::CheckIfUniqueActivation(std::vector<WorkState>& states)
 {
     int s = 0;
-    for(int i=0; i<states_.size(); i++)
+    for(int i=0; i<states.size(); i++)
     {
-        if(states_[i].CheckActivated()) s++;
+        if(states[i].CheckActivated()) s++;
     }
     return s<=1;
 }
+WorkState& WorkState::GetActivatedState(std::vector<WorkState>& states)
+{
+    if ( ! WorkState::CheckIfUniqueActivation(states) )
+        throw std::runtime_error(
+            "State machine error: not unique states are activated!");
+    
+    for(int i=0;i<states.size();i++)
+    {
+        if (states[i].CheckActivated())
+            return states[i];
+    }
+
+    FlagMachine f;
+    FlagMachine& f_ = f;
+
+    WorkState s(-1,states,f_);
+    WorkState& s_ = s;
+
+    return s_;
+}
+
 
 void WorkState::FiducialsPlanned(){TransitionNotPossible();}
 void WorkState::FiducialsDigitized(){TransitionNotPossible();}
@@ -46,5 +69,19 @@ void WorkState::RePlanFiducials(){TransitionNotPossible();}
 void WorkState::ReDigitize(){TransitionNotPossible();}
 void WorkState::RePlanToolPose(){TransitionNotPossible();}
 
-void WorkState::TransitionNotPossible(){TransitionNotPossible();}
+void WorkState::TransitionNotPossible()
+{
+    // TODO: implement this. (possibly having a return value)
+}
+void WorkState::Transition(int target_state, std::function<void()> func_flagchange)
+{
+    this->Deactivate();
 
+    func_flagchange();
+
+    states_[target_state].Activate();
+
+    if ( ! WorkState::CheckIfUniqueActivation(states_) )
+        throw std::runtime_error(
+            "State machine error: not unique states are activated!");
+}

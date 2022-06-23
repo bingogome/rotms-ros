@@ -1,5 +1,7 @@
 #pragma once
 #include <vector>
+#include "flag_machine.hpp"
+#include <functional>
 
 /***
 * Current design: 
@@ -17,18 +19,22 @@ class WorkState
 
 public:
 
-    WorkState(std::vector<WorkState>& v);
+    WorkState(
+        int state_num,
+        std::vector<WorkState>& v,
+        FlagMachine& f);
     bool CheckActivated();
     void Activate();
     void Deactivate();
-    void SetStateNum(int i);
     int GetStateNum();
-    bool CheckIfUniqueActivation();
+    static bool CheckIfUniqueActivation(std::vector<WorkState>& states);
+    static WorkState& GetActivatedState(std::vector<WorkState>& states);
 
 protected:
     
-    int state_num_;
+    const int state_num_;
     std::vector<WorkState>& states_;
+    FlagMachine& flags_;
     bool activated_;
 
     virtual void FiducialsPlanned();
@@ -46,5 +52,6 @@ protected:
     virtual void RePlanToolPose();
     
     virtual void TransitionNotPossible();
+    void Transition(int target_state, std::function<void()> func);
 
 };
