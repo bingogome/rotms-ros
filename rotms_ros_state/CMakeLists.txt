@@ -33,5 +33,5 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} yaml-cpp)
 
-add_executable(node_state src/nodes/node_state.cpp)
-target_link_libraries(node_state ${PROJECT_NAME})
+add_executable(test_node_state src/nodes/test_node_state.cpp)
+target_link_libraries(test_node_state ${PROJECT_NAME})

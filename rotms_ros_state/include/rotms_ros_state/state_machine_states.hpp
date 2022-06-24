@@ -3,6 +3,8 @@
 #include "state_machine.hpp"
 #include <vector>
 
+bool CheckFlagIntegrity(std::vector<WorkState>& states);
+
 const std::vector<WorkState> GetStatesVector(FlagMachine& f);
 
 class State0000 : public WorkState
@@ -10,7 +12,7 @@ class State0000 : public WorkState
 public:
     State0000(std::vector<WorkState>& v, FlagMachine& f);
 private:
-    void FiducialsPlanned() override;
+    void LandmarksPlanned() override;
     void ToolPosePlanned() override;
 };
 
@@ -19,10 +21,10 @@ class State1000 : public WorkState
 public:
     State1000(std::vector<WorkState>& v, FlagMachine& f);
 private:
-    void FiducialsDigitized() override;
+    void LandmarksDigitized() override;
     void ToolPosePlanned() override;
-    void ClearFiducials() override;
-    void RePlanFiducials() override;
+    void ClearLandmarks() override;
+    void RePlanLandmarks() override;
 };
 
 class State1100 : public WorkState
@@ -33,7 +35,7 @@ private:
     void ToolPosePlanned() override;
     void Registered() override;
     void ClearDigitization() override;
-    void ClearFiducials() override;
+    void ClearLandmarks() override;
     void ReDigitize() override;
 };
 
@@ -44,7 +46,7 @@ public:
 private:
     void ToolPosePlanned() override;
     void ClearRegistration() override;
-    void ClearFiducials() override;
+    void ClearLandmarks() override;
 };
 
 class State0010 : public WorkState
@@ -52,7 +54,7 @@ class State0010 : public WorkState
 public:
     State0010(std::vector<WorkState>& v, FlagMachine& f);
 private:
-    void FiducialsPlanned() override;
+    void LandmarksPlanned() override;
     void ClearToolPosePlan() override;
     void RePlanToolPose() override;
 };
@@ -63,10 +65,10 @@ public:
     State1010(std::vector<WorkState>& v, FlagMachine& f);
 private:
     void ClearToolPosePlan() override;
-    void ClearFiducials() override;
+    void ClearLandmarks() override;
     void RePlanToolPose() override;
-    void RePlanFiducials() override;
-    void FiducialsDigitized() override;
+    void RePlanLandmarks() override;
+    void LandmarksDigitized() override;
 };
 
 class State1110 : public WorkState
@@ -78,7 +80,7 @@ private:
     void ReDigitize() override;
     void RePlanToolPose() override;
     void ClearDigitization() override;
-    void ClearFiducials() override;
+    void ClearLandmarks() override;
     void Registered() override;
 };
 
@@ -90,5 +92,5 @@ private:
     void ClearToolPosePlan() override;
     void RePlanToolPose() override;
     void ClearRegistration() override;
-    void ClearFiducials() override;
+    void ClearLandmarks() override;
 };

@@ -14,5 +14,6 @@
   <depend>roslaunch</depend>
   <depend>roscpp</depend>
   <depend>yaml-cpp</depend>
+  <depend>rotms_ros_state</depend>
 
 </package>

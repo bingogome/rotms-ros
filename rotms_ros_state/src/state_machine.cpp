@@ -55,17 +55,17 @@ WorkState& WorkState::GetActivatedState(std::vector<WorkState>& states)
 }
 
 
-void WorkState::FiducialsPlanned(){TransitionNotPossible();}
-void WorkState::FiducialsDigitized(){TransitionNotPossible();}
+void WorkState::LandmarksPlanned(){TransitionNotPossible();}
+void WorkState::LandmarksDigitized(){TransitionNotPossible();}
 void WorkState::ToolPosePlanned(){TransitionNotPossible();}
 void WorkState::Registered(){TransitionNotPossible();}
 
-void WorkState::ClearFiducials(){TransitionNotPossible();}
+void WorkState::ClearLandmarks(){TransitionNotPossible();}
 void WorkState::ClearDigitization(){TransitionNotPossible();}
 void WorkState::ClearRegistration(){TransitionNotPossible();}
 void WorkState::ClearToolPosePlan(){TransitionNotPossible();}
 
-void WorkState::RePlanFiducials(){TransitionNotPossible();}
+void WorkState::RePlanLandmarks(){TransitionNotPossible();}
 void WorkState::ReDigitize(){TransitionNotPossible();}
 void WorkState::RePlanToolPose(){TransitionNotPossible();}
 
@@ -73,11 +73,14 @@ void WorkState::TransitionNotPossible()
 {
     // TODO: implement this. (possibly having a return value)
 }
-void WorkState::Transition(int target_state, std::function<void()> func_flagchange)
+void WorkState::Transition(int target_state, TransitionOps funcs)
 {
     this->Deactivate();
 
-    func_flagchange();
+    for(int i=0; i<funcs.size(); i++)
+    {
+        funcs[i]();
+    }
 
     states_[target_state].Activate();
 

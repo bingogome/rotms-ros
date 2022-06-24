@@ -3,6 +3,8 @@
 #include "flag_machine.hpp"
 #include <functional>
 
+typedef std::vector<std::function<void()>> TransitionOps;
+
 /***
 * Current design: 
 * WorkState should have the virtual functions of all possible state transition operations (edges).
@@ -37,21 +39,21 @@ protected:
     FlagMachine& flags_;
     bool activated_;
 
-    virtual void FiducialsPlanned();
-    virtual void FiducialsDigitized();
+    virtual void LandmarksPlanned();
+    virtual void LandmarksDigitized();
     virtual void ToolPosePlanned();
     virtual void Registered();
 
-    virtual void ClearFiducials();
+    virtual void ClearLandmarks();
     virtual void ClearDigitization();
     virtual void ClearRegistration();
     virtual void ClearToolPosePlan();
 
-    virtual void RePlanFiducials();
+    virtual void RePlanLandmarks();
     virtual void ReDigitize();
     virtual void RePlanToolPose();
     
     virtual void TransitionNotPossible();
-    void Transition(int target_state, std::function<void()> func);
+    void Transition(int target_state, TransitionOps funcs);
 
 };
