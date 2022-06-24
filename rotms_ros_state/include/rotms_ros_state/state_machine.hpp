@@ -48,7 +48,8 @@ public:
     WorkState(
         int state_num,
         std::vector<WorkState>& v,
-        FlagMachine& f);
+        FlagMachine& f,
+        TMSOperations& ops);
     bool CheckActivated();
     void Activate();
     void Deactivate();
@@ -61,21 +62,22 @@ protected:
     const int state_num_;
     std::vector<WorkState>& states_;
     FlagMachine& flags_;
+    TMSOperations& ops_;
     bool activated_;
 
-    virtual void LandmarksPlanned();
-    virtual void LandmarksDigitized();
-    virtual void ToolPosePlanned();
-    virtual void Registered();
+    virtual int LandmarksPlanned();
+    virtual int LandmarksDigitized();
+    virtual int ToolPosePlanned();
+    virtual int Registered();
 
-    virtual void ClearLandmarks();
-    virtual void ClearDigitization();
-    virtual void ClearRegistration();
-    virtual void ClearToolPosePlan();
+    virtual int ClearLandmarks();
+    virtual int ClearDigitization();
+    virtual int ClearRegistration();
+    virtual int ClearToolPosePlan();
 
-    virtual void RePlanLandmarks();
-    virtual void ReDigitize();
-    virtual void RePlanToolPose();
+    virtual int RePlanLandmarks();
+    virtual int ReDigitize();
+    virtual int RePlanToolPose();
     
     virtual void TransitionNotPossible();
     void Transition(int target_state, TransitionOps funcs);

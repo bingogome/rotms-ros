@@ -38,8 +38,8 @@ SOFTWARE.
 * nested siwch-case.
 ***/
 
-WorkState::WorkState(int state_num, std::vector<WorkState>& v, FlagMachine& f) 
-    : state_num_(state_num), states_(v), flags_(f)
+WorkState::WorkState(int state_num, std::vector<WorkState>& v, FlagMachine& f, TMSOperations& ops) 
+    : state_num_(state_num), states_(v), flags_(f), ops_(ops)
 {
     Deactivate();
 }
@@ -79,19 +79,19 @@ WorkState& WorkState::GetActivatedState(std::vector<WorkState>& states)
 }
 
 
-void WorkState::LandmarksPlanned(){TransitionNotPossible();}
-void WorkState::LandmarksDigitized(){TransitionNotPossible();}
-void WorkState::ToolPosePlanned(){TransitionNotPossible();}
-void WorkState::Registered(){TransitionNotPossible();}
+int WorkState::LandmarksPlanned(){TransitionNotPossible();}
+int WorkState::LandmarksDigitized(){TransitionNotPossible();}
+int WorkState::ToolPosePlanned(){TransitionNotPossible();}
+int WorkState::Registered(){TransitionNotPossible();}
 
-void WorkState::ClearLandmarks(){TransitionNotPossible();}
-void WorkState::ClearDigitization(){TransitionNotPossible();}
-void WorkState::ClearRegistration(){TransitionNotPossible();}
-void WorkState::ClearToolPosePlan(){TransitionNotPossible();}
+int WorkState::ClearLandmarks(){TransitionNotPossible();}
+int WorkState::ClearDigitization(){TransitionNotPossible();}
+int WorkState::ClearRegistration(){TransitionNotPossible();}
+int WorkState::ClearToolPosePlan(){TransitionNotPossible();}
 
-void WorkState::RePlanLandmarks(){TransitionNotPossible();}
-void WorkState::ReDigitize(){TransitionNotPossible();}
-void WorkState::RePlanToolPose(){TransitionNotPossible();}
+int WorkState::RePlanLandmarks(){TransitionNotPossible();}
+int WorkState::ReDigitize(){TransitionNotPossible();}
+int WorkState::RePlanToolPose(){TransitionNotPossible();}
 
 void WorkState::TransitionNotPossible()
 {

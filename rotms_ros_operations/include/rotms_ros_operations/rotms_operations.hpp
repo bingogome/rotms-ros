@@ -22,29 +22,24 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
-#include "rotms_dispatcher.hpp"
-#include "flag_machine.hpp"
-#include "state_machine.hpp"
-#include "state_machine_states.hpp"
-
+#pragma once
 #include <ros/ros.h>
-#include <tuple>
+#include <geometry_msgs/Pose.h>
 
-int main(int argc, char **argv)
+class TMSOperations
 {
+public:
 
-    ros::init(argc, argv, "NodeDispatcher");
-    ros::NodeHandle nh;
+    TMSOperations(ros::NodeHandle& n);
 
-    // Initialize flags, states, and pass to dispatcher
-    const FlagMachine f = FlagMachine();
-    const std::vector<WorkState> vec = GetStatesVector(f);
-    bool integ = CheckFlagIntegrity(vec);
-    ROS_INFO_STREAM("Flag integrity check: " + integ);
+private:
 
-    // Initialize dispatcher
-    Dispatcher d = Dispatcher(nh, vec);
+    ros::NodeHandle& n_;
+    ros::Publisher pub_registration_ = 
+        n_.advertise<geometry_msgs::Pose>("/Rotms/State/Update/Registration", 5);
 
-    ros::spin();
-    return 0;
+    // void Operation();
+    // void Operation();
+    // void Operation();
+    void OperationRegistration();
 }
