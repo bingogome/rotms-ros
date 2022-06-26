@@ -1,5 +1,31 @@
+/***
+MIT License
+
+Copyright (c) 2022 Yihao Liu, Johns Hopkins University
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+***/
+
+#include "flag_machine.hpp"
 #include "state_machine.hpp"
 #include <vector>
+#include <functional>
 
 /***
 * Current design: 
@@ -12,7 +38,8 @@
 * nested siwch-case.
 ***/
 
-WorkState::WorkState(std::vector<WorkState>& v) : states_(v)
+WorkState::WorkState(int state_num, std::vector<WorkState>& v, FlagMachine& f, TMSOperations& ops) 
+    : state_num_(state_num), states_(v), flags_(f), ops_(ops)
 {
     Deactivate();
 }
@@ -20,31 +47,64 @@ WorkState::WorkState(std::vector<WorkState>& v) : states_(v)
 bool WorkState::CheckActivated(){return activated_;}
 void WorkState::Activate(){activated_=true;}
 void WorkState::Deactivate(){activated_=false;}
-void WorkState::SetStateNum(int i){state_num_=i;}
 int WorkState::GetStateNum(){return state_num_;}
-bool WorkState::CheckIfUniqueActivation()
+bool WorkState::CheckIfUniqueActivation(std::vector<WorkState>& states)
 {
     int s = 0;
-    for(int i=0; i<states_.size(); i++)
+    for(int i=0; i<states.size(); i++)
     {
-        if(states_[i].CheckActivated()) s++;
+        if(states[i].CheckActivated()) s++;
     }
     return s<=1;
 }
+WorkState& WorkState::GetActivatedState(std::vector<WorkState>& states)
+{
+    if ( ! WorkState::CheckIfUniqueActivation(states) )
+        throw std::runtime_error(
+            "State machine error: not unique states are activated!");
+    
+    for(int i=0;i<states.size();i++)
+    {
+        if (states[i].CheckActivated())
+            return states[i];
+    }
 
-void WorkState::FiducialsPlanned(){TransitionNotPossible();}
-void WorkState::FiducialsDigitized(){TransitionNotPossible();}
-void WorkState::ToolPosePlanned(){TransitionNotPossible();}
-void WorkState::Registered(){TransitionNotPossible();}
+    FlagMachine f;
+    FlagMachine& f_ = f;
 
-void WorkState::ClearFiducials(){TransitionNotPossible();}
-void WorkState::ClearDigitization(){TransitionNotPossible();}
-void WorkState::ClearRegistration(){TransitionNotPossible();}
-void WorkState::ClearToolPosePlan(){TransitionNotPossible();}
+    WorkState s(-1,states,f_);
+    WorkState& s_ = s;
 
-void WorkState::RePlanFiducials(){TransitionNotPossible();}
-void WorkState::ReDigitize(){TransitionNotPossible();}
-void WorkState::RePlanToolPose(){TransitionNotPossible();}
+    return s_;
+}
 
-void WorkState::TransitionNotPossible(){TransitionNotPossible();}
 
+int WorkState::LandmarksPlanned() { TransitionNotPossible(); return -1; }
+int WorkState::LandmarksDigitized() { TransitionNotPossible(); return -1; }
+int WorkState::ToolPosePlanned() { TransitionNotPossible(); return -1; }
+int WorkState::Registered() { TransitionNotPossible(); return -1; }
+
+int WorkState::ClearLandmarks() { TransitionNotPossible(); return -1; }
+int WorkState::ClearDigitization() { TransitionNotPossible(); return -1; }
+int WorkState::ClearRegistration() { TransitionNotPossible(); return -1; }
+int WorkState::ClearToolPosePlan() { TransitionNotPossible(); return -1; }
+
+void WorkState::TransitionNotPossible()
+{
+    // TODO: implement this. (possibly having a return value)
+}
+void WorkState::Transition(int target_state, TransitionOps funcs)
+{
+    this->Deactivate();
+
+    for(int i=0; i<funcs.size(); i++)
+    {
+        funcs[i]();
+    }
+
+    states_[target_state].Activate();
+
+    if ( ! WorkState::CheckIfUniqueActivation(states_) )
+        throw std::runtime_error(
+            "State machine error: not unique states are activated!");
+}

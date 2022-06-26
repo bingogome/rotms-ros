@@ -1,3 +1,27 @@
+/***
+MIT License
+
+Copyright (c) 2022 Yihao Liu, Johns Hopkins University
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+***/
+
 #include "registration_funcs.hpp"
 
 #include <vector>
@@ -308,53 +332,6 @@ Matrixnbym qrhelper(const std::vector<double>& a)
     }
     return H;
 }
-
-// Old implementation. Results can be incorrect in some edge cases.
-// std::tuple<Matrixnbym, Matrixnbym> qrSim3by3(const Matrixnbym& A)
-// {
-
-//     Matrixnbym Q = getZeros3by3();
-//     Matrixnbym R = getZeros3by3();
-
-//     Matrixnbym X = getZeros3by3();
-//     Matrixnbym Y = getZeros3by3();
-//     Matrixnbym K = getEye3by3();
-
-//     for (int i = 0; i < 3; i++)
-//         for (int j = 0; j < 3; j++)
-//             X[i][j] = A[i][j];
-
-//     for (int i = 0; i < 3; i++)
-//         for (int j = 0; j < 3; j++)
-//             Y[i][j] = A[i][j];
-
-//     for (int i = 0; i < 3; i++)
-//     {
-//         for (int j = 0; j < i; j++)
-//         {
-//             K[j][i] = (X[0][i] * Y[0][j] + X[1][i] * Y[1][j] + X[2][i] * Y[2][j]) / (Y[0][j] * Y[0][j] + Y[1][j] * Y[1][j] + Y[2][j] * Y[2][j]);
-//             Y[0][i] = Y[0][i] - K[j][i] * Y[0][j];
-//             Y[1][i] = Y[1][i] - K[j][i] * Y[1][j];
-//             Y[2][i] = Y[2][i] - K[j][i] * Y[2][j];
-//         }
-//     }
-
-//     std::vector<double> vecY{0.0,0.0,0.0};
-
-// 	for (int i = 0; i < 3; i++)
-// 	{
-// 		double n = (double)sqrt(Y[0][i] * Y[0][i] + Y[1][i] * Y[1][i] + Y[2][i] * Y[2][i]);
-// 		Q[0][i] = Y[0][i] / n;
-// 		Q[1][i] = Y[1][i] / n;
-// 		Q[2][i] = Y[2][i] / n;
-// 		vecY[i] = n;
-// 	}
-
-// 	Matrixnbym diagY = getDiag3by3(vecY);
-// 	R = matrixMult3by3(diagY, K);
-
-// 	return std::make_tuple(Q, R);
-// }
 
 std::tuple<Matrixnbym, Matrixnbym, Matrixnbym> svdSim3by3(const Matrixnbym& A)
 {

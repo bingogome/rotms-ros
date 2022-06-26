@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>rotms_ros_dispatcher</name>
+  <name>rotms_ros_operations</name>
   <version>0.0.0</version>
-  <description>The rotms_ros_dispatcher package</description>
+  <description>The rotms_ros_operations package</description>
   <maintainer email="yliu333@jhu.edu">yl</maintainer>
 
   <!-- One license tag required, multiple allowed, one license per tag -->
@@ -11,9 +11,7 @@
   <license>MIT</license>
   <buildtool_depend>catkin</buildtool_depend>
 
-  <depend>roslaunch</depend>
   <depend>roscpp</depend>
   <depend>yaml-cpp</depend>
-  <depend>rotms_ros_state</depend>
 
 </package>

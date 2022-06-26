@@ -22,17 +22,32 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
+#pragma once
 #include <ros/ros.h>
-#include "decode_node.hpp"
-#include "function_map_medimg.hpp"
+#include <geometry_msgs/Pose.h>
 
-int main(int argc, char **argv)
+class TMSOperations
 {
-    ros::init(argc, argv, "CommDecodeMedImg");
-    ros::NodeHandle nh;
-    FuncMap fm = GetFuncMapMedImg();
-    CommDecoderMedImg dcdr = CommDecoderMedImg(nh, "MEDIMG", fm);
+public:
 
-    ros::spin();
-    return 0;
+    TMSOperations(ros::NodeHandle& n);
+
+private:
+
+    ros::NodeHandle& n_;
+    ros::Publisher pub_registration_ = 
+        n_.advertise<geometry_msgs::Pose>("/Rotms/DataCache/Update/Registration", 5);
+    ros::Publisher pub_toolpose_ = 
+        n_.advertise<geometry_msgs::Pose>("/Rotms/DataCache/Update/ToolPose", 5);
+
+    // Cruicial operations
+    void OperationPlanLandmarks();
+    void OperationDigitization();
+    void OperationPlanToolPose();
+    void OperationRegistration();
+
+    // Secondary and intermediate operations
+    // void Operation();
+    // void Operation();
+    // void Operation();
 }

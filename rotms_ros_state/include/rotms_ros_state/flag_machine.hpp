@@ -22,17 +22,34 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
-#include <ros/ros.h>
-#include "decode_node.hpp"
-#include "function_map_medimg.hpp"
+#pragma once
 
-int main(int argc, char **argv)
+class FlagMachine
 {
-    ros::init(argc, argv, "CommDecodeMedImg");
-    ros::NodeHandle nh;
-    FuncMap fm = GetFuncMapMedImg();
-    CommDecoderMedImg dcdr = CommDecoderMedImg(nh, "MEDIMG", fm);
 
-    ros::spin();
-    return 0;
-}
+public:
+
+    FlagMachine();
+
+    static void PlanLandmarks();
+    static void DigitizeLandmarks();
+    static void PlanToolPose();
+    static void CompleteRegistration();
+
+    static void UnPlanLandmarks();
+    static void UnDigitizeLandmarks();
+    static void UnPlanToolPose();
+    static void UnCompleteRegistration();
+
+    static bool GetFlagLandmarkPlanned();
+    static bool GetFlagLandmarkDigitized();
+    static bool GetFlagToolPosePlanned();
+    static bool GetFlagRegistered();
+
+private:
+
+    static bool flag_landmark_planned_;
+    static bool flag_landmark_digitized_;
+    static bool flag_toolpose_planned_;
+    static bool flag_registration_completed_;
+};
