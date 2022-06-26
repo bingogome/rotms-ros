@@ -37,11 +37,14 @@ private:
 
     ros::NodeHandle& n_;
     const std::vector<WorkState>& states_;
-    int activate_state_;
+    int activated_state_;
 
+    // Cruicial operations
     void AutodigitizationCallBack(const std_msgs::String::ConstPtr& msg);
     void RegistrationCallBack(const std_msgs::String::ConstPtr& msg);
     void RegistrationUsePrevCallBack(const std_msgs::String::ConstPtr& msg);
+
+    // Secondary and intermediate operations
 
 };
 

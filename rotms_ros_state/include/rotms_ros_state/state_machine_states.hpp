@@ -49,7 +49,7 @@ private:
     int LandmarksDigitized() override;
     int ToolPosePlanned() override;
     int ClearLandmarks() override;
-    int RePlanLandmarks() override;
+    int LandmarksPlanned() override;
 };
 
 class State1100 : public WorkState
@@ -61,7 +61,7 @@ private:
     int Registered() override;
     int ClearDigitization() override;
     int ClearLandmarks() override;
-    int ReDigitize() override;
+    int LandmarksDigitized() override;
 };
 
 class State1101 : public WorkState
@@ -81,7 +81,7 @@ public:
 private:
     int LandmarksPlanned() override;
     int ClearToolPosePlan() override;
-    int RePlanToolPose() override;
+    int ToolPosePlanned() override;
 };
 
 class State1010 : public WorkState
@@ -91,8 +91,8 @@ public:
 private:
     int ClearToolPosePlan() override;
     int ClearLandmarks() override;
-    int RePlanToolPose() override;
-    int RePlanLandmarks() override;
+    int ToolPosePlanned() override;
+    int LandmarksPlanned() override;
     int LandmarksDigitized() override;
 };
 
@@ -102,8 +102,8 @@ public:
     State1110(std::vector<WorkState>& v, FlagMachine& f, TMSOperations& ops);
 private:
     int ClearToolPosePlan() override;
-    int ReDigitize() override;
-    int RePlanToolPose() override;
+    int LandmarksDigitized() override;
+    int ToolPosePlanned() override;
     int ClearDigitization() override;
     int ClearLandmarks() override;
     int Registered() override;
@@ -115,7 +115,7 @@ public:
     State1111(std::vector<WorkState>& v, FlagMachine& f, TMSOperations& ops);
 private:
     int ClearToolPosePlan() override;
-    int RePlanToolPose() override;
+    int ToolPosePlanned() override;
     int ClearRegistration() override;
     int ClearLandmarks() override;
 };

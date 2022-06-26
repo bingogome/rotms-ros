@@ -74,10 +74,6 @@ protected:
     virtual int ClearDigitization();
     virtual int ClearRegistration();
     virtual int ClearToolPosePlan();
-
-    virtual int RePlanLandmarks();
-    virtual int ReDigitize();
-    virtual int RePlanToolPose();
     
     virtual void TransitionNotPossible();
     void Transition(int target_state, TransitionOps funcs);

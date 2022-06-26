@@ -185,7 +185,7 @@ int State1000::ClearLandmarks()
     this->Transition(0B0000, funcs);
     return 0B0000;
 }
-int State1000::RePlanLandmarks()
+int State1000::LandmarksPlanned()
 {
     TransitionOps funcs;
     funcs.push_back(FlagMachine::PlanLandmarks);
@@ -227,7 +227,7 @@ int State1100::ClearLandmarks()
     this->Transition(0B0000, funcs);
     return 0B0000;
 }
-int State1100::ReDigitize()
+int State1100::LandmarksDigitized()
 {
     TransitionOps funcs;
     funcs.push_back(FlagMachine::DigitizeLandmarks);
@@ -281,7 +281,7 @@ int State0010::ClearToolPosePlan()
     this->Transition(0B0000, funcs);
     return 0B0000;
 }
-int State0010::RePlanToolPose()
+int State0010::ToolPosePlanned()
 {
     TransitionOps funcs;
     funcs.push_back(FlagMachine::PlanToolPose);
@@ -307,14 +307,14 @@ int State1010::ClearLandmarks()
     this->Transition(0B0010, funcs);
     return 0B0010;
 }
-int State1010::RePlanToolPose()
+int State1010::ToolPosePlanned()
 {
     TransitionOps funcs;
     funcs.push_back(FlagMachine::PlanToolPose);
     this->Transition(0B1010, funcs);
     return 0B1010;
 }
-int State1010::RePlanLandmarks()
+int State1010::LandmarksPlanned()
 {
     TransitionOps funcs;
     funcs.push_back(FlagMachine::PlanLandmarks);
@@ -340,14 +340,14 @@ int State1110::ClearToolPosePlan()
     this->Transition(0B1100, funcs);
     return 0B1100;
 }
-int State1110::ReDigitize()
+int State1110::LandmarksDigitized()
 {
     TransitionOps funcs;
     funcs.push_back(FlagMachine::DigitizeLandmarks);
     this->Transition(0B1110, funcs);
     return 0B1110;
 }
-int State1110::RePlanToolPose()
+int State1110::ToolPosePlanned()
 {
     TransitionOps funcs;
     funcs.push_back(FlagMachine::PlanToolPose);
@@ -389,7 +389,7 @@ int State1111::ClearToolPosePlan()
     this->Transition(0B1101, funcs);
     return 0B1101;
 }
-int State1111::RePlanToolPose()
+int State1111::ToolPosePlanned()
 {
     TransitionOps funcs;
     funcs.push_back(FlagMachine::PlanToolPose);

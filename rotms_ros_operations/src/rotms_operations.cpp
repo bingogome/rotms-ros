@@ -40,7 +40,7 @@ TMSOperations::TMSOperations(ros::NodeHandle& n)
     : n_(n)
 {}
 
-TMSOperations::void OperationRegistration()
+void TMSOperations::OperationRegistration()
 {
     std::string packpath = ros::package::getPath("rotms_ros_operation");
         
@@ -98,5 +98,20 @@ TMSOperations::void OperationRegistration()
     // Write the registration result to cache files
     SaveRegistrationData(quat, p, packpath + "/share/data/reg_" + GetTimeString() + ".yaml"); // record
     SaveRegistrationData(quat, p, packpath + "/share/config/reg" + ".yaml"); // use
+
+}
+
+void TMSOperations::OperationDigitization()
+{
+
+}
+
+void TMSOperations::OperationPlanToolPose()
+{
+
+}
+
+void TMSOperations::OperationRegistration()
+{
 
 }

@@ -36,10 +36,18 @@ private:
 
     ros::NodeHandle& n_;
     ros::Publisher pub_registration_ = 
-        n_.advertise<geometry_msgs::Pose>("/Rotms/State/Update/Registration", 5);
+        n_.advertise<geometry_msgs::Pose>("/Rotms/DataCache/Update/Registration", 5);
+    ros::Publisher pub_toolpose_ = 
+        n_.advertise<geometry_msgs::Pose>("/Rotms/DataCache/Update/ToolPose", 5);
 
-    // void Operation();
-    // void Operation();
-    // void Operation();
+    // Cruicial operations
+    void OperationPlanLandmarks();
+    void OperationDigitization();
+    void OperationPlanToolPose();
     void OperationRegistration();
+
+    // Secondary and intermediate operations
+    // void Operation();
+    // void Operation();
+    // void Operation();
 }

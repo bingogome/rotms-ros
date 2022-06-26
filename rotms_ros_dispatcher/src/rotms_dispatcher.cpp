@@ -34,9 +34,35 @@ Dispatcher::Dispatcher(ros::NodeHandle& n, std::vector<WorkState>& states)
 
 void Dispatcher::RegistrationCallBack(const std_msgs::String::ConstPtr& msg)
 {
-    if (msg->data.compare("_end_robot_connection_")==0)
+    if (msg->data.compare("_register__")==0)
     {
-        states_[activate_state_].Registered();
+        int new_state = states_[activated_state_].Registered();
+        if (new_state != -1)
+        {
+            activated_state_ = new_state;
+        }
+        else
+        {
+            // Failed operation
+            // TODO
+        }
     }
     
+}
+
+void Dispatcher::DigitizationCallBack(const std_msgs::String::ConstPtr& msg)
+{
+    if (msg->data.compare("_digitize__")==0)
+    {
+        int new_state = states_[activated_state_].LandmarksDigitized();
+        if (new_state != -1)
+        {
+            activated_state_ = new_state;
+        }
+        else
+        {
+            // Failed operation
+            // TODO
+        }
+    }
 }

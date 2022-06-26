@@ -79,19 +79,15 @@ WorkState& WorkState::GetActivatedState(std::vector<WorkState>& states)
 }
 
 
-int WorkState::LandmarksPlanned(){TransitionNotPossible();}
-int WorkState::LandmarksDigitized(){TransitionNotPossible();}
-int WorkState::ToolPosePlanned(){TransitionNotPossible();}
-int WorkState::Registered(){TransitionNotPossible();}
+int WorkState::LandmarksPlanned() { TransitionNotPossible(); return -1; }
+int WorkState::LandmarksDigitized() { TransitionNotPossible(); return -1; }
+int WorkState::ToolPosePlanned() { TransitionNotPossible(); return -1; }
+int WorkState::Registered() { TransitionNotPossible(); return -1; }
 
-int WorkState::ClearLandmarks(){TransitionNotPossible();}
-int WorkState::ClearDigitization(){TransitionNotPossible();}
-int WorkState::ClearRegistration(){TransitionNotPossible();}
-int WorkState::ClearToolPosePlan(){TransitionNotPossible();}
-
-int WorkState::RePlanLandmarks(){TransitionNotPossible();}
-int WorkState::ReDigitize(){TransitionNotPossible();}
-int WorkState::RePlanToolPose(){TransitionNotPossible();}
+int WorkState::ClearLandmarks() { TransitionNotPossible(); return -1; }
+int WorkState::ClearDigitization() { TransitionNotPossible(); return -1; }
+int WorkState::ClearRegistration() { TransitionNotPossible(); return -1; }
+int WorkState::ClearToolPosePlan() { TransitionNotPossible(); return -1; }
 
 void WorkState::TransitionNotPossible()
 {
