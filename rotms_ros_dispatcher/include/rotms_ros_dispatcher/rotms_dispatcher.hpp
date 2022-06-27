@@ -25,7 +25,16 @@ SOFTWARE.
 #pragma once
 #include <ros/ros.h>
 #include <std_msgs/String.h>
+#include <std_msgs/Int16.h>
+#include <std_msgs/Float32MultiArray.h>
+#include <vector>
 #include "state_machine.hpp"
+
+struct VolatileTempDataCache 
+{
+    int landmark_total = -1;
+    std::vector<std::vector<double>> landmark_coords;
+};
 
 class Dispatcher
 {
@@ -42,18 +51,25 @@ private:
 
     // Dispatch signals
     ros::Subscriber sub_medimg_landmarkplanmeta_ = n_.subscribe(
-        "/MedImg/LandmarkPlanMeta", 10,
-        &Dispatcher::RobotInitConnectionCallBack, this);
+        "/MedImg/LandmarkPlanMeta", 10, &Dispatcher::LandmarkPlanMetaCallBack, this);
+    ros::Subscriber sub_medimg_landmarkplanfids_ = n_.subscribe(
+        "/MedImg/LandmarkPlanFids", 10, &Dispatcher::LandmarkPlanFidsCallBack, this);
 
     // Cruicial operations
-    void 
+    void LandmarkPlanMetaCallBack(const std_msgs::Int16::ConstPtr& msg);
     void AutodigitizationCallBack(const std_msgs::String::ConstPtr& msg);
     void RegistrationCallBack(const std_msgs::String::ConstPtr& msg);
     void RegistrationUsePrevCallBack(const std_msgs::String::ConstPtr& msg);
 
     // Secondary and intermediate operations
+    void LandmarkPlanFidsCallBack(const std_msgs::Float32MultiArray::ConstPtr& msg);
 
+    // Temp data cache (volatile)
+    struct VolatileTempDataCache datacache_;
+    void ResetVolatileDataCache();
 
 };
 
-
+void SaveLandmarkPlanData(struct VolatileTempDataCache datacache, std::string f);
+std::string FormatDouble2String(double a, int dec);
+std::string GetTimeString();

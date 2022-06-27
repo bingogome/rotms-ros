@@ -1,0 +1,3 @@
+<launch>
+    <node name="node_dispatcher" pkg="rotms_ros_dispatcher" type="node_dispatcher" output="screen"/>
+</launch>

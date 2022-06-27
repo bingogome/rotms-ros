@@ -42,7 +42,7 @@ int main(int argc, char **argv)
     TMSOperations ops = TMSOperations(nh);
     std::vector<WorkState> vec = GetStatesVector(f, ops);
     bool integ = CheckFlagIntegrity(vec);
-    ROS_INFO_STREAM("Flag integrity check: " + integ);
+    ROS_INFO_STREAM("Flag integrity check: " + std::to_string(integ));
 
     // Initialize dispatcher
     Dispatcher d = Dispatcher(nh, vec);

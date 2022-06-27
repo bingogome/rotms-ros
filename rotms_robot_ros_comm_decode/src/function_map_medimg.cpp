@@ -26,8 +26,25 @@ SOFTWARE.
 #include <string>
 #include <ros/ros.h>
 #include <std_msgs/Int16.h>
+#include <std_msgs/Float32MultiArray.h>
 #include "function_map_medimg.hpp"
 #include "decode_node.hpp"
+
+std::vector<double> SubStringTokenize2Double(std::string s, std::string del = "_")
+{   
+    std::vector<double> ans;
+    int start = 0;
+    int end = s.find(del);
+    while (end != -1) {
+        ans.push_back(
+            std::stod(s.substr(start, end - start)));
+        start = end + del.size();
+        end = s.find(del, start);
+    }
+    ans.push_back(
+        std::stod(s.substr(start, end - start)));
+    return ans;
+}
 
 /**
 * This maps the functions to the received cmd.
@@ -47,7 +64,7 @@ CommDecoderMedImg::CommDecoderMedImg(
     pubs_.push_back(
         n_.advertise<std_msgs::Int16>("/MedImg/LandmarkPlanMeta", 5));
     pubs_.push_back(
-        n_.advertise<std_msgs::String>("/MedImg/LandmarkPlanFids", 5));
+        n_.advertise<std_msgs::Float32MultiArray>("/MedImg/LandmarkPlanFids", 5));
 }
 
 FuncMap GetFuncMapMedImg()
@@ -85,7 +102,19 @@ void StartUsePrevRegistration(std::string& ss, PublisherVec& pubs)
 
 void LandmarkCurrentOnImg(std::string& ss, PublisherVec& pubs)
 {
-    
+    // format: {current_index, x, y, z}
+    std::vector<double> fid_vec = SubStringTokenize2Double(ss, "_");
+
+    std_msgs::Float32MultiArray msg;
+    msg.layout.dim.push_back(std_msgs::MultiArrayDimension());
+    msg.layout.dim[0].size = fid_vec.size();
+    msg.layout.dim[0].stride = 1;
+    msg.layout.dim[0].label = "format__num_x_y_z";
+    msg.data.clear();
+    msg.data.insert(msg.data.end(), fid_vec.begin(), fid_vec.end());
+    // pub[3] is the publisher /MedImg/LandmarkPlanFids (fiducial)
+    // Publish the current index of landmark, and the coordinate
+    pubs[3].publish(msg);
 }
 
 void LandmarkNumOnImg(std::string& ss, PublisherVec& pubs)
