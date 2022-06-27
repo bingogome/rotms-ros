@@ -10,6 +10,7 @@
 
     "FIDUCIAL_CURRENT_ON_IMG": "img_fid_pntxxxxx",
     "FIDUCIAL_NUM_OF_ON_IMG": "img_fid_numxxxxx",
+    "FIDUCIAL_LAST_RECEIVED": "img_fig_lastrecv",
 
     "TARGET_POSE_ORIENTATION": "target_rotxxxxxx",
     "TARGET_POSE_TRANSLATION": "target_tslxxxxxx",

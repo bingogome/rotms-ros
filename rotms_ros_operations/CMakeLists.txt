@@ -27,7 +27,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   ${YAML_CPP_INCLUDEDIR} 
   )
 
-# target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} yaml-cpp)
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} yaml-cpp)
 
-# add_executable(node src/nodes/node.cpp)
-# target_link_libraries(node ${PROJECT_NAME})
+add_executable(test_node_operations src/nodes/test_node_operations.cpp)
+target_link_libraries(test_node_operations ${PROJECT_NAME})

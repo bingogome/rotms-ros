@@ -1,4 +1,5 @@
 <launch>
     <include file="$(find rotms_robot_ros_comm)/launch/comm_nodes.launch"/>
     <include file="$(find rotms_robot_ros_comm_decode)/launch/comm_decode_nodes.launch"/>
+    <include file="$(find rotms_robot_ros_interface)/launch/interface_nodes.launch"/>
 </launch>

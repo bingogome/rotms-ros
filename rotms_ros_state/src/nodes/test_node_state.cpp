@@ -26,6 +26,7 @@ SOFTWARE.
 #include "flag_machine.hpp"
 #include "state_machine.hpp"
 #include "state_machine_states.hpp"
+#include "rotms_operations.hpp"
 
 // This node not needed in the final system. 
 // The headers and definition files from this package will be 
@@ -36,7 +37,9 @@ int main(int argc, char **argv)
     ros::NodeHandle nh;
     
     FlagMachine f = FlagMachine();
-    std::vector<WorkState> vec = GetStatesVector(f);
+    TMSOperations o(nh);
+    
+    std::vector<WorkState> vec = GetStatesVector(f, o);
     bool temp = CheckFlagIntegrity(vec);
 
     ROS_INFO_STREAM(temp);

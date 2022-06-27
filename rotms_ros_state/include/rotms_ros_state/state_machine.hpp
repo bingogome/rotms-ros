@@ -24,8 +24,10 @@ SOFTWARE.
 
 #pragma once
 #include <vector>
-#include "flag_machine.hpp"
 #include <functional>
+
+#include "flag_machine.hpp"
+#include "rotms_operations.hpp"
 
 typedef std::vector<std::function<void()>> TransitionOps;
 
@@ -55,15 +57,7 @@ public:
     void Deactivate();
     int GetStateNum();
     static bool CheckIfUniqueActivation(std::vector<WorkState>& states);
-    static WorkState& GetActivatedState(std::vector<WorkState>& states);
-
-protected:
-    
-    const int state_num_;
-    std::vector<WorkState>& states_;
-    FlagMachine& flags_;
-    TMSOperations& ops_;
-    bool activated_;
+    static int GetActivatedState(std::vector<WorkState>& states);
 
     virtual int LandmarksPlanned();
     virtual int LandmarksDigitized();
@@ -74,6 +68,14 @@ protected:
     virtual int ClearDigitization();
     virtual int ClearRegistration();
     virtual int ClearToolPosePlan();
+
+protected:
+    
+    const int state_num_;
+    std::vector<WorkState>& states_;
+    FlagMachine& flags_;
+    TMSOperations& ops_;
+    bool activated_;
     
     virtual void TransitionNotPossible();
     void Transition(int target_state, TransitionOps funcs);

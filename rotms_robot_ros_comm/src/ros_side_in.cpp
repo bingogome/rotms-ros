@@ -41,6 +41,7 @@ ROSSideIn::ROSSideIn(ros::NodeHandle& n, boost::asio::io_context& io_context,
 	n_(n), 
 	socket_(io_context, udp::endpoint(udp::v4(), cfg.port_in))
 {
+	eom_ = cfg.eom;
 	pub_test_ = n_.advertise<std_msgs::String>(cfg_.publisher_name, 50);
 	ROSSideIn::StartReceive();
 }
@@ -88,9 +89,16 @@ void ROSSideIn::HandleIncoming()
 	for(int i=0;i<10;i++) // end msg header length is 10
 		sscmd << recv_buffer_[i];
 	for(int i=0;i<cfg_.msg_size;i++) // chars in a msg
+	{
 		ss << recv_buffer_[i];
+		if(recv_buffer_[i]==eom_)
+			break;
+	}
 	sscmd_str_ = sscmd.str();
 	ss_str_ = ss.str();
+
+	// if (cfg_.verbose)
+	// 	ROS_INFO_STREAM(ss_str_+"\n");
 
 	if(sscmd_str_==cfg_.end_msg){
 		if (cfg_.verbose == 1)

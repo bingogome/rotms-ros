@@ -51,6 +51,8 @@ void FiducialCurrentOnImg(std::string& ss, PublisherVec& pubs);
 
 void FiducialNumOnImg(std::string& ss, PublisherVec& pubs);
 
+void FiducialLastReceived(std::string& ss, PublisherVec& pubs);
+
 void TargetPoseOrientation(std::string& ss, PublisherVec& pubs);
 
 void TargetPoseTranslation(std::string& ss, PublisherVec& pubs);

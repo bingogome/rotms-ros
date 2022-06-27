@@ -89,6 +89,12 @@ void CommDecoder::SubCallBack(const std_msgs::String::ConstPtr& msg)
     std::string lookupkey = cmddict_.at(sscmd.str());
     std::string msgcontent = ss.str();
 
+    // Check if the content is only the eom symbol.
+    std::string eom_string(1, eom_);
+    if(ss.str()!=eom_string)
+        msgcontent = msgcontent.erase(0,1);
+
+
     CmdsProcess(lookupkey, msgcontent);
 }
 

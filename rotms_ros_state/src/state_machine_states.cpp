@@ -25,6 +25,7 @@ SOFTWARE.
 #include "flag_machine.hpp"
 #include "state_machine.hpp"
 #include "state_machine_states.hpp"
+#include "rotms_operations.hpp"
 #include <vector>
 #include <stdexcept>
 #include <functional>
@@ -54,7 +55,7 @@ bool CheckFlagIntegrity(std::vector<WorkState>& states)
     return true;
 }
 
-const std::vector<WorkState> GetStatesVector(FlagMachine& f, TMSOperations& ops)
+std::vector<WorkState> GetStatesVector(FlagMachine& f, TMSOperations& ops)
 {
     std::vector<WorkState> vec;
     for(int i=0; i<16; i++)
@@ -137,8 +138,7 @@ const std::vector<WorkState> GetStatesVector(FlagMachine& f, TMSOperations& ops)
                 + "state num: " + std::to_string(vec[i].GetStateNum()));
     }
 
-    const std::vector<WorkState> vec_ = vec;
-    return vec_;
+    return vec;
 }
 
 // Initial state (default state)
@@ -207,7 +207,7 @@ int State1100::ToolPosePlanned()
 int State1100::Registered()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationRegistration, ops_))
+    funcs.push_back(std::bind(&TMSOperations::OperationRegistration, ops_));
     funcs.push_back(FlagMachine::CompleteRegistration);
     this->Transition(0B1101, funcs);
     return 0B1101;
@@ -372,7 +372,7 @@ int State1110::ClearLandmarks()
 int State1110::Registered()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationRegistration, ops_))
+    funcs.push_back(std::bind(&TMSOperations::OperationRegistration, ops_));
     funcs.push_back(FlagMachine::CompleteRegistration);
     this->Transition(0B1111, funcs);
     return 0B1111;
