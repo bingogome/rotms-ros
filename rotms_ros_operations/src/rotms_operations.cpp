@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
-#include "rotms_operations.hpp"
 #include "registration_funcs.hpp"
+#include "rotms_operations.hpp"
 
 #include <ros/ros.h>
 #include <ros/package.h>
@@ -39,6 +39,21 @@ SOFTWARE.
 TMSOperations::TMSOperations(ros::NodeHandle& n)
     : n_(n)
 {}
+
+void TMSOperations::OperationPlanLandmarks()
+{
+
+}
+
+void TMSOperations::OperationDigitization()
+{
+
+}
+
+void TMSOperations::OperationPlanToolPose()
+{
+
+}
 
 void TMSOperations::OperationRegistration()
 {
@@ -98,20 +113,5 @@ void TMSOperations::OperationRegistration()
     // Write the registration result to cache files
     SaveRegistrationData(quat, p, packpath + "/share/data/reg_" + GetTimeString() + ".yaml"); // record
     SaveRegistrationData(quat, p, packpath + "/share/config/reg" + ".yaml"); // use
-
-}
-
-void TMSOperations::OperationDigitization()
-{
-
-}
-
-void TMSOperations::OperationPlanToolPose()
-{
-
-}
-
-void TMSOperations::OperationRegistration()
-{
 
 }

@@ -32,14 +32,6 @@ public:
 
     TMSOperations(ros::NodeHandle& n);
 
-private:
-
-    ros::NodeHandle& n_;
-    ros::Publisher pub_registration_ = 
-        n_.advertise<geometry_msgs::Pose>("/Rotms/DataCache/Update/Registration", 5);
-    ros::Publisher pub_toolpose_ = 
-        n_.advertise<geometry_msgs::Pose>("/Rotms/DataCache/Update/ToolPose", 5);
-
     // Cruicial operations
     void OperationPlanLandmarks();
     void OperationDigitization();
@@ -50,4 +42,13 @@ private:
     // void Operation();
     // void Operation();
     // void Operation();
-}
+
+private:
+
+    ros::NodeHandle& n_;
+    ros::Publisher pub_registration_ = 
+        n_.advertise<geometry_msgs::Pose>("/Rotms/DataCache/Update/Registration", 5);
+    ros::Publisher pub_toolpose_ = 
+        n_.advertise<geometry_msgs::Pose>("/Rotms/DataCache/Update/ToolPose", 5);
+
+};

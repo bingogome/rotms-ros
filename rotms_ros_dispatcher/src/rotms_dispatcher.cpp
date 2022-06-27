@@ -23,11 +23,11 @@ SOFTWARE.
 ***/
 
 #include "rotms_dispatcher.hpp"
-
+#include "state_machine.hpp"
 #include <ros/ros.h>
 
 Dispatcher::Dispatcher(ros::NodeHandle& n, std::vector<WorkState>& states) 
-    : n_(n), states_(state)
+    : n_(n), states_(states)
 {
 
 }
@@ -50,9 +50,9 @@ void Dispatcher::RegistrationCallBack(const std_msgs::String::ConstPtr& msg)
     
 }
 
-void Dispatcher::DigitizationCallBack(const std_msgs::String::ConstPtr& msg)
+void Dispatcher::AutodigitizationCallBack(const std_msgs::String::ConstPtr& msg)
 {
-    if (msg->data.compare("_digitize__")==0)
+    if (msg->data.compare("_autodigitize__")==0)
     {
         int new_state = states_[activated_state_].LandmarksDigitized();
         if (new_state != -1)

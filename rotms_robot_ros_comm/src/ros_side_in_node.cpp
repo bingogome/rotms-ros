@@ -42,6 +42,7 @@ void CommNodeInIniter(ros::NodeHandle& n, std::string modulesuffix)
 	cfg.end_msg = f["MSG_END_"+modulesuffix].as<std::string>();
 	cfg.publisher_name = f["PUBLISHER_NAME_"+modulesuffix].as<std::string>();
 	cfg.verbose = f["VERBOSE_"+modulesuffix].as<int>();
+	cfg.eom = f["CMDS_EOM"].as<char>();
 
 	try
 	{

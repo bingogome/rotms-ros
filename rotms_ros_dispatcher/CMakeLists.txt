@@ -6,6 +6,7 @@ find_package(catkin REQUIRED COMPONENTS
   roslib
   roslaunch
   rotms_ros_state
+  rotms_ros_operations
   )
 
 find_package(PkgConfig REQUIRED)
@@ -25,10 +26,12 @@ add_library(${PROJECT_NAME}
   ../rotms_ros_state/src/flag_machine.cpp
   ../rotms_ros_state/src/state_machine.cpp
   ../rotms_ros_state/src/state_machine_states.cpp
+  ../rotms_ros_operations/src/rotms_operations.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   include/rotms_ros_dispatcher
+  ../rotms_ros_operations/include/rotms_ros_operations
   ../rotms_ros_state/include/rotms_ros_state
   ${catkin_INCLUDE_DIRS} 
   ${YAML_CPP_INCLUDEDIR} 

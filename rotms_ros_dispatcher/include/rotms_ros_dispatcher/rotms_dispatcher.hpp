@@ -25,6 +25,7 @@ SOFTWARE.
 #pragma once
 #include <ros/ros.h>
 #include <std_msgs/String.h>
+#include "state_machine.hpp"
 
 class Dispatcher
 {
@@ -36,7 +37,7 @@ public:
 private:
 
     ros::NodeHandle& n_;
-    const std::vector<WorkState>& states_;
+    std::vector<WorkState>& states_;
     int activated_state_;
 
     // Cruicial operations

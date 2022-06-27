@@ -24,6 +24,7 @@ SOFTWARE.
 
 #include "flag_machine.hpp"
 #include "state_machine.hpp"
+#include "rotms_operations.hpp"
 #include <vector>
 #include <functional>
 
@@ -57,7 +58,8 @@ bool WorkState::CheckIfUniqueActivation(std::vector<WorkState>& states)
     }
     return s<=1;
 }
-WorkState& WorkState::GetActivatedState(std::vector<WorkState>& states)
+
+int WorkState::GetActivatedState(std::vector<WorkState>& states)
 {
     if ( ! WorkState::CheckIfUniqueActivation(states) )
         throw std::runtime_error(
@@ -66,16 +68,10 @@ WorkState& WorkState::GetActivatedState(std::vector<WorkState>& states)
     for(int i=0;i<states.size();i++)
     {
         if (states[i].CheckActivated())
-            return states[i];
+            return i;
     }
 
-    FlagMachine f;
-    FlagMachine& f_ = f;
-
-    WorkState s(-1,states,f_);
-    WorkState& s_ = s;
-
-    return s_;
+    return -1;
 }
 
 

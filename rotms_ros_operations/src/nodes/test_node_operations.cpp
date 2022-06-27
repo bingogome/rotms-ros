@@ -22,30 +22,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
-#include "rotms_dispatcher.hpp"
-#include "flag_machine.hpp"
-#include "state_machine.hpp"
-#include "state_machine_states.hpp"
-#include "rotms_operations.hpp"
-
 #include <ros/ros.h>
-#include <tuple>
 
+// This node not needed in the final system. 
+// The headers and definition files from this package will be 
+// called by rotms_ros_dispatcher package
 int main(int argc, char **argv)
 {
-
-    ros::init(argc, argv, "NodeDispatcher");
+    ros::init(argc, argv, "DummyNode");
     ros::NodeHandle nh;
-
-    // Initialize flags, states, operations and pass to dispatcher
-    FlagMachine f = FlagMachine();
-    TMSOperations ops = TMSOperations(nh);
-    std::vector<WorkState> vec = GetStatesVector(f, ops);
-    bool integ = CheckFlagIntegrity(vec);
-    ROS_INFO_STREAM("Flag integrity check: " + integ);
-
-    // Initialize dispatcher
-    Dispatcher d = Dispatcher(nh, vec);
 
     ros::spin();
     return 0;

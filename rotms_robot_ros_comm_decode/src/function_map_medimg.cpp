@@ -25,6 +25,7 @@ SOFTWARE.
 #include <map>
 #include <string>
 #include <ros/ros.h>
+#include <std_msgs/Int16.h>
 #include "function_map_medimg.hpp"
 #include "decode_node.hpp"
 
@@ -44,7 +45,9 @@ CommDecoderMedImg::CommDecoderMedImg(
     pubs_.push_back(
         n_.advertise<std_msgs::String>("/MedImg/TargetPlan", 5));
     pubs_.push_back(
-        n_.advertise<std_msgs::String>("/MedImg/FiducialPlan", 5));
+        n_.advertise<std_msgs::Int16>("/MedImg/FiducialPlanMeta", 5));
+    pubs_.push_back(
+        n_.advertise<std_msgs::String>("/MedImg/FiducialPlanFids", 5));
 }
 
 FuncMap GetFuncMapMedImg()
@@ -57,6 +60,7 @@ FuncMap GetFuncMapMedImg()
 
     fm["FIDUCIAL_CURRENT_ON_IMG"] = FiducialCurrentOnImg;
     fm["FIDUCIAL_NUM_OF_ON_IMG"] = FiducialNumOnImg;
+    fm["FIDUCIAL_LAST_RECEIVED"] = FiducialLastReceived;
 
     fm["TARGET_POSE_ORIENTATION"] = TargetPoseOrientation;
     fm["TARGET_POSE_TRANSLATION"] = TargetPoseTranslation;
@@ -66,7 +70,7 @@ FuncMap GetFuncMapMedImg()
 
 void StartAutoDigitize(std::string& ss, PublisherVec& pubs)
 {
-
+    
 }
 
 void StartRegistration(std::string& ss, PublisherVec& pubs)
@@ -86,7 +90,20 @@ void FiducialCurrentOnImg(std::string& ss, PublisherVec& pubs)
 
 void FiducialNumOnImg(std::string& ss, PublisherVec& pubs)
 {
-    
+    std_msgs::Int16 msg_test;
+    msg_test.data = std::stoi(ss);
+    // pubs[2] is the publisher /MedImg/FiducialPlanMeta (meta data)
+    // Publish number of fiducials (landmarks). (If it is not -99)
+    pubs[2].publish(msg_test);
+}
+
+void FiducialLastReceived(std::string& ss, PublisherVec& pubs)
+{
+    std_msgs::Int16 msg_test;
+    msg_test.data = -99;
+    // pubs[2] is the publisher /MedImg/FiducialPlanMeta (meta data)
+    // Publish -99 to the topic indicating the receiving of landmarks is complete
+    pubs[2].publish(msg_test);
 }
 
 void TargetPoseOrientation(std::string& ss, PublisherVec& pubs)

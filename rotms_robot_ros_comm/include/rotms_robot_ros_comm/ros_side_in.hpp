@@ -42,6 +42,7 @@ struct ROSSideInConfig
 	std::string publisher_name;
 	int verbose;
 	int msg_size;
+	char eom;
 };
 
 // Main class of the program. Will be called by the main function and constantly
@@ -68,13 +69,14 @@ private:
 	// asio related members
 	udp::socket socket_;
 	udp::endpoint remote_endpoint_;
-	boost::array<char, 150> recv_buffer_;
+	boost::array<char, 256> recv_buffer_;
 	// TODO: make socket array so that multiple channels are possible (or dynamic expansion)
 	// TODO: make TCP optional
 
 	struct ROSSideInConfig cfg_;
 	std::string sscmd_str_; // command header of current messege
 	std::string ss_str_; // whole msg
+	char eom_; // End of message indicator
 
 
 };
