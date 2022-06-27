@@ -40,12 +40,19 @@ private:
     std::vector<WorkState>& states_;
     int activated_state_;
 
+    // Dispatch signals
+    ros::Subscriber sub_medimg_landmarkplanmeta_ = n_.subscribe(
+        "/MedImg/LandmarkPlanMeta", 10,
+        &Dispatcher::RobotInitConnectionCallBack, this);
+
     // Cruicial operations
+    void 
     void AutodigitizationCallBack(const std_msgs::String::ConstPtr& msg);
     void RegistrationCallBack(const std_msgs::String::ConstPtr& msg);
     void RegistrationUsePrevCallBack(const std_msgs::String::ConstPtr& msg);
 
     // Secondary and intermediate operations
+
 
 };
 

@@ -45,9 +45,9 @@ CommDecoderMedImg::CommDecoderMedImg(
     pubs_.push_back(
         n_.advertise<std_msgs::String>("/MedImg/TargetPlan", 5));
     pubs_.push_back(
-        n_.advertise<std_msgs::Int16>("/MedImg/FiducialPlanMeta", 5));
+        n_.advertise<std_msgs::Int16>("/MedImg/LandmarkPlanMeta", 5));
     pubs_.push_back(
-        n_.advertise<std_msgs::String>("/MedImg/FiducialPlanFids", 5));
+        n_.advertise<std_msgs::String>("/MedImg/LandmarkPlanFids", 5));
 }
 
 FuncMap GetFuncMapMedImg()
@@ -58,9 +58,9 @@ FuncMap GetFuncMapMedImg()
     fm["START_REGISTRATION"] = StartRegistration;
     fm["START_USE_PREV_REGISTRATION"] = StartUsePrevRegistration;
 
-    fm["FIDUCIAL_CURRENT_ON_IMG"] = FiducialCurrentOnImg;
-    fm["FIDUCIAL_NUM_OF_ON_IMG"] = FiducialNumOnImg;
-    fm["FIDUCIAL_LAST_RECEIVED"] = FiducialLastReceived;
+    fm["LANDMARK_CURRENT_ON_IMG"] = LandmarkCurrentOnImg;
+    fm["LANDMARK_NUM_OF_ON_IMG"] = LandmarkNumOnImg;
+    fm["LANDMARK_LAST_RECEIVED"] = LandmarkLastReceived;
 
     fm["TARGET_POSE_ORIENTATION"] = TargetPoseOrientation;
     fm["TARGET_POSE_TRANSLATION"] = TargetPoseTranslation;
@@ -83,25 +83,25 @@ void StartUsePrevRegistration(std::string& ss, PublisherVec& pubs)
     
 }
 
-void FiducialCurrentOnImg(std::string& ss, PublisherVec& pubs)
+void LandmarkCurrentOnImg(std::string& ss, PublisherVec& pubs)
 {
     
 }
 
-void FiducialNumOnImg(std::string& ss, PublisherVec& pubs)
+void LandmarkNumOnImg(std::string& ss, PublisherVec& pubs)
 {
     std_msgs::Int16 msg_test;
     msg_test.data = std::stoi(ss);
-    // pubs[2] is the publisher /MedImg/FiducialPlanMeta (meta data)
-    // Publish number of fiducials (landmarks). (If it is not -99)
+    // pubs[2] is the publisher /MedImg/LandmarkPlanMeta (meta data)
+    // Publish number of landmarks (landmarks). (If it is not -99)
     pubs[2].publish(msg_test);
 }
 
-void FiducialLastReceived(std::string& ss, PublisherVec& pubs)
+void LandmarkLastReceived(std::string& ss, PublisherVec& pubs)
 {
     std_msgs::Int16 msg_test;
     msg_test.data = -99;
-    // pubs[2] is the publisher /MedImg/FiducialPlanMeta (meta data)
+    // pubs[2] is the publisher /MedImg/LandmarkPlanMeta (meta data)
     // Publish -99 to the topic indicating the receiving of landmarks is complete
     pubs[2].publish(msg_test);
 }
