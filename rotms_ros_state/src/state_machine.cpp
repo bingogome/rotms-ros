@@ -75,7 +75,7 @@ int WorkState::GetActivatedState(std::vector<WorkState>& states)
 }
 
 
-int WorkState::LandmarksPlanned() { TransitionNotPossible(); return -1; }
+int WorkState::LandmarksPlanned() { ROS_INFO_STREAM("Test state");TransitionNotPossible(); return -1; }
 int WorkState::LandmarksDigitized() { TransitionNotPossible(); return -1; }
 int WorkState::ToolPosePlanned() { TransitionNotPossible(); return -1; }
 int WorkState::Registered() { TransitionNotPossible(); return -1; }

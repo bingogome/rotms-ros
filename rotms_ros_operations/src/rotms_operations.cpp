@@ -42,11 +42,44 @@ TMSOperations::TMSOperations(ros::NodeHandle& n)
 
 void TMSOperations::OperationPlanLandmarks()
 {
-
+    // The operation has been done by dispatcher and cached to /share/cache
+    // no need to call this anymore.
+    // Perhaps future change 
 }
 
 void TMSOperations::OperationDigitization()
 {
+    // Get meta data of planned landmarks
+    std::string packpath = ros::package::getPath("rotms_ros_operation");
+    YAML::Node f = YAML::LoadFile(packpath + "/share/cache/landmarkplan.yaml");
+    int num_of_landmarks = f["NUM"].as<int>();
+
+    ROS_INFO_STREAM(num_of_landmarks);
+
+    // // Beep the Polaris 3 times to indicate get prepared for digitization
+    // ros::Publisher pub_beep = n_.advertise<std_msgs::Int32>("/NDI/beep", 10);
+    // ros::Duration(3).sleep();
+    // std_msgs::Int32 beep_num;
+    // beep_num.data = 3;
+    // pub_beep.publish(beep_num); 
+    // ros::spinOnce();
+
+    // // Wait 7 seconds to get prepared
+    // ros::Duration(7).sleep();
+
+    // // Start digitization
+    // for(int i=0;i<digPntCld_.points.size();i++)
+    // {
+    //     beep_num.data = 2;
+    //     ros::Duration(7).sleep();
+    //     pub_beep.publish(beep_num); ros::spinOnce();
+    //     geometry_msgs::TransformStampedConstPtr curdigPtr = ros::topic::waitForMessage<geometry_msgs::TransformStamped>("/TMSKuka/PtrtipWRTHeadRef");
+    //     digPntCld_.points[i].x = curdigPtr->transform.translation.x;
+    //     digPntCld_.points[i].y = curdigPtr->transform.translation.y;
+    //     digPntCld_.points[i].z = curdigPtr->transform.translation.z;
+    //     flag_dig_recvd_[i] = true;
+    //     ROS_INFO("User digitized one point (#%d)", i);
+    // }
 
 }
 

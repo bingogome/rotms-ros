@@ -29,7 +29,15 @@ SOFTWARE.
 #include <fstream>
 #include <iostream>
 
-
+/*
+Dispatcher takes decoded messages from comm_decode and preprocesses
+volatile data that have "receiving bursts" (eg. The operation plan 
+landmarks will receive NUM_LANDMARKS messages at one request. These 
+messages will be preprocessed by dispatcher and cached in /share/cache 
+for state/flag/operation for postprocessing.
+On the other hand, state/flag/operation will postprocess any data 
+that have been preprocessed and cached.
+*/
 Dispatcher::Dispatcher(ros::NodeHandle& n, std::vector<WorkState>& states) 
     : n_(n), states_(states)
 {
@@ -48,6 +56,21 @@ void Dispatcher::LandmarkPlanMetaCallBack(const std_msgs::Int16::ConstPtr& msg)
         ROS_INFO("Landmarks cached.");
 
         Dispatcher::ResetVolatileDataCache(); // reset
+
+        int new_state = states_[activated_state_].LandmarksPlanned();
+        ROS_INFO_STREAM("Old state: " + std::to_string(activated_state_));
+        ROS_INFO_STREAM("New state: " + std::to_string(new_state));
+        if (new_state != -1)
+        {
+            activated_state_ = new_state;
+            ROS_INFO_STREAM("Transitioned to new state: " + 
+                std::to_string(activated_state_));
+        }
+        else
+        {
+            // Failed operation
+            // TODO
+        }
     }
     else
     {
@@ -60,9 +83,13 @@ void Dispatcher::AutodigitizationCallBack(const std_msgs::String::ConstPtr& msg)
     if (msg->data.compare("_autodigitize__")==0)
     {
         int new_state = states_[activated_state_].LandmarksDigitized();
+        ROS_INFO_STREAM("Old state: " + std::to_string(activated_state_));
+        ROS_INFO_STREAM("New state: " + std::to_string(new_state));
         if (new_state != -1)
         {
             activated_state_ = new_state;
+            ROS_INFO_STREAM("Transitioned to new state: " + 
+                std::to_string(activated_state_));
         }
         else
         {
@@ -77,9 +104,13 @@ void Dispatcher::RegistrationCallBack(const std_msgs::String::ConstPtr& msg)
     if (msg->data.compare("_register__")==0)
     {
         int new_state = states_[activated_state_].Registered();
+        ROS_INFO_STREAM("Old state: " + std::to_string(activated_state_));
+        ROS_INFO_STREAM("New state: " + std::to_string(new_state));
         if (new_state != -1)
         {
             activated_state_ = new_state;
+            ROS_INFO_STREAM("Transitioned to new state: " + 
+                std::to_string(activated_state_));
         }
         else
         {
@@ -116,6 +147,9 @@ void SaveLandmarkPlanData(struct VolatileTempDataCache datacache, std::string f)
     std::ofstream filesave(f);
     if(filesave.is_open())
     {
+        filesave << "NUM: " << datacache.landmark_total << "\n";
+        filesave << "\n";
+
         for(int i=0;i<datacache.landmark_total;i++)
         {
             std::vector<std::vector<double>> c = datacache.landmark_coords;

@@ -54,6 +54,8 @@ private:
         "/MedImg/LandmarkPlanMeta", 10, &Dispatcher::LandmarkPlanMetaCallBack, this);
     ros::Subscriber sub_medimg_landmarkplanfids_ = n_.subscribe(
         "/MedImg/LandmarkPlanFids", 10, &Dispatcher::LandmarkPlanFidsCallBack, this);
+    ros::Subscriber sub_medimg_autodigitization_ = n_.subscribe(
+        "/MedImg/StartAct", 10, &Dispatcher::AutodigitizationCallBack, this);
 
     // Cruicial operations
     void LandmarkPlanMetaCallBack(const std_msgs::Int16::ConstPtr& msg);

@@ -64,63 +64,63 @@ std::vector<WorkState> GetStatesVector(FlagMachine& f, TMSOperations& ops)
         {
             case 0B0000:
             {
-                WorkState s0B0000 = State0000(vec,f,ops);
+                State0000 s0B0000(vec,f,ops);
                 vec.push_back(s0B0000);
                 break;
             }
                 
             case 0B1000:
             {
-                WorkState s0B1000 = State1000(vec,f,ops);
+                State1000 s0B1000(vec,f,ops);
                 vec.push_back(s0B1000);
                 break;
             }
                 
             case 0B1100:
             {
-                WorkState s0B1100 = State1100(vec,f,ops);
+                State1100 s0B1100(vec,f,ops);
                 vec.push_back(s0B1100);
                 break;
             }
                 
             case 0B1101:
             {
-                WorkState s0B1101 = State1101(vec,f,ops);
+                State1101 s0B1101(vec,f,ops);
                 vec.push_back(s0B1101);
                 break;
             }
                 
             case 0B0010:
             {
-                WorkState s0B0010 = State0010(vec,f,ops);
+                State0010 s0B0010(vec,f,ops);
                 vec.push_back(s0B0010);
                 break;
             }
                 
             case 0B1010:
             {
-                WorkState s0B1010 = State1010(vec,f,ops);
+                State1010 s0B1010(vec,f,ops);
                 vec.push_back(s0B1010);
                 break;
             }
                 
             case 0B1110:
             {
-                WorkState s0B1110 = State1110(vec,f,ops);
+                State1110 s0B1110(vec,f,ops);
                 vec.push_back(s0B1110);
                 break;
             }
                 
             case 0B1111:
             {
-                WorkState s0B1111 = State1111(vec,f,ops);
+                State1111 s0B1111(vec,f,ops);
                 vec.push_back(s0B1111);
                 break;
             }
                 
             default:
             {
-                WorkState s = WorkState(-1,vec,f,ops);
+                WorkState s(-1,vec,f,ops);
                 vec.push_back(s);
                 break;
             }
@@ -147,6 +147,7 @@ State0000::State0000(std::vector<WorkState>& v, FlagMachine& f, TMSOperations& o
 
 int State0000::LandmarksPlanned()
 {
+    ROS_INFO_STREAM("Test state0000");
     TransitionOps funcs;
     funcs.push_back(FlagMachine::PlanLandmarks);
     this->Transition(0B1000, funcs);
@@ -167,6 +168,7 @@ State1000::State1000(std::vector<WorkState>& v, FlagMachine& f, TMSOperations& o
 int State1000::LandmarksDigitized()
 {
     TransitionOps funcs;
+    funcs.push_back(std::bind(&TMSOperations::OperationDigitization, ops_));
     funcs.push_back(FlagMachine::DigitizeLandmarks);
     this->Transition(0B1100, funcs);
     return 0B1100;
@@ -230,6 +232,7 @@ int State1100::ClearLandmarks()
 int State1100::LandmarksDigitized()
 {
     TransitionOps funcs;
+    funcs.push_back(std::bind(&TMSOperations::OperationDigitization, ops_));
     funcs.push_back(FlagMachine::DigitizeLandmarks);
     this->Transition(0B1100, funcs);
     return 0B1100;
@@ -324,6 +327,7 @@ int State1010::LandmarksPlanned()
 int State1010::LandmarksDigitized()
 {
     TransitionOps funcs;
+    funcs.push_back(std::bind(&TMSOperations::OperationDigitization, ops_));
     funcs.push_back(FlagMachine::DigitizeLandmarks);
     this->Transition(0B1110, funcs);
     return 0B1110;
@@ -343,6 +347,7 @@ int State1110::ClearToolPosePlan()
 int State1110::LandmarksDigitized()
 {
     TransitionOps funcs;
+    funcs.push_back(std::bind(&TMSOperations::OperationDigitization, ops_));
     funcs.push_back(FlagMachine::DigitizeLandmarks);
     this->Transition(0B1110, funcs);
     return 0B1110;

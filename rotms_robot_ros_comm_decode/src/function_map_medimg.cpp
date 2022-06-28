@@ -87,7 +87,10 @@ FuncMap GetFuncMapMedImg()
 
 void StartAutoDigitize(std::string& ss, PublisherVec& pubs)
 {
-    
+    // pub[0] is the publisher /MedImg/StartAct
+    std_msgs::String msg;
+    msg.data = "_autodigitize__";
+    pubs[0].publish(msg);
 }
 
 void StartRegistration(std::string& ss, PublisherVec& pubs)
