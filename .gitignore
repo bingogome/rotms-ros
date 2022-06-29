@@ -54,4 +54,4 @@ CATKIN_IGNORE
 .vs/
 
 # data record
-data/
+rotms_ros_operations/share/data/
