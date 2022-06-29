@@ -102,7 +102,7 @@ std::tuple<Matrixnbym, std::vector<double>> getRegistrationResult(
 
     if(sz1!=sz2)
         throw std::runtime_error(
-            "Planned point cloud and the digitized point cloud have different size!");
+            "Planned point cloud and the digitized point cloud have different size! [Registration calculation]");
 
     std::vector<double> a_centroid = getCentroid(a);
 	std::vector<double> b_centroid = getCentroid(b);

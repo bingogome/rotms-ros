@@ -26,6 +26,13 @@ SOFTWARE.
 #include <ros/ros.h>
 #include <geometry_msgs/Pose.h>
 
+
+struct OpsVolatileTempDataCache 
+{
+    int landmark_total = -1;
+    std::vector<std::vector<double>> landmarkdig;
+};
+
 class TMSOperations
 {
 public:
@@ -51,4 +58,9 @@ private:
     ros::Publisher pub_toolpose_ = 
         n_.advertise<geometry_msgs::Pose>("/Rotms/DataCache/Update/ToolPose", 5);
 
+    struct OpsVolatileTempDataCache datacache_;
+    void ResetOpsVolatileDataCache();
+
 };
+
+void SaveLandmarkDigData(struct OpsVolatileTempDataCache datacache, std::string f);

@@ -41,12 +41,12 @@ class Dispatcher
 
 public:
 
-    Dispatcher(ros::NodeHandle& n, std::vector<WorkState>& states);
+    Dispatcher(ros::NodeHandle& n, const std::vector<WorkState*>& states);
 
 private:
 
     ros::NodeHandle& n_;
-    std::vector<WorkState>& states_;
+    const std::vector<WorkState*>& states_;
     int activated_state_;
 
     // Dispatch signals
@@ -56,6 +56,8 @@ private:
         "/MedImg/LandmarkPlanFids", 10, &Dispatcher::LandmarkPlanFidsCallBack, this);
     ros::Subscriber sub_medimg_autodigitization_ = n_.subscribe(
         "/MedImg/StartAct", 10, &Dispatcher::AutodigitizationCallBack, this);
+    ros::Subscriber sub_medimg_registration_ = n_.subscribe(
+        "/MedImg/StartAct", 10, &Dispatcher::RegistrationCallBack, this);
 
     // Cruicial operations
     void LandmarkPlanMetaCallBack(const std_msgs::Int16::ConstPtr& msg);

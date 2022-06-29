@@ -95,12 +95,18 @@ void StartAutoDigitize(std::string& ss, PublisherVec& pubs)
 
 void StartRegistration(std::string& ss, PublisherVec& pubs)
 {
-    
+    // pub[0] is the publisher /MedImg/StartAct
+    std_msgs::String msg;
+    msg.data = "_register__";
+    pubs[0].publish(msg);
 }
 
 void StartUsePrevRegistration(std::string& ss, PublisherVec& pubs)
 {
-    
+    // pub[0] is the publisher /MedImg/StartAct
+    std_msgs::String msg;
+    msg.data = "_prevregister__";
+    pubs[0].publish(msg);
 }
 
 void LandmarkCurrentOnImg(std::string& ss, PublisherVec& pubs)
