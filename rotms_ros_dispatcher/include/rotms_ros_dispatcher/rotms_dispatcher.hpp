@@ -34,6 +34,11 @@ struct VolatileTempDataCache
 {
     int landmark_total = -1;
     std::vector<std::vector<double>> landmark_coords;
+
+    bool toolpose_t_recvd = false;
+    bool toolpose_r_recvd = false;
+    std::vector<double> toolpose_t;
+    std::vector<double> toolpose_r;
 };
 
 class Dispatcher
@@ -51,19 +56,26 @@ private:
 
     // Dispatch signals
     ros::Subscriber sub_medimg_landmarkplanmeta_ = n_.subscribe(
-        "/MedImg/LandmarkPlanMeta", 10, &Dispatcher::LandmarkPlanMetaCallBack, this);
+        "/MedImg/LandmarkPlanMeta", 2, &Dispatcher::LandmarkPlanMetaCallBack, this);
     ros::Subscriber sub_medimg_landmarkplanfids_ = n_.subscribe(
         "/MedImg/LandmarkPlanFids", 10, &Dispatcher::LandmarkPlanFidsCallBack, this);
     ros::Subscriber sub_medimg_autodigitization_ = n_.subscribe(
-        "/MedImg/StartAct", 10, &Dispatcher::AutodigitizationCallBack, this);
+        "/MedImg/StartAct", 2, &Dispatcher::AutodigitizationCallBack, this);
     ros::Subscriber sub_medimg_registration_ = n_.subscribe(
-        "/MedImg/StartAct", 10, &Dispatcher::RegistrationCallBack, this);
+        "/MedImg/StartAct", 2, &Dispatcher::RegistrationCallBack, this);
+    ros::Subscriber sub_medimg_toolposeorient_ = n_.subscribe(
+        "/MedImg/ToolPoseOrient", 2, &Dispatcher::ToolPoseOrientCallBack, this);
+    ros::Subscriber sub_medimg_toolposetrans_ = n_.subscribe(
+        "/MedImg/ToolPoseTrans", 2, &Dispatcher::ToolPoseTransCallBack, this);
 
     // Cruicial operations
     void LandmarkPlanMetaCallBack(const std_msgs::Int16::ConstPtr& msg);
     void AutodigitizationCallBack(const std_msgs::String::ConstPtr& msg);
     void RegistrationCallBack(const std_msgs::String::ConstPtr& msg);
     void RegistrationUsePrevCallBack(const std_msgs::String::ConstPtr& msg);
+    void ToolPoseOrientCallBack(const geometry_msgs::Quaternion::ConstPtr& msg);
+    void ToolPoseTransCallBack(const geometry_msgs::Point::ConstPtr& msg);
+
 
     // Secondary and intermediate operations
     void LandmarkPlanFidsCallBack(const std_msgs::Float32MultiArray::ConstPtr& msg);
@@ -71,9 +83,11 @@ private:
     // Temp data cache (volatile)
     struct VolatileTempDataCache datacache_;
     void ResetVolatileDataCacheLandmarks();
+    void ResetVolatileDataCacheToolPose();
 
 };
 
 void SaveLandmarkPlanData(struct VolatileTempDataCache datacache, std::string f);
+void SaveToolPoseData(struct VolatileTempDataCache datacache, std::string f);
 std::string FormatDouble2String(double a, int dec);
 std::string GetTimeString();

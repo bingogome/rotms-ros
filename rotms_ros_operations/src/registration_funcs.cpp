@@ -34,17 +34,52 @@ SOFTWARE.
 #include <math.h>
 #include <limits>
 
-std::vector<double> rotm2quat(const Matrixnbym& R)
+std::vector<double> rotm2quat(const Matrixnbym& R) // x y z w
 {
-    double qw = sqrt(1.0+R[0][0]+R[1][1]+R[2][2]) / 2.0 * 4.0;
-    // x y z w
-    std::vector<double> ans{ 
-        (R[2][1] - R[1][2]) / qw,
-        (R[0][2] - R[2][0]) / qw,
-        (R[1][0] - R[0][1]) / qw,
-        qw/4
-    };
-    return ans;
+    if (R[0][0]+R[1][1]+R[2][2] > 0)
+    {
+        double qw = sqrt(1.0 + R[0][0] + R[1][1] + R[2][2]) / 2.0 * 4.0;
+        std::vector<double> ans{ 
+            (R[2][1] - R[1][2]) / qw,
+            (R[0][2] - R[2][0]) / qw,
+            (R[1][0] - R[0][1]) / qw,
+            qw/4
+        };
+        return ans;
+    }
+    else if ((R[0][0] > R[1][1]) && (R[0][0] > R[2][2]))
+    {
+        double s = sqrt(1.0 + R[0][0] - R[1][1] - R[2][2]) * 2.0;
+        std::vector<double> ans{ 
+            0.25 * s,
+            (R[0][1] + R[1][0]) / s,
+            (R[0][2] + R[2][0]) / s,
+            (R[2][1] - R[1][2]) / s
+        };
+        return ans;
+    }
+    else if (R[1][1] > R[2][2])
+    {
+        double s = sqrt(1.0 + R[1][1] - R[0][0] - R[2][2]) * 2.0;
+        std::vector<double> ans{ 
+            (R[0][1] + R[1][0]) / s,
+            0.25 * s,
+            (R[1][2] + R[2][1]) / s,
+            (R[0][2] - R[2][0]) / s
+        };
+        return ans;
+    }
+    else
+    {
+        double s = sqrt(1.0 + R[2][2] - R[0][0] - R[1][1]) * 2.0;
+        std::vector<double> ans{ 
+            (R[0][2] + R[2][0]) / s,
+            (R[1][2] + R[2][1]) / s,
+            0.25 * s,
+            (R[1][0] - R[0][1]) / s
+        };
+        return ans;
+    }
 }
 
 void SaveRegistrationData(

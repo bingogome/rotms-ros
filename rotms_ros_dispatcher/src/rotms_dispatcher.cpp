@@ -160,6 +160,83 @@ void Dispatcher::RegistrationCallBack(const std_msgs::String::ConstPtr& msg)
     
 }
 
+void Dispatcher::ToolPoseOrientCallBack(const geometry_msgs::Quaternion::ConstPtr& msg)
+{
+    std::vector<double> toolpose_r{
+        msg->x, msg->y, msg->z, msg->w
+    };
+    datacache_.toolpose_r = toolpose_r;
+    datacache_.toolpose_r_recvd = true;
+    if (datacache_.toolpose_t_recvd == true)
+    {
+        
+        std::string packpath = ros::package::getPath("rotms_ros_operations");
+        SaveToolPoseData(datacache_, packpath + "/share/config/toolpose.yaml");
+        SaveToolPoseData(datacache_, packpath + "/share/data/toolpose_" + GetTimeString() + ".yaml");
+
+        ROS_INFO("Toolpose cached.");
+        Dispatcher::ResetVolatileDataCacheToolPose();
+
+        int new_state = states_[activated_state_]->ToolPosePlanned();
+        ROS_INFO_STREAM("Old state: " + std::to_string(activated_state_));
+        ROS_INFO_STREAM("Attempt new state: " + std::to_string(new_state));
+        if (new_state != -1)
+        {
+            activated_state_ = new_state;
+            ROS_INFO_STREAM("Transitioned to new state: " + 
+                std::to_string(activated_state_));
+        }
+        else
+        {
+            // Failed operation
+            ROS_INFO("State transition not possible.");
+            ROS_INFO("Make sure the operation dependencies are met.");
+        }
+    }
+}
+
+void Dispatcher::ToolPoseTransCallBack(const geometry_msgs::Point::ConstPtr& msg)
+{
+    std::vector<double> toolpose_t{
+        msg->x, msg->y, msg->z
+    };
+    datacache_.toolpose_t = toolpose_t;
+    datacache_.toolpose_t_recvd = true;
+    if (datacache_.toolpose_r_recvd == true)
+    {
+        std::string packpath = ros::package::getPath("rotms_ros_operations");
+        SaveToolPoseData(datacache_, packpath + "/share/config/toolpose.yaml");
+        SaveToolPoseData(datacache_, packpath + "/share/data/toolpose_" + GetTimeString() + ".yaml");
+
+        ROS_INFO("Toolpose cached.");
+        Dispatcher::ResetVolatileDataCacheToolPose();
+
+        int new_state = states_[activated_state_]->ToolPosePlanned();
+        ROS_INFO_STREAM("Old state: " + std::to_string(activated_state_));
+        ROS_INFO_STREAM("Attempt new state: " + std::to_string(new_state));
+        if (new_state != -1)
+        {
+            activated_state_ = new_state;
+            ROS_INFO_STREAM("Transitioned to new state: " + 
+                std::to_string(activated_state_));
+        }
+        else
+        {
+            // Failed operation
+            ROS_INFO("State transition not possible.");
+            ROS_INFO("Make sure the operation dependencies are met.");
+        }
+    }
+}
+
+void Dispatcher::ResetVolatileDataCacheToolPose()
+{
+    datacache_.toolpose_t_recvd = false;
+    datacache_.toolpose_r_recvd = false;
+    datacache_.toolpose_t.clear();
+    datacache_.toolpose_r.clear();
+}
+
 void SaveLandmarkPlanData(struct VolatileTempDataCache datacache, std::string f)
 {
     std::ofstream filesave(f);
@@ -184,6 +261,32 @@ void SaveLandmarkPlanData(struct VolatileTempDataCache datacache, std::string f)
                 filesave << "},\n";
         }
         filesave << "  }\n";
+        filesave.close();
+    }
+}
+
+void SaveToolPoseData(struct VolatileTempDataCache datacache, std::string f)
+{
+    std::ofstream filesave(f);
+    if(filesave.is_open())
+    {
+        filesave << "TRANSLATION: # translation: x,y,z\n";
+        filesave << "\n";
+        filesave << "  {\n";
+		filesave << "    x: " << FormatDouble2String(datacache.toolpose_t[0], 16) << ",\n";
+		filesave << "    y: " << FormatDouble2String(datacache.toolpose_t[1], 16) << ",\n";
+		filesave << "    z: " << FormatDouble2String(datacache.toolpose_t[2], 16) << "\n";
+		filesave << "  }\n";
+        filesave << "\n";
+		filesave << "ROTATION: # quat: x,y,z,w\n";
+        filesave << "\n";
+        filesave << "  {\n";
+		filesave << "    x: " << FormatDouble2String(datacache.toolpose_r[0], 16) << ",\n";
+		filesave << "    y: " << FormatDouble2String(datacache.toolpose_r[1], 16) << ",\n";
+		filesave << "    z: " << FormatDouble2String(datacache.toolpose_r[2], 16) << ",\n";
+        filesave << "    w: " << FormatDouble2String(datacache.toolpose_r[3], 16) << "\n";
+        filesave << "  }\n";
+		filesave.close();
     }
 }
 

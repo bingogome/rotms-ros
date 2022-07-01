@@ -102,7 +102,9 @@ void TMSOperations::OperationDigitization()
 
 void TMSOperations::OperationPlanToolPose()
 {
-
+    // The operation has been done by dispatcher and cached to /share/config
+    // no need to call this anymore.
+    // Perhaps future change 
 }
 
 void TMSOperations::OperationRegistration()
@@ -198,5 +200,6 @@ void SaveLandmarkDigData(struct OpsVolatileTempDataCache datacache, std::string 
                 filesave << "},\n";
         }
         filesave << "  }\n";
+        filesave.close();
     }
 }

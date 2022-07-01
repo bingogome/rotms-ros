@@ -67,9 +67,9 @@ CommDecoderMedImg::CommDecoderMedImg(
     pubs_.push_back(
         n_.advertise<std_msgs::Float32MultiArray>("/MedImg/LandmarkPlanFids", 10));
     pubs_.push_back(
-        n_.advertise<geometry_msgs::Quaternion>("/MedImg/ToolPlanOrient", 2));
+        n_.advertise<geometry_msgs::Quaternion>("/MedImg/ToolPoseOrient", 2));
     pubs_.push_back(
-        n_.advertise<geometry_msgs::Point>("/MedImg/ToolPlanTrans", 2));
+        n_.advertise<geometry_msgs::Point>("/MedImg/ToolPoseTrans", 2));
 }
 
 FuncMap GetFuncMapMedImg()
@@ -168,7 +168,7 @@ void TargetPoseOrientation(std::string& ss, PublisherVec& pubs)
     quat.z = quat_vec[2];
     quat.w = quat_vec[3];
 
-    // pubs[3] is the publisher /MedImg/ToolPlanOrient
+    // pubs[3] is the publisher /MedImg/ToolPoseOrient
     pubs[3].publish(quat);
 }
 
@@ -183,6 +183,6 @@ void TargetPoseTranslation(std::string& ss, PublisherVec& pubs)
     p.y = p_vec[1];
     p.z = p_vec[2];
 
-    // pubs[4] is the publisher /MedImg/ToolPlanTrans
+    // pubs[4] is the publisher /MedImg/ToolPoseTrans
     pubs[4].publish(p);
 }
