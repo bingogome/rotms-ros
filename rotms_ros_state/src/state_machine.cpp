@@ -95,7 +95,7 @@ int WorkState::ClearToolPosePlan() { TransitionNotPossible(); return -1; }
 
 void WorkState::TransitionNotPossible()
 {
-    // TODO: implement this. (possibly having a return value)
+    // TODO: implement this. Optional
 }
 void WorkState::Transition(int target_state, TransitionOps funcs)
 {

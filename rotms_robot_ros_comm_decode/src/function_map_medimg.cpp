@@ -27,6 +27,9 @@ SOFTWARE.
 #include <ros/ros.h>
 #include <std_msgs/Int16.h>
 #include <std_msgs/Float32MultiArray.h>
+#include <geometry_msgs/Quaternion.h>
+#include <geometry_msgs/Point.h>
+
 #include "function_map_medimg.hpp"
 #include "decode_node.hpp"
 
@@ -58,13 +61,15 @@ CommDecoderMedImg::CommDecoderMedImg(
     CommDecoder(n, modulesuffix, opsdict) 
 {
     pubs_.push_back(
-        n_.advertise<std_msgs::String>("/MedImg/StartAct", 5));
+        n_.advertise<std_msgs::String>("/MedImg/StartAct", 2));
     pubs_.push_back(
-        n_.advertise<std_msgs::String>("/MedImg/TargetPlan", 5));
+        n_.advertise<std_msgs::Int16>("/MedImg/LandmarkPlanMeta", 2));
     pubs_.push_back(
-        n_.advertise<std_msgs::Int16>("/MedImg/LandmarkPlanMeta", 5));
+        n_.advertise<std_msgs::Float32MultiArray>("/MedImg/LandmarkPlanFids", 10));
     pubs_.push_back(
-        n_.advertise<std_msgs::Float32MultiArray>("/MedImg/LandmarkPlanFids", 5));
+        n_.advertise<geometry_msgs::Quaternion>("/MedImg/ToolPlanOrient", 2));
+    pubs_.push_back(
+        n_.advertise<geometry_msgs::Point>("/MedImg/ToolPlanTrans", 2));
 }
 
 FuncMap GetFuncMapMedImg()
@@ -87,7 +92,7 @@ FuncMap GetFuncMapMedImg()
 
 void StartAutoDigitize(std::string& ss, PublisherVec& pubs)
 {
-    // pub[0] is the publisher /MedImg/StartAct
+    // pubs[0] is the publisher /MedImg/StartAct
     std_msgs::String msg;
     msg.data = "_autodigitize__";
     pubs[0].publish(msg);
@@ -95,7 +100,7 @@ void StartAutoDigitize(std::string& ss, PublisherVec& pubs)
 
 void StartRegistration(std::string& ss, PublisherVec& pubs)
 {
-    // pub[0] is the publisher /MedImg/StartAct
+    // pubs[0] is the publisher /MedImg/StartAct
     std_msgs::String msg;
     msg.data = "_register__";
     pubs[0].publish(msg);
@@ -103,11 +108,18 @@ void StartRegistration(std::string& ss, PublisherVec& pubs)
 
 void StartUsePrevRegistration(std::string& ss, PublisherVec& pubs)
 {
-    // pub[0] is the publisher /MedImg/StartAct
+    // pubs[0] is the publisher /MedImg/StartAct
     std_msgs::String msg;
     msg.data = "_prevregister__";
     pubs[0].publish(msg);
 }
+
+/* Landmark related functions:
+The decoder receives 3 commands
+1. Get the total number of landmarks
+2. Get each landmark cooredinate
+3. Notice the last landmark has been received
+*/
 
 void LandmarkCurrentOnImg(std::string& ss, PublisherVec& pubs)
 {
@@ -121,35 +133,56 @@ void LandmarkCurrentOnImg(std::string& ss, PublisherVec& pubs)
     msg.layout.dim[0].label = "format__num_x_y_z";
     msg.data.clear();
     msg.data.insert(msg.data.end(), fid_vec.begin(), fid_vec.end());
-    // pub[3] is the publisher /MedImg/LandmarkPlanFids (fiducial)
+    // pubs[2] is the publisher /MedImg/LandmarkPlanFids (fiducial)
     // Publish the current index of landmark, and the coordinate
-    pubs[3].publish(msg);
+    pubs[2].publish(msg);
 }
 
 void LandmarkNumOnImg(std::string& ss, PublisherVec& pubs)
 {
     std_msgs::Int16 msg_test;
     msg_test.data = std::stoi(ss);
-    // pubs[2] is the publisher /MedImg/LandmarkPlanMeta (meta data)
+    // pubs[1] is the publisher /MedImg/LandmarkPlanMeta (meta data)
     // Publish number of landmarks (landmarks). (If it is not -99)
-    pubs[2].publish(msg_test);
+    pubs[1].publish(msg_test);
 }
 
 void LandmarkLastReceived(std::string& ss, PublisherVec& pubs)
 {
     std_msgs::Int16 msg_test;
     msg_test.data = -99;
-    // pubs[2] is the publisher /MedImg/LandmarkPlanMeta (meta data)
+    // pubs[1] is the publisher /MedImg/LandmarkPlanMeta (meta data)
     // Publish -99 to the topic indicating the receiving of landmarks is complete
-    pubs[2].publish(msg_test);
+    pubs[1].publish(msg_test);
 }
 
 void TargetPoseOrientation(std::string& ss, PublisherVec& pubs)
 {
-    
+    geometry_msgs::Quaternion quat;
+
+    // format: { x, y, z, w }
+    std::vector<double> quat_vec = SubStringTokenize2Double(ss, "_");
+
+    quat.x = quat_vec[0];
+    quat.y = quat_vec[1];
+    quat.z = quat_vec[2];
+    quat.w = quat_vec[3];
+
+    // pubs[3] is the publisher /MedImg/ToolPlanOrient
+    pubs[3].publish(quat);
 }
 
 void TargetPoseTranslation(std::string& ss, PublisherVec& pubs)
 {
-    
+    geometry_msgs::Point p;
+
+    // format: { x, y, z }
+    std::vector<double> p_vec = SubStringTokenize2Double(ss, "_");
+
+    p.x = p_vec[0];
+    p.y = p_vec[1];
+    p.z = p_vec[2];
+
+    // pubs[4] is the publisher /MedImg/ToolPlanTrans
+    pubs[4].publish(p);
 }

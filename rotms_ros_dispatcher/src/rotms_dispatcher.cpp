@@ -52,16 +52,26 @@ void Dispatcher::LandmarkPlanMetaCallBack(const std_msgs::Int16::ConstPtr& msg)
     {
         std::string packpath = ros::package::getPath("rotms_ros_operations");
 
+        if (datacache_.landmark_coords.size() != datacache_.landmark_total)
+        {
+            ROS_INFO("The number of landmarks received does not match planned!");
+            ROS_INFO_STREAM("Planned: " + std::to_string(datacache_.landmark_total));
+            ROS_INFO_STREAM("Received: " + std::to_string(datacache_.landmark_coords.size()));
+            ROS_INFO("Try one more time!");
+            Dispatcher::ResetVolatileDataCacheLandmarks();
+            return;
+        }
+
         SaveLandmarkPlanData(datacache_, packpath + "/share/cache/landmarkplan.yaml");
         SaveLandmarkPlanData(datacache_, packpath + "/share/data/landmarkplan_" + GetTimeString() + ".yaml");
 
         ROS_INFO("Landmarks cached.");
 
-        Dispatcher::ResetVolatileDataCache(); // reset
+        Dispatcher::ResetVolatileDataCacheLandmarks(); // reset
 
         int new_state = states_[activated_state_]->LandmarksPlanned();
         ROS_INFO_STREAM("Old state: " + std::to_string(activated_state_));
-        ROS_INFO_STREAM("New state: " + std::to_string(new_state));
+        ROS_INFO_STREAM("Attempt new state: " + std::to_string(new_state));
         if (new_state != -1)
         {
             activated_state_ = new_state;
@@ -71,56 +81,14 @@ void Dispatcher::LandmarkPlanMetaCallBack(const std_msgs::Int16::ConstPtr& msg)
         else
         {
             // Failed operation
-            // TODO
+            ROS_INFO("State transition not possible.");
+            ROS_INFO("Make sure the operation dependencies are met.");
         }
     }
     else
     {
         datacache_.landmark_total = msg->data;
     }
-}
-
-void Dispatcher::AutodigitizationCallBack(const std_msgs::String::ConstPtr& msg)
-{
-    if (msg->data.compare("_autodigitize__")==0)
-    {
-        int new_state = states_[activated_state_]->LandmarksDigitized();
-        ROS_INFO_STREAM("Old state: " + std::to_string(activated_state_));
-        ROS_INFO_STREAM("New state: " + std::to_string(new_state));
-        if (new_state != -1)
-        {
-            activated_state_ = new_state;
-            ROS_INFO_STREAM("Transitioned to new state: " + 
-                std::to_string(activated_state_));
-        }
-        else
-        {
-            // Failed operation
-            // TODO
-        }
-    }
-}
-
-void Dispatcher::RegistrationCallBack(const std_msgs::String::ConstPtr& msg)
-{
-    if (msg->data.compare("_register__")==0)
-    {
-        int new_state = states_[activated_state_]->Registered();
-        ROS_INFO_STREAM("Old state: " + std::to_string(activated_state_));
-        ROS_INFO_STREAM("New state: " + std::to_string(new_state));
-        if (new_state != -1)
-        {
-            activated_state_ = new_state;
-            ROS_INFO_STREAM("Transitioned to new state: " + 
-                std::to_string(activated_state_));
-        }
-        else
-        {
-            // Failed operation
-            // TODO
-        }
-    }
-    
 }
 
 void Dispatcher::LandmarkPlanFidsCallBack(const std_msgs::Float32MultiArray::ConstPtr& msg)
@@ -133,15 +101,63 @@ void Dispatcher::LandmarkPlanFidsCallBack(const std_msgs::Float32MultiArray::Con
     }
     else
     {
-        throw std::runtime_error(
-            "Current index does not match the waiting index!");
+        ROS_INFO("Current index does not match the waiting index!");
+        ROS_INFO_STREAM("Current index: " + std::to_string(msg->data[0]));
+        ROS_INFO_STREAM("Waiting index: " + std::to_string(datacache_.landmark_coords.size()));
+        ROS_INFO("Try one more time!");
+        Dispatcher::ResetVolatileDataCacheLandmarks();
     }
 }
 
-void Dispatcher::ResetVolatileDataCache()
+void Dispatcher::ResetVolatileDataCacheLandmarks()
 {
     datacache_.landmark_total = -1;
     datacache_.landmark_coords.clear();
+}
+
+void Dispatcher::AutodigitizationCallBack(const std_msgs::String::ConstPtr& msg)
+{
+    if (msg->data.compare("_autodigitize__")==0)
+    {
+        int new_state = states_[activated_state_]->LandmarksDigitized();
+        ROS_INFO_STREAM("Old state: " + std::to_string(activated_state_));
+        ROS_INFO_STREAM("Attempt new state: " + std::to_string(new_state));
+        if (new_state != -1)
+        {
+            activated_state_ = new_state;
+            ROS_INFO_STREAM("Transitioned to new state: " + 
+                std::to_string(activated_state_));
+        }
+        else
+        {
+            // Failed operation
+            ROS_INFO("State transition not possible.");
+            ROS_INFO("Make sure the operation dependencies are met.");
+        }
+    }
+}
+
+void Dispatcher::RegistrationCallBack(const std_msgs::String::ConstPtr& msg)
+{
+    if (msg->data.compare("_register__")==0)
+    {
+        int new_state = states_[activated_state_]->Registered();
+        ROS_INFO_STREAM("Old state: " + std::to_string(activated_state_));
+        ROS_INFO_STREAM("Attempt new state: " + std::to_string(new_state));
+        if (new_state != -1)
+        {
+            activated_state_ = new_state;
+            ROS_INFO_STREAM("Transitioned to new state: " + 
+                std::to_string(activated_state_));
+        }
+        else
+        {
+            // Failed operation
+            ROS_INFO("State transition not possible.");
+            ROS_INFO("Make sure the operation dependencies are met.");
+        }
+    }
+    
 }
 
 void SaveLandmarkPlanData(struct VolatileTempDataCache datacache, std::string f)

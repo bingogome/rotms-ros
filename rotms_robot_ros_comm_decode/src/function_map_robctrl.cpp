@@ -73,7 +73,7 @@ FuncMap GetFuncMapRobCtrl()
 void GetJntAngs(std::string& ss, PublisherVec& pubs)
 {
     std_msgs::String msg_test;
-    msg_test.data = "JNTS";
+    msg_test.data = "_jnts__";
     // pubs[0] is the publisher /RobCtrl/GetInfo
     pubs[0].publish(msg_test);
 }
@@ -81,7 +81,7 @@ void GetJntAngs(std::string& ss, PublisherVec& pubs)
 void GetEffPose(std::string& ss, PublisherVec& pubs)
 {
     std_msgs::String msg_test;
-    msg_test.data = "EFF";
+    msg_test.data = "_eff__";
     // pubs[0] is the publisher /RobCtrl/GetInfo
     pubs[0].publish(msg_test);
 }
@@ -89,7 +89,7 @@ void GetEffPose(std::string& ss, PublisherVec& pubs)
 void ExecuteMotion(std::string& ss, PublisherVec& pubs)
 {
     std_msgs::String msg_test;
-    msg_test.data = "Execute";
+    msg_test.data = "_execute__";
     // pubs[1] is the publisher /RobCtrl/Motion
     pubs[1].publish(msg_test);
 }
@@ -97,7 +97,7 @@ void ExecuteMotion(std::string& ss, PublisherVec& pubs)
 void ExecuteMoveConfirm(std::string& ss, PublisherVec& pubs)
 {
     std_msgs::String msg_test;
-    msg_test.data = "Confirm";
+    msg_test.data = "_confirm__";
     // pubs[1] is the publisher /RobCtrl/Motion
     pubs[1].publish(msg_test);
 }
@@ -111,7 +111,7 @@ void ExecuteEndAndBack(std::string& ss, PublisherVec& pubs)
 void ExecuteBackInit(std::string& ss, PublisherVec& pubs)
 {
     std_msgs::String msg_test;
-    msg_test.data = "Backinit";
+    msg_test.data = "_backinit__";
     // pubs[1] is the publisher /RobCtrl/Motion
     pubs[1].publish(msg_test);
 }
@@ -119,7 +119,7 @@ void ExecuteBackInit(std::string& ss, PublisherVec& pubs)
 void ExecuteBackOffset(std::string& ss, PublisherVec& pubs)
 {
     std_msgs::String msg_test;
-    msg_test.data = "Backoffs";
+    msg_test.data = "_backoffset__";
     // pubs[1] is the publisher /RobCtrl/Motion
     pubs[1].publish(msg_test);
 }
@@ -127,7 +127,7 @@ void ExecuteBackOffset(std::string& ss, PublisherVec& pubs)
 void SessionEnd(std::string& ss, PublisherVec& pubs)
 {
     std_msgs::String msg_test;
-    msg_test.data = "End";
+    msg_test.data = "_end__";
     // pubs[3] is the publisher /RobCtrl/Session
     pubs[3].publish(msg_test);
 }

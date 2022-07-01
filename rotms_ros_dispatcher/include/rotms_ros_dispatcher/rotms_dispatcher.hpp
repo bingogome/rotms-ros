@@ -70,7 +70,7 @@ private:
 
     // Temp data cache (volatile)
     struct VolatileTempDataCache datacache_;
-    void ResetVolatileDataCache();
+    void ResetVolatileDataCacheLandmarks();
 
 };
 
