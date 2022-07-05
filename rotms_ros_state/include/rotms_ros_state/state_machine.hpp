@@ -53,6 +53,8 @@ public:
         FlagMachine& f,
         TMSOperations& ops);
     virtual ~WorkState();
+
+    FlagMachine& flags_;
     
     bool CheckActivated();
     void Activate();
@@ -75,7 +77,6 @@ protected:
     
     const int state_num_;
     const std::vector<WorkState*>& states_;
-    FlagMachine& flags_;
     TMSOperations& ops_;
     bool activated_;
     

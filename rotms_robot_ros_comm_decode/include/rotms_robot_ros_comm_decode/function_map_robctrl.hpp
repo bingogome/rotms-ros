@@ -43,8 +43,8 @@ public:
 
 FuncMap GetFuncMapRobCtrl();
 
-void GetJntAngs(std::string& ss, PublisherVec& pubs);
-void GetEffPose(std::string& ss, PublisherVec& pubs);
+void GetJntsAngs(std::string& ss, PublisherVec& pubs);
+void GetEFFPose(std::string& ss, PublisherVec& pubs);
 
 void ExecuteMotion(std::string& ss, PublisherVec& pubs);
 void ExecuteMoveConfirm(std::string& ss, PublisherVec& pubs);
@@ -56,3 +56,6 @@ void SessionEnd(std::string& ss, PublisherVec& pubs);
 
 void ManualAdjustT(std::string& ss, PublisherVec& pubs);
 void ManualAdjustR(std::string& ss, PublisherVec& pubs);
+
+void ConnectRobot(std::string& ss, PublisherVec& pubs);
+void DisconnectRobot(std::string& ss, PublisherVec& pubs);

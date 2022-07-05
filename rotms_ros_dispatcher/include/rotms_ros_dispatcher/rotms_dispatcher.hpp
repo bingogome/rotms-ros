@@ -27,6 +27,9 @@ SOFTWARE.
 #include <std_msgs/String.h>
 #include <std_msgs/Int16.h>
 #include <std_msgs/Float32MultiArray.h>
+#include <std_msgs/Bool.h>
+#include <rotms_ros_msgs/GetJnts.h>
+#include <rotms_ros_msgs/GetEFF.h>
 #include <vector>
 #include "state_machine.hpp"
 
@@ -54,7 +57,7 @@ private:
     const std::vector<WorkState*>& states_;
     int activated_state_;
 
-    // Dispatch signals
+    // Dispatcher receiving query signals
     ros::Subscriber sub_medimg_landmarkplanmeta_ = n_.subscribe(
         "/MedImg/LandmarkPlanMeta", 2, &Dispatcher::LandmarkPlanMetaCallBack, this);
     ros::Subscriber sub_medimg_landmarkplanfids_ = n_.subscribe(
@@ -67,8 +70,22 @@ private:
         "/MedImg/ToolPoseOrient", 2, &Dispatcher::ToolPoseOrientCallBack, this);
     ros::Subscriber sub_medimg_toolposetrans_ = n_.subscribe(
         "/MedImg/ToolPoseTrans", 2, &Dispatcher::ToolPoseTransCallBack, this);
+    ros::Subscriber sub_robctrl_robconnect_ = n_.subscribe(
+        "/RobCtrl/RobConnection", 2, &Dispatcher::RobConnectCallBack, this);
+    ros::Subscriber sub_robctrl_robdisconnect_ = n_.subscribe(
+        "/RobCtrl/RobConnection", 2, &Dispatcher::RobDisconnectCallBack, this);
+    ros::Subscriber sub_robctrl_getjnt_ = n_.subscribe(
+        "/RobCtrl/GetInfo", 2, &Dispatcher::GetJntsCallBack, this);
+    ros::Subscriber sub_robctrl_geteff_ = n_.subscribe(
+        "/RobCtrl/GetInfo", 2, &Dispatcher::GetEFFCallBack, this);
+    ros::Subscriber sub_robconnstatus_ = n_.subscribe(
+        "/RobInterfaceOut/RobConnStatus", 2, &Dispatcher::UpdateRobotConnFlagCallBack, this);
 
-    // Cruicial operations
+    // Dispatcher sending query response signals
+    ros::Publisher pub_robctrlcomm = n_.advertise<std_msgs::String>(
+        "/RobCtrlComm/msg_to_send", 2);
+
+    // Cruicial operations (operations that affect main user logic and its states/flags/operations)
     void LandmarkPlanMetaCallBack(const std_msgs::Int16::ConstPtr& msg);
     void AutodigitizationCallBack(const std_msgs::String::ConstPtr& msg);
     void RegistrationCallBack(const std_msgs::String::ConstPtr& msg);
@@ -76,14 +93,30 @@ private:
     void ToolPoseOrientCallBack(const geometry_msgs::Quaternion::ConstPtr& msg);
     void ToolPoseTransCallBack(const geometry_msgs::Point::ConstPtr& msg);
 
-
     // Secondary and intermediate operations
     void LandmarkPlanFidsCallBack(const std_msgs::Float32MultiArray::ConstPtr& msg);
+
+    // Robot operations
+    void UpdateRobotConnFlagCallBack(const std_msgs::Bool::ConstPtr& msg);
+    void RobConnectCallBack(const std_msgs::String::ConstPtr& msg);
+    void RobDisconnectCallBack(const std_msgs::String::ConstPtr& msg);
+    void GetJntsCallBack(const std_msgs::String::ConstPtr& msg);
+    void GetEFFCallBack(const std_msgs::String::ConstPtr& msg);
 
     // Temp data cache (volatile)
     struct VolatileTempDataCache datacache_;
     void ResetVolatileDataCacheLandmarks();
     void ResetVolatileDataCacheToolPose();
+
+    // Robot interface
+    ros::Publisher pub_init_conn_ = n_.advertise<std_msgs::String>(
+        "/RobInterface/Connection", 2);
+    ros::Publisher pub_disconn_ = n_.advertise<std_msgs::String>(
+        "/RobInterface/Connection", 2);
+    ros::ServiceClient clt_jnt_ = n_.serviceClient<rotms_ros_msgs::GetJnts>(
+        "/RobInterface/GetJntsPos");
+    ros::ServiceClient clt_eff_ = n_.serviceClient<rotms_ros_msgs::GetEFF>(
+        "/RobInterface/GetEFFPose");
 
 };
 

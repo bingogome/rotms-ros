@@ -46,10 +46,17 @@ public:
     static bool GetFlagToolPosePlanned();
     static bool GetFlagRegistered();
 
+    static void ConnectRobot();
+    static void DisconnectRobot();
+    static bool GetFlagRobotConnStatus();
+
 private:
+
+    static bool flag_robot_conn_status_;
 
     static bool flag_landmark_planned_;
     static bool flag_landmark_digitized_;
     static bool flag_toolpose_planned_;
     static bool flag_registration_completed_;
+
 };

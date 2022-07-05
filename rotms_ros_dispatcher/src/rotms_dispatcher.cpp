@@ -27,6 +27,8 @@ SOFTWARE.
 #include "state_machine_states.hpp"
 #include <ros/ros.h>
 #include <ros/package.h>
+#include <rotms_ros_msgs/GetJnts.h>
+#include <rotms_ros_msgs/GetEFF.h>
 #include <fstream>
 #include <iostream>
 
@@ -226,6 +228,87 @@ void Dispatcher::ToolPoseTransCallBack(const geometry_msgs::Point::ConstPtr& msg
             ROS_INFO("State transition not possible.");
             ROS_INFO("Make sure the operation dependencies are met.");
         }
+    }
+}
+
+void Dispatcher::UpdateRobotConnFlagCallBack(const std_msgs::Bool::ConstPtr& msg)
+{
+    if(msg->data)
+    {
+        states_[activated_state_]->flags_.ConnectRobot();
+    }
+    else
+    {
+        states_[activated_state_]->flags_.DisconnectRobot();
+    }
+}
+
+void Dispatcher::RobConnectCallBack(const std_msgs::String::ConstPtr& msg)
+{
+    if (msg->data.compare("_connect__")==0)
+    {
+        std_msgs::String msg_test;
+        msg_test.data = "_start_robot_connection_";
+        pub_init_conn_.publish(msg_test);
+    }
+}
+
+void Dispatcher::RobDisconnectCallBack(const std_msgs::String::ConstPtr& msg)
+{
+    if (msg->data.compare("_disconnect__")==0)
+    {
+        std_msgs::String msg_test;
+        msg_test.data = "_end_robot_connection_";
+        pub_init_conn_.publish(msg_test);
+    }
+}
+
+void Dispatcher::GetJntsCallBack(const std_msgs::String::ConstPtr& msg)
+{
+    if(!msg->data.compare("_jnts__")==0) return;
+    if(!states_[activated_state_]->flags_.GetFlagRobotConnStatus())
+    {
+        ROS_INFO("Robot cabinet connection has not been established");
+        return;
+    }
+    rotms_ros_msgs::GetJnts srv;
+    if(clt_jnt_.call(srv))
+    {
+        std_msgs::Float32MultiArray jnts = srv.response.jnt;
+        std_msgs::String msg_out;
+        std::stringstream str;
+        for(int i=0;i<jnts.layout.dim[0].size;i++)
+        {
+            str << std::to_string(jnts.data[i]) << "_";
+        }
+        msg_out.data = str.str();
+        pub_robctrlcomm.publish(msg_out);
+    }
+}
+
+void Dispatcher::GetEFFCallBack(const std_msgs::String::ConstPtr& msg)
+{
+    if(!msg->data.compare("_eff__")==0) return;
+    if(!states_[activated_state_]->flags_.GetFlagRobotConnStatus())
+    {
+        ROS_INFO("Robot cabinet connection has not been established");
+        return;
+    }
+    rotms_ros_msgs::GetEFF srv;
+    if(clt_eff_.call(srv))
+    {
+        geometry_msgs::Pose eff = srv.response.eff;
+        std_msgs::String msg_out;
+        std::stringstream str;
+        str << std::to_string(eff.position.x) << "_";
+        str << std::to_string(eff.position.y) << "_";
+        str << std::to_string(eff.position.z) << "_";
+        str << std::to_string(eff.orientation.x) << "_";
+        str << std::to_string(eff.orientation.y) << "_";
+        str << std::to_string(eff.orientation.z) << "_";
+        str << std::to_string(eff.orientation.w) << "_";
+        msg_out.data = str.str();
+        pub_robctrlcomm.publish(msg_out);
     }
 }
 

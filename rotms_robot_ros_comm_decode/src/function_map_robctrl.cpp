@@ -40,21 +40,23 @@ CommDecoderRobCtrl::CommDecoderRobCtrl(
     CommDecoder(n, modulesuffix, opsdict) 
 {
     pubs_.push_back(
-        n_.advertise<std_msgs::String>("/RobCtrl/GetInfo", 5));
+        n_.advertise<std_msgs::String>("/RobCtrl/GetInfo", 2));
     pubs_.push_back(
-        n_.advertise<std_msgs::String>("/RobCtrl/Motion", 5));
+        n_.advertise<std_msgs::String>("/RobCtrl/Motion", 2));
     pubs_.push_back(
-        n_.advertise<std_msgs::String>("/RobCtrl/Adjust", 5));
+        n_.advertise<std_msgs::String>("/RobCtrl/Adjust", 2));
     pubs_.push_back(
-        n_.advertise<std_msgs::String>("/RobCtrl/Session", 5));
+        n_.advertise<std_msgs::String>("/RobCtrl/Session", 2));
+    pubs_.push_back(
+        n_.advertise<std_msgs::String>("/RobCtrl/RobConnection", 2));
 }
 
 FuncMap GetFuncMapRobCtrl()
 {
     FuncMap fm;
 
-    fm["GET_JNT_ANGS"] = GetJntAngs;
-    fm["GET_EFF_POSE"] = GetEffPose;
+    fm["GET_JNT_ANGS"] = GetJntsAngs;
+    fm["GET_EFF_POSE"] = GetEFFPose;
 
     fm["EXECUTE_MOTION"] = ExecuteMotion;
     fm["EXECUTE_MOVE_CONFIRM"] = ExecuteMoveConfirm;
@@ -67,10 +69,13 @@ FuncMap GetFuncMapRobCtrl()
     fm["MAN_ADJUST_T"] = ManualAdjustT;
     fm["MAN_ADJUST_R"] = ManualAdjustR;
 
+    fm["ROB_CONN_ON"] = ConnectRobot;
+    fm["ROB_CONN_OFF"] = DisconnectRobot;
+
     return fm;
 }
 
-void GetJntAngs(std::string& ss, PublisherVec& pubs)
+void GetJntsAngs(std::string& ss, PublisherVec& pubs)
 {
     std_msgs::String msg_test;
     msg_test.data = "_jnts__";
@@ -78,7 +83,7 @@ void GetJntAngs(std::string& ss, PublisherVec& pubs)
     pubs[0].publish(msg_test);
 }
 
-void GetEffPose(std::string& ss, PublisherVec& pubs)
+void GetEFFPose(std::string& ss, PublisherVec& pubs)
 {
     std_msgs::String msg_test;
     msg_test.data = "_eff__";
@@ -139,6 +144,21 @@ void ManualAdjustT(std::string& ss, PublisherVec& pubs)
 
 void ManualAdjustR(std::string& ss, PublisherVec& pubs)
 {
-
+    
 }
 
+void ConnectRobot(std::string& ss, PublisherVec& pubs)
+{
+    std_msgs::String msg_test;
+    msg_test.data = "_connect__";
+    // pubs[4] is the publisher /RobCtrl/RobConnection
+    pubs[4].publish(msg_test);
+}
+
+void DisconnectRobot(std::string& ss, PublisherVec& pubs)
+{
+    std_msgs::String msg_test;
+    msg_test.data = "_disconnect__";
+    // pubs[4] is the publisher /RobCtrl/RobConnection
+    pubs[4].publish(msg_test);
+}

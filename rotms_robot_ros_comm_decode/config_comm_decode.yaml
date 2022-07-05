@@ -32,7 +32,10 @@
     "SESSION_END": "end_sessionxxxxx",
     
     "MAN_ADJUST_T": "adjust_tranxxxxx",
-    "MAN_ADJUST_R": "adjust_oriexxxxx"
+    "MAN_ADJUST_R": "adjust_oriexxxxx",
+
+    "ROB_CONN_ON": "rob_conn_onxxxxx",
+    "ROB_CONN_OFF": "rob_conn_offxxxx"
   }
 
 "TARGETVIZ_CMDS":

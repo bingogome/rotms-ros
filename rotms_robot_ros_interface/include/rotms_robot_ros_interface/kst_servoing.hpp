@@ -54,7 +54,7 @@ public:
     
     // PTP motion
     void PTPJointSpace(std::vector<double> jpos , double relVel);
-    void PTPLineEEF(std::vector<double> epos, double vel); // vel: mm/sec
+    void PTPLineEFF(std::vector<double> epos, double vel); // vel: mm/sec
     // epos: x y z rz ry rx
 
     // Smart and direct servo methods
@@ -66,12 +66,12 @@ public:
 
     void ServoSendJoints(std::vector<double> jp);
     std::vector<double> ServoSendJointsGetFeedback(std::vector<double> jp);
-    void ServoSendEEF(std::vector<double> eef); // x y z rz ry rx
-    std::vector<double> ServoSendEEFGetFeedback(std::vector<double> eef); // x y z rz ry rx
+    void ServoSendEFF(std::vector<double> eff); // x y z rz ry rx
+    std::vector<double> ServoSendEFFGetFeedback(std::vector<double> eff); // x y z rz ry rx
 
     // getters
     std::vector<double> GetJointPosition();
-    std::vector<double> GetEEFPosition();
+    std::vector<double> GetEFFPosition();
         
     // networking
     void NetEstablishConnection();
