@@ -85,16 +85,16 @@ void RobotROSInterface::RobotInitConnectionCallBack(const std_msgs::String::Cons
         try
         {
             kst_.NetEstablishConnection();
+            flag_connected_ = true;
+            ROS_INFO("Robot cabinet connection initialized");
+            std_msgs::Bool robconnstatus;
+            robconnstatus.data = true;
+            pub_robconnstatus_.publish(robconnstatus);
         }
         catch(...)
         {
-            ROS_INFO("ERROR ERROR ERROR");
+            ROS_INFO("ERROR ERROR ERROR (1)");
         }
-        flag_connected_ = true;
-        ROS_INFO("Robot cabinet connection initialized");
-        std_msgs::Bool robconnstatus;
-        robconnstatus.data = true;
-        pub_robconnstatus_.publish(robconnstatus);
     }   
 }
 
@@ -106,16 +106,17 @@ void RobotROSInterface::RobotDisconnectCallBack(const std_msgs::String::ConstPtr
         try
         {
             kst_.NetTurnoffServer();
+            flag_connected_ = false;
+            ROS_INFO("Robot cabinet disconnected");
+            std_msgs::Bool robconnstatus;
+            robconnstatus.data = false;
+            pub_robconnstatus_.publish(robconnstatus);
         }
         catch(...)
         {
-            ROS_INFO("ERROR ERROR ERROR");
+            ROS_INFO("ERROR ERROR ERROR (2)");
         }
-        flag_connected_ = false;
-        ROS_INFO("Robot cabinet disconnected");
-        std_msgs::Bool robconnstatus;
-        robconnstatus.data = false;
-        pub_robconnstatus_.publish(robconnstatus);
+        
     }   
 }
 
@@ -148,7 +149,7 @@ void RobotROSInterface::RobotEFFMotionCallBack(const geometry_msgs::Pose::ConstP
     }
     catch(...)
     {
-        ROS_INFO("ERROR ERROR ERROR");
+        ROS_INFO("ERROR ERROR ERROR (3)");
     }
 
 }
@@ -163,16 +164,16 @@ void RobotROSInterface::RobotTerminateNodeCallBack(const std_msgs::String::Const
         try
         {
             kst_.NetTurnoffServer();
+            flag_connected_ = false;
+            ROS_INFO("Ending connection signal sent to cabinet");
+            std_msgs::Bool robconnstatus;
+            robconnstatus.data = false;
+            pub_robconnstatus_.publish(robconnstatus);
         }
         catch(...)
         {
-            ROS_INFO("ERROR ERROR ERROR");
+            ROS_INFO("ERROR ERROR ERROR (4)");
         }
-        flag_connected_ = false;
-        ROS_INFO("Ending connection signal sent to cabinet");
-        std_msgs::Bool robconnstatus;
-        robconnstatus.data = false;
-        pub_robconnstatus_.publish(robconnstatus);
     }
 }
 
@@ -200,7 +201,7 @@ bool RobotROSInterface::RobotGetJntsPosCallBack(
     }
     catch(...)
     {
-        ROS_INFO("ERROR ERROR ERROR");
+        ROS_INFO("ERROR ERROR ERROR (5)");
         return false;
     }   
     return true;
@@ -228,7 +229,7 @@ bool RobotROSInterface::RobotGetEFFPoseCallBack(
     }
     catch(...)
     {
-        ROS_INFO("ERROR ERROR ERROR");
+        ROS_INFO("ERROR ERROR ERROR (6)");
         return false;
     }
     return true;

@@ -266,16 +266,18 @@ void Dispatcher::RobDisconnectCallBack(const std_msgs::String::ConstPtr& msg)
 void Dispatcher::GetJntsCallBack(const std_msgs::String::ConstPtr& msg)
 {
     if(!msg->data.compare("_jnts__")==0) return;
+    std_msgs::String msg_out;
     if(!states_[activated_state_]->flags_.GetFlagRobotConnStatus())
     {
         ROS_INFO("Robot cabinet connection has not been established");
+        msg_out.data = "no_data_returned;";
+        pub_robctrlcomm.publish(msg_out);
         return;
     }
     rotms_ros_msgs::GetJnts srv;
     if(clt_jnt_.call(srv))
     {
         std_msgs::Float32MultiArray jnts = srv.response.jnt;
-        std_msgs::String msg_out;
         std::stringstream str;
         for(int i=0;i<jnts.layout.dim[0].size;i++)
         {
@@ -289,16 +291,18 @@ void Dispatcher::GetJntsCallBack(const std_msgs::String::ConstPtr& msg)
 void Dispatcher::GetEFFCallBack(const std_msgs::String::ConstPtr& msg)
 {
     if(!msg->data.compare("_eff__")==0) return;
+    std_msgs::String msg_out;
     if(!states_[activated_state_]->flags_.GetFlagRobotConnStatus())
     {
         ROS_INFO("Robot cabinet connection has not been established");
+        msg_out.data = "no_data_returned;";
+        pub_robctrlcomm.publish(msg_out);
         return;
     }
     rotms_ros_msgs::GetEFF srv;
     if(clt_eff_.call(srv))
     {
         geometry_msgs::Pose eff = srv.response.eff;
-        std_msgs::String msg_out;
         std::stringstream str;
         str << std::to_string(eff.position.x) << "_";
         str << std::to_string(eff.position.y) << "_";
