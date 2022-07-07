@@ -1,0 +1,3 @@
+<launch>
+    <node name="node_calibration_data" pkg="rotms_ros_kinematics" type="node_calibration_data" output="screen"/>
+</launch>
