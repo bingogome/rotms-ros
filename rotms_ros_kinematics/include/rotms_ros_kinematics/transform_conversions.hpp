@@ -22,48 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
-#pragma once
-#include <ros/ros.h>
 #include <geometry_msgs/Pose.h>
-#include <std_msgs/String.h>
+#include <geometry_msgs/TransformStamped.h>
+#include <tf2/LinearMath/Transform.h>
 
+tf2::Transform ConvertToTf2Transform(const geometry_msgs::PoseConstPtr tr);
 
-struct OpsVolatileTempDataCache 
-{
-    int landmark_total = -1;
-    std::vector<std::vector<double>> landmarkdig;
-};
+tf2::Transform ConvertToTf2Transform(const geometry_msgs::TransformStampedConstPtr tr);
 
-class TMSOperations
-{
-public:
-
-    TMSOperations(ros::NodeHandle& n);
-
-    // Cruicial operations
-    void OperationPlanLandmarks();
-    void OperationDigitization();
-    void OperationPlanToolPose();
-    void OperationRegistration();
-
-    // Secondary and intermediate operations
-    // void Operation();
-    // void Operation();
-    // void Operation();
-
-private:
-
-    ros::NodeHandle& n_;
-    ros::Publisher pub_registration_ = 
-        n_.advertise<geometry_msgs::Pose>("/Rotms/DataCache/Update/Registration", 5);
-    ros::Publisher pub_toolpose_ = 
-        n_.advertise<geometry_msgs::Pose>("/Rotms/DataCache/Update/ToolPose", 5);
-    ros::Publisher pub_run_polaris_tr_bodyref_ptrtip_ = 
-        n_.advertise<std_msgs::String>("/Kinematics/Flag_bodyref_ptrtip", 2);
-
-    struct OpsVolatileTempDataCache datacache_;
-    void ResetOpsVolatileDataCache();
-
-};
-
-void SaveLandmarkDigData(struct OpsVolatileTempDataCache datacache, std::string f);
+geometry_msgs::Pose ConvertToGeometryPose(const tf2::Transform tr);

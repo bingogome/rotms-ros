@@ -6,6 +6,7 @@ find_package(catkin REQUIRED COMPONENTS
   cmake_modules
   roslaunch
   roslib
+  tf2
   )
 
 find_package(PkgConfig REQUIRED)
@@ -21,7 +22,7 @@ catkin_package(
   )
 
 add_library(${PROJECT_NAME} 
-  src/dummy.cpp
+  src/transform_conversions.cpp
   )
 
 target_include_directories(${PROJECT_NAME} PUBLIC 
@@ -34,3 +35,6 @@ target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} yaml-cpp)
 
 add_executable(node_calibration_data src/nodes/node_calibration_data.cpp)
 target_link_libraries(node_calibration_data ${PROJECT_NAME})
+
+add_executable(node_polaris_tr_bodyref_ptrtip src/nodes/node_polaris_tr_bodyref_ptrtip.cpp)
+target_link_libraries(node_polaris_tr_bodyref_ptrtip ${PROJECT_NAME})
