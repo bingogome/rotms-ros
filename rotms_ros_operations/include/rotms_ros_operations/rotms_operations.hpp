@@ -55,9 +55,9 @@ private:
 
     ros::NodeHandle& n_;
     ros::Publisher pub_registration_ = 
-        n_.advertise<geometry_msgs::Pose>("/Rotms/DataCache/Update/Registration", 5);
+        n_.advertise<geometry_msgs::Pose>("/Kinematics/TR_bodyref_body", 2, true);
     ros::Publisher pub_toolpose_ = 
-        n_.advertise<geometry_msgs::Pose>("/Rotms/DataCache/Update/ToolPose", 5);
+        n_.advertise<geometry_msgs::Pose>("/Kinematics/TR_body_cntct", 2, true);
     ros::Publisher pub_run_polaris_tr_bodyref_ptrtip_ = 
         n_.advertise<std_msgs::String>("/Kinematics/Flag_bodyref_ptrtip", 2);
 

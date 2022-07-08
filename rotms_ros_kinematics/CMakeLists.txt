@@ -38,3 +38,7 @@ target_link_libraries(node_calibration_data ${PROJECT_NAME})
 
 add_executable(node_polaris_tr_bodyref_ptrtip src/nodes/node_polaris_tr_bodyref_ptrtip.cpp)
 target_link_libraries(node_polaris_tr_bodyref_ptrtip ${PROJECT_NAME})
+
+
+add_executable(node_robot_eff src/nodes/node_robot_eff.cpp)
+target_link_libraries(node_robot_eff ${PROJECT_NAME})

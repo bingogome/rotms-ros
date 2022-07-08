@@ -54,9 +54,9 @@ private:
 int main(int argc, char **argv)
 {
     // ROS stuff
-    ros::Rate rate(50.0);
     ros::init(argc, argv, "NodePolarisTrBodyrefPtrtip");
     ros::NodeHandle nh;
+    ros::Rate rate(50.0);
 
     // Instantiate the flag manager
     TransformMngrBodyrefPtrtip mngr1(nh);

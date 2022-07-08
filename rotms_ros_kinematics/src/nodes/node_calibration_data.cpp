@@ -25,7 +25,6 @@ SOFTWARE.
 #include <map>
 #include <yaml-cpp/yaml.h>
 #include <ros/package.h>
-
 #include <ros/ros.h>
 #include <geometry_msgs/Pose.h>
 
@@ -57,19 +56,22 @@ int main(int argc, char **argv)
     ros::NodeHandle nh;
 
     ros::Publisher pub_cntct_offset = nh.advertise<geometry_msgs::Pose>(
-        "/Kinematics/TR_cntc_offset", 2, true);
+        "/Kinematics/TR_cntct_offset", 2, true);
     ros::Publisher pub_offset_tool = nh.advertise<geometry_msgs::Pose>(
         "/Kinematics/TR_offset_tool", 2, true);
     ros::Publisher pub_tool_toolref = nh.advertise<geometry_msgs::Pose>(
         "/Kinematics/TR_tool_toolref", 2, true);
     ros::Publisher pub_toolref_eff = nh.advertise<geometry_msgs::Pose>(
         "/Kinematics/TR_toolref_eff", 2, true);
+    ros::Publisher pub_ptr_ptrtip = nh.advertise<geometry_msgs::Pose>(
+        "/Kinematics/TR_ptr_ptrtip", 2, true);
 
     PubMap pubs;
     pubs["cntct_offset"] = pub_cntct_offset;
     pubs["offset_tool"] = pub_offset_tool;
     pubs["tool_toolref"] = pub_tool_toolref;
     pubs["toolref_eff"] = pub_toolref_eff;
+    pubs["ptr_ptrtip"] = pub_ptr_ptrtip;
 
     for (PubMap::iterator it = pubs.begin(); it != pubs.end(); it++)
     {

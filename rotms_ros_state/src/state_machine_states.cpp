@@ -147,6 +147,7 @@ int State0000::LandmarksPlanned()
 int State0000::ToolPosePlanned()
 {
     TransitionOps funcs;
+    funcs.push_back(std::bind(&TMSOperations::OperationPlanToolPose, ops_));
     funcs.push_back(FlagMachine::PlanToolPose);
     Transition(0B0010, funcs);
     return 0B0010;
@@ -167,6 +168,7 @@ int State1000::LandmarksDigitized()
 int State1000::ToolPosePlanned()
 {
     TransitionOps funcs;
+    funcs.push_back(std::bind(&TMSOperations::OperationPlanToolPose, ops_));
     funcs.push_back(FlagMachine::PlanToolPose);
     Transition(0B1010, funcs);
     return 0B1010;
@@ -193,6 +195,7 @@ State1100::State1100(std::vector<WorkState*>& v, FlagMachine& f, TMSOperations& 
 int State1100::ToolPosePlanned()
 {
     TransitionOps funcs;
+    funcs.push_back(std::bind(&TMSOperations::OperationPlanToolPose, ops_));
     funcs.push_back(FlagMachine::PlanToolPose);
     Transition(0B1110, funcs);
     return 0B1110;
@@ -236,6 +239,7 @@ State1101::State1101(std::vector<WorkState*>& v, FlagMachine& f, TMSOperations& 
 int State1101::ToolPosePlanned()
 {
     TransitionOps funcs;
+    funcs.push_back(std::bind(&TMSOperations::OperationPlanToolPose, ops_));
     funcs.push_back(FlagMachine::PlanToolPose);
     Transition(0B1111, funcs);
     return 0B1111;
@@ -278,6 +282,7 @@ int State0010::ClearToolPosePlan()
 int State0010::ToolPosePlanned()
 {
     TransitionOps funcs;
+    funcs.push_back(std::bind(&TMSOperations::OperationPlanToolPose, ops_));
     funcs.push_back(FlagMachine::PlanToolPose);
     Transition(0B0010, funcs);
     return 0B0010;
@@ -304,6 +309,7 @@ int State1010::ClearLandmarks()
 int State1010::ToolPosePlanned()
 {
     TransitionOps funcs;
+    funcs.push_back(std::bind(&TMSOperations::OperationPlanToolPose, ops_));
     funcs.push_back(FlagMachine::PlanToolPose);
     Transition(0B1010, funcs);
     return 0B1010;
@@ -346,6 +352,7 @@ int State1110::LandmarksDigitized()
 int State1110::ToolPosePlanned()
 {
     TransitionOps funcs;
+    funcs.push_back(std::bind(&TMSOperations::OperationPlanToolPose, ops_));
     funcs.push_back(FlagMachine::PlanToolPose);
     Transition(0B1110, funcs);
     return 0B1110;
@@ -388,6 +395,7 @@ int State1111::ClearToolPosePlan()
 int State1111::ToolPosePlanned()
 {
     TransitionOps funcs;
+    funcs.push_back(std::bind(&TMSOperations::OperationPlanToolPose, ops_));
     funcs.push_back(FlagMachine::PlanToolPose);
     Transition(0B1111, funcs);
     return 0B1111;

@@ -114,8 +114,20 @@ void TMSOperations::OperationDigitization()
 void TMSOperations::OperationPlanToolPose()
 {
     // The operation has been done by dispatcher and cached to /share/config
-    // no need to call this anymore.
-    // Perhaps future change 
+    // Only need to publish
+    std::string packpath = ros::package::getPath("rotms_ros_operations");
+    YAML::Node f = YAML::LoadFile(packpath + "/share/config/toolpose.yaml");
+    YAML::Node ff1 = f["TRANSLATION"];
+    YAML::Node ff2 = f["ROTATION"];
+    geometry_msgs::Pose tr;
+    tr.position.x = ff1["x"].as<double>();
+    tr.position.y = ff1["y"].as<double>();
+    tr.position.z = ff1["z"].as<double>();
+    tr.orientation.x = ff2["x"].as<double>();
+    tr.orientation.y = ff2["y"].as<double>();
+    tr.orientation.z = ff2["z"].as<double>();
+    tr.orientation.w = ff2["w"].as<double>();
+    pub_toolpose_.publish(tr);
 }
 
 void TMSOperations::OperationRegistration()
