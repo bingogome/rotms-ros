@@ -387,7 +387,7 @@ void Dispatcher::ExecuteMotionToTargetEFFPose()
 
     if(activated_state_!=0b1111)
     {
-        ROS_INFO("The prerequisites are not met. Check before robot motion. (code 1)");
+        ROS_INFO("The prerequisites are not met. Check before robot motion. (code 0)");
         return;
     }
     // Query for current EFF pose and publish (latch)
@@ -435,7 +435,7 @@ void Dispatcher::ExecuteBackOffsetCallBack(const std_msgs::String::ConstPtr& msg
     if(!msg->data.compare("_backoffset__")==0) return;
     if(activated_state_!=0b1111)
     {
-        ROS_INFO("The prerequisites are not met. Check before robot motion. (code 1)");
+        ROS_INFO("The prerequisites are not met. Check before robot motion. (code 3)");
         return;
     }
     geometry_msgs::Pose changeoffset;
