@@ -32,6 +32,7 @@ SOFTWARE.
 #include <ros/package.h>
 #include <rotms_ros_msgs/GetJnts.h>
 #include <rotms_ros_msgs/GetEFF.h>
+#include <yaml-cpp/yaml.h>
 #include <iostream>
 
 /*
@@ -383,6 +384,12 @@ void Dispatcher::ExecuteConfirmMotionCallBack(const std_msgs::String::ConstPtr& 
 
 void Dispatcher::ExecuteMotionToTargetEFFPose()
 {   
+
+    if(activated_state_!=0b1111)
+    {
+        ROS_INFO("The prerequisites are not met. Check before robot motion. (code 1)");
+        return;
+    }
     // Query for current EFF pose and publish (latch)
     rotms_ros_msgs::GetEFF srv;
     if(!clt_eff_.call(srv))
@@ -421,4 +428,26 @@ void Dispatcher::ExecuteMotionToTargetEFFPose()
     rotms_ros_msgs::PoseValid pv;
     pv.valid = false;
     pub_effold_.publish(pv);
+}
+
+void Dispatcher::ExecuteBackOffsetCallBack(const std_msgs::String::ConstPtr& msg)
+{
+    if(!msg->data.compare("_backoffset__")==0) return;
+    if(activated_state_!=0b1111)
+    {
+        ROS_INFO("The prerequisites are not met. Check before robot motion. (code 1)");
+        return;
+    }
+    geometry_msgs::Pose changeoffset;
+    std::string packpath = ros::package::getPath("rotms_ros_kinematics");
+	YAML::Node f = YAML::LoadFile(packpath + "/share/cntct_offset.yaml");
+    changeoffset.position.x = f["x"].as<double>();
+    changeoffset.position.y = f["y"].as<double>();
+    changeoffset.position.z = f["z"].as<double>();
+    changeoffset.orientation.x = f["rx"].as<double>();
+    changeoffset.orientation.y = f["ry"].as<double>();
+    changeoffset.orientation.z = f["rz"].as<double>();
+    changeoffset.orientation.w = f["rw"].as<double>();
+    pub_changeoffset_.publish(changeoffset);
+    Dispatcher::ExecuteMotionToTargetEFFPose();
 }

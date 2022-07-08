@@ -77,6 +77,8 @@ private:
         "/RobCtrl/Motion", 2, &Dispatcher::ExecuteMotionCallBack, this);
     ros::Subscriber sub_robctrl_executeconfirm_ = n_.subscribe(
         "/RobCtrl/Motion", 2, &Dispatcher::ExecuteConfirmMotionCallBack, this);
+    ros::Subscriber sub_robctrl_executebackoffset_ = n_.subscribe(
+        "/RobCtrl/Motion", 2, &Dispatcher::ExecuteBackOffsetCallBack, this);
     ros::Subscriber sub_robctrl_sessionreinit_ = n_.subscribe(
         "/RobCtrl/Session", 2, &Dispatcher::SessionReinitCallBack, this);
 
@@ -115,6 +117,7 @@ private:
     void ExecuteMotionCallBack(const std_msgs::String::ConstPtr& msg);
     void ExecuteConfirmMotionCallBack(const std_msgs::String::ConstPtr& msg);
     void ExecuteMotionToTargetEFFPose();
+    void ExecuteBackOffsetCallBack(const std_msgs::String::ConstPtr& msg);
 
     // Temp data cache (volatile)
     struct VolatileTempDataCache datacache_;
