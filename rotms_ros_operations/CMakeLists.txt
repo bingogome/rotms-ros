@@ -4,6 +4,7 @@ project(rotms_ros_operations)
 find_package(catkin REQUIRED COMPONENTS 
   roscpp
   roslib
+  rotms_ros_msgs
   )
 
 find_package(PkgConfig REQUIRED)

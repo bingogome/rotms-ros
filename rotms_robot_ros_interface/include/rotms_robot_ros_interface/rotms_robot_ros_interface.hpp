@@ -24,7 +24,10 @@ SOFTWARE.
 
 #include <ros/ros.h>
 #include <std_msgs/String.h>
+#include <std_msgs/Bool.h>
 #include <geometry_msgs/Pose.h>
+#include <rotms_ros_msgs/GetJnts.h>
+#include <rotms_ros_msgs/GetEFF.h>
 
 #include "kst_servoing.hpp"
 
@@ -42,35 +45,51 @@ private:
     KstServoing& kst_;
     ros::NodeHandle& n_;
 
+    ros::Subscriber sub_connstatus_query_ = n_.subscribe(
+        "/RobInterface/ConnectStatusQuery", 2,
+        &RobotROSInterface::RobotConnectStatusQuery, this);
     ros::Subscriber sub_init_conn_ = n_.subscribe(
-        "/RobInterface/InitConnection", 10,
+        "/RobInterface/Connection", 2,
         &RobotROSInterface::RobotInitConnectionCallBack, this);
-    ros::Subscriber sub_end_ = n_.subscribe(
-        "/RobInterface/TerminateNode", 10, 
-        &RobotROSInterface::RobotTerminateNodeCallBack, this);
-    ros::Subscriber sub_eef_move_ = n_.subscribe(
-        "/RobInterface/MoveEEF", 10,
-        &RobotROSInterface::RobotEEFMotionCallBack, this);
-    ros::Subscriber sub_get_jnt_ = n_.subscribe(
-        "/RobInterface/GetJntPos", 10,
-        &RobotROSInterface::RobotGetJntPosCallBack, this);
-    ros::Subscriber sub_get_eef_ = n_.subscribe(
-        "/RobInterface/GetEEFPose", 10,
-        &RobotROSInterface::RobotGetEEFPoseCallBack, this);
+    ros::Subscriber sub_disconn_ = n_.subscribe(
+        "/RobInterface/Connection", 2,
+        &RobotROSInterface::RobotDisconnectCallBack, this);
+    ros::Subscriber sub_eff_move_ = n_.subscribe(
+        "/RobInterface/MoveEFF", 2,
+        &RobotROSInterface::RobotEFFMotionCallBack, this);
+    
+    ros::Publisher pub_eff_ = n_.advertise<geometry_msgs::Pose>(
+        "/RobInterfaceOut/EFFPose", 2);
+    ros::Publisher pub_jnt_ = n_.advertise<std_msgs::Float32MultiArray>(
+        "/RobInterfaceOut/JntPos", 2);
+    ros::Publisher pub_robconnstatus_ = n_.advertise<std_msgs::Bool>(
+        "/RobInterfaceOut/RobConnStatus", 2);
 
-    ros::Publisher pub_eef_ = n_.advertise<geometry_msgs::Pose>(
-        "/RobInterfaceOut/EEFPose", 10);
-    ros::Publisher pub_jnt_ = n_.advertise<geometry_msgs::Pose>(
-        "/RobInterfaceOut/JntPos", 10);
+    ros::ServiceServer srv_get_jnt_ = n_.advertiseService(
+        "/RobInterface/GetJntsPos", &RobotROSInterface::RobotGetJntsPosCallBack, this);
+    ros::ServiceServer srv_get_eff_ = n_.advertiseService(
+        "/RobInterface/GetEFFPose", &RobotROSInterface::RobotGetEFFPoseCallBack, this);
 
+    // Query the robot connection status
+    void RobotConnectStatusQuery(const std_msgs::String::ConstPtr& msg);
     // Start the cabinet connection
     void RobotInitConnectionCallBack(const std_msgs::String::ConstPtr& msg);
-    // Move to received EEF pose at a slow speed
-    void RobotEEFMotionCallBack(const geometry_msgs::Pose::ConstPtr& msg);
+    // End the cabinet connection
+    void RobotDisconnectCallBack(const std_msgs::String::ConstPtr& msg);
+    // Move to received EFF pose at a slow speed
+    void RobotEFFMotionCallBack(const geometry_msgs::Pose::ConstPtr& msg);
+
     // Get joint positions
-    void RobotGetJntPosCallBack(const std_msgs::String::ConstPtr& msg);
+    bool RobotGetJntsPosCallBack(
+        rotms_ros_msgs::GetJnts::Request &req, rotms_ros_msgs::GetJnts::Response &res);
     // Get end-effector pose
-    void RobotGetEEFPoseCallBack(const std_msgs::String::ConstPtr& msg);
+    bool RobotGetEFFPoseCallBack(
+        rotms_ros_msgs::GetEFF::Request &req, rotms_ros_msgs::GetEFF::Response &res);
+
     // Should be only called when terminating node
+    ros::Subscriber sub_end_ = n_.subscribe(
+        "/RobInterface/TerminateNode", 2, 
+        &RobotROSInterface::RobotTerminateNodeCallBack, this);
     void RobotTerminateNodeCallBack(const std_msgs::String::ConstPtr& msg);
+
 };

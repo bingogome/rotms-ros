@@ -39,27 +39,35 @@ SOFTWARE.
 * nested siwch-case.
 ***/
 
-WorkState::WorkState(int state_num, std::vector<WorkState>& v, FlagMachine& f, TMSOperations& ops) 
+WorkState::WorkState(int state_num, std::vector<WorkState*>& v, FlagMachine& f, TMSOperations& ops) 
     : state_num_(state_num), states_(v), flags_(f), ops_(ops)
 {
     Deactivate();
+}
+
+WorkState::~WorkState()
+{
+    for (auto p : states_)
+    {
+        delete p;
+    } 
 }
 
 bool WorkState::CheckActivated(){return activated_;}
 void WorkState::Activate(){activated_=true;}
 void WorkState::Deactivate(){activated_=false;}
 int WorkState::GetStateNum(){return state_num_;}
-bool WorkState::CheckIfUniqueActivation(std::vector<WorkState>& states)
+bool WorkState::CheckIfUniqueActivation(const std::vector<WorkState*>& states)
 {
     int s = 0;
     for(int i=0; i<states.size(); i++)
     {
-        if(states[i].CheckActivated()) s++;
+        if(states[i]->CheckActivated()) s++;
     }
     return s<=1;
 }
 
-int WorkState::GetActivatedState(std::vector<WorkState>& states)
+int WorkState::GetActivatedState(const std::vector<WorkState*>& states)
 {
     if ( ! WorkState::CheckIfUniqueActivation(states) )
         throw std::runtime_error(
@@ -67,7 +75,7 @@ int WorkState::GetActivatedState(std::vector<WorkState>& states)
     
     for(int i=0;i<states.size();i++)
     {
-        if (states[i].CheckActivated())
+        if (states[i]->CheckActivated())
             return i;
     }
 
@@ -85,21 +93,22 @@ int WorkState::ClearDigitization() { TransitionNotPossible(); return -1; }
 int WorkState::ClearRegistration() { TransitionNotPossible(); return -1; }
 int WorkState::ClearToolPosePlan() { TransitionNotPossible(); return -1; }
 
+int WorkState::ReinitState() { TransitionNotPossible(); return -1; }
+
 void WorkState::TransitionNotPossible()
 {
-    // TODO: implement this. (possibly having a return value)
+    // TODO: implement this. Optional
 }
 void WorkState::Transition(int target_state, TransitionOps funcs)
 {
-    this->Deactivate();
+    Deactivate();
 
     for(int i=0; i<funcs.size(); i++)
     {
         funcs[i]();
     }
 
-    states_[target_state].Activate();
-
+    states_[target_state]->Activate();
     if ( ! WorkState::CheckIfUniqueActivation(states_) )
         throw std::runtime_error(
             "State machine error: not unique states are activated!");

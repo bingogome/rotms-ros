@@ -38,11 +38,6 @@ int main(int argc, char **argv)
     
     FlagMachine f = FlagMachine();
     TMSOperations o(nh);
-    
-    std::vector<WorkState> vec = GetStatesVector(f, o);
-    bool temp = CheckFlagIntegrity(vec);
-
-    ROS_INFO_STREAM(temp);
 
     ros::spin();
     return 0;

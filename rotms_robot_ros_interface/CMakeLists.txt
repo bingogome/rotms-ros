@@ -5,6 +5,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   roslib
   roslaunch
+  rotms_ros_msgs
   )
 
 find_package(Boost REQUIRED COMPONENTS system)
@@ -17,7 +18,7 @@ roslaunch_add_file_check(launch)
 catkin_package(
   INCLUDE_DIRS include 
   LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS roscpp
+  CATKIN_DEPENDS roscpp rotms_ros_msgs
   DEPENDS YAML_CPP
 )
 

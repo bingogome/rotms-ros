@@ -24,7 +24,10 @@ SOFTWARE.
 
 #include <ros/ros.h>
 #include <std_msgs/String.h>
+#include <std_msgs/Bool.h>
 #include <geometry_msgs/Pose.h>
+#include <rotms_ros_msgs/GetJnts.h>
+#include <rotms_ros_msgs/GetEFF.h>
 #include <vector>
 #include <math.h>
 #include "rotms_robot_ros_interface.hpp"
@@ -62,6 +65,18 @@ RobotROSInterface::RobotROSInterface(KstServoing& kst, ros::NodeHandle& nh)
         : 
         kst_(kst), n_(nh) {}
 
+// Publish the robot connection status
+void RobotROSInterface::RobotConnectStatusQuery(const std_msgs::String::ConstPtr& msg)
+{
+    if(msg->data.compare("_query_robot_connection_status__")==0)
+    {
+        std_msgs::Bool robconnstatus;
+        robconnstatus.data = flag_connected_;
+        pub_robconnstatus_.publish(robconnstatus);
+        ROS_INFO_STREAM("Robot cabinet connection status: " + std::to_string(flag_connected_));
+    }
+}
+
 // Start the cabinet connection
 void RobotROSInterface::RobotInitConnectionCallBack(const std_msgs::String::ConstPtr& msg)
 {
@@ -70,18 +85,49 @@ void RobotROSInterface::RobotInitConnectionCallBack(const std_msgs::String::Cons
         try
         {
             kst_.NetEstablishConnection();
+            flag_connected_ = true;
+            ROS_INFO("Robot cabinet connection initialized");
+            std_msgs::Bool robconnstatus;
+            robconnstatus.data = true;
+            pub_robconnstatus_.publish(robconnstatus);
         }
         catch(...)
         {
-            ROS_INFO("ERROR ERROR ERROR");
+            ROS_INFO("ERROR ERROR ERROR (1)");
         }
-        flag_connected_ = true;
     }   
 }
 
-// Move to receive EEF pose at a slow speed
-void RobotROSInterface::RobotEEFMotionCallBack(const geometry_msgs::Pose::ConstPtr& msg)
+// End the cabinet connection
+void RobotROSInterface::RobotDisconnectCallBack(const std_msgs::String::ConstPtr& msg)
 {
+    if (msg->data.compare("_end_robot_connection_")==0 && flag_connected_)
+    {
+        try
+        {
+            kst_.NetTurnoffServer();
+            flag_connected_ = false;
+            ROS_INFO("Robot cabinet disconnected");
+            std_msgs::Bool robconnstatus;
+            robconnstatus.data = false;
+            pub_robconnstatus_.publish(robconnstatus);
+        }
+        catch(...)
+        {
+            ROS_INFO("ERROR ERROR ERROR (2)");
+        }
+        
+    }   
+}
+
+// Move to received EFF pose at a slow speed
+void RobotROSInterface::RobotEFFMotionCallBack(const geometry_msgs::Pose::ConstPtr& msg)
+{
+    if(!flag_connected_)
+    {
+        ROS_INFO("Robot cabinet connection has not been established");
+        return;
+    }
     std::vector<double> quat{
         msg->orientation.x,
         msg->orientation.y,
@@ -99,13 +145,13 @@ void RobotROSInterface::RobotEEFMotionCallBack(const geometry_msgs::Pose::ConstP
     };
     try
     {
-        kst_.PTPLineEEF(epos, /*DON'T CHANGE!*/12.0); // second parameter is mm/sec
+        kst_.PTPLineEFF(epos, /*DON'T CHANGE!*/12.0); // second parameter is mm/sec
     }
     catch(...)
     {
-        ROS_INFO("ERROR ERROR ERROR");
+        ROS_INFO("ERROR ERROR ERROR (3)");
     }
-    
+
 }
 
 // Should be only called when terminating node
@@ -118,37 +164,73 @@ void RobotROSInterface::RobotTerminateNodeCallBack(const std_msgs::String::Const
         try
         {
             kst_.NetTurnoffServer();
+            flag_connected_ = false;
+            ROS_INFO("Ending connection signal sent to cabinet");
+            std_msgs::Bool robconnstatus;
+            robconnstatus.data = false;
+            pub_robconnstatus_.publish(robconnstatus);
         }
         catch(...)
         {
-            ROS_INFO("ERROR ERROR ERROR");
+            ROS_INFO("ERROR ERROR ERROR (4)");
         }
-        
-        ROS_INFO("Ending connection signal sent to cabinet");
     }
 }
 
 // Get joint positions
-void RobotROSInterface::RobotGetJntPosCallBack(const std_msgs::String::ConstPtr& msg)
+bool RobotROSInterface::RobotGetJntsPosCallBack(
+    rotms_ros_msgs::GetJnts::Request &req, rotms_ros_msgs::GetJnts::Response &res)
 {
-
+    if(!flag_connected_)
+    {
+        ROS_INFO("Robot cabinet connection has not been established");
+        return false;
+    }
+    try
+    {
+        std::vector<double> vec = kst_.GetJointPosition();
+        std_msgs::Float32MultiArray msg;
+        msg.layout.dim.push_back(std_msgs::MultiArrayDimension());
+        msg.layout.dim[0].size = 7; // Kuka iiwa has 7 joints
+        msg.layout.dim[0].stride = 1;
+        msg.layout.dim[0].label = "format__";
+        msg.data.clear();
+        msg.data.insert(msg.data.end(), vec.begin(), vec.end());
+        pub_jnt_.publish(msg);
+        res.jnt = msg;
+    }
+    catch(...)
+    {
+        ROS_INFO("ERROR ERROR ERROR (5)");
+        return false;
+    }   
+    return true;
 }
 
 // Get end-effector pose
-void RobotROSInterface::RobotGetEEFPoseCallBack(const std_msgs::String::ConstPtr& msg)
+bool RobotROSInterface::RobotGetEFFPoseCallBack(
+    rotms_ros_msgs::GetEFF::Request &req, rotms_ros_msgs::GetEFF::Response &res)
 {
+    if(!flag_connected_)
+    {
+        ROS_INFO("Robot cabinet connection has not been established");
+        return false;
+    }
     try
     {
-        std::vector<double> vec = kst_.GetEEFPosition();
+        std::vector<double> vec = kst_.GetEFFPosition();
         geometry_msgs::Pose out;
         out.position.x = vec[0]; out.position.y = vec[1]; out.position.z = vec[2];
         std::vector<double> eul{vec[3],vec[4],vec[5]};
         std::vector<double> quat = eul2quat(eul);
         out.orientation.x = quat[0]; out.orientation.y = quat[1]; out.orientation.z = quat[2]; out.orientation.w = quat[3]; 
-        pub_eef_.publish(out);
+        pub_eff_.publish(out);
+        res.eff = out;
     }
     catch(...)
     {
-        ROS_INFO("ERROR ERROR ERROR");
+        ROS_INFO("ERROR ERROR ERROR (6)");
+        return false;
     }
+    return true;
 }

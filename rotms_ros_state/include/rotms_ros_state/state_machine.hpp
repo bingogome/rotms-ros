@@ -49,15 +49,19 @@ public:
 
     WorkState(
         int state_num,
-        std::vector<WorkState>& v,
+        std::vector<WorkState*>& v,
         FlagMachine& f,
         TMSOperations& ops);
+    virtual ~WorkState();
+
+    FlagMachine& flags_;
+    
     bool CheckActivated();
     void Activate();
     void Deactivate();
     int GetStateNum();
-    static bool CheckIfUniqueActivation(std::vector<WorkState>& states);
-    static int GetActivatedState(std::vector<WorkState>& states);
+    static bool CheckIfUniqueActivation(const std::vector<WorkState*>& states);
+    static int GetActivatedState(const std::vector<WorkState*>& states);
 
     virtual int LandmarksPlanned();
     virtual int LandmarksDigitized();
@@ -69,11 +73,12 @@ public:
     virtual int ClearRegistration();
     virtual int ClearToolPosePlan();
 
+    virtual int ReinitState();
+
 protected:
     
     const int state_num_;
-    std::vector<WorkState>& states_;
-    FlagMachine& flags_;
+    const std::vector<WorkState*>& states_;
     TMSOperations& ops_;
     bool activated_;
     

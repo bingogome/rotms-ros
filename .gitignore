@@ -52,3 +52,6 @@ CATKIN_IGNORE
 
 .vscode/
 .vs/
+
+# data record
+rotms_ros_operations/share/data/

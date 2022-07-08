@@ -24,7 +24,6 @@ SOFTWARE.
 
 #include "rotms_dispatcher.hpp"
 #include "flag_machine.hpp"
-#include "state_machine.hpp"
 #include "state_machine_states.hpp"
 #include "rotms_operations.hpp"
 
@@ -40,13 +39,17 @@ int main(int argc, char **argv)
     // Initialize flags, states, operations and pass to dispatcher
     FlagMachine f = FlagMachine();
     TMSOperations ops = TMSOperations(nh);
-    std::vector<WorkState> vec = GetStatesVector(f, ops);
-    bool integ = CheckFlagIntegrity(vec);
-    ROS_INFO_STREAM("Flag integrity check: " + integ);
+
+    // WARNING: this function will return a vector of pointers
+    // Remember to release memory !!
+    // In this node, the memory is released by Dispatcher when 
+    // destroying the Dispatcher object
+    const std::vector<WorkState*> states = GetStatesVector(f, ops);
 
     // Initialize dispatcher
-    Dispatcher d = Dispatcher(nh, vec);
+    Dispatcher d = Dispatcher(nh, states);
 
     ros::spin();
+
     return 0;
 }

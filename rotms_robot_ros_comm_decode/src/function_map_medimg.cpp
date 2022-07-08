@@ -26,8 +26,28 @@ SOFTWARE.
 #include <string>
 #include <ros/ros.h>
 #include <std_msgs/Int16.h>
+#include <std_msgs/Float32MultiArray.h>
+#include <geometry_msgs/Quaternion.h>
+#include <geometry_msgs/Point.h>
+
 #include "function_map_medimg.hpp"
 #include "decode_node.hpp"
+
+std::vector<double> SubStringTokenize2Double(std::string s, std::string del = "_")
+{   
+    std::vector<double> ans;
+    int start = 0;
+    int end = s.find(del);
+    while (end != -1) {
+        ans.push_back(
+            std::stod(s.substr(start, end - start)));
+        start = end + del.size();
+        end = s.find(del, start);
+    }
+    ans.push_back(
+        std::stod(s.substr(start, end - start)));
+    return ans;
+}
 
 /**
 * This maps the functions to the received cmd.
@@ -41,13 +61,15 @@ CommDecoderMedImg::CommDecoderMedImg(
     CommDecoder(n, modulesuffix, opsdict) 
 {
     pubs_.push_back(
-        n_.advertise<std_msgs::String>("/MedImg/StartAct", 5));
+        n_.advertise<std_msgs::String>("/MedImg/StartAct", 2));
     pubs_.push_back(
-        n_.advertise<std_msgs::String>("/MedImg/TargetPlan", 5));
+        n_.advertise<std_msgs::Int16>("/MedImg/LandmarkPlanMeta", 2));
     pubs_.push_back(
-        n_.advertise<std_msgs::Int16>("/MedImg/FiducialPlanMeta", 5));
+        n_.advertise<std_msgs::Float32MultiArray>("/MedImg/LandmarkPlanFids", 10));
     pubs_.push_back(
-        n_.advertise<std_msgs::String>("/MedImg/FiducialPlanFids", 5));
+        n_.advertise<geometry_msgs::Quaternion>("/MedImg/ToolPoseOrient", 2));
+    pubs_.push_back(
+        n_.advertise<geometry_msgs::Point>("/MedImg/ToolPoseTrans", 2));
 }
 
 FuncMap GetFuncMapMedImg()
@@ -58,9 +80,9 @@ FuncMap GetFuncMapMedImg()
     fm["START_REGISTRATION"] = StartRegistration;
     fm["START_USE_PREV_REGISTRATION"] = StartUsePrevRegistration;
 
-    fm["FIDUCIAL_CURRENT_ON_IMG"] = FiducialCurrentOnImg;
-    fm["FIDUCIAL_NUM_OF_ON_IMG"] = FiducialNumOnImg;
-    fm["FIDUCIAL_LAST_RECEIVED"] = FiducialLastReceived;
+    fm["LANDMARK_CURRENT_ON_IMG"] = LandmarkCurrentOnImg;
+    fm["LANDMARK_NUM_OF_ON_IMG"] = LandmarkNumOnImg;
+    fm["LANDMARK_LAST_RECEIVED"] = LandmarkLastReceived;
 
     fm["TARGET_POSE_ORIENTATION"] = TargetPoseOrientation;
     fm["TARGET_POSE_TRANSLATION"] = TargetPoseTranslation;
@@ -70,48 +92,97 @@ FuncMap GetFuncMapMedImg()
 
 void StartAutoDigitize(std::string& ss, PublisherVec& pubs)
 {
-    
+    // pubs[0] is the publisher /MedImg/StartAct
+    std_msgs::String msg;
+    msg.data = "_autodigitize__";
+    pubs[0].publish(msg);
 }
 
 void StartRegistration(std::string& ss, PublisherVec& pubs)
 {
-    
+    // pubs[0] is the publisher /MedImg/StartAct
+    std_msgs::String msg;
+    msg.data = "_register__";
+    pubs[0].publish(msg);
 }
 
 void StartUsePrevRegistration(std::string& ss, PublisherVec& pubs)
 {
-    
+    // pubs[0] is the publisher /MedImg/StartAct
+    std_msgs::String msg;
+    msg.data = "_prevregister__";
+    pubs[0].publish(msg);
 }
 
-void FiducialCurrentOnImg(std::string& ss, PublisherVec& pubs)
+/* Landmark related functions:
+The decoder receives 3 commands
+1. Get the total number of landmarks
+2. Get each landmark cooredinate
+3. Notice the last landmark has been received
+*/
+
+void LandmarkCurrentOnImg(std::string& ss, PublisherVec& pubs)
 {
-    
+    // format: {current_index, x, y, z}
+    std::vector<double> fid_vec = SubStringTokenize2Double(ss, "_");
+
+    std_msgs::Float32MultiArray msg;
+    msg.layout.dim.push_back(std_msgs::MultiArrayDimension());
+    msg.layout.dim[0].size = fid_vec.size();
+    msg.layout.dim[0].stride = 1;
+    msg.layout.dim[0].label = "format__num_x_y_z";
+    msg.data.clear();
+    msg.data.insert(msg.data.end(), fid_vec.begin(), fid_vec.end());
+    // pubs[2] is the publisher /MedImg/LandmarkPlanFids (fiducial)
+    // Publish the current index of landmark, and the coordinate
+    pubs[2].publish(msg);
 }
 
-void FiducialNumOnImg(std::string& ss, PublisherVec& pubs)
+void LandmarkNumOnImg(std::string& ss, PublisherVec& pubs)
 {
     std_msgs::Int16 msg_test;
     msg_test.data = std::stoi(ss);
-    // pubs[2] is the publisher /MedImg/FiducialPlanMeta (meta data)
-    // Publish number of fiducials (landmarks). (If it is not -99)
-    pubs[2].publish(msg_test);
+    // pubs[1] is the publisher /MedImg/LandmarkPlanMeta (meta data)
+    // Publish number of landmarks (landmarks). (If it is not -99)
+    pubs[1].publish(msg_test);
 }
 
-void FiducialLastReceived(std::string& ss, PublisherVec& pubs)
+void LandmarkLastReceived(std::string& ss, PublisherVec& pubs)
 {
     std_msgs::Int16 msg_test;
     msg_test.data = -99;
-    // pubs[2] is the publisher /MedImg/FiducialPlanMeta (meta data)
+    // pubs[1] is the publisher /MedImg/LandmarkPlanMeta (meta data)
     // Publish -99 to the topic indicating the receiving of landmarks is complete
-    pubs[2].publish(msg_test);
+    pubs[1].publish(msg_test);
 }
 
 void TargetPoseOrientation(std::string& ss, PublisherVec& pubs)
 {
-    
+    geometry_msgs::Quaternion quat;
+
+    // format: { x, y, z, w }
+    std::vector<double> quat_vec = SubStringTokenize2Double(ss, "_");
+
+    quat.x = quat_vec[0];
+    quat.y = quat_vec[1];
+    quat.z = quat_vec[2];
+    quat.w = quat_vec[3];
+
+    // pubs[3] is the publisher /MedImg/ToolPoseOrient
+    pubs[3].publish(quat);
 }
 
 void TargetPoseTranslation(std::string& ss, PublisherVec& pubs)
 {
-    
+    geometry_msgs::Point p;
+
+    // format: { x, y, z }
+    std::vector<double> p_vec = SubStringTokenize2Double(ss, "_");
+
+    p.x = p_vec[0];
+    p.y = p_vec[1];
+    p.z = p_vec[2];
+
+    // pubs[4] is the publisher /MedImg/ToolPoseTrans
+    pubs[4].publish(p);
 }

@@ -1,0 +1,5 @@
+<launch>
+    <node name="node_calibration_data" pkg="rotms_ros_kinematics" type="node_calibration_data" output="screen"/>
+    <node name="node_robot_eff" pkg="rotms_ros_kinematics" type="node_robot_eff" output="screen"/>
+    <node name="node_polaris_tr_bodyref_ptrtip" pkg="rotms_ros_kinematics" type="node_polaris_tr_bodyref_ptrtip" output="screen"/>
+</launch>

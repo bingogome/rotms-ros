@@ -7,6 +7,7 @@ find_package(catkin REQUIRED COMPONENTS
   roslaunch
   rotms_ros_state
   rotms_ros_operations
+  rotms_ros_msgs
   )
 
 find_package(PkgConfig REQUIRED)
@@ -17,12 +18,13 @@ roslaunch_add_file_check(launch)
 catkin_package(
   INCLUDE_DIRS include 
   LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS roscpp rotms_ros_state
+  CATKIN_DEPENDS roscpp rotms_ros_state rotms_ros_msgs
   DEPENDS YAML_CPP
 )
 
 add_library(${PROJECT_NAME} 
   src/rotms_dispatcher.cpp
+  src/dispatcher_utility.cpp
   ../rotms_ros_state/src/flag_machine.cpp
   ../rotms_ros_state/src/state_machine.cpp
   ../rotms_ros_state/src/state_machine_states.cpp

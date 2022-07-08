@@ -29,79 +29,85 @@ SOFTWARE.
 
 #include <vector>
 
-bool CheckFlagIntegrity(std::vector<WorkState>& states);
+bool CheckFlagIntegrity(const std::vector<WorkState*>& states);
 
-std::vector<WorkState> GetStatesVector(
+std::vector<WorkState*> GetStatesVector(
     FlagMachine& f, TMSOperations& ops);
 
 class State0000 : public WorkState
 {
 public:
-    State0000(std::vector<WorkState>& v, FlagMachine& f, TMSOperations& ops);
+    State0000(std::vector<WorkState*>& v, FlagMachine& f, TMSOperations& ops);
 
     int LandmarksPlanned() override;
     int ToolPosePlanned() override;
+    int ReinitState() override;
 };
 
 class State1000 : public WorkState
 {
 public:
-    State1000(std::vector<WorkState>& v, FlagMachine& f, TMSOperations& ops);
+    State1000(std::vector<WorkState*>& v, FlagMachine& f, TMSOperations& ops);
 
     int LandmarksDigitized() override;
     int ToolPosePlanned() override;
     int ClearLandmarks() override;
     int LandmarksPlanned() override;
+    int ReinitState() override;
 };
 
 class State1100 : public WorkState
 {
 public:
-    State1100(std::vector<WorkState>& v, FlagMachine& f, TMSOperations& ops);
+    State1100(std::vector<WorkState*>& v, FlagMachine& f, TMSOperations& ops);
 
     int ToolPosePlanned() override;
     int Registered() override;
     int ClearDigitization() override;
     int ClearLandmarks() override;
     int LandmarksDigitized() override;
+    int ReinitState() override;
 };
 
 class State1101 : public WorkState
 {
 public:
-    State1101(std::vector<WorkState>& v, FlagMachine& f, TMSOperations& ops);
+    State1101(std::vector<WorkState*>& v, FlagMachine& f, TMSOperations& ops);
 
     int ToolPosePlanned() override;
     int ClearRegistration() override;
     int ClearLandmarks() override;
+    int ReinitState() override;
 };
 
 class State0010 : public WorkState
 {
 public:
-    State0010(std::vector<WorkState>& v, FlagMachine& f, TMSOperations& ops);
+    State0010(std::vector<WorkState*>& v, FlagMachine& f, TMSOperations& ops);
 
     int LandmarksPlanned() override;
     int ClearToolPosePlan() override;
     int ToolPosePlanned() override;
+    int ReinitState() override;
 };
 
 class State1010 : public WorkState
 {
 public:
-    State1010(std::vector<WorkState>& v, FlagMachine& f, TMSOperations& ops);
+    State1010(std::vector<WorkState*>& v, FlagMachine& f, TMSOperations& ops);
 
     int ClearToolPosePlan() override;
     int ClearLandmarks() override;
     int ToolPosePlanned() override;
     int LandmarksPlanned() override;
     int LandmarksDigitized() override;
+    int ReinitState() override;
 };
 
 class State1110 : public WorkState
 {
 public:
-    State1110(std::vector<WorkState>& v, FlagMachine& f, TMSOperations& ops);
+    State1110(std::vector<WorkState*>& v, FlagMachine& f, TMSOperations& ops);
 
     int ClearToolPosePlan() override;
     int LandmarksDigitized() override;
@@ -109,15 +115,17 @@ public:
     int ClearDigitization() override;
     int ClearLandmarks() override;
     int Registered() override;
+    int ReinitState() override;
 };
 
 class State1111 : public WorkState
 {
 public:
-    State1111(std::vector<WorkState>& v, FlagMachine& f, TMSOperations& ops);
+    State1111(std::vector<WorkState*>& v, FlagMachine& f, TMSOperations& ops);
 
     int ClearToolPosePlan() override;
     int ToolPosePlanned() override;
     int ClearRegistration() override;
     int ClearLandmarks() override;
+    int ReinitState() override;
 };

@@ -47,11 +47,11 @@ void StartRegistration(std::string& ss, PublisherVec& pubs);
 
 void StartUsePrevRegistration(std::string& ss, PublisherVec& pubs);
 
-void FiducialCurrentOnImg(std::string& ss, PublisherVec& pubs);
+void LandmarkCurrentOnImg(std::string& ss, PublisherVec& pubs);
 
-void FiducialNumOnImg(std::string& ss, PublisherVec& pubs);
+void LandmarkNumOnImg(std::string& ss, PublisherVec& pubs);
 
-void FiducialLastReceived(std::string& ss, PublisherVec& pubs);
+void LandmarkLastReceived(std::string& ss, PublisherVec& pubs);
 
 void TargetPoseOrientation(std::string& ss, PublisherVec& pubs);
 

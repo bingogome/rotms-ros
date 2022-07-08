@@ -15,8 +15,8 @@ VERBOSE_MEDIMG: 1
 
 # Robot Control module communication configs
 
-PORT_OUT_ROBCTRL: 8539 # Port number for data stream out from ROS
-PORT_IN_ROBCTRL: 8657 # Port number for data stream into ROS
+PORT_OUT_ROBCTRL: 8063 # Port number for data stream out from ROS
+PORT_IN_ROBCTRL: 8072 # Port number for data stream into ROS
 MSG_END_ROBCTRL: "_msg_end__" # communication messege starts with this means end the port
 MSG_SIZE_ROBCTRL: 256 # change the ros_side_in.hpp and ros_side_out.hpp {boost::array<char, ...> recv_buffer_} field when chaning this number
 PUBLISHER_NAME_ROBCTRL: "/RobCtrlComm/msg_received" # Messege ROS publisher name (ROSSideIn received)
