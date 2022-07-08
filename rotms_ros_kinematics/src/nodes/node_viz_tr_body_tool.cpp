@@ -51,7 +51,7 @@ int main(int argc, char **argv)
     // ROS stuff
     ros::init(argc, argv, "NodeVizTrBodyTool");
     ros::NodeHandle nh;
-    ros::Rate rate(30.0);
+    ros::Rate rate(10.0);
 
     // Instantiate the flag manager
     TransformMngrBodyTool mngr(nh);
@@ -69,12 +69,13 @@ int main(int argc, char **argv)
     std_msgs::String msg_out;
 
     // Go in the loop, with the flag indicating wether do the calculation or not
+    int t = 0;
     while (nh.ok())
     {
         if (mngr.run_flag)
         {
-            
-            msg_out.data = "__msg_pose_0010.00000_0010.00000_0000.00000_0000.00000_0000.00000_0000.00000_0001.00000";
+            t+=1;
+            msg_out.data = "__msg_pose_0010.00000_" + std::to_string(10.0+10*sin(0.5*t)) + "_0000.00000_0000.00000_0000.00000_0000.00000_0001.00000";
             pub_encode_body_tool.publish(msg_out);
         }
         ros::spinOnce();
