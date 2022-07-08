@@ -25,19 +25,19 @@ SOFTWARE.
 #include <ros/ros.h>
 #include <std_msgs/String.h>
 
-class TransformMngrHeadTool
+class TransformMngrBodyTool
 {
 // Manages the flag of running the calculation of the transform
 public:
     
-    TransformMngrHeadTool(ros::NodeHandle& n) : n_(n){}
+    TransformMngrBodyTool(ros::NodeHandle& n) : n_(n){}
     bool run_flag = false;
 
 private:
 
     ros::NodeHandle& n_;
     ros::Subscriber sub_run_ = n_.subscribe(
-        "/Kinematics/Flag_head_tool", 2, &TransformMngrHeadTool::FlagCallBack, this);
+        "/Kinematics/Flag_body_tool", 2, &TransformMngrBodyTool::FlagCallBack, this);
     void FlagCallBack(const std_msgs::String::ConstPtr& msg)
     {
         if(msg->data.compare("_start__")==0) run_flag = true;
@@ -49,30 +49,33 @@ private:
 int main(int argc, char **argv)
 {
     // ROS stuff
-    ros::init(argc, argv, "NodeVizTrHeadTool");
+    ros::init(argc, argv, "NodeVizTrBodyTool");
     ros::NodeHandle nh;
     ros::Rate rate(30.0);
 
     // Instantiate the flag manager
-    TransformMngrHeadTool mngr(nh);
+    TransformMngrBodyTool mngr(nh);
 
     // Initialize the requred transforms
 
     // Initialize the tf2 intermediate variables
 
     // Initialize the result variable and its publisher
-    ros::Publisher pub_encode_head_tool = nh.advertise<std_msgs::String>(
-        "/TargetVizComm/msg_to_send", 5);
-    std_msg::String msg_out;
+    // Format:
+    // __msg_pose_0000.00000_0000.00000_0000.00000_0000.00000_0000.00000_0000.00000_0000.00000
+    // x, y, z, qx, qy, qz, qw in mm
+    ros::Publisher pub_encode_body_tool = nh.advertise<std_msgs::String>(
+        "/TargetVizComm/msg_to_send_hi_f", 5);
+    std_msgs::String msg_out;
 
     // Go in the loop, with the flag indicating wether do the calculation or not
     while (nh.ok())
     {
-        if (mngr1.run_flag)
+        if (mngr.run_flag)
         {
             
-            
-            pub_encode_head_tool.publish(tr_bodyref_ptrtip.position);
+            msg_out.data = "__msg_pose_0010.00000_0010.00000_0000.00000_0000.00000_0000.00000_0000.00000_0001.00000";
+            pub_encode_body_tool.publish(msg_out);
         }
         ros::spinOnce();
         rate.sleep();

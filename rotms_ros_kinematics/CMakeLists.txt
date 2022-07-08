@@ -43,5 +43,5 @@ target_link_libraries(node_polaris_tr_bodyref_ptrtip ${PROJECT_NAME})
 add_executable(node_robot_eff src/nodes/node_robot_eff.cpp)
 target_link_libraries(node_robot_eff ${PROJECT_NAME})
 
-add_executable(node_viz_tr_head_tool src/nodes/node_viz_tr_head_tool.cpp)
-target_link_libraries(node_viz_tr_head_tool ${PROJECT_NAME})
+add_executable(node_viz_tr_body_tool src/nodes/node_viz_tr_body_tool.cpp)
+target_link_libraries(node_viz_tr_body_tool ${PROJECT_NAME})

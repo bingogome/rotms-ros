@@ -81,6 +81,8 @@ private:
         "/RobCtrl/Motion", 2, &Dispatcher::ExecuteBackOffsetCallBack, this);
     ros::Subscriber sub_robctrl_sessionreinit_ = n_.subscribe(
         "/RobCtrl/Session", 2, &Dispatcher::SessionReinitCallBack, this);
+    ros::Subscriber sub_targetviz_ = n_.subscribe(
+        "/TargetViz/Visualize", 2, &Dispatcher::TargetVizCallBack, this);
 
     // Dispatcher sending query response signals
     ros::Publisher pub_robctrlcomm_ = n_.advertise<std_msgs::String>(
@@ -95,6 +97,8 @@ private:
         "/Kinematics/TR_cntct_offset", 2, true);
     ros::Publisher pub_reinitcaldata_ = n_.advertise<std_msgs::String>(
         "/Kinematics/Query_ReInit", 2);
+    ros::Publisher pub_flag_bodytoolviz_ = n_.advertise<std_msgs::String>(
+        "/Kinematics/Flag_body_tool", 2);
 
     // Cruicial operations (operations that affect main user logic and its states/flags/operations)
     void LandmarkPlanMetaCallBack(const std_msgs::Int16::ConstPtr& msg);
@@ -107,6 +111,7 @@ private:
     // Secondary and intermediate operations
     void LandmarkPlanFidsCallBack(const std_msgs::Float32MultiArray::ConstPtr& msg);
     void SessionReinitCallBack(const std_msgs::String::ConstPtr& msg);
+    void TargetVizCallBack(const std_msgs::String::ConstPtr& msg);
 
     // Robot operations
     void UpdateRobotConnFlagCallBack(const std_msgs::Bool::ConstPtr& msg);

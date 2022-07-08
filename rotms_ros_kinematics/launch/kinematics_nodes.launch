@@ -2,5 +2,5 @@
     <node name="node_calibration_data" pkg="rotms_ros_kinematics" type="node_calibration_data" output="screen"/>
     <node name="node_robot_eff" pkg="rotms_ros_kinematics" type="node_robot_eff" output="screen"/>
     <node name="node_polaris_tr_bodyref_ptrtip" pkg="rotms_ros_kinematics" type="node_polaris_tr_bodyref_ptrtip" output="screen"/>
-    <node name="node_viz_tr_head_tool" pkg="rotms_ros_kinematics" type="node_viz_tr_head_tool" output="screen"/>
+    <node name="node_viz_tr_body_tool" pkg="rotms_ros_kinematics" type="node_viz_tr_body_tool" output="screen"/>
 </launch>

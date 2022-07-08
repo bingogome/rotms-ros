@@ -22,49 +22,17 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
-#include <map>
-#include <string>
 #include <ros/ros.h>
-#include "function_map_targetviz.hpp"
-#include "decode_node.hpp"
+#include <ros_side_hif_out_node.hpp>
+#include <ros_side_out.hpp>
 
-/**
-* This maps the functions to the received cmd.
-*/
-
-CommDecoderTargetViz::CommDecoderTargetViz(
-    ros::NodeHandle& n, 
-    const std::string modulesuffix,
-    FuncMap opsdict) 
-    : 
-    CommDecoder(n, modulesuffix, opsdict) 
+int main(int argc, char **argv)
 {
-    pubs_.push_back(
-        n_.advertise<std_msgs::String>("/TargetViz/Visualize", 5));
-}
+	ros::init(argc, argv, "CommHiFOutTargetViz");
+    ros::NodeHandle n;
 
-FuncMap GetFuncMapTargetViz()
-{
-    FuncMap fm;
+	ROSSideOut server = CommNodeHiFOutIniter(n, "TARGETVIZ");
 
-    fm["VISUALIZE_START"] = VisualizeStart;
-    fm["VISUALIZE_STOP"] = VisualizeStop;
-
-    return fm;
-}
-
-void VisualizeStart(std::string& ss, PublisherVec& pubs)
-{
-    std_msgs::String msg_test;
-    msg_test.data = "_start__";
-    // pubs[0] is the publisher /TargetViz/Visualize
-    pubs[0].publish(msg_test);
-}
-
-void VisualizeStop(std::string& ss, PublisherVec& pubs)
-{
-    std_msgs::String msg_test;
-    msg_test.data = "_end__";
-    // pubs[0] is the publisher /TargetViz/Visualize
-    pubs[0].publish(msg_test);
+	ros::spin();
+	return 0;
 }
