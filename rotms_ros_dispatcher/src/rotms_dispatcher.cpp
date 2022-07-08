@@ -390,6 +390,11 @@ void Dispatcher::ExecuteMotionToTargetEFFPose()
         ROS_INFO("The prerequisites are not met. Check before robot motion. (code 0)");
         return;
     }
+    if(!states_[activated_state_]->flags_.GetFlagRobotConnStatus())
+    {
+        ROS_INFO("Robot cabinet connection has not been established");
+        return;
+    }
     // Query for current EFF pose and publish (latch)
     rotms_ros_msgs::GetEFF srv;
     if(!clt_eff_.call(srv))
