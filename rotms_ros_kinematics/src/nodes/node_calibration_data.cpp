@@ -27,6 +27,7 @@ SOFTWARE.
 #include <ros/package.h>
 #include <ros/ros.h>
 #include <geometry_msgs/Pose.h>
+#include <std_msgs/String.h>
 
 typedef std::map<std::string, ros::Publisher> PubMap;
 
@@ -50,6 +51,32 @@ void ReadAndPublishCalibrations(std::string tr_str, PubMap pubs)
     ros::spinOnce();
 }
 
+class CalibrationDataMngr
+{
+
+public:
+
+    CalibrationDataMngr(ros::NodeHandle& n, PubMap& pubs) : 
+        n_(n), pubs_(pubs) {}
+
+private:
+
+    ros::NodeHandle& n_;
+    PubMap& pubs_;
+    
+    ros::Subscriber sub_reinit = n_.subscribe(
+        "/Kinematics/Query_ReInit", 2, &CalibrationDataMngr::ReInitCallback, this);
+
+    void ReInitCallback(const std_msgs::String::ConstPtr& msg)
+    {
+        if(!msg->data.compare("_reinit__")==0) return;
+        for (PubMap::iterator it = pubs_.begin(); it != pubs_.end(); it++)
+        {
+            ReadAndPublishCalibrations(it->first, pubs_);
+        }
+    }
+};
+
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "NodeCalibrationData");
@@ -72,6 +99,8 @@ int main(int argc, char **argv)
     pubs["tool_toolref"] = pub_tool_toolref;
     pubs["toolref_eff"] = pub_toolref_eff;
     pubs["ptr_ptrtip"] = pub_ptr_ptrtip;
+
+    CalibrationDataMngr mngr(nh, pubs);
 
     for (PubMap::iterator it = pubs.begin(); it != pubs.end(); it++)
     {

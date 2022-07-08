@@ -73,6 +73,8 @@ public:
     virtual int ClearRegistration();
     virtual int ClearToolPosePlan();
 
+    virtual int ReinitState();
+
 protected:
     
     const int state_num_;

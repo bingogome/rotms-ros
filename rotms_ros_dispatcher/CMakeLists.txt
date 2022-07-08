@@ -24,6 +24,7 @@ catkin_package(
 
 add_library(${PROJECT_NAME} 
   src/rotms_dispatcher.cpp
+  src/dispatcher_utility.cpp
   ../rotms_ros_state/src/flag_machine.cpp
   ../rotms_ros_state/src/state_machine.cpp
   ../rotms_ros_state/src/state_machine_states.cpp

@@ -52,7 +52,7 @@ void ExecuteEndAndBack(std::string& ss, PublisherVec& pubs);
 void ExecuteBackInit(std::string& ss, PublisherVec& pubs);
 void ExecuteBackOffset(std::string& ss, PublisherVec& pubs);
 
-void SessionEnd(std::string& ss, PublisherVec& pubs);
+void SessionReinit(std::string& ss, PublisherVec& pubs);
 
 void ManualAdjustT(std::string& ss, PublisherVec& pubs);
 void ManualAdjustR(std::string& ss, PublisherVec& pubs);

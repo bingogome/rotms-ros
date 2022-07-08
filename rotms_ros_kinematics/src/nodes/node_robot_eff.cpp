@@ -28,16 +28,23 @@ SOFTWARE.
 #include <geometry_msgs/TransformStamped.h>
 #include <tf2/LinearMath/Transform.h>
 #include "transform_conversions.hpp"
+#include "rotms_ros_msgs/PoseValid.h"
 
-void GetTargetEffCallback(const std_msgs::String::ConstPtr& msg)
+class RobotEffMngr
 {
-    if(msg->data.compare("_gettargeteff__")==0)
+public:
+    RobotEffMngr(ros::NodeHandle& n) : n_(n) {}
+private:
+    ros::NodeHandle& n_;
+    ros::Publisher pub_eff = n_.advertise<rotms_ros_msgs::PoseValid>(
+        "/Kinematics/TR_derivedeff", 2, true);
+    ros::Subscriber sub = n_.subscribe(
+        "/Kinematics/Query_GetTargetEff", 
+        10, &RobotEffMngr::GetTargetEffCallback, this);
+    void GetTargetEffCallback(const std_msgs::String::ConstPtr& msg)
     {
-        ros::NodeHandle n_;
-
-        // Create a result publisher
-        ros::Publisher pub_eff = n_.advertise<geometry_msgs::Pose>("/Kinematics/TR_derivedeff", 2, true);
-
+        if(!msg->data.compare("_gettargeteff__")==0) return;
+        
         // Calibration data (latched)
         geometry_msgs::PoseConstPtr tr_toolref_eff = ros::topic::waitForMessage<geometry_msgs::Pose>(
             "/Kinematics/TR_toolref_eff");
@@ -47,9 +54,15 @@ void GetTargetEffCallback(const std_msgs::String::ConstPtr& msg)
             "/Kinematics/TR_offset_tool");
         geometry_msgs::PoseConstPtr tr_cntct_offset = ros::topic::waitForMessage<geometry_msgs::Pose>(
             "/Kinematics/TR_cntct_offset");
-        geometry_msgs::PoseConstPtr tr_body_cntct = ros::topic::waitForMessage<geometry_msgs::Pose>(
+        rotms_ros_msgs::PoseValidConstPtr tr_body_cntct = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
             "/Kinematics/TR_body_cntct");
-        geometry_msgs::PoseConstPtr tr_bodyref_body = ros::topic::waitForMessage<geometry_msgs::Pose>(
+        while(!tr_body_cntct->valid)
+            rotms_ros_msgs::PoseValidConstPtr tr_body_cntct = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
+                "/Kinematics/TR_body_cntct");
+        rotms_ros_msgs::PoseValidConstPtr tr_bodyref_body = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
+            "/Kinematics/TR_bodyref_body");
+        while(!tr_bodyref_body->valid)
+            rotms_ros_msgs::PoseValidConstPtr tr_bodyref_body = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
             "/Kinematics/TR_bodyref_body");
         tf2::Transform tr_toolref_eff_ = ConvertToTf2Transform(tr_toolref_eff);
         tf2::Transform tr_tool_toolref_ = ConvertToTf2Transform(tr_tool_toolref);
@@ -59,8 +72,11 @@ void GetTargetEffCallback(const std_msgs::String::ConstPtr& msg)
         tf2::Transform tr_bodyref_body_ = ConvertToTf2Transform(tr_bodyref_body);
 
         // Old eff pose (latched)
-        geometry_msgs::PoseConstPtr tr_robbase_effold = ros::topic::waitForMessage<geometry_msgs::Pose>(
+        rotms_ros_msgs::PoseValidConstPtr tr_robbase_effold = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
             "/Kinematics/TR_robbase_effold");
+        while(!tr_robbase_effold->valid)
+            rotms_ros_msgs::PoseValidConstPtr tr_robbase_effold = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
+                "/Kinematics/TR_robbase_effold");
         tf2::Transform tr_robbase_effold_ = ConvertToTf2Transform(tr_robbase_effold);
 
         // Sensor data (real-time)
@@ -71,7 +87,7 @@ void GetTargetEffCallback(const std_msgs::String::ConstPtr& msg)
         tf2::Transform tr_pol_bodyref_ = ConvertToTf2Transform(tr_pol_bodyref);
         tf2::Transform tr_pol_toolref_ = ConvertToTf2Transform(tr_pol_toolref);
         
-        // Calculate
+        // Calculate target EFF
         tf2::Transform derivedeff_ = 
             tr_robbase_effold_ * (tr_toolref_eff_.inverse()) * (tr_pol_toolref_.inverse()) * 
             tr_pol_bodyref_ * tr_bodyref_body_ * tr_body_cntct_ * tr_cntct_offset_ * tr_offset_tool_ * 
@@ -80,20 +96,25 @@ void GetTargetEffCallback(const std_msgs::String::ConstPtr& msg)
         geometry_msgs::Pose derivedeff = ConvertToGeometryPose(derivedeff_);
 
         // Publish (latch)
-        pub_eff.publish(derivedeff);
+        rotms_ros_msgs::PoseValid pv;
+        pv.valid = true;
+        pv.pose = derivedeff;
+        pub_eff.publish(pv);
 
-        // Latch for 5 seconds and stop publish
-        ros::Duration(5.0).sleep();
-        pub_eff.shutdown();
+        // Latch for 2 seconds and stop publish
+        ros::Duration(2.0).sleep();
+        pv.valid = false;
+        pub_eff.publish(pv);
+
     }
-}
+};
 
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "NodeRobotEff");
     ros::NodeHandle nh;
 
-    ros::Subscriber sub = nh.subscribe("/Kinematics/Query_GetTargetEff", 10, GetTargetEffCallback);
+    RobotEffMngr mngr(nh);
 
     ros::spin();
     return 0;

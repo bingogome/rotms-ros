@@ -41,6 +41,7 @@ public:
 
     int LandmarksPlanned() override;
     int ToolPosePlanned() override;
+    int ReinitState() override;
 };
 
 class State1000 : public WorkState
@@ -52,6 +53,7 @@ public:
     int ToolPosePlanned() override;
     int ClearLandmarks() override;
     int LandmarksPlanned() override;
+    int ReinitState() override;
 };
 
 class State1100 : public WorkState
@@ -64,6 +66,7 @@ public:
     int ClearDigitization() override;
     int ClearLandmarks() override;
     int LandmarksDigitized() override;
+    int ReinitState() override;
 };
 
 class State1101 : public WorkState
@@ -74,6 +77,7 @@ public:
     int ToolPosePlanned() override;
     int ClearRegistration() override;
     int ClearLandmarks() override;
+    int ReinitState() override;
 };
 
 class State0010 : public WorkState
@@ -84,6 +88,7 @@ public:
     int LandmarksPlanned() override;
     int ClearToolPosePlan() override;
     int ToolPosePlanned() override;
+    int ReinitState() override;
 };
 
 class State1010 : public WorkState
@@ -96,6 +101,7 @@ public:
     int ToolPosePlanned() override;
     int LandmarksPlanned() override;
     int LandmarksDigitized() override;
+    int ReinitState() override;
 };
 
 class State1110 : public WorkState
@@ -109,6 +115,7 @@ public:
     int ClearDigitization() override;
     int ClearLandmarks() override;
     int Registered() override;
+    int ReinitState() override;
 };
 
 class State1111 : public WorkState
@@ -120,4 +127,5 @@ public:
     int ToolPosePlanned() override;
     int ClearRegistration() override;
     int ClearLandmarks() override;
+    int ReinitState() override;
 };

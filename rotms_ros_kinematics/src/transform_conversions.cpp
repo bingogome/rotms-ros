@@ -23,6 +23,7 @@ SOFTWARE.
 ***/
 
 #include "transform_conversions.hpp"
+#include "rotms_ros_msgs/PoseValid.h"
 
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/Transform.h>
@@ -36,6 +37,19 @@ tf2::Transform ConvertToTf2Transform(const geometry_msgs::PoseConstPtr tr)
     tf2::Quaternion q(
         tr->orientation.x, tr->orientation.y, tr->orientation.z,
         tr->orientation.w);
+
+    tf2::Transform tr_(q, v);
+
+    return tr_;
+}
+
+tf2::Transform ConvertToTf2Transform(const rotms_ros_msgs::PoseValidConstPtr tr)
+{
+    tf2::Vector3 v(
+        tr->pose.position.x, tr->pose.position.y, tr->pose.position.z);
+    tf2::Quaternion q(
+        tr->pose.orientation.x, tr->pose.orientation.y, tr->pose.orientation.z,
+        tr->pose.orientation.w);
 
     tf2::Transform tr_(q, v);
 

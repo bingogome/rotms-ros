@@ -23,15 +23,21 @@ SOFTWARE.
 ***/
 
 #pragma once
-#include <geometry_msgs/Pose.h>
-#include <geometry_msgs/TransformStamped.h>
-#include <tf2/LinearMath/Transform.h>
-#include "rotms_ros_msgs/PoseValid.h"
+#include <string>
+#include <vector>
 
-tf2::Transform ConvertToTf2Transform(const geometry_msgs::PoseConstPtr tr);
+struct VolatileTempDataCache 
+{
+    int landmark_total = -1;
+    std::vector<std::vector<double>> landmark_coords;
 
-tf2::Transform ConvertToTf2Transform(const rotms_ros_msgs::PoseValidConstPtr tr);
+    bool toolpose_t_recvd = false;
+    bool toolpose_r_recvd = false;
+    std::vector<double> toolpose_t;
+    std::vector<double> toolpose_r;
+};
 
-tf2::Transform ConvertToTf2Transform(const geometry_msgs::TransformStampedConstPtr tr);
-
-geometry_msgs::Pose ConvertToGeometryPose(const tf2::Transform tr);
+void SaveLandmarkPlanData(struct VolatileTempDataCache datacache, std::string f);
+void SaveToolPoseData(struct VolatileTempDataCache datacache, std::string f);
+std::string FormatDouble2String(double a, int dec);
+std::string GetTimeString();

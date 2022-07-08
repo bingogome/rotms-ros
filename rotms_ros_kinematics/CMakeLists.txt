@@ -7,6 +7,7 @@ find_package(catkin REQUIRED COMPONENTS
   roslaunch
   roslib
   tf2
+  rotms_ros_msgs
   )
 
 find_package(PkgConfig REQUIRED)

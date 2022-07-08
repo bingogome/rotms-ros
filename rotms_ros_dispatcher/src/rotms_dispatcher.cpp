@@ -22,14 +22,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
+#include "dispatcher_utility.hpp"
 #include "rotms_dispatcher.hpp"
 #include "state_machine.hpp"
 #include "state_machine_states.hpp"
+#include "rotms_ros_msgs/PoseValid.h"
+
 #include <ros/ros.h>
 #include <ros/package.h>
 #include <rotms_ros_msgs/GetJnts.h>
 #include <rotms_ros_msgs/GetEFF.h>
-#include <fstream>
 #include <iostream>
 
 /*
@@ -111,6 +113,33 @@ void Dispatcher::LandmarkPlanFidsCallBack(const std_msgs::Float32MultiArray::Con
     }
 }
 
+void Dispatcher::SessionReinitCallBack(const std_msgs::String::ConstPtr& msg)
+{
+    if(!msg->data.compare("_reinit__")==0) return; 
+
+    // Reset state
+    int new_state = states_[activated_state_]->ReinitState();
+    ROS_INFO_STREAM("Old state: " + std::to_string(activated_state_));
+    ROS_INFO_STREAM("Attempt new state: " + std::to_string(new_state));
+    if (new_state != 0b0000) 
+    {
+        ROS_INFO("Unable to reinit state.");
+        return;
+    }
+    activated_state_ = new_state;
+    ROS_INFO_STREAM("Transitioned to new state: " + 
+        std::to_string(activated_state_));
+
+    // Reinit calibration data
+    std_msgs::String msg_out;
+    msg_out.data = "_reinit__";
+    pub_reinitcaldata_.publish(msg_out);
+
+    // Verbo
+    ROS_INFO("Session reinited");
+
+}
+
 void Dispatcher::ResetVolatileDataCacheLandmarks()
 {
     datacache_.landmark_total = -1;
@@ -119,45 +148,44 @@ void Dispatcher::ResetVolatileDataCacheLandmarks()
 
 void Dispatcher::AutodigitizationCallBack(const std_msgs::String::ConstPtr& msg)
 {
-    if (msg->data.compare("_autodigitize__")==0)
+    if (!msg->data.compare("_autodigitize__")==0) return;
+    
+    int new_state = states_[activated_state_]->LandmarksDigitized();
+    ROS_INFO_STREAM("Old state: " + std::to_string(activated_state_));
+    ROS_INFO_STREAM("Attempt new state: " + std::to_string(new_state));
+    if (new_state != -1)
     {
-        int new_state = states_[activated_state_]->LandmarksDigitized();
-        ROS_INFO_STREAM("Old state: " + std::to_string(activated_state_));
-        ROS_INFO_STREAM("Attempt new state: " + std::to_string(new_state));
-        if (new_state != -1)
-        {
-            activated_state_ = new_state;
-            ROS_INFO_STREAM("Transitioned to new state: " + 
-                std::to_string(activated_state_));
-        }
-        else
-        {
-            // Failed operation
-            ROS_INFO("State transition not possible.");
-            ROS_INFO("Make sure the operation dependencies are met.");
-        }
+        activated_state_ = new_state;
+        ROS_INFO_STREAM("Transitioned to new state: " + 
+            std::to_string(activated_state_));
     }
+    else
+    {
+        // Failed operation
+        ROS_INFO("State transition not possible.");
+        ROS_INFO("Make sure the operation dependencies are met.");
+    }
+    
 }
 
 void Dispatcher::RegistrationCallBack(const std_msgs::String::ConstPtr& msg)
 {
-    if (msg->data.compare("_register__")==0)
+    if (!msg->data.compare("_register__")==0) return;
+    
+    int new_state = states_[activated_state_]->Registered();
+    ROS_INFO_STREAM("Old state: " + std::to_string(activated_state_));
+    ROS_INFO_STREAM("Attempt new state: " + std::to_string(new_state));
+    if (new_state != -1)
     {
-        int new_state = states_[activated_state_]->Registered();
-        ROS_INFO_STREAM("Old state: " + std::to_string(activated_state_));
-        ROS_INFO_STREAM("Attempt new state: " + std::to_string(new_state));
-        if (new_state != -1)
-        {
-            activated_state_ = new_state;
-            ROS_INFO_STREAM("Transitioned to new state: " + 
-                std::to_string(activated_state_));
-        }
-        else
-        {
-            // Failed operation
-            ROS_INFO("State transition not possible.");
-            ROS_INFO("Make sure the operation dependencies are met.");
-        }
+        activated_state_ = new_state;
+        ROS_INFO_STREAM("Transitioned to new state: " + 
+            std::to_string(activated_state_));
+    }
+    else
+    {
+        // Failed operation
+        ROS_INFO("State transition not possible.");
+        ROS_INFO("Make sure the operation dependencies are met.");
     }
     
 }
@@ -271,7 +299,7 @@ void Dispatcher::GetJntsCallBack(const std_msgs::String::ConstPtr& msg)
     {
         ROS_INFO("Robot cabinet connection has not been established");
         msg_out.data = "no_data_returned;";
-        pub_robctrlcomm.publish(msg_out);
+        pub_robctrlcomm_.publish(msg_out);
         return;
     }
     rotms_ros_msgs::GetJnts srv;
@@ -284,7 +312,7 @@ void Dispatcher::GetJntsCallBack(const std_msgs::String::ConstPtr& msg)
             str << std::to_string(jnts.data[i]) << "_";
         }
         msg_out.data = str.str();
-        pub_robctrlcomm.publish(msg_out);
+        pub_robctrlcomm_.publish(msg_out);
     }
 }
 
@@ -296,7 +324,7 @@ void Dispatcher::GetEFFCallBack(const std_msgs::String::ConstPtr& msg)
     {
         ROS_INFO("Robot cabinet connection has not been established");
         msg_out.data = "no_data_returned;";
-        pub_robctrlcomm.publish(msg_out);
+        pub_robctrlcomm_.publish(msg_out);
         return;
     }
     rotms_ros_msgs::GetEFF srv;
@@ -312,7 +340,7 @@ void Dispatcher::GetEFFCallBack(const std_msgs::String::ConstPtr& msg)
         str << std::to_string(eff.orientation.z) << "_";
         str << std::to_string(eff.orientation.w) << "_";
         msg_out.data = str.str();
-        pub_robctrlcomm.publish(msg_out);
+        pub_robctrlcomm_.publish(msg_out);
     }
 }
 
@@ -324,76 +352,73 @@ void Dispatcher::ResetVolatileDataCacheToolPose()
     datacache_.toolpose_r.clear();
 }
 
-void SaveLandmarkPlanData(struct VolatileTempDataCache datacache, std::string f)
+void Dispatcher::ExecuteMotionCallBack(const std_msgs::String::ConstPtr& msg)
 {
-    std::ofstream filesave(f);
-    if(filesave.is_open())
+    // Status check
+    if(!msg->data.compare("_execute__")==0) return;
+    if(activated_state_!=0b1111)
     {
-        filesave << "NUM: " << datacache.landmark_total << "\n";
-        filesave << "\n";
-        filesave << "PLANNED: # in m\n";
-        filesave << "\n";
-        filesave << "  {\n";
-        for(int i=0;i<datacache.landmark_total;i++)
-        {
-            std::vector<std::vector<double>> c = datacache.landmark_coords;
-            filesave << "    p" << i << ": ";
-            filesave << "{";
-            filesave << "x: " << FormatDouble2String(c[i][0], 16) << ", ";
-            filesave << "y: " << FormatDouble2String(c[i][1], 16) << ", ";
-            filesave << "z: " << FormatDouble2String(c[i][2], 16);
-            if (i==datacache.landmark_total-1)
-                filesave << "}\n";
-            else
-                filesave << "},\n";
-        }
-        filesave << "  }\n";
-        filesave.close();
+        ROS_INFO("The prerequisites are not met. Check before robot motion. (code 1)");
+        return;
     }
+    Dispatcher::ExecuteMotionToTargetEFFPose();
 }
 
-void SaveToolPoseData(struct VolatileTempDataCache datacache, std::string f)
+void Dispatcher::ExecuteConfirmMotionCallBack(const std_msgs::String::ConstPtr& msg)
 {
-    std::ofstream filesave(f);
-    if(filesave.is_open())
+    // Status check
+    if(!msg->data.compare("_confirm__")==0) return;
+    if(activated_state_!=0b1111)
     {
-        filesave << "TRANSLATION: # translation: x,y,z\n";
-        filesave << "\n";
-        filesave << "  {\n";
-		filesave << "    x: " << FormatDouble2String(datacache.toolpose_t[0], 16) << ",\n";
-		filesave << "    y: " << FormatDouble2String(datacache.toolpose_t[1], 16) << ",\n";
-		filesave << "    z: " << FormatDouble2String(datacache.toolpose_t[2], 16) << "\n";
-		filesave << "  }\n";
-        filesave << "\n";
-		filesave << "ROTATION: # quat: x,y,z,w\n";
-        filesave << "\n";
-        filesave << "  {\n";
-		filesave << "    x: " << FormatDouble2String(datacache.toolpose_r[0], 16) << ",\n";
-		filesave << "    y: " << FormatDouble2String(datacache.toolpose_r[1], 16) << ",\n";
-		filesave << "    z: " << FormatDouble2String(datacache.toolpose_r[2], 16) << ",\n";
-        filesave << "    w: " << FormatDouble2String(datacache.toolpose_r[3], 16) << "\n";
-        filesave << "  }\n";
-		filesave.close();
+        ROS_INFO("The prerequisites are not met. Check before robot motion. (code 2)");
+        return;
     }
+    geometry_msgs::Pose changeoffset;
+    changeoffset.position.x = 0.0; changeoffset.position.y = 0.0; changeoffset.position.z = 0.0;
+    changeoffset.orientation.x = 0.0; changeoffset.orientation.y = 0.0; changeoffset.orientation.z = 0.0;
+    changeoffset.orientation.w = 1.0;
+    pub_changeoffset_.publish(changeoffset);
+    Dispatcher::ExecuteMotionToTargetEFFPose();
 }
 
-std::string FormatDouble2String(double a, int dec)
-{
-	std::stringstream stream;
-    stream << std::fixed << std::setprecision(dec) << a;
-    std::string s = stream.str();
-    return s;
-}
+void Dispatcher::ExecuteMotionToTargetEFFPose()
+{   
+    // Query for current EFF pose and publish (latch)
+    rotms_ros_msgs::GetEFF srv;
+    if(!clt_eff_.call(srv))
+    {
+        ROS_INFO("Could not request current EFF from robot cabinet!");
+        return;
+    }
+    geometry_msgs::Pose effold = srv.response.eff;
+    rotms_ros_msgs::PoseValid pv_old;
+    pv_old.valid = true;
+    pv_old.pose = effold;
+    pub_effold_.publish(pv_old);
 
-std::string GetTimeString()
-{
-	time_t rawtime;
-	struct tm * timeinfo;
-	char buffer [80];
+    // Query for target EFF pose
+    std_msgs::String queryeff;
+    queryeff.data = "_gettargeteff__";
+    pub_gettargeteff_.publish(queryeff);
+    rotms_ros_msgs::PoseValidConstPtr tr_targeteff = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
+        "/Kinematics/TR_derivedeff");
+    while(!tr_targeteff->valid)
+        rotms_ros_msgs::PoseValidConstPtr tr_targeteff = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
+            "/Kinematics/TR_derivedeff");
+    geometry_msgs::Pose tr_targeteff_;
+    tr_targeteff_.position.x = tr_targeteff->pose.position.x;
+    tr_targeteff_.position.y = tr_targeteff->pose.position.y;
+    tr_targeteff_.position.z = tr_targeteff->pose.position.z;
+    tr_targeteff_.orientation.x = tr_targeteff->pose.orientation.x;
+    tr_targeteff_.orientation.y = tr_targeteff->pose.orientation.y;
+    tr_targeteff_.orientation.z = tr_targeteff->pose.orientation.z;
+    tr_targeteff_.orientation.w = tr_targeteff->pose.orientation.w;
 
-	time(&rawtime);
-	timeinfo = localtime(&rawtime);
-	strftime (buffer,80,"%Y%m%d_%I%M%p",timeinfo);
+    // Send to robot interface and move
+    pub_robeffmove_.publish(tr_targeteff_);
 
-	return buffer;
+    // Stop old EFF pose publisher latch
+    rotms_ros_msgs::PoseValid pv;
+    pv.valid = false;
+    pub_effold_.publish(pv);
 }

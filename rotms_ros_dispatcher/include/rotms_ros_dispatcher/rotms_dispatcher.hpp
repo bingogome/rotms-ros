@@ -23,6 +23,7 @@ SOFTWARE.
 ***/
 
 #pragma once
+
 #include <ros/ros.h>
 #include <std_msgs/String.h>
 #include <std_msgs/Int16.h>
@@ -31,18 +32,10 @@ SOFTWARE.
 #include <rotms_ros_msgs/GetJnts.h>
 #include <rotms_ros_msgs/GetEFF.h>
 #include <vector>
+
 #include "state_machine.hpp"
-
-struct VolatileTempDataCache 
-{
-    int landmark_total = -1;
-    std::vector<std::vector<double>> landmark_coords;
-
-    bool toolpose_t_recvd = false;
-    bool toolpose_r_recvd = false;
-    std::vector<double> toolpose_t;
-    std::vector<double> toolpose_r;
-};
+#include "dispatcher_utility.hpp"
+#include "rotms_ros_msgs/PoseValid.h"
 
 class Dispatcher
 {
@@ -80,10 +73,26 @@ private:
         "/RobCtrl/GetInfo", 2, &Dispatcher::GetEFFCallBack, this);
     ros::Subscriber sub_robconnstatus_ = n_.subscribe(
         "/RobInterfaceOut/RobConnStatus", 2, &Dispatcher::UpdateRobotConnFlagCallBack, this);
+    ros::Subscriber sub_robctrl_execute_ = n_.subscribe(
+        "/RobCtrl/Motion", 2, &Dispatcher::ExecuteMotionCallBack, this);
+    ros::Subscriber sub_robctrl_executeconfirm_ = n_.subscribe(
+        "/RobCtrl/Motion", 2, &Dispatcher::ExecuteConfirmMotionCallBack, this);
+    ros::Subscriber sub_robctrl_sessionreinit_ = n_.subscribe(
+        "/RobCtrl/Session", 2, &Dispatcher::SessionReinitCallBack, this);
 
     // Dispatcher sending query response signals
-    ros::Publisher pub_robctrlcomm = n_.advertise<std_msgs::String>(
+    ros::Publisher pub_robctrlcomm_ = n_.advertise<std_msgs::String>(
         "/RobCtrlComm/msg_to_send", 2);
+    ros::Publisher pub_effold_ = n_.advertise<rotms_ros_msgs::PoseValid>( 
+        "/Kinematics/TR_robbase_effold", 2, true); // should only be called by ExecuteMotionToTargetEFFPose
+    
+    // Dispatcher sending query
+    ros::Publisher pub_gettargeteff_ = n_.advertise<std_msgs::String>(
+        "/Kinematics/Query_GetTargetEff", 2);
+    ros::Publisher pub_changeoffset_ = n_.advertise<geometry_msgs::Pose>(
+        "/Kinematics/TR_cntct_offset", 2, true);
+    ros::Publisher pub_reinitcaldata_ = n_.advertise<std_msgs::String>(
+        "/Kinematics/Query_ReInit", 2);
 
     // Cruicial operations (operations that affect main user logic and its states/flags/operations)
     void LandmarkPlanMetaCallBack(const std_msgs::Int16::ConstPtr& msg);
@@ -95,6 +104,7 @@ private:
 
     // Secondary and intermediate operations
     void LandmarkPlanFidsCallBack(const std_msgs::Float32MultiArray::ConstPtr& msg);
+    void SessionReinitCallBack(const std_msgs::String::ConstPtr& msg);
 
     // Robot operations
     void UpdateRobotConnFlagCallBack(const std_msgs::Bool::ConstPtr& msg);
@@ -102,6 +112,9 @@ private:
     void RobDisconnectCallBack(const std_msgs::String::ConstPtr& msg);
     void GetJntsCallBack(const std_msgs::String::ConstPtr& msg);
     void GetEFFCallBack(const std_msgs::String::ConstPtr& msg);
+    void ExecuteMotionCallBack(const std_msgs::String::ConstPtr& msg);
+    void ExecuteConfirmMotionCallBack(const std_msgs::String::ConstPtr& msg);
+    void ExecuteMotionToTargetEFFPose();
 
     // Temp data cache (volatile)
     struct VolatileTempDataCache datacache_;
@@ -117,10 +130,7 @@ private:
         "/RobInterface/GetJntsPos");
     ros::ServiceClient clt_eff_ = n_.serviceClient<rotms_ros_msgs::GetEFF>(
         "/RobInterface/GetEFFPose");
+    ros::Publisher pub_robeffmove_ = n_.advertise<geometry_msgs::Pose>(
+        "/RobInterface/MoveEFF", 2);
 
 };
-
-void SaveLandmarkPlanData(struct VolatileTempDataCache datacache, std::string f);
-void SaveToolPoseData(struct VolatileTempDataCache datacache, std::string f);
-std::string FormatDouble2String(double a, int dec);
-std::string GetTimeString();

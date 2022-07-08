@@ -24,6 +24,7 @@ SOFTWARE.
 
 #include "registration_funcs.hpp"
 #include "rotms_operations.hpp"
+#include "rotms_ros_msgs/PoseValid.h"
 
 #include <ros/ros.h>
 #include <ros/package.h>
@@ -127,7 +128,10 @@ void TMSOperations::OperationPlanToolPose()
     tr.orientation.y = ff2["y"].as<double>();
     tr.orientation.z = ff2["z"].as<double>();
     tr.orientation.w = ff2["w"].as<double>();
-    pub_toolpose_.publish(tr);
+    rotms_ros_msgs::PoseValid pv;
+    pv.valid = true;
+    pv.pose = tr;
+    pub_toolpose_.publish(pv);
 }
 
 void TMSOperations::OperationRegistration()
@@ -185,12 +189,29 @@ void TMSOperations::OperationRegistration()
     res.orientation.y = quat[1]; 
     res.orientation.z = quat[2]; 
     res.orientation.w = quat[3]; 
-    pub_registration_.publish(res);
+    rotms_ros_msgs::PoseValid pv;
+    pv.valid = true;
+    pv.pose = res;
+    pub_registration_.publish(pv);
 
     // Write the registration result to cache files
     SaveRegistrationData(quat, p, packpath + "/share/data/reg_" + GetTimeString() + ".yaml"); // record
     SaveRegistrationData(quat, p, packpath + "/share/config/reg" + ".yaml"); // use
 
+}
+
+void TMSOperations::OperationResetRegistration()
+{
+    rotms_ros_msgs::PoseValid pv;
+    pv.valid = false;
+    pub_registration_.publish(pv);
+}
+
+void TMSOperations::OperationResetToolPose()
+{
+    rotms_ros_msgs::PoseValid pv;
+    pv.valid = false;
+    pub_toolpose_.publish(pv);
 }
 
 void TMSOperations::ResetOpsVolatileDataCache()

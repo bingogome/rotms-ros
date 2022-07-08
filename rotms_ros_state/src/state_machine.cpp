@@ -93,6 +93,8 @@ int WorkState::ClearDigitization() { TransitionNotPossible(); return -1; }
 int WorkState::ClearRegistration() { TransitionNotPossible(); return -1; }
 int WorkState::ClearToolPosePlan() { TransitionNotPossible(); return -1; }
 
+int WorkState::ReinitState() { TransitionNotPossible(); return -1; }
+
 void WorkState::TransitionNotPossible()
 {
     // TODO: implement this. Optional

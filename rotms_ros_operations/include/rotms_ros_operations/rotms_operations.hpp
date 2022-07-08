@@ -26,6 +26,7 @@ SOFTWARE.
 #include <ros/ros.h>
 #include <geometry_msgs/Pose.h>
 #include <std_msgs/String.h>
+#include "rotms_ros_msgs/PoseValid.h"
 
 
 struct OpsVolatileTempDataCache 
@@ -46,6 +47,9 @@ public:
     void OperationPlanToolPose();
     void OperationRegistration();
 
+    void OperationResetRegistration();
+    void OperationResetToolPose();
+
     // Secondary and intermediate operations
     // void Operation();
     // void Operation();
@@ -55,9 +59,9 @@ private:
 
     ros::NodeHandle& n_;
     ros::Publisher pub_registration_ = 
-        n_.advertise<geometry_msgs::Pose>("/Kinematics/TR_bodyref_body", 2, true);
+        n_.advertise<rotms_ros_msgs::PoseValid>("/Kinematics/TR_bodyref_body", 2, true);
     ros::Publisher pub_toolpose_ = 
-        n_.advertise<geometry_msgs::Pose>("/Kinematics/TR_body_cntct", 2, true);
+        n_.advertise<rotms_ros_msgs::PoseValid>("/Kinematics/TR_body_cntct", 2, true);
     ros::Publisher pub_run_polaris_tr_bodyref_ptrtip_ = 
         n_.advertise<std_msgs::String>("/Kinematics/Flag_bodyref_ptrtip", 2);
 

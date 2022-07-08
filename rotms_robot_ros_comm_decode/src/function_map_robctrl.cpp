@@ -64,7 +64,7 @@ FuncMap GetFuncMapRobCtrl()
     fm["EXECUTE_BACKINIT"] = ExecuteBackInit;
     fm["EXECUTE_BACKOFFSET"] = ExecuteBackOffset;
 
-    fm["SESSION_END"] = SessionEnd;
+    fm["SESSION_REINIT"] = SessionReinit;
 
     fm["MAN_ADJUST_T"] = ManualAdjustT;
     fm["MAN_ADJUST_R"] = ManualAdjustR;
@@ -109,7 +109,7 @@ void ExecuteMoveConfirm(std::string& ss, PublisherVec& pubs)
 
 void ExecuteEndAndBack(std::string& ss, PublisherVec& pubs)
 {
-    SessionEnd(ss, pubs);
+    SessionReinit(ss, pubs);
     ExecuteBackInit(ss, pubs);
 }
 
@@ -129,13 +129,14 @@ void ExecuteBackOffset(std::string& ss, PublisherVec& pubs)
     pubs[1].publish(msg_test);
 }
 
-void SessionEnd(std::string& ss, PublisherVec& pubs)
+void SessionReinit(std::string& ss, PublisherVec& pubs)
 {
     std_msgs::String msg_test;
-    msg_test.data = "_end__";
+    msg_test.data = "_reinit__";
     // pubs[3] is the publisher /RobCtrl/Session
     pubs[3].publish(msg_test);
 }
+
 
 void ManualAdjustT(std::string& ss, PublisherVec& pubs)
 {

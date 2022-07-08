@@ -15,5 +15,6 @@
   <depend>roscpp</depend>
   <depend>yaml-cpp</depend>
   <depend>rotms_ros_operations</depend>
+  <depend>rotms_ros_msgs</depend>
 
 </package>
