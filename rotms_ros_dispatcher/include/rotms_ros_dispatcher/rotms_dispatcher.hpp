@@ -88,13 +88,13 @@ private:
     ros::Publisher pub_robctrlcomm_ = n_.advertise<std_msgs::String>(
         "/RobCtrlComm/msg_to_send", 2);
     ros::Publisher pub_effold_ = n_.advertise<rotms_ros_msgs::PoseValid>( 
-        "/Kinematics/TR_robbase_effold", 2, true); // should only be called by ExecuteMotionToTargetEFFPose
+        "/Kinematics/TR_robbase_effold", 1, true); // should only be called by ExecuteMotionToTargetEFFPose
     
     // Dispatcher sending query
     ros::Publisher pub_gettargeteff_ = n_.advertise<std_msgs::String>(
         "/Kinematics/Query_GetTargetEff", 2);
     ros::Publisher pub_changeoffset_ = n_.advertise<geometry_msgs::Pose>(
-        "/Kinematics/TR_cntct_offset", 2, true);
+        "/Kinematics/TR_cntct_offset", 1, true);
     ros::Publisher pub_reinitcaldata_ = n_.advertise<std_msgs::String>(
         "/Kinematics/Query_ReInit", 2);
     ros::Publisher pub_flag_bodytoolviz_ = n_.advertise<std_msgs::String>(

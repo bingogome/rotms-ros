@@ -37,7 +37,7 @@ public:
 private:
     ros::NodeHandle& n_;
     ros::Publisher pub_eff = n_.advertise<rotms_ros_msgs::PoseValid>(
-        "/Kinematics/TR_derivedeff", 2, true);
+        "/Kinematics/TR_derivedeff", 1, true);
     ros::Subscriber sub = n_.subscribe(
         "/Kinematics/Query_GetTargetEff", 
         10, &RobotEffMngr::GetTargetEffCallback, this);
