@@ -76,11 +76,11 @@ KstServoing::KstServoing(
 // Send connection request to Sunrise Cabinet
 void KstServoing::NetEstablishConnection()
 {
-ROS_INFO("Here (4)");
+
     tcp::endpoint remote_endpoint = tcp::endpoint(boost::asio::ip::address_v4::from_string(ip_), 30001);
-    ROS_INFO("Here (3)");
 	tcp_sock_.connect(remote_endpoint);
-	ROS_INFO("Here (2)");
+
+	ros::Duration(1).sleep();
 
 	boost::system::error_code error;
 
@@ -96,6 +96,8 @@ ROS_INFO("Here (4)");
 
 	boost::asio::write(tcp_sock_, boost::asio::buffer(msg1), error);
 	lenmsgr1 = tcp_sock_.read_some(boost::asio::buffer(buf_));
+	
+	ros::Duration(0.5).sleep();
 	
 }
 
