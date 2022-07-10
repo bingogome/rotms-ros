@@ -66,6 +66,8 @@ private:
     
     ros::Subscriber sub_reinit = n_.subscribe(
         "/Kinematics/Query_ReInit", 2, &CalibrationDataMngr::ReInitCallback, this);
+    ros::Subscriber sub_updateoffset = n_.subscribe(
+        "/Kinematics/Update_TR_cntct_offset", 2, &CalibrationDataMngr::ChangeOffsetCallBack, this);
 
     void ReInitCallback(const std_msgs::String::ConstPtr& msg)
     {
@@ -74,6 +76,14 @@ private:
         {
             ReadAndPublishCalibrations(it->first, pubs_);
         }
+    }
+    
+    void ChangeOffsetCallBack(const geometry_msgs::Pose::ConstPtr& msg)
+    {
+        geometry_msgs::Pose out;
+        out.position = msg->position;
+        out.orientation = msg->orientation;
+        pubs_["cntct_offset"].publish(out);
     }
 };
 

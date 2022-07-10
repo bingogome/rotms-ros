@@ -95,6 +95,7 @@ void KstServoing::NetEstablishConnection()
 	// Previously using ros sleep
 
 	boost::asio::write(tcp_sock_, boost::asio::buffer(msg1), error);
+	ROS_INFO("Request sent");
 	lenmsgr1 = tcp_sock_.read_some(boost::asio::buffer(buf_));
 	
 	ros::Duration(0.5).sleep();
