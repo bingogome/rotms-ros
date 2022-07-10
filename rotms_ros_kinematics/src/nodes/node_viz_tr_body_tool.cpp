@@ -104,6 +104,12 @@ int main(int argc, char **argv)
     {
         if (mngr.run_flag)
         {
+            tr_pol_bodyref = ros::topic::waitForMessage<geometry_msgs::TransformStamped>(
+                "/NDI/HeadRef/local/measured_cp");
+            tr_pol_toolref = ros::topic::waitForMessage<geometry_msgs::TransformStamped>(
+                "/NDI/CoilRef/local/measured_cp");
+            tr_pol_bodyref_ = ConvertToTf2Transform(tr_pol_bodyref);
+            tr_pol_toolref_ = ConvertToTf2Transform(tr_pol_toolref);
             tr_body_tool_ = 
                 tr_bodyref_body_.inverse() * tr_pol_bodyref_.inverse() *
                 tr_pol_toolref_ * tr_tool_toolref_.inverse();
