@@ -146,7 +146,7 @@ void RobotROSInterface::RobotEFFMotionCallBack(const geometry_msgs::Pose::ConstP
     };
     try
     {
-        kst_.PTPLineEFF(epos, /*DON'T CHANGE!*/12.0); // second parameter is mm/sec
+        kst_.PTPLineEFF(epos, /*DON'T CHANGE!*/6.0); // second parameter is mm/sec
     }
     catch(...)
     {
