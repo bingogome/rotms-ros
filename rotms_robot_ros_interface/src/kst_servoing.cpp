@@ -336,6 +336,12 @@ std::vector<double> KstServoing::GetEFFPosition()
 	}
 	std::vector<double> vec = ParseString2DoubleVec(strmsgr);
 	// vector format: x y z rz ry rx
+	ROS_INFO_STREAM(std::to_string(vec[0]));
+	ROS_INFO_STREAM(std::to_string(vec[1]));
+	ROS_INFO_STREAM(std::to_string(vec[2]));
+	ROS_INFO_STREAM(std::to_string(vec[3]));
+	ROS_INFO_STREAM(std::to_string(vec[4]));
+	ROS_INFO_STREAM(std::to_string(vec[5]));
 
 	return vec;
 }
