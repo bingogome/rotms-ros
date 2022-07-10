@@ -63,7 +63,7 @@ private:
             "/Kinematics/TR_bodyref_body");
         while(!tr_bodyref_body->valid)
             rotms_ros_msgs::PoseValidConstPtr tr_bodyref_body = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
-            "/Kinematics/TR_bodyref_body");
+                "/Kinematics/TR_bodyref_body");
         tf2::Transform tr_toolref_eff_ = ConvertToTf2Transform(tr_toolref_eff);
         tf2::Transform tr_tool_toolref_ = ConvertToTf2Transform(tr_tool_toolref);
         tf2::Transform tr_offset_tool_ = ConvertToTf2Transform(tr_offset_tool);

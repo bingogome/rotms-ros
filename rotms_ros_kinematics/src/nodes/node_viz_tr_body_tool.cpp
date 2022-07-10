@@ -24,6 +24,14 @@ SOFTWARE.
 
 #include <ros/ros.h>
 #include <std_msgs/String.h>
+#include <geometry_msgs/Pose.h>
+#include <geometry_msgs/TransformStamped.h>
+#include <tf2/LinearMath/Transform.h>
+#include <iostream>
+#include <iomanip>
+
+#include "transform_conversions.hpp"
+#include "rotms_ros_msgs/PoseValid.h"
 
 class TransformMngrBodyTool
 {
@@ -45,20 +53,43 @@ private:
     }
 };
 
+std::string FormatDouble2String(double a, int dec)
+{
+	std::stringstream stream;
+    stream << std::fixed << std::setprecision(dec) << a;
+    std::string s = stream.str();
+    return s;
+}
 
 int main(int argc, char **argv)
 {
     // ROS stuff
     ros::init(argc, argv, "NodeVizTrBodyTool");
     ros::NodeHandle nh;
-    ros::Rate rate(10.0);
+    ros::Rate rate(30.0);
 
     // Instantiate the flag manager
     TransformMngrBodyTool mngr(nh);
 
     // Initialize the requred transforms
+    geometry_msgs::TransformStampedConstPtr tr_pol_bodyref;
+    geometry_msgs::TransformStampedConstPtr tr_pol_toolref;
+    rotms_ros_msgs::PoseValidConstPtr tr_bodyref_body = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
+            "/Kinematics/TR_bodyref_body");
+    while(!tr_bodyref_body->valid)
+        rotms_ros_msgs::PoseValidConstPtr tr_bodyref_body = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
+            "/Kinematics/TR_bodyref_body");
+    geometry_msgs::PoseConstPtr tr_tool_toolref = ros::topic::waitForMessage<geometry_msgs::Pose>(
+        "/Kinematics/TR_tool_toolref");
 
     // Initialize the tf2 intermediate variables
+    tf2::Transform tr_pol_bodyref_;
+    tf2::Transform tr_pol_toolref_;
+    tf2::Transform tr_bodyref_body_ = ConvertToTf2Transform(tr_bodyref_body);
+    tf2::Transform tr_tool_toolref_ = ConvertToTf2Transform(tr_tool_toolref);
+
+    // Initialize the result transform
+    tf2::Transform tr_body_tool_;
 
     // Initialize the result variable and its publisher
     // Format:
@@ -69,13 +100,21 @@ int main(int argc, char **argv)
     std_msgs::String msg_out;
 
     // Go in the loop, with the flag indicating wether do the calculation or not
-    int t = 0;
     while (nh.ok())
     {
         if (mngr.run_flag)
         {
-            t+=1;
-            msg_out.data = "__msg_pose_0010.00000_" + std::to_string(10.0+10*sin(0.5*t)) + "_0000.00000_0000.00000_0000.00000_0000.00000_0001.00000";
+            tr_body_tool_ = 
+                tr_bodyref_body_.inverse() * tr_pol_bodyref_.inverse() *
+                tr_pol_toolref_ * tr_tool_toolref_.inverse();
+            msg_out.data = "__msg_pose_" + // convert m to mm
+                FormatDouble2String(tr_body_tool_.getOrigin().x() * 1000.0, 5) + "_" +
+                FormatDouble2String(tr_body_tool_.getOrigin().y() * 1000.0, 5) + "_" +
+                FormatDouble2String(tr_body_tool_.getOrigin().z() * 1000.0, 5) + "_" + 
+                FormatDouble2String(tr_body_tool_.getRotation().x(), 5) + "_" + 
+                FormatDouble2String(tr_body_tool_.getRotation().y(), 5) + "_" + 
+                FormatDouble2String(tr_body_tool_.getRotation().z(), 5) + "_" +
+                FormatDouble2String(tr_body_tool_.getRotation().w(), 5);
             pub_encode_body_tool.publish(msg_out);
         }
         ros::spinOnce();
