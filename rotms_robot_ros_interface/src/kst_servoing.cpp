@@ -26,6 +26,7 @@ SOFTWARE.
 #include <boost/asio.hpp>
 #include <boost/lexical_cast.hpp>
 #include <iomanip>
+#include <ros/ros.h>
 
 /*****
  *
@@ -75,9 +76,11 @@ KstServoing::KstServoing(
 // Send connection request to Sunrise Cabinet
 void KstServoing::NetEstablishConnection()
 {
+ROS_INFO("Here (4)");
     tcp::endpoint remote_endpoint = tcp::endpoint(boost::asio::ip::address_v4::from_string(ip_), 30001);
+    ROS_INFO("Here (3)");
 	tcp_sock_.connect(remote_endpoint);
-
+	ROS_INFO("Here (2)");
 
 	boost::system::error_code error;
 

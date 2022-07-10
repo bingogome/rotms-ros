@@ -85,6 +85,7 @@ void RobotROSInterface::RobotInitConnectionCallBack(const std_msgs::String::Cons
         try
         {
             kst_.NetEstablishConnection();
+            ROS_INFO("Here (1)");
             flag_connected_ = true;
             ROS_INFO("Robot cabinet connection initialized");
             std_msgs::Bool robconnstatus;
