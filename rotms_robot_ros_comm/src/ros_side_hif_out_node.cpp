@@ -40,7 +40,7 @@ ROSSideOut CommNodeHiFOutIniter(ros::NodeHandle& n, std::string modulesuffix)
 	cfg.msg_size = f["MSG_SIZE_"+modulesuffix].as<int>();
 	cfg.subscriber_name = f["SUBSCRIBER_HIF_NAME_"+modulesuffix].as<std::string>();
     cfg.publisher_name = f["PUBLISHER_HIF_NAME_"+modulesuffix].as<std::string>();
-	cfg.verbose = 1;
+	cfg.verbose = f["VERBOSE_HIF_"+modulesuffix].as<int>();
 
 	ROSSideOut server(n, io_context, cfg);
 
