@@ -22,49 +22,27 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
-#include <map>
-#include <string>
-#include <ros/ros.h>
-#include "function_map_targetviz.hpp"
-#include "decode_node.hpp"
+#include <ros_side_out.hpp>
+#include <ros_side_hif_out_node.hpp>
+#include <ros/package.h>
 
-/**
-* This maps the functions to the received cmd.
-*/
+#include <yaml-cpp/yaml.h>
+#include <boost/asio.hpp>
 
-CommDecoderTargetViz::CommDecoderTargetViz(
-    ros::NodeHandle& n, 
-    const std::string modulesuffix,
-    FuncMap opsdict) 
-    : 
-    CommDecoder(n, modulesuffix, opsdict) 
+ROSSideOut CommNodeHiFOutIniter(ros::NodeHandle& n, std::string modulesuffix)
 {
-    pubs_.push_back(
-        n_.advertise<std_msgs::String>("/TargetViz/Visualize", 5));
-}
+    boost::asio::io_context io_context;
+    std::string packpath = ros::package::getPath("rotms_robot_ros_comm");
+	YAML::Node f = YAML::LoadFile(packpath + "/config_comm.yaml");
 
-FuncMap GetFuncMapTargetViz()
-{
-    FuncMap fm;
+    struct ROSSideOutConfig cfg;
+	cfg.port_out = f["PORT_OUT_NNBLC_"+modulesuffix].as<int>();
+	cfg.msg_size = f["MSG_SIZE_"+modulesuffix].as<int>();
+	cfg.subscriber_name = f["SUBSCRIBER_HIF_NAME_"+modulesuffix].as<std::string>();
+    cfg.publisher_name = f["PUBLISHER_HIF_NAME_"+modulesuffix].as<std::string>();
+	cfg.verbose = f["VERBOSE_HIF_"+modulesuffix].as<int>();
 
-    fm["VISUALIZE_START"] = VisualizeStart;
-    fm["VISUALIZE_STOP"] = VisualizeStop;
+	ROSSideOut server(n, io_context, cfg);
 
-    return fm;
-}
-
-void VisualizeStart(std::string& ss, PublisherVec& pubs)
-{
-    std_msgs::String msg_test;
-    msg_test.data = "_start__";
-    // pubs[0] is the publisher /TargetViz/Visualize
-    pubs[0].publish(msg_test);
-}
-
-void VisualizeStop(std::string& ss, PublisherVec& pubs)
-{
-    std_msgs::String msg_test;
-    msg_test.data = "_end__";
-    // pubs[0] is the publisher /TargetViz/Visualize
-    pubs[0].publish(msg_test);
+	return server;
 }

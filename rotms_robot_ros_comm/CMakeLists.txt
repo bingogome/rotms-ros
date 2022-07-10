@@ -27,6 +27,7 @@ add_library(${PROJECT_NAME}
   src/ros_side_out.cpp
   src/ros_side_in_node.cpp
   src/ros_side_out_node.cpp
+  src/ros_side_hif_out_node.cpp
   )
 
 target_include_directories(${PROJECT_NAME} PUBLIC 
@@ -58,3 +59,6 @@ target_link_libraries(node_targetviz_comm_out ${PROJECT_NAME})
 
 add_executable(node_comm_end src/nodes/node_comm_end.cpp)
 target_link_libraries(node_comm_end ${PROJECT_NAME})
+
+add_executable(node_targetviz_comm_hif_out src/nodes/node_targetviz_comm_hif_out.cpp)
+target_link_libraries(node_targetviz_comm_hif_out ${PROJECT_NAME})

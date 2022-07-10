@@ -456,3 +456,22 @@ void Dispatcher::ExecuteBackOffsetCallBack(const std_msgs::String::ConstPtr& msg
     pub_changeoffset_.publish(changeoffset);
     Dispatcher::ExecuteMotionToTargetEFFPose();
 }
+
+void Dispatcher::TargetVizCallBack(const std_msgs::String::ConstPtr& msg)
+{
+    std_msgs::String msg_out;
+    if(msg->data.compare("_start__")==0) 
+    {
+        // Poke node_viz_tr_body_tool
+        msg_out.data = "_start__";
+        pub_flag_bodytoolviz_.publish(msg_out);
+    }
+    else if(msg->data.compare("_end__")==0) 
+    {
+        // Poke node_viz_tr_body_tool
+        msg_out.data = "_end__";
+        pub_flag_bodytoolviz_.publish(msg_out);
+    }
+    
+
+}

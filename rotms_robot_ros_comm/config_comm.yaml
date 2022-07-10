@@ -32,4 +32,7 @@ MSG_END_TARGETVIZ: "_msg_end__" # communication messege starts with this means e
 MSG_SIZE_TARGETVIZ: 256 # change the ros_side_in.hpp and ros_side_out.hpp {boost::array<char, ...> recv_buffer_} field when chaning this number
 PUBLISHER_NAME_TARGETVIZ: "/TargetVizComm/msg_received" # Messege ROS publisher name (ROSSideIn received)
 SUBSCRIBER_NAME_TARGETVIZ: "/TargetVizComm/msg_to_send" # Messege ROS subscriber name (ROSSideOut to send)
+PUBLISHER_HIF_NAME_TARGETVIZ: "/TargetVizComm/msg_received_hi_f" # TODO: reconfigure for high frequency ROSSideOut. ROSSideOut has both pub and sub. pub was originally for ack, but not applicable for HI F since there is no Hi F ROSSideIn 
+SUBSCRIBER_HIF_NAME_TARGETVIZ: "/TargetVizComm/msg_to_send_hi_f" # Messege ROS subscriber name (ROSSideOut to send at high frequency)
 VERBOSE_TARGETVIZ: 1
+VERBOSE_HIF_TARGETVIZ: 0
