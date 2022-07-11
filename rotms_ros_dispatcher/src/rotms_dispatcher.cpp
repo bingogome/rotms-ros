@@ -302,7 +302,7 @@ void Dispatcher::ResetVolatileDataCacheToolPose()
     datacache_.toolpose_r.clear();
 }
 
-void Dispatcher::ExecuteMotionCallBack(const std_msgs::String::ConstPtr& msg)
+void Dispatcher::ExecuteMotionToOffsetCallBack(const std_msgs::String::ConstPtr& msg)
 {
     // Status check
     if(!msg->data.compare("_execute__")==0) return;
@@ -311,6 +311,10 @@ void Dispatcher::ExecuteMotionCallBack(const std_msgs::String::ConstPtr& msg)
         ROS_YELLOW_STREAM("[ROTMS WARNING] The prerequisites are not met. Check before robot motion. (code 1)");
         return;
     }
+    std_msgs::String msg_reinit;
+    msg_reinit.data = "_reinitoffset__";
+    pub_reinitoffset_.publish(msg_reinit);
+    ros::spinOnce();
     Dispatcher::ExecuteMotionToTargetEFFPose();
 }
 
@@ -328,6 +332,7 @@ void Dispatcher::ExecuteConfirmMotionCallBack(const std_msgs::String::ConstPtr& 
     changeoffset.orientation.x = 0.0; changeoffset.orientation.y = 0.0; changeoffset.orientation.z = 0.0;
     changeoffset.orientation.w = 1.0;
     pub_changeoffset_.publish(changeoffset);
+    ros::spinOnce();
     Dispatcher::ExecuteMotionToTargetEFFPose();
 }
 

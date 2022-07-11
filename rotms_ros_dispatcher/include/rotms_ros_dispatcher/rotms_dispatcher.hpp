@@ -74,7 +74,7 @@ private:
     ros::Subscriber sub_robconnstatus_ = n_.subscribe(
         "/RobInterfaceOut/RobConnStatus", 2, &Dispatcher::UpdateRobotConnFlagCallBack, this);
     ros::Subscriber sub_robctrl_execute_ = n_.subscribe(
-        "/RobCtrl/Motion", 2, &Dispatcher::ExecuteMotionCallBack, this);
+        "/RobCtrl/Motion", 2, &Dispatcher::ExecuteMotionToOffsetCallBack, this);
     ros::Subscriber sub_robctrl_executeconfirm_ = n_.subscribe(
         "/RobCtrl/Motion", 2, &Dispatcher::ExecuteConfirmMotionCallBack, this);
     ros::Subscriber sub_robctrl_executebackoffset_ = n_.subscribe(
@@ -95,6 +95,8 @@ private:
         "/Kinematics/Query_GetTargetEff", 2);
     ros::Publisher pub_changeoffset_ = n_.advertise<geometry_msgs::Pose>(
         "/Kinematics/Update_TR_cntct_offset", 2);
+    ros::Publisher pub_reinitoffset_ = n_.advertise<geometry_msgs::Pose>(
+        "/Kinematics/Reinit_TR_cntct_offset", 2);
     ros::Publisher pub_reinitcaldata_ = n_.advertise<std_msgs::String>(
         "/Kinematics/Query_ReInit", 2);
     ros::Publisher pub_flag_bodytoolviz_ = n_.advertise<std_msgs::String>(
@@ -119,7 +121,7 @@ private:
     void RobDisconnectCallBack(const std_msgs::String::ConstPtr& msg);
     void GetJntsCallBack(const std_msgs::String::ConstPtr& msg);
     void GetEFFCallBack(const std_msgs::String::ConstPtr& msg);
-    void ExecuteMotionCallBack(const std_msgs::String::ConstPtr& msg);
+    void ExecuteMotionToOffsetCallBack(const std_msgs::String::ConstPtr& msg);
     void ExecuteConfirmMotionCallBack(const std_msgs::String::ConstPtr& msg);
     void ExecuteMotionToTargetEFFPose();
     void ExecuteBackOffsetCallBack(const std_msgs::String::ConstPtr& msg);

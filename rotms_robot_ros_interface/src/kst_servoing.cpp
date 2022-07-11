@@ -111,7 +111,7 @@ void KstServoing::NetEstablishConnection()
 
 // Send a point-to-point command, in joint space
 void KstServoing::PTPJointSpace(std::vector<double> jpos , double relVel)
-{
+{// vel: relative to max vel
 	try
 	{
 		boost::system::error_code error;
