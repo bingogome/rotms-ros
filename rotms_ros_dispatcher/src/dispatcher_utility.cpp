@@ -31,6 +31,8 @@ SOFTWARE.
 #include <iomanip>
 #include <time.h>
 
+#include <std_msgs/Float32MultiArray.h>
+
 
 void SaveLandmarkPlanData(struct VolatileTempDataCache datacache, std::string f)
 {
@@ -83,6 +85,20 @@ void SaveToolPoseData(struct VolatileTempDataCache datacache, std::string f)
         filesave << "  }\n";
 		filesave.close();
     }
+}
+
+void SaveCurrentJntsAsInit(std_msgs::Float32MultiArray jnts, std::string f)
+{
+    std::ofstream filesave(f);
+    if(filesave.is_open())
+    {
+        for(int i=0;i<jnts.layout.dim[0].size;i++)
+        {
+            filesave << "a" << i << ": " << FormatDouble2String(jnts.data[i], 16) << "\n";
+        }
+        filesave.close();
+    }
+    
 }
 
 std::string FormatDouble2String(double a, int dec)

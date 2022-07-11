@@ -243,7 +243,10 @@ void Dispatcher::RobDisconnectCallBack(const std_msgs::String::ConstPtr& msg)
 
 void Dispatcher::GetJntsCallBack(const std_msgs::String::ConstPtr& msg)
 {
-    if(!msg->data.compare("_jnts__")==0) return;
+    if(! (msg->data.compare("_jnts__")==0 
+        || 
+        msg->data.compare("_initcur__")==0) ) return;
+    
     std_msgs::String msg_out;
     if(!states_[activated_state_]->flags_.GetFlagRobotConnStatus())
     {
@@ -263,7 +266,16 @@ void Dispatcher::GetJntsCallBack(const std_msgs::String::ConstPtr& msg)
         }
         msg_out.data = str.str();
         pub_robctrlcomm_.publish(msg_out);
+
+        if(msg->data.compare("_initcur__")==0) 
+        {
+            ROS_GREEN_STREAM("[ROTMS INFO] Setting current joints as init.");
+            std::string packpath = ros::package::getPath("rotms_ros_operations");
+            SaveCurrentJntsAsInit(jnts, packpath + "/share/config/initjnts.yaml");
+            SaveCurrentJntsAsInit(jnts, packpath + "/share/data/initjnts_" + GetTimeString() + ".yaml");
+        }
     }
+    
 }
 
 void Dispatcher::GetEFFCallBack(const std_msgs::String::ConstPtr& msg)

@@ -95,7 +95,7 @@ private:
         "/Kinematics/Query_GetTargetEff", 2);
     ros::Publisher pub_changeoffset_ = n_.advertise<geometry_msgs::Pose>(
         "/Kinematics/Update_TR_cntct_offset", 2);
-    ros::Publisher pub_reinitoffset_ = n_.advertise<geometry_msgs::Pose>(
+    ros::Publisher pub_reinitoffset_ = n_.advertise<std_msgs::String>(
         "/Kinematics/Reinit_TR_cntct_offset", 2);
     ros::Publisher pub_reinitcaldata_ = n_.advertise<std_msgs::String>(
         "/Kinematics/Query_ReInit", 2);
