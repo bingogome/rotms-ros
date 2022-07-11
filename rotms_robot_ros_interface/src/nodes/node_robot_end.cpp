@@ -27,6 +27,8 @@ SOFTWARE.
 #include <signal.h>
 #include <yaml-cpp/yaml.h>
 #include <ros/package.h>
+#include "ros_print_color.hpp"
+
 
 void endSigintHandler(int sig)
 {
@@ -51,14 +53,14 @@ void endSigintHandler(int sig)
     msg.data = ss.str();
     
     // Enter a random "handshake" effort
-    ROS_INFO_STREAM("Ending robot connetion "+msg.data); 
+    ROS_GREEN_STREAM("[ROTMS INFO] Ending robot connetion "+msg.data); 
     for(int i=0;i<handshake_num;i++)
     {
         pub.publish(msg);
         ros::spinOnce();
         duration.sleep();
     }
-    ROS_INFO("Ending connection efforts sent to ROS node");
+    ROS_GREEN_STREAM("[ROTMS INFO] Ending connection efforts sent to ROS node.");
     ros::shutdown();
 }
 

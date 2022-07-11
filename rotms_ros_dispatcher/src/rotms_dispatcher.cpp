@@ -27,6 +27,7 @@ SOFTWARE.
 #include "state_machine.hpp"
 #include "state_machine_states.hpp"
 #include "rotms_ros_msgs/PoseValid.h"
+#include "ros_print_color.hpp"
 
 #include <ros/ros.h>
 #include <ros/package.h>
@@ -48,7 +49,7 @@ Dispatcher::Dispatcher(ros::NodeHandle& n, const std::vector<WorkState*>& states
     : n_(n), states_(states)
 {
     bool integ = CheckFlagIntegrity(states_);
-    ROS_INFO_STREAM("Flag integrity check: " + std::to_string(integ));
+    ROS_GREEN_STREAM("[ROTMS INFO] Flag integrity check: " + std::to_string(integ));
 }
 
 void Dispatcher::LandmarkPlanMetaCallBack(const std_msgs::Int16::ConstPtr& msg)
@@ -59,10 +60,10 @@ void Dispatcher::LandmarkPlanMetaCallBack(const std_msgs::Int16::ConstPtr& msg)
 
         if (datacache_.landmark_coords.size() != datacache_.landmark_total)
         {
-            ROS_INFO("The number of landmarks received does not match planned!");
-            ROS_INFO_STREAM("Planned: " + std::to_string(datacache_.landmark_total));
-            ROS_INFO_STREAM("Received: " + std::to_string(datacache_.landmark_coords.size()));
-            ROS_INFO("Try one more time!");
+            ROS_YELLOW_STREAM("[ROTMS WARNING] The number of landmarks received does not match planned!");
+            ROS_YELLOW_STREAM("[ROTMS WARNING] Planned: " + std::to_string(datacache_.landmark_total));
+            ROS_YELLOW_STREAM("[ROTMS WARNING] Received: " + std::to_string(datacache_.landmark_coords.size()));
+            ROS_YELLOW_STREAM("[ROTMS WARNING] Try one more time!");
             Dispatcher::ResetVolatileDataCacheLandmarks();
             return;
         }
@@ -70,24 +71,24 @@ void Dispatcher::LandmarkPlanMetaCallBack(const std_msgs::Int16::ConstPtr& msg)
         SaveLandmarkPlanData(datacache_, packpath + "/share/cache/landmarkplan.yaml");
         SaveLandmarkPlanData(datacache_, packpath + "/share/data/landmarkplan_" + GetTimeString() + ".yaml");
 
-        ROS_INFO("Landmarks cached.");
+        ROS_GREEN_STREAM("[ROTMS INFO] Landmarks cached.");
 
         Dispatcher::ResetVolatileDataCacheLandmarks(); // reset
 
         int new_state = states_[activated_state_]->LandmarksPlanned();
-        ROS_INFO_STREAM("Old state: " + std::to_string(activated_state_));
-        ROS_INFO_STREAM("Attempt new state: " + std::to_string(new_state));
+        ROS_GREEN_STREAM("[ROTMS INFO] Old state: " + std::to_string(activated_state_));
+        ROS_GREEN_STREAM("[ROTMS INFO] Attempt new state: " + std::to_string(new_state));
         if (new_state != -1)
         {
             activated_state_ = new_state;
-            ROS_INFO_STREAM("Transitioned to new state: " + 
+            ROS_GREEN_STREAM("[ROTMS INFO] Transitioned to new state: " + 
                 std::to_string(activated_state_));
         }
         else
         {
             // Failed operation
-            ROS_INFO("State transition not possible.");
-            ROS_INFO("Make sure the operation dependencies are met.");
+            ROS_YELLOW_STREAM("[ROTMS WARNING] State transition not possible.");
+            ROS_YELLOW_STREAM("[ROTMS WARNING] Make sure the operation dependencies are met.");
         }
     }
     else
@@ -106,10 +107,10 @@ void Dispatcher::LandmarkPlanFidsCallBack(const std_msgs::Float32MultiArray::Con
     }
     else
     {
-        ROS_INFO("Current index does not match the waiting index!");
-        ROS_INFO_STREAM("Current index: " + std::to_string(msg->data[0]));
-        ROS_INFO_STREAM("Waiting index: " + std::to_string(datacache_.landmark_coords.size()));
-        ROS_INFO("Try one more time!");
+        ROS_YELLOW_STREAM("[ROTMS WARNING] Current index does not match the waiting index!");
+        ROS_YELLOW_STREAM("[ROTMS WARNING] Current index: " + std::to_string(msg->data[0]));
+        ROS_YELLOW_STREAM("[ROTMS WARNING] Waiting index: " + std::to_string(datacache_.landmark_coords.size()));
+        ROS_YELLOW_STREAM("[ROTMS WARNING] Try one more time!");
         Dispatcher::ResetVolatileDataCacheLandmarks();
     }
 }
@@ -120,15 +121,15 @@ void Dispatcher::SessionReinitCallBack(const std_msgs::String::ConstPtr& msg)
 
     // Reset state
     int new_state = states_[activated_state_]->ReinitState();
-    ROS_INFO_STREAM("Old state: " + std::to_string(activated_state_));
-    ROS_INFO_STREAM("Attempt new state: " + std::to_string(new_state));
+    ROS_GREEN_STREAM("[ROTMS INFO] Old state: " + std::to_string(activated_state_));
+    ROS_GREEN_STREAM("[ROTMS INFO] Attempt new state: " + std::to_string(new_state));
     if (new_state != 0b0000) 
     {
-        ROS_INFO("Unable to reinit state.");
+        ROS_YELLOW_STREAM("[ROTMS WARNING] Unable to reinit state.");
         return;
     }
     activated_state_ = new_state;
-    ROS_INFO_STREAM("Transitioned to new state: " + 
+    ROS_GREEN_STREAM("[ROTMS INFO] Transitioned to new state: " + 
         std::to_string(activated_state_));
 
     // Reinit calibration data
@@ -137,7 +138,7 @@ void Dispatcher::SessionReinitCallBack(const std_msgs::String::ConstPtr& msg)
     pub_reinitcaldata_.publish(msg_out);
 
     // Verbo
-    ROS_INFO("Session reinited");
+    ROS_GREEN_STREAM("[ROTMS INFO] Session reinited");
 
 }
 
@@ -152,19 +153,19 @@ void Dispatcher::AutodigitizationCallBack(const std_msgs::String::ConstPtr& msg)
     if (!msg->data.compare("_autodigitize__")==0) return;
     
     int new_state = states_[activated_state_]->LandmarksDigitized();
-    ROS_INFO_STREAM("Old state: " + std::to_string(activated_state_));
-    ROS_INFO_STREAM("Attempt new state: " + std::to_string(new_state));
+    ROS_GREEN_STREAM("[ROTMS INFO] Old state: " + std::to_string(activated_state_));
+    ROS_GREEN_STREAM("[ROTMS INFO] Attempt new state: " + std::to_string(new_state));
     if (new_state != -1)
     {
         activated_state_ = new_state;
-        ROS_INFO_STREAM("Transitioned to new state: " + 
+        ROS_GREEN_STREAM("[ROTMS INFO] Transitioned to new state: " + 
             std::to_string(activated_state_));
     }
     else
     {
         // Failed operation
-        ROS_INFO("State transition not possible.");
-        ROS_INFO("Make sure the operation dependencies are met.");
+        ROS_YELLOW_STREAM("[ROTMS WARNING] State transition not possible.");
+        ROS_YELLOW_STREAM("[ROTMS WARNING] Make sure the operation dependencies are met.");
     }
     
 }
@@ -174,19 +175,19 @@ void Dispatcher::RegistrationCallBack(const std_msgs::String::ConstPtr& msg)
     if (!msg->data.compare("_register__")==0) return;
     
     int new_state = states_[activated_state_]->Registered();
-    ROS_INFO_STREAM("Old state: " + std::to_string(activated_state_));
-    ROS_INFO_STREAM("Attempt new state: " + std::to_string(new_state));
+    ROS_GREEN_STREAM("[ROTMS INFO] Old state: " + std::to_string(activated_state_));
+    ROS_GREEN_STREAM("[ROTMS INFO] Attempt new state: " + std::to_string(new_state));
     if (new_state != -1)
     {
         activated_state_ = new_state;
-        ROS_INFO_STREAM("Transitioned to new state: " + 
+        ROS_GREEN_STREAM("[ROTMS INFO] Transitioned to new state: " + 
             std::to_string(activated_state_));
     }
     else
     {
         // Failed operation
-        ROS_INFO("State transition not possible.");
-        ROS_INFO("Make sure the operation dependencies are met.");
+        ROS_YELLOW_STREAM("[ROTMS WARNING] State transition not possible.");
+        ROS_YELLOW_STREAM("[ROTMS WARNING] Make sure the operation dependencies are met.");
     }
     
 }
@@ -205,23 +206,23 @@ void Dispatcher::ToolPoseOrientCallBack(const geometry_msgs::Quaternion::ConstPt
         SaveToolPoseData(datacache_, packpath + "/share/config/toolpose.yaml");
         SaveToolPoseData(datacache_, packpath + "/share/data/toolpose_" + GetTimeString() + ".yaml");
 
-        ROS_INFO("Toolpose cached.");
+        ROS_GREEN_STREAM("[ROTMS INFO] Toolpose cached.");
         Dispatcher::ResetVolatileDataCacheToolPose();
 
         int new_state = states_[activated_state_]->ToolPosePlanned();
-        ROS_INFO_STREAM("Old state: " + std::to_string(activated_state_));
-        ROS_INFO_STREAM("Attempt new state: " + std::to_string(new_state));
+        ROS_GREEN_STREAM("[ROTMS INFO] Old state: " + std::to_string(activated_state_));
+        ROS_GREEN_STREAM("[ROTMS INFO] Attempt new state: " + std::to_string(new_state));
         if (new_state != -1)
         {
             activated_state_ = new_state;
-            ROS_INFO_STREAM("Transitioned to new state: " + 
+            ROS_GREEN_STREAM("[ROTMS INFO] Transitioned to new state: " + 
                 std::to_string(activated_state_));
         }
         else
         {
             // Failed operation
-            ROS_INFO("State transition not possible.");
-            ROS_INFO("Make sure the operation dependencies are met.");
+            ROS_YELLOW_STREAM("[ROTMS WARNING] State transition not possible.");
+            ROS_YELLOW_STREAM("[ROTMS WARNING] Make sure the operation dependencies are met.");
         }
     }
 }
@@ -239,23 +240,23 @@ void Dispatcher::ToolPoseTransCallBack(const geometry_msgs::Point::ConstPtr& msg
         SaveToolPoseData(datacache_, packpath + "/share/config/toolpose.yaml");
         SaveToolPoseData(datacache_, packpath + "/share/data/toolpose_" + GetTimeString() + ".yaml");
 
-        ROS_INFO("Toolpose cached.");
+        ROS_GREEN_STREAM("[ROTMS INFO] Toolpose cached.");
         Dispatcher::ResetVolatileDataCacheToolPose();
 
         int new_state = states_[activated_state_]->ToolPosePlanned();
-        ROS_INFO_STREAM("Old state: " + std::to_string(activated_state_));
-        ROS_INFO_STREAM("Attempt new state: " + std::to_string(new_state));
+        ROS_GREEN_STREAM("[ROTMS INFO] Old state: " + std::to_string(activated_state_));
+        ROS_GREEN_STREAM("[ROTMS INFO] Attempt new state: " + std::to_string(new_state));
         if (new_state != -1)
         {
             activated_state_ = new_state;
-            ROS_INFO_STREAM("Transitioned to new state: " + 
+            ROS_GREEN_STREAM("[ROTMS INFO] Transitioned to new state: " + 
                 std::to_string(activated_state_));
         }
         else
         {
             // Failed operation
-            ROS_INFO("State transition not possible.");
-            ROS_INFO("Make sure the operation dependencies are met.");
+            ROS_YELLOW_STREAM("[ROTMS WARNING] State transition not possible.");
+            ROS_YELLOW_STREAM("[ROTMS WARNING] Make sure the operation dependencies are met.");
         }
     }
 }
@@ -292,7 +293,7 @@ void Dispatcher::GetJntsCallBack(const std_msgs::String::ConstPtr& msg)
     std_msgs::String msg_out;
     if(!states_[activated_state_]->flags_.GetFlagRobotConnStatus())
     {
-        ROS_INFO("Robot cabinet connection has not been established");
+        ROS_YELLOW_STREAM("[ROTMS WARNING] Robot cabinet connection has not been established!");
         msg_out.data = "no_data_returned;";
         pub_robctrlcomm_.publish(msg_out);
         return;
@@ -317,7 +318,7 @@ void Dispatcher::GetEFFCallBack(const std_msgs::String::ConstPtr& msg)
     std_msgs::String msg_out;
     if(!states_[activated_state_]->flags_.GetFlagRobotConnStatus())
     {
-        ROS_INFO("Robot cabinet connection has not been established");
+        ROS_YELLOW_STREAM("[ROTMS WARNING] Robot cabinet connection has not been established!");
         msg_out.data = "no_data_returned;";
         pub_robctrlcomm_.publish(msg_out);
         return;
@@ -353,7 +354,7 @@ void Dispatcher::ExecuteMotionCallBack(const std_msgs::String::ConstPtr& msg)
     if(!msg->data.compare("_execute__")==0) return;
     if(activated_state_!=0b1111)
     {
-        ROS_INFO("The prerequisites are not met. Check before robot motion. (code 1)");
+        ROS_YELLOW_STREAM("[ROTMS WARNING] The prerequisites are not met. Check before robot motion. (code 1)");
         return;
     }
     Dispatcher::ExecuteMotionToTargetEFFPose();
@@ -365,7 +366,7 @@ void Dispatcher::ExecuteConfirmMotionCallBack(const std_msgs::String::ConstPtr& 
     if(!msg->data.compare("_confirm__")==0) return;
     if(activated_state_!=0b1111)
     {
-        ROS_INFO("The prerequisites are not met. Check before robot motion. (code 2)");
+        ROS_YELLOW_STREAM("[ROTMS WARNING] The prerequisites are not met. Check before robot motion. (code 2)");
         return;
     }
     geometry_msgs::Pose changeoffset;
@@ -381,12 +382,12 @@ void Dispatcher::ExecuteMotionToTargetEFFPose()
 
     if(activated_state_!=0b1111)
     {
-        ROS_INFO("The prerequisites are not met. Check before robot motion. (code 0)");
+        ROS_YELLOW_STREAM("[ROTMS WARNING] The prerequisites are not met. Check before robot motion. (code 0)");
         return;
     }
     if(!states_[activated_state_]->flags_.GetFlagRobotConnStatus())
     {
-        ROS_INFO("Robot cabinet connection has not been established");
+        ROS_YELLOW_STREAM("[ROTMS WARNING] Robot cabinet connection has not been established!");
         return;
     }
 
@@ -394,7 +395,7 @@ void Dispatcher::ExecuteMotionToTargetEFFPose()
     rotms_ros_msgs::GetEFF srv;
     if(!clt_eff_.call(srv))
     {
-        ROS_INFO("Could not request current EFF from robot cabinet!");
+        ROS_YELLOW_STREAM("[ROTMS WARNING] Could not request current EFF from robot cabinet!");
         return;
     }
     geometry_msgs::Pose effold = srv.response.eff;
@@ -403,7 +404,7 @@ void Dispatcher::ExecuteMotionToTargetEFFPose()
     pv_old.pose = effold;
     pub_effold_.publish(pv_old);
 
-    ROS_INFO("Current EFF pose received");
+    ROS_GREEN_STREAM("[ROTMS INFO] Current EFF pose received.");
 
     // Query for target EFF pose
     std_msgs::String queryeff;
@@ -412,13 +413,13 @@ void Dispatcher::ExecuteMotionToTargetEFFPose()
     rotms_ros_msgs::PoseValidConstPtr tr_targeteff = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
         "/Kinematics/TR_derivedeff");
 
-    ROS_INFO("Target pose received, test validaty......");
+    ROS_GREEN_STREAM("[ROTMS INFO] Target pose received, test validaty......");
 
     while(!tr_targeteff->valid)
         tr_targeteff = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
             "/Kinematics/TR_derivedeff");
 
-    ROS_INFO("Target pose valid. ");
+    ROS_GREEN_STREAM("[ROTMS INFO] Target pose valid. ");
 
     geometry_msgs::Pose tr_targeteff_;
     tr_targeteff_.position.x = tr_targeteff->pose.position.x;
@@ -432,14 +433,14 @@ void Dispatcher::ExecuteMotionToTargetEFFPose()
     // Send to robot interface and move
     pub_robeffmove_.publish(tr_targeteff_);
 
-    ROS_INFO("Send to robot interface. ");
+    ROS_GREEN_STREAM("[ROTMS INFO] Send to robot interface. ");
 
     // Stop old EFF pose publisher latch
     rotms_ros_msgs::PoseValid pv;
     pv.valid = false;
     pub_effold_.publish(pv);
 
-    ROS_INFO("End of robot motion call. ");
+    ROS_GREEN_STREAM("[ROTMS INFO] End of robot motion call. ");
 }
 
 void Dispatcher::ExecuteBackOffsetCallBack(const std_msgs::String::ConstPtr& msg)
@@ -447,7 +448,7 @@ void Dispatcher::ExecuteBackOffsetCallBack(const std_msgs::String::ConstPtr& msg
     if(!msg->data.compare("_backoffset__")==0) return;
     if(activated_state_!=0b1111)
     {
-        ROS_INFO("The prerequisites are not met. Check before robot motion. (code 3)");
+        ROS_YELLOW_STREAM("[ROTMS WARNING] The prerequisites are not met. Check before robot motion. (code 3)");
         return;
     }
     geometry_msgs::Pose changeoffset;
@@ -469,6 +470,11 @@ void Dispatcher::TargetVizCallBack(const std_msgs::String::ConstPtr& msg)
     std_msgs::String msg_out;
     if(msg->data.compare("_start__")==0) 
     {
+        if(activated_state_ != 0b1101 || activated_state_!= 0b1111)
+        {
+            ROS_YELLOW_STREAM("[ROTMS WARNING] Prerequisite is not met!");
+            return;
+        }
         // Poke node_viz_tr_body_tool
         msg_out.data = "_start__";
         pub_flag_bodytoolviz_.publish(msg_out);

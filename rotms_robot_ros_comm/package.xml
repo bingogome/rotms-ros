@@ -14,5 +14,6 @@
   <depend>roslaunch</depend>
   <depend>roscpp</depend>
   <depend>Boost</depend>
+  <depend>rotms_ros_universal_utility</depend>
 
 </package>

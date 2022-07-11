@@ -22,10 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
-#include "registration_funcs.hpp"
-#include "rotms_operations.hpp"
-#include "rotms_ros_msgs/PoseValid.h"
-
 #include <ros/ros.h>
 #include <ros/package.h>
 #include <geometry_msgs/Pose.h>
@@ -39,6 +35,11 @@ SOFTWARE.
 #include <iostream>
 #include <stdexcept>
 #include <yaml-cpp/yaml.h>
+
+#include "registration_funcs.hpp"
+#include "rotms_operations.hpp"
+#include "rotms_ros_msgs/PoseValid.h"
+#include "ros_print_color.hpp"
 
 TMSOperations::TMSOperations(ros::NodeHandle& n)
     : n_(n)
@@ -88,7 +89,7 @@ void TMSOperations::OperationDigitization()
     //     geometry_msgs::PointConstPtr curdigPtr = ros::topic::waitForMessage<geometry_msgs::Point>("/Kinematics/T_bodyref_ptrtip");
     //     std::vector<double> curlandmark{curdigPtr->x, curdigPtr->y, curdigPtr->z};
     //     datacache_.landmarkdig.push_back(curlandmark);
-    //     ROS_INFO("User digitized one point (#%d)", i);
+    //     ROS_GREEN_STREAM("[ROTMS INFO] User digitized one point (#%d)", i);
     // }
 
     // // Poke polaris_tr_bodyref_ptrtip node /Kinematics/Flag_bodyref_ptrtip
@@ -167,8 +168,8 @@ void TMSOperations::OperationRegistration()
         };
         clouddig.push_back(temppnt);
     }
-    ROS_INFO_STREAM("Planned landmark size: " + std::to_string(cloudpln.size()));
-    ROS_INFO_STREAM("Digitized landmark size: " + std::to_string(clouddig.size()));
+    ROS_GREEN_STREAM("[ROTMS INFO] Planned landmark size: " + std::to_string(cloudpln.size()));
+    ROS_GREEN_STREAM("[ROTMS INFO] Digitized landmark size: " + std::to_string(clouddig.size()));
     if(cloudpln.size()!=clouddig.size())
         throw std::runtime_error(
             "Planned point cloud and the digitized point cloud have different size! [Read from cache]");

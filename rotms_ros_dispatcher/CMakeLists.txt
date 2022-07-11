@@ -8,6 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
   rotms_ros_state
   rotms_ros_operations
   rotms_ros_msgs
+  rotms_ros_universal_utility
   )
 
 find_package(PkgConfig REQUIRED)
@@ -18,7 +19,7 @@ roslaunch_add_file_check(launch)
 catkin_package(
   INCLUDE_DIRS include 
   LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS roscpp rotms_ros_state rotms_ros_msgs
+  CATKIN_DEPENDS roscpp rotms_ros_state rotms_ros_msgs rotms_ros_universal_utility
   DEPENDS YAML_CPP
 )
 
@@ -35,6 +36,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   include/rotms_ros_dispatcher
   ../rotms_ros_operations/include/rotms_ros_operations
   ../rotms_ros_state/include/rotms_ros_state
+  ../rotms_ros_universal_utility/include/rotms_ros_universal_utility
   ${catkin_INCLUDE_DIRS} 
   ${YAML_CPP_INCLUDEDIR} 
   ${Boost_INCLUDE_DIRS}

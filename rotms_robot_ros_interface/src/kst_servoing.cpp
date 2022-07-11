@@ -28,6 +28,9 @@ SOFTWARE.
 #include <iomanip>
 #include <ros/ros.h>
 
+#include "ros_print_color.hpp"
+
+
 /*****
  *
  * Some utility functions
@@ -95,7 +98,7 @@ void KstServoing::NetEstablishConnection()
 	size_t lenmsgr1;
 
 	boost::asio::write(tcp_sock_, boost::asio::buffer(msg1), error);
-	ROS_INFO("Request sent");
+	ROS_GREEN_STREAM("[ROTMS INFO] Connection request sent.");
 	lenmsgr1 = tcp_sock_.read_some(boost::asio::buffer(buf_));
 	
 	// TODO: test if: successful connection when received 
