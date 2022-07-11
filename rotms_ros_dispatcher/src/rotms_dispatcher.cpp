@@ -421,7 +421,7 @@ void Dispatcher::ExecuteMotionToTargetEFFPose()
     ROS_INFO("Target pose received, test validaty......");
 
     while(!tr_targeteff->valid)
-        rotms_ros_msgs::PoseValidConstPtr tr_targeteff = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
+        tr_targeteff = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
             "/Kinematics/TR_derivedeff");
 
     ROS_INFO("Target pose valid. ");

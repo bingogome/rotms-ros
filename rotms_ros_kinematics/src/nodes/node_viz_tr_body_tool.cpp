@@ -77,7 +77,7 @@ int main(int argc, char **argv)
     rotms_ros_msgs::PoseValidConstPtr tr_bodyref_body = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
             "/Kinematics/TR_bodyref_body");
     while(!tr_bodyref_body->valid)
-        rotms_ros_msgs::PoseValidConstPtr tr_bodyref_body = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
+        tr_bodyref_body = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
             "/Kinematics/TR_bodyref_body");
     geometry_msgs::PoseConstPtr tr_tool_toolref = ros::topic::waitForMessage<geometry_msgs::Pose>(
         "/Kinematics/TR_tool_toolref");

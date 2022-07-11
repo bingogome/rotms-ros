@@ -57,12 +57,12 @@ private:
         rotms_ros_msgs::PoseValidConstPtr tr_body_cntct = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
             "/Kinematics/TR_body_cntct");
         while(!tr_body_cntct->valid)
-            rotms_ros_msgs::PoseValidConstPtr tr_body_cntct = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
+            tr_body_cntct = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
                 "/Kinematics/TR_body_cntct");
         rotms_ros_msgs::PoseValidConstPtr tr_bodyref_body = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
             "/Kinematics/TR_bodyref_body");
         while(!tr_bodyref_body->valid)
-            rotms_ros_msgs::PoseValidConstPtr tr_bodyref_body = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
+            tr_bodyref_body = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
                 "/Kinematics/TR_bodyref_body");
         tf2::Transform tr_toolref_eff_ = ConvertToTf2Transform(tr_toolref_eff);
         tf2::Transform tr_tool_toolref_ = ConvertToTf2Transform(tr_tool_toolref);
@@ -75,7 +75,7 @@ private:
         rotms_ros_msgs::PoseValidConstPtr tr_robbase_effold = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
             "/Kinematics/TR_robbase_effold");
         while(!tr_robbase_effold->valid)
-            rotms_ros_msgs::PoseValidConstPtr tr_robbase_effold = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
+            tr_robbase_effold = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
                 "/Kinematics/TR_robbase_effold");
         tf2::Transform tr_robbase_effold_ = ConvertToTf2Transform(tr_robbase_effold);
 
@@ -102,7 +102,7 @@ private:
         pub_eff.publish(pv);
 
         // Latch for 2 seconds and stop publish
-        ros::Duration(5.0).sleep();
+        ros::Duration(2.0).sleep();
         pv.valid = false;
         pub_eff.publish(pv);
 
