@@ -124,11 +124,6 @@ private:
     void ExecuteMotionToTargetEFFPose();
     void ExecuteBackOffsetCallBack(const std_msgs::String::ConstPtr& msg);
 
-    // Temp data cache (volatile)
-    struct VolatileTempDataCache datacache_;
-    void ResetVolatileDataCacheLandmarks();
-    void ResetVolatileDataCacheToolPose();
-
     // Robot interface
     ros::Publisher pub_init_conn_ = n_.advertise<std_msgs::String>(
         "/RobInterface/Connection", 2);
@@ -140,5 +135,13 @@ private:
         "/RobInterface/GetEFFPose");
     ros::Publisher pub_robeffmove_ = n_.advertise<geometry_msgs::Pose>(
         "/RobInterface/MoveEFF", 2);
+
+    // Temp data cache (volatile)
+    struct VolatileTempDataCache datacache_;
+    void ResetVolatileDataCacheLandmarks();
+    void ResetVolatileDataCacheToolPose();
+
+    // Utility
+    void StateTransitionCheck(int new_state);
 
 };

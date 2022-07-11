@@ -94,6 +94,7 @@ int WorkState::ClearRegistration() { TransitionNotPossible(); return -1; }
 int WorkState::ClearToolPosePlan() { TransitionNotPossible(); return -1; }
 
 int WorkState::ReinitState() { TransitionNotPossible(); return -1; }
+int WorkState::UsePrevRegister() { TransitionNotPossible(); return -1; }
 
 void WorkState::TransitionNotPossible()
 {

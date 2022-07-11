@@ -215,6 +215,27 @@ void TMSOperations::OperationResetToolPose()
     pub_toolpose_.publish(pv);
 }
 
+void TMSOperations::OperationUsePreRegistration()
+{
+    std::string packpath = ros::package::getPath("rotms_ros_operations");
+        
+    // Read the registration from cache file
+    YAML::Node f = YAML::LoadFile(packpath + "/share/config/reg.yaml");
+    YAML::Node ft = f["TRANSLATION"];
+    YAML::Node fr = f["ROTATION"];
+
+    rotms_ros_msgs::PoseValid pv;
+    pv.valid = true;
+    pv.pose.position.x = ft["x"].as<double>();
+    pv.pose.position.y = ft["y"].as<double>();
+    pv.pose.position.z = ft["z"].as<double>();
+    pv.pose.orientation.x = fr["x"].as<double>();
+    pv.pose.orientation.y = fr["y"].as<double>();
+    pv.pose.orientation.z = fr["z"].as<double>();
+    pv.pose.orientation.w = fr["w"].as<double>();
+    pub_registration_.publish(pv);
+}
+
 void TMSOperations::ResetOpsVolatileDataCache()
 {
     datacache_.landmark_total = -1;

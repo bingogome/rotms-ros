@@ -76,20 +76,7 @@ void Dispatcher::LandmarkPlanMetaCallBack(const std_msgs::Int16::ConstPtr& msg)
         Dispatcher::ResetVolatileDataCacheLandmarks(); // reset
 
         int new_state = states_[activated_state_]->LandmarksPlanned();
-        ROS_GREEN_STREAM("[ROTMS INFO] Old state: " + std::to_string(activated_state_));
-        ROS_GREEN_STREAM("[ROTMS INFO] Attempt new state: " + std::to_string(new_state));
-        if (new_state != -1)
-        {
-            activated_state_ = new_state;
-            ROS_GREEN_STREAM("[ROTMS INFO] Transitioned to new state: " + 
-                std::to_string(activated_state_));
-        }
-        else
-        {
-            // Failed operation
-            ROS_YELLOW_STREAM("[ROTMS WARNING] State transition not possible.");
-            ROS_YELLOW_STREAM("[ROTMS WARNING] Make sure the operation dependencies are met.");
-        }
+        Dispatcher::StateTransitionCheck(new_state);
     }
     else
     {
@@ -172,22 +159,15 @@ void Dispatcher::AutodigitizationCallBack(const std_msgs::String::ConstPtr& msg)
 
 void Dispatcher::RegistrationCallBack(const std_msgs::String::ConstPtr& msg)
 {
-    if (!msg->data.compare("_register__")==0) return;
-    
-    int new_state = states_[activated_state_]->Registered();
-    ROS_GREEN_STREAM("[ROTMS INFO] Old state: " + std::to_string(activated_state_));
-    ROS_GREEN_STREAM("[ROTMS INFO] Attempt new state: " + std::to_string(new_state));
-    if (new_state != -1)
+    if (msg->data.compare("_prevregister__")==0)
     {
-        activated_state_ = new_state;
-        ROS_GREEN_STREAM("[ROTMS INFO] Transitioned to new state: " + 
-            std::to_string(activated_state_));
+        int new_state = states_[activated_state_]->UsePrevRegister();
+        Dispatcher::StateTransitionCheck(new_state);
     }
-    else
+    if (msg->data.compare("_register__")==0)
     {
-        // Failed operation
-        ROS_YELLOW_STREAM("[ROTMS WARNING] State transition not possible.");
-        ROS_YELLOW_STREAM("[ROTMS WARNING] Make sure the operation dependencies are met.");
+        int new_state = states_[activated_state_]->Registered();
+        Dispatcher::StateTransitionCheck(new_state);
     }
     
 }
@@ -210,20 +190,7 @@ void Dispatcher::ToolPoseOrientCallBack(const geometry_msgs::Quaternion::ConstPt
         Dispatcher::ResetVolatileDataCacheToolPose();
 
         int new_state = states_[activated_state_]->ToolPosePlanned();
-        ROS_GREEN_STREAM("[ROTMS INFO] Old state: " + std::to_string(activated_state_));
-        ROS_GREEN_STREAM("[ROTMS INFO] Attempt new state: " + std::to_string(new_state));
-        if (new_state != -1)
-        {
-            activated_state_ = new_state;
-            ROS_GREEN_STREAM("[ROTMS INFO] Transitioned to new state: " + 
-                std::to_string(activated_state_));
-        }
-        else
-        {
-            // Failed operation
-            ROS_YELLOW_STREAM("[ROTMS WARNING] State transition not possible.");
-            ROS_YELLOW_STREAM("[ROTMS WARNING] Make sure the operation dependencies are met.");
-        }
+        Dispatcher::StateTransitionCheck(new_state);
     }
 }
 
@@ -244,20 +211,7 @@ void Dispatcher::ToolPoseTransCallBack(const geometry_msgs::Point::ConstPtr& msg
         Dispatcher::ResetVolatileDataCacheToolPose();
 
         int new_state = states_[activated_state_]->ToolPosePlanned();
-        ROS_GREEN_STREAM("[ROTMS INFO] Old state: " + std::to_string(activated_state_));
-        ROS_GREEN_STREAM("[ROTMS INFO] Attempt new state: " + std::to_string(new_state));
-        if (new_state != -1)
-        {
-            activated_state_ = new_state;
-            ROS_GREEN_STREAM("[ROTMS INFO] Transitioned to new state: " + 
-                std::to_string(activated_state_));
-        }
-        else
-        {
-            // Failed operation
-            ROS_YELLOW_STREAM("[ROTMS WARNING] State transition not possible.");
-            ROS_YELLOW_STREAM("[ROTMS WARNING] Make sure the operation dependencies are met.");
-        }
+        Dispatcher::StateTransitionCheck(new_state);
     }
 }
 
@@ -487,4 +441,22 @@ void Dispatcher::TargetVizCallBack(const std_msgs::String::ConstPtr& msg)
     }
     
 
+}
+
+void Dispatcher::StateTransitionCheck(int new_state)
+{
+    ROS_GREEN_STREAM("[ROTMS INFO] Old state: " + std::to_string(activated_state_));
+    ROS_GREEN_STREAM("[ROTMS INFO] Attempt new state: " + std::to_string(new_state));
+    if (new_state != -1)
+    {
+        activated_state_ = new_state;
+        ROS_GREEN_STREAM("[ROTMS INFO] Transitioned to new state: " + 
+            std::to_string(activated_state_));
+    }
+    else
+    {
+        // Failed operation
+        ROS_YELLOW_STREAM("[ROTMS WARNING] State transition not possible.");
+        ROS_YELLOW_STREAM("[ROTMS WARNING] Make sure the operation dependencies are met.");
+    }
 }

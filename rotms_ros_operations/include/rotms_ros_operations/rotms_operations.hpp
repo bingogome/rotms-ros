@@ -49,6 +49,7 @@ public:
 
     void OperationResetRegistration();
     void OperationResetToolPose();
+    void OperationUsePreRegistration();
 
     // Secondary and intermediate operations
     // void Operation();
