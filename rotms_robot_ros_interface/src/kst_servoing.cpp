@@ -150,10 +150,10 @@ void KstServoing::PTPLineEFF(std::vector<double> epos, double vel)
 		boost::asio::write(tcp_sock_, boost::asio::buffer(msg1), error);
 		size_t lenmsgr1 = tcp_sock_.read_some(boost::asio::buffer(buf_), error);
 
-		const std::string msgjs = "cArtixanPosition_" +
-			std::to_string(epos[0]) + "_" +
-			std::to_string(epos[1]) + "_" +
-			std::to_string(epos[2]) + "_" +
+		const std::string msgjs = "cArtixanPosition_" + // Convert to m
+			std::to_string(epos[0]*1000.0) + "_" +
+			std::to_string(epos[1]*1000.0) + "_" +
+			std::to_string(epos[2]*1000.0) + "_" +
 			std::to_string(epos[3]) + "_" +
 			std::to_string(epos[4]) + "_" +
 			std::to_string(epos[5]) + "_\n";
@@ -339,6 +339,7 @@ std::vector<double> KstServoing::GetEFFPosition()
 		throw;
 	}
 	std::vector<double> vec = ParseString2DoubleVec(strmsgr);
+	for(int i=0;i<3;i++) vec[i] /= 1000; // Convert to m
 	// vector format: x y z rz ry rx
 	ROS_INFO_STREAM(std::to_string(vec[0]));
 	ROS_INFO_STREAM(std::to_string(vec[1]));
