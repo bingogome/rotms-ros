@@ -80,6 +80,10 @@ void KstServoing::NetEstablishConnection()
     tcp::endpoint remote_endpoint = tcp::endpoint(boost::asio::ip::address_v4::from_string(ip_), 30001);
 	tcp_sock_.connect(remote_endpoint);
 
+	// TODO: test if: successful connection when received 
+	// May need to add a pause (or better, check if can do a handshake type of ack)
+	// Previously using ros sleep
+
 	ros::Duration(1).sleep();
 
 	boost::system::error_code error;
@@ -90,14 +94,14 @@ void KstServoing::NetEstablishConnection()
 	const std::string msg1 = "TFtrans_0.0_0.0_0.0_0.0_0.0_0.0\n";
 	size_t lenmsgr1;
 
-	// TODO: test if: successful connection when received 
-	// May need to add a pause (or better, check if can do a handshake type of ack)
-	// Previously using ros sleep
-
 	boost::asio::write(tcp_sock_, boost::asio::buffer(msg1), error);
 	ROS_INFO("Request sent");
 	lenmsgr1 = tcp_sock_.read_some(boost::asio::buffer(buf_));
 	
+	// TODO: test if: successful connection when received 
+	// May need to add a pause (or better, check if can do a handshake type of ack)
+	// Previously using ros sleep
+
 	ros::Duration(0.5).sleep();
 	
 }
@@ -159,8 +163,6 @@ void KstServoing::PTPLineEFF(std::vector<double> epos, double vel)
 			std::to_string(epos[5]) + "_\n";
 		boost::asio::write(tcp_sock_, boost::asio::buffer(msgjs), error);
 		size_t lenmsgrjs = tcp_sock_.read_some(boost::asio::buffer(buf_), error);
-
-		ROS_INFO_STREAM(msgjs);
 
 		const std::string msg2 = "doPTPinCS\n"; 
 		boost::asio::write(tcp_sock_, boost::asio::buffer(msg2), error);
@@ -313,7 +315,7 @@ std::vector<double> KstServoing::GetJointPosition()
 		throw;
 	}
 	std::vector<double> vec = ParseString2DoubleVec(strmsgr);
-	ROS_INFO_STREAM(strmsgr);
+
 	// vector format: a1 a2 a3 a4 a5 a6 a7
 	
 	return vec;
@@ -341,12 +343,6 @@ std::vector<double> KstServoing::GetEFFPosition()
 	std::vector<double> vec = ParseString2DoubleVec(strmsgr);
 	for(int i=0;i<3;i++) vec[i] /= 1000; // Convert to m
 	// vector format: x y z rz ry rx
-	ROS_INFO_STREAM(std::to_string(vec[0]));
-	ROS_INFO_STREAM(std::to_string(vec[1]));
-	ROS_INFO_STREAM(std::to_string(vec[2]));
-	ROS_INFO_STREAM(std::to_string(vec[3]));
-	ROS_INFO_STREAM(std::to_string(vec[4]));
-	ROS_INFO_STREAM(std::to_string(vec[5]));
 
 	return vec;
 }

@@ -262,14 +262,8 @@ void Dispatcher::ToolPoseTransCallBack(const geometry_msgs::Point::ConstPtr& msg
 
 void Dispatcher::UpdateRobotConnFlagCallBack(const std_msgs::Bool::ConstPtr& msg)
 {
-    if(msg->data)
-    {
-        states_[activated_state_]->flags_.ConnectRobot();
-    }
-    else
-    {
-        states_[activated_state_]->flags_.DisconnectRobot();
-    }
+    if(msg->data) states_[activated_state_]->flags_.ConnectRobot();
+    else states_[activated_state_]->flags_.DisconnectRobot();
 }
 
 void Dispatcher::RobConnectCallBack(const std_msgs::String::ConstPtr& msg)

@@ -154,14 +154,6 @@ int State0000::ToolPosePlanned()
 }
 int State0000::ReinitState()
 {
-    TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationResetRegistration, ops_));
-    funcs.push_back(std::bind(&TMSOperations::OperationResetToolPose, ops_));
-    funcs.push_back(FlagMachine::UnPlanLandmarks);
-    funcs.push_back(FlagMachine::UnDigitizeLandmarks);
-    funcs.push_back(FlagMachine::UnPlanToolPose);
-    funcs.push_back(FlagMachine::UnCompleteRegistration);
-    Transition(0B0000, funcs);
     return 0B0000;
 }
 
@@ -202,12 +194,7 @@ int State1000::LandmarksPlanned()
 int State1000::ReinitState()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationResetRegistration, ops_));
-    funcs.push_back(std::bind(&TMSOperations::OperationResetToolPose, ops_));
     funcs.push_back(FlagMachine::UnPlanLandmarks);
-    funcs.push_back(FlagMachine::UnDigitizeLandmarks);
-    funcs.push_back(FlagMachine::UnPlanToolPose);
-    funcs.push_back(FlagMachine::UnCompleteRegistration);
     Transition(0B0000, funcs);
     return 0B0000;
 }
@@ -258,12 +245,8 @@ int State1100::LandmarksDigitized()
 int State1100::ReinitState()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationResetRegistration, ops_));
-    funcs.push_back(std::bind(&TMSOperations::OperationResetToolPose, ops_));
     funcs.push_back(FlagMachine::UnPlanLandmarks);
     funcs.push_back(FlagMachine::UnDigitizeLandmarks);
-    funcs.push_back(FlagMachine::UnPlanToolPose);
-    funcs.push_back(FlagMachine::UnCompleteRegistration);
     Transition(0B0000, funcs);
     return 0B0000;
 }
@@ -301,10 +284,8 @@ int State1101::ReinitState()
 {
     TransitionOps funcs;
     funcs.push_back(std::bind(&TMSOperations::OperationResetRegistration, ops_));
-    funcs.push_back(std::bind(&TMSOperations::OperationResetToolPose, ops_));
     funcs.push_back(FlagMachine::UnPlanLandmarks);
     funcs.push_back(FlagMachine::UnDigitizeLandmarks);
-    funcs.push_back(FlagMachine::UnPlanToolPose);
     funcs.push_back(FlagMachine::UnCompleteRegistration);
     Transition(0B0000, funcs);
     return 0B0000;
@@ -340,12 +321,8 @@ int State0010::ToolPosePlanned()
 int State0010::ReinitState()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationResetRegistration, ops_));
     funcs.push_back(std::bind(&TMSOperations::OperationResetToolPose, ops_));
-    funcs.push_back(FlagMachine::UnPlanLandmarks);
-    funcs.push_back(FlagMachine::UnDigitizeLandmarks);
     funcs.push_back(FlagMachine::UnPlanToolPose);
-    funcs.push_back(FlagMachine::UnCompleteRegistration);
     Transition(0B0000, funcs);
     return 0B0000;
 }
@@ -395,12 +372,9 @@ int State1010::LandmarksDigitized()
 int State1010::ReinitState()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationResetRegistration, ops_));
     funcs.push_back(std::bind(&TMSOperations::OperationResetToolPose, ops_));
     funcs.push_back(FlagMachine::UnPlanLandmarks);
-    funcs.push_back(FlagMachine::UnDigitizeLandmarks);
     funcs.push_back(FlagMachine::UnPlanToolPose);
-    funcs.push_back(FlagMachine::UnCompleteRegistration);
     Transition(0B0000, funcs);
     return 0B0000;
 }
@@ -459,12 +433,10 @@ int State1110::Registered()
 int State1110::ReinitState()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationResetRegistration, ops_));
     funcs.push_back(std::bind(&TMSOperations::OperationResetToolPose, ops_));
     funcs.push_back(FlagMachine::UnPlanLandmarks);
     funcs.push_back(FlagMachine::UnDigitizeLandmarks);
     funcs.push_back(FlagMachine::UnPlanToolPose);
-    funcs.push_back(FlagMachine::UnCompleteRegistration);
     Transition(0B0000, funcs);
     return 0B0000;
 }
