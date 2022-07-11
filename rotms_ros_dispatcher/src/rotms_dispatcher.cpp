@@ -395,6 +395,7 @@ void Dispatcher::ExecuteMotionToTargetEFFPose()
         ROS_INFO("Robot cabinet connection has not been established");
         return;
     }
+
     // Query for current EFF pose and publish (latch)
     rotms_ros_msgs::GetEFF srv;
     if(!clt_eff_.call(srv))
@@ -408,7 +409,7 @@ void Dispatcher::ExecuteMotionToTargetEFFPose()
     pv_old.pose = effold;
     pub_effold_.publish(pv_old);
 
-    ROS_INFO("1");
+    ROS_INFO("Current EFF pose received");
 
     // Query for target EFF pose
     std_msgs::String queryeff;
@@ -417,13 +418,13 @@ void Dispatcher::ExecuteMotionToTargetEFFPose()
     rotms_ros_msgs::PoseValidConstPtr tr_targeteff = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
         "/Kinematics/TR_derivedeff");
 
-    ROS_INFO("2");
+    ROS_INFO("Target pose received, test validaty......");
 
     while(!tr_targeteff->valid)
         rotms_ros_msgs::PoseValidConstPtr tr_targeteff = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
             "/Kinematics/TR_derivedeff");
 
-    ROS_INFO("3");
+    ROS_INFO("Target pose valid. ");
 
     geometry_msgs::Pose tr_targeteff_;
     tr_targeteff_.position.x = tr_targeteff->pose.position.x;
@@ -437,14 +438,14 @@ void Dispatcher::ExecuteMotionToTargetEFFPose()
     // Send to robot interface and move
     pub_robeffmove_.publish(tr_targeteff_);
 
-    ROS_INFO("4");
+    ROS_INFO("Send to robot interface. ");
 
     // Stop old EFF pose publisher latch
     rotms_ros_msgs::PoseValid pv;
     pv.valid = false;
     pub_effold_.publish(pv);
 
-    ROS_INFO("5");
+    ROS_INFO("End of robot motion call. ");
 }
 
 void Dispatcher::ExecuteBackOffsetCallBack(const std_msgs::String::ConstPtr& msg)
