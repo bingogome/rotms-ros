@@ -182,30 +182,30 @@ void RobotROSInterface::RobotTerminateNodeCallBack(const std_msgs::String::Const
 bool RobotROSInterface::RobotGetJntsPosCallBack(
     rotms_ros_msgs::GetJnts::Request &req, rotms_ros_msgs::GetJnts::Response &res)
 {
-    // std::vector<double> vec;
-    // if(!flag_connected_)
-    // {
-    //     ROS_YELLOW_STREAM("[ROTMS WARNING] Robot cabinet connection has not been established! (2)");
-    //     return false;
-    // }
-    // try
-    // {
-    //     vec = kst_.GetJointPosition();
-    // }
-    // catch(...)
-    // {
-    //     ROS_RED_STREAM("[ROTMS ERROR] ERROR ERROR ERROR (5)");
-    //     return false;
-    // }   
-    // std_msgs::Float32MultiArray msg;
-    // msg.layout.dim.push_back(std_msgs::MultiArrayDimension());
-    // msg.layout.dim[0].size = 7; // Kuka iiwa has 7 joints
-    // msg.layout.dim[0].stride = 1;
-    // msg.layout.dim[0].label = "format__";
-    // msg.data.clear();
-    // msg.data.insert(msg.data.end(), vec.begin(), vec.end());
-    // pub_jnt_.publish(msg);
-    // res.jnt = msg;
+    std::vector<double> vec;
+    if(!flag_connected_)
+    {
+        ROS_YELLOW_STREAM("[ROTMS WARNING] Robot cabinet connection has not been established! (2)");
+        return false;
+    }
+    try
+    {
+        vec = kst_.GetJointPosition();
+    }
+    catch(...)
+    {
+        ROS_RED_STREAM("[ROTMS ERROR] ERROR ERROR ERROR (5)");
+        return false;
+    }   
+    std_msgs::Float32MultiArray msg;
+    msg.layout.dim.push_back(std_msgs::MultiArrayDimension());
+    msg.layout.dim[0].size = 7; // Kuka iiwa has 7 joints
+    msg.layout.dim[0].stride = 1;
+    msg.layout.dim[0].label = "format__";
+    msg.data.clear();
+    msg.data.insert(msg.data.end(), vec.begin(), vec.end());
+    pub_jnt_.publish(msg);
+    res.jnt = msg;
     
     return true;
 }

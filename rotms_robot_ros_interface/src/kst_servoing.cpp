@@ -310,7 +310,6 @@ std::vector<double> KstServoing::GetJointPosition()
 		std::stringstream ssmsgr;
 		for(int i=0;i<lenmsgr;i++)
 			ssmsgr << buf_[i];
-		// ssmsgr << "_"; // this is for getting jpos only, because the kuka java side miss a _
 		strmsgr = ssmsgr.str();
 	}
 	catch(std::exception& e)

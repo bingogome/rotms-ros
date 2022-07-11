@@ -35,7 +35,7 @@ private:
     // connection
     std::string ip_;
     tcp::socket tcp_sock_; // tcpip connection object
-    boost::array<char, 128> buf_;
+    boost::array<char, 256> buf_;
 
     // robot data
     std::string robot_type_;
