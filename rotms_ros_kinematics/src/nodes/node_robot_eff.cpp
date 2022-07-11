@@ -102,7 +102,7 @@ private:
         pub_eff.publish(pv);
 
         // Latch for 2 seconds and stop publish
-        ros::Duration(2.0).sleep();
+        ros::Duration(5.0).sleep();
         pv.valid = false;
         pub_eff.publish(pv);
 

@@ -408,15 +408,23 @@ void Dispatcher::ExecuteMotionToTargetEFFPose()
     pv_old.pose = effold;
     pub_effold_.publish(pv_old);
 
+    ROS_INFO("1");
+
     // Query for target EFF pose
     std_msgs::String queryeff;
     queryeff.data = "_gettargeteff__";
     pub_gettargeteff_.publish(queryeff);
     rotms_ros_msgs::PoseValidConstPtr tr_targeteff = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
         "/Kinematics/TR_derivedeff");
+
+    ROS_INFO("2");
+
     while(!tr_targeteff->valid)
         rotms_ros_msgs::PoseValidConstPtr tr_targeteff = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
             "/Kinematics/TR_derivedeff");
+
+    ROS_INFO("3");
+
     geometry_msgs::Pose tr_targeteff_;
     tr_targeteff_.position.x = tr_targeteff->pose.position.x;
     tr_targeteff_.position.y = tr_targeteff->pose.position.y;
@@ -429,10 +437,14 @@ void Dispatcher::ExecuteMotionToTargetEFFPose()
     // Send to robot interface and move
     pub_robeffmove_.publish(tr_targeteff_);
 
+    ROS_INFO("4");
+
     // Stop old EFF pose publisher latch
     rotms_ros_msgs::PoseValid pv;
     pv.valid = false;
     pub_effold_.publish(pv);
+
+    ROS_INFO("5");
 }
 
 void Dispatcher::ExecuteBackOffsetCallBack(const std_msgs::String::ConstPtr& msg)

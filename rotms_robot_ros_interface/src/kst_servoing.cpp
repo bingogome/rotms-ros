@@ -160,6 +160,8 @@ void KstServoing::PTPLineEFF(std::vector<double> epos, double vel)
 		boost::asio::write(tcp_sock_, boost::asio::buffer(msgjs), error);
 		size_t lenmsgrjs = tcp_sock_.read_some(boost::asio::buffer(buf_), error);
 
+		ROS_INFO_STREAM(msgjs);
+
 		const std::string msg2 = "doPTPinCS\n"; 
 		boost::asio::write(tcp_sock_, boost::asio::buffer(msg2), error);
 		size_t lenmsgr2 = tcp_sock_.read_some(boost::asio::buffer(buf_), error);
@@ -303,7 +305,7 @@ std::vector<double> KstServoing::GetJointPosition()
 		std::stringstream ssmsgr;
 		for(int i=0;i<lenmsgr;i++)
 			ssmsgr << buf_[i];
-		ssmsgr << "_"; // this is for getting jpos only, because the kuka java side miss a _
+		// ssmsgr << "_"; // this is for getting jpos only, because the kuka java side miss a _
 		strmsgr = ssmsgr.str();
 	}
 	catch(std::exception& e)
@@ -311,6 +313,7 @@ std::vector<double> KstServoing::GetJointPosition()
 		throw;
 	}
 	std::vector<double> vec = ParseString2DoubleVec(strmsgr);
+	ROS_INFO_STREAM(strmsgr);
 	// vector format: a1 a2 a3 a4 a5 a6 a7
 	
 	return vec;
