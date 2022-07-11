@@ -151,6 +151,7 @@ void RobotROSInterface::RobotEFFMotionCallBack(const geometry_msgs::Pose::ConstP
     }
     catch(...)
     {
+        ROS_GREEN_STREAM("[ROTMS INFO] Robot start moving ...");
         ROS_RED_STREAM("[ROTMS ERROR] ERROR ERROR ERROR (3.1)");
     }
 }
@@ -169,11 +170,12 @@ void RobotROSInterface::RobotJntMotionCallBack(const std_msgs::Float32MultiArray
     }
     try
     {
+        ROS_GREEN_STREAM("[ROTMS INFO] Robot start moving ...");
         kst_.PTPJointSpace(jnts, /*DON'T CHANGE!*/0.02); // relative to max speed
     }
     catch(...)
     {
-        ROS_RED_STREAM("[ROTMS ERROR] ERROR ERROR ERROR (3.1)");
+        ROS_RED_STREAM("[ROTMS ERROR] ERROR ERROR ERROR (3.2)");
     }
 }
 
