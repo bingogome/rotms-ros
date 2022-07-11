@@ -41,5 +41,6 @@ struct VolatileTempDataCache
 void SaveLandmarkPlanData(struct VolatileTempDataCache datacache, std::string f);
 void SaveToolPoseData(struct VolatileTempDataCache datacache, std::string f);
 void SaveCurrentJntsAsInit(std_msgs::Float32MultiArray jnts, std::string f);
+std::vector<double> ReadJntsFromConfig(std::string f);
 std::string FormatDouble2String(double a, int dec);
 std::string GetTimeString();

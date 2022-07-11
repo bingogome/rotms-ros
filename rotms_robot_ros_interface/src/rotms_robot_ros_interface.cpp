@@ -25,6 +25,7 @@ SOFTWARE.
 #include <ros/ros.h>
 #include <std_msgs/String.h>
 #include <std_msgs/Bool.h>
+#include <std_msgs/Float32MultiArray.h>
 #include <geometry_msgs/Pose.h>
 #include <rotms_ros_msgs/GetJnts.h>
 #include <rotms_ros_msgs/GetEFF.h>
@@ -146,13 +147,34 @@ void RobotROSInterface::RobotEFFMotionCallBack(const geometry_msgs::Pose::ConstP
     };
     try
     {
-        kst_.PTPLineEFF(epos, /*DON'T CHANGE!*/6.0); // second parameter is mm/sec
+        kst_.PTPLineEFF(epos, /*DON'T CHANGE!*/9.0); // second parameter is mm/sec
     }
     catch(...)
     {
-        ROS_RED_STREAM("[ROTMS ERROR] ERROR ERROR ERROR (3)");
+        ROS_RED_STREAM("[ROTMS ERROR] ERROR ERROR ERROR (3.1)");
     }
+}
 
+void RobotROSInterface::RobotJntMotionCallBack(const std_msgs::Float32MultiArray::ConstPtr& msg)
+{
+    if(!flag_connected_)
+    {
+        ROS_YELLOW_STREAM("[ROTMS WARNING] Robot cabinet connection has not been established! (1)");
+        return;
+    }
+    std::vector<double> jnts; 
+    for(int i=0;i<msg->layout.dim[0].size;i++)
+    {
+        jnts.push_back(msg->data[i]);
+    }
+    try
+    {
+        kst_.PTPJointSpace(jnts, /*DON'T CHANGE!*/0.02); // relative to max speed
+    }
+    catch(...)
+    {
+        ROS_RED_STREAM("[ROTMS ERROR] ERROR ERROR ERROR (3.1)");
+    }
 }
 
 // Should be only called when terminating node

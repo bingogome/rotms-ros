@@ -79,6 +79,8 @@ private:
         "/RobCtrl/Motion", 2, &Dispatcher::ExecuteConfirmMotionCallBack, this);
     ros::Subscriber sub_robctrl_executebackoffset_ = n_.subscribe(
         "/RobCtrl/Motion", 2, &Dispatcher::ExecuteBackOffsetCallBack, this);
+    ros::Subscriber sub_robctrl_executebackinit_ = n_.subscribe(
+        "/RobCtrl/Motion", 2, &Dispatcher::ExecuteBackInitCallBack, this);
     ros::Subscriber sub_robctrl_sessionreinit_ = n_.subscribe(
         "/RobCtrl/Session", 2, &Dispatcher::SessionReinitCallBack, this);
     ros::Subscriber sub_targetviz_ = n_.subscribe(
@@ -125,6 +127,7 @@ private:
     void ExecuteConfirmMotionCallBack(const std_msgs::String::ConstPtr& msg);
     void ExecuteMotionToTargetEFFPose();
     void ExecuteBackOffsetCallBack(const std_msgs::String::ConstPtr& msg);
+    void ExecuteBackInitCallBack(const std_msgs::String::ConstPtr& msg);
 
     // Robot interface
     ros::Publisher pub_init_conn_ = n_.advertise<std_msgs::String>(
@@ -137,6 +140,8 @@ private:
         "/RobInterface/GetEFFPose");
     ros::Publisher pub_robeffmove_ = n_.advertise<geometry_msgs::Pose>(
         "/RobInterface/MoveEFF", 2);
+    ros::Publisher pub_robjntmove_ = n_.advertise<std_msgs::Float32MultiArray>(
+        "/RobInterface/MoveJnt", 2);
 
     // Temp data cache (volatile)
     struct VolatileTempDataCache datacache_;

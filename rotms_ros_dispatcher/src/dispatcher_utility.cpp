@@ -30,7 +30,7 @@ SOFTWARE.
 #include <iostream>
 #include <iomanip>
 #include <time.h>
-
+#include <yaml-cpp/yaml.h>
 #include <std_msgs/Float32MultiArray.h>
 
 
@@ -99,6 +99,19 @@ void SaveCurrentJntsAsInit(std_msgs::Float32MultiArray jnts, std::string f)
         filesave.close();
     }
     
+}
+
+std::vector<double> ReadJntsFromConfig(std::string f)
+{
+    YAML::Node nd = YAML::LoadFile(f);
+    int num = 0;
+    std::vector<double> jnt;
+    for(YAML::const_iterator it=nd.begin(); it!=nd.end(); ++it)
+    {
+        jnt.push_back(nd["a"+std::to_string(num)].as<double>());
+        num++;
+    }
+    return jnt;
 }
 
 std::string FormatDouble2String(double a, int dec)

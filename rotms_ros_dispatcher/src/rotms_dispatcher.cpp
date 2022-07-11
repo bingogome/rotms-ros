@@ -436,6 +436,26 @@ void Dispatcher::ExecuteBackOffsetCallBack(const std_msgs::String::ConstPtr& msg
     Dispatcher::ExecuteMotionToTargetEFFPose();
 }
 
+void Dispatcher::ExecuteBackInitCallBack(const std_msgs::String::ConstPtr& msg)
+{
+    if(!msg->data.compare("_backinit__")==0) return;
+    if(activated_state_!=0b1111)
+    {
+        ROS_YELLOW_STREAM("[ROTMS WARNING] The prerequisites are not met. Check before robot motion. (code 3)");
+        return;
+    }
+    std::string packpath = ros::package::getPath("rotms_ros_operations");
+    std::vector<double> vec = ReadJntsFromConfig(packpath + "/share/config/initjnts.yaml");
+    std_msgs::Float32MultiArray msg_out;
+    msg_out.layout.dim.push_back(std_msgs::MultiArrayDimension());
+    msg_out.layout.dim[0].size = vec.size(); 
+    msg_out.layout.dim[0].stride = 1;
+    msg_out.layout.dim[0].label = "format__";
+    msg_out.data.clear();
+    msg_out.data.insert(msg_out.data.end(), vec.begin(), vec.end());
+    pub_robjntmove_.publish(msg_out);
+}
+
 void Dispatcher::TargetVizCallBack(const std_msgs::String::ConstPtr& msg)
 {
     std_msgs::String msg_out;
