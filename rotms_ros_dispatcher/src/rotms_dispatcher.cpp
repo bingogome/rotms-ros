@@ -386,10 +386,14 @@ void Dispatcher::ExecuteMotionToTargetEFFPose()
 
     ROS_GREEN_STREAM("[ROTMS INFO] Target pose received, test validaty......");
 
+    ros::Rate check_valid_rate(10);
     while(!tr_targeteff->valid)
+    {
         tr_targeteff = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
             "/Kinematics/TR_derivedeff");
-
+        check_valid_rate.sleep();
+    }
+    
     ROS_GREEN_STREAM("[ROTMS INFO] Target pose valid. ");
 
     geometry_msgs::Pose tr_targeteff_;

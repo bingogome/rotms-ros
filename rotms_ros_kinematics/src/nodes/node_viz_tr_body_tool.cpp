@@ -76,9 +76,14 @@ int main(int argc, char **argv)
     geometry_msgs::TransformStampedConstPtr tr_pol_toolref;
     rotms_ros_msgs::PoseValidConstPtr tr_bodyref_body = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
             "/Kinematics/TR_bodyref_body");
+    ros::Rate check_valid_rate(10);
     while(!tr_bodyref_body->valid)
+    {
         tr_bodyref_body = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
             "/Kinematics/TR_bodyref_body");
+        check_valid_rate.sleep();
+    }
+        
     geometry_msgs::PoseConstPtr tr_tool_toolref = ros::topic::waitForMessage<geometry_msgs::Pose>(
         "/Kinematics/TR_tool_toolref");
 
