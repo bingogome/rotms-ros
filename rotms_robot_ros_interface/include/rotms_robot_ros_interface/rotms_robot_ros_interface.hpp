@@ -25,6 +25,7 @@ SOFTWARE.
 #include <ros/ros.h>
 #include <std_msgs/String.h>
 #include <std_msgs/Bool.h>
+#include <std_msgs/Float32MultiArray.h>
 #include <geometry_msgs/Pose.h>
 #include <rotms_ros_msgs/GetJnts.h>
 #include <rotms_ros_msgs/GetEFF.h>
@@ -57,6 +58,9 @@ private:
     ros::Subscriber sub_eff_move_ = n_.subscribe(
         "/RobInterface/MoveEFF", 2,
         &RobotROSInterface::RobotEFFMotionCallBack, this);
+    ros::Subscriber sub_jnt_move_ = n_.subscribe(
+        "/RobInterface/MoveJnt", 2,
+        &RobotROSInterface::RobotJntMotionCallBack, this);
     
     ros::Publisher pub_eff_ = n_.advertise<geometry_msgs::Pose>(
         "/RobInterfaceOut/EFFPose", 2);
@@ -78,6 +82,8 @@ private:
     void RobotDisconnectCallBack(const std_msgs::String::ConstPtr& msg);
     // Move to received EFF pose at a slow speed
     void RobotEFFMotionCallBack(const geometry_msgs::Pose::ConstPtr& msg);
+    // Move to received joints at a slow speed
+    void RobotJntMotionCallBack(const std_msgs::Float32MultiArray::ConstPtr& msg);
 
     // Get joint positions
     bool RobotGetJntsPosCallBack(

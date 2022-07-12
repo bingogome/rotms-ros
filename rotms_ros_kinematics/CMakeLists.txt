@@ -8,6 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
   roslib
   tf2
   rotms_ros_msgs
+  rotms_ros_universal_utility
   )
 
 find_package(PkgConfig REQUIRED)
@@ -18,7 +19,7 @@ roslaunch_add_file_check(launch)
 catkin_package(
   INCLUDE_DIRS include 
   LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS roscpp
+  CATKIN_DEPENDS roscpp rotms_ros_universal_utility
   DEPENDS YAML_CPP
   )
 
@@ -28,6 +29,7 @@ add_library(${PROJECT_NAME}
 
 target_include_directories(${PROJECT_NAME} PUBLIC 
   include/rotms_ros_kinematics
+  ../rotms_ros_universal_utility/include/rotms_ros_universal_utility
   ${catkin_INCLUDE_DIRS} 
   ${YAML_CPP_INCLUDEDIR} 
   )
@@ -40,6 +42,8 @@ target_link_libraries(node_calibration_data ${PROJECT_NAME})
 add_executable(node_polaris_tr_bodyref_ptrtip src/nodes/node_polaris_tr_bodyref_ptrtip.cpp)
 target_link_libraries(node_polaris_tr_bodyref_ptrtip ${PROJECT_NAME})
 
-
 add_executable(node_robot_eff src/nodes/node_robot_eff.cpp)
 target_link_libraries(node_robot_eff ${PROJECT_NAME})
+
+add_executable(node_viz_tr_body_tool src/nodes/node_viz_tr_body_tool.cpp)
+target_link_libraries(node_viz_tr_body_tool ${PROJECT_NAME})

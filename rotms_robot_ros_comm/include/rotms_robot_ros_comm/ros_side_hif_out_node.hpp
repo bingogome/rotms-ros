@@ -23,24 +23,7 @@ SOFTWARE.
 ***/
 
 #pragma once
-#include <string>
-#include <vector>
-#include <std_msgs/Float32MultiArray.h>
+#include <ros/ros.h>
+#include <ros_side_out.hpp>
 
-struct VolatileTempDataCache 
-{
-    int landmark_total = -1;
-    std::vector<std::vector<double>> landmark_coords;
-
-    bool toolpose_t_recvd = false;
-    bool toolpose_r_recvd = false;
-    std::vector<double> toolpose_t;
-    std::vector<double> toolpose_r;
-};
-
-void SaveLandmarkPlanData(struct VolatileTempDataCache datacache, std::string f);
-void SaveToolPoseData(struct VolatileTempDataCache datacache, std::string f);
-void SaveCurrentJntsAsInit(std_msgs::Float32MultiArray jnts, std::string f);
-std::vector<double> ReadJntsFromConfig(std::string f);
-std::string FormatDouble2String(double a, int dec);
-std::string GetTimeString();
+ROSSideOut CommNodeHiFOutIniter(ros::NodeHandle& n, std::string modulesuffix);

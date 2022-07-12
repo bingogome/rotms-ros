@@ -22,10 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
-#include "registration_funcs.hpp"
-#include "rotms_operations.hpp"
-#include "rotms_ros_msgs/PoseValid.h"
-
 #include <ros/ros.h>
 #include <ros/package.h>
 #include <geometry_msgs/Pose.h>
@@ -40,6 +36,11 @@ SOFTWARE.
 #include <stdexcept>
 #include <yaml-cpp/yaml.h>
 
+#include "registration_funcs.hpp"
+#include "rotms_operations.hpp"
+#include "rotms_ros_msgs/PoseValid.h"
+#include "ros_print_color.hpp"
+
 TMSOperations::TMSOperations(ros::NodeHandle& n)
     : n_(n)
 {}
@@ -53,62 +54,62 @@ void TMSOperations::OperationPlanLandmarks()
 
 void TMSOperations::OperationDigitization()
 {
-    // Get meta data of planned landmarks
-    std::string packpath = ros::package::getPath("rotms_ros_operations");
-    YAML::Node f = YAML::LoadFile(packpath + "/share/cache/landmarkplan.yaml");
-    int num_of_landmarks = f["NUM"].as<int>();
+    // // Get meta data of planned landmarks
+    // std::string packpath = ros::package::getPath("rotms_ros_operations");
+    // YAML::Node f = YAML::LoadFile(packpath + "/share/cache/landmarkplan.yaml");
+    // int num_of_landmarks = f["NUM"].as<int>();
 
-    ROS_INFO_STREAM(num_of_landmarks);
-    datacache_.landmark_total = num_of_landmarks;
+    // ROS_INFO_STREAM(num_of_landmarks);
+    // datacache_.landmark_total = num_of_landmarks;
 
-    // Poke polaris_tr_bodyref_ptrtip node /Kinematics/Flag_bodyref_ptrtip
-    std_msgs::String flag_start;
-    flag_start.data = "_start__";
-    pub_run_polaris_tr_bodyref_ptrtip_.publish(flag_start);
+    // // Poke polaris_tr_bodyref_ptrtip node /Kinematics/Flag_bodyref_ptrtip
+    // std_msgs::String flag_start;
+    // flag_start.data = "_start__";
+    // pub_run_polaris_tr_bodyref_ptrtip_.publish(flag_start);
 
-    // Beep the Polaris 3 times to indicate get prepared for digitization
-    ros::Publisher pub_beep = n_.advertise<std_msgs::Int32>("/NDI/beep", 10);
-    ros::Duration(3).sleep();
-    std_msgs::Int32 beep_num;
-    beep_num.data = 3;
-    pub_beep.publish(beep_num); 
-    ros::spinOnce();
+    // // Beep the Polaris 3 times to indicate get prepared for digitization
+    // ros::Publisher pub_beep = n_.advertise<std_msgs::Int32>("/NDI/beep", 10);
+    // ros::Duration(3).sleep();
+    // std_msgs::Int32 beep_num;
+    // beep_num.data = 3;
+    // pub_beep.publish(beep_num); 
+    // ros::spinOnce();
 
-    // Wait 7 seconds to get prepared
-    ros::Duration(7).sleep();
+    // // Wait 7 seconds to get prepared
+    // ros::Duration(7).sleep();
 
-    // Start digitization
-    for(int i=0;i<num_of_landmarks;i++)
-    {
-        // Beep 2 times for each landmark
-        beep_num.data = 2;
-        ros::Duration(7).sleep();
-        pub_beep.publish(beep_num); ros::spinOnce();
-        // Wait for a 
-        geometry_msgs::PointConstPtr curdigPtr = ros::topic::waitForMessage<geometry_msgs::Point>("/Kinematics/T_bodyref_ptrtip");
-        std::vector<double> curlandmark{curdigPtr->x, curdigPtr->y, curdigPtr->z};
-        datacache_.landmarkdig.push_back(curlandmark);
-        ROS_INFO("User digitized one point (#%d)", i);
-    }
+    // // Start digitization
+    // for(int i=0;i<num_of_landmarks;i++)
+    // {
+    //     // Beep 2 times for each landmark
+    //     beep_num.data = 2;
+    //     ros::Duration(7).sleep();
+    //     pub_beep.publish(beep_num); ros::spinOnce();
+    //     // Wait for a 
+    //     geometry_msgs::PointConstPtr curdigPtr = ros::topic::waitForMessage<geometry_msgs::Point>("/Kinematics/T_bodyref_ptrtip");
+    //     std::vector<double> curlandmark{curdigPtr->x, curdigPtr->y, curdigPtr->z};
+    //     datacache_.landmarkdig.push_back(curlandmark);
+    //     ROS_GREEN_STREAM("[ROTMS INFO] User digitized one point (#%d)", i);
+    // }
 
-    // Poke polaris_tr_bodyref_ptrtip node /Kinematics/Flag_bodyref_ptrtip
-    flag_start.data = "_end__";
-    pub_run_polaris_tr_bodyref_ptrtip_.publish(flag_start);
+    // // Poke polaris_tr_bodyref_ptrtip node /Kinematics/Flag_bodyref_ptrtip
+    // flag_start.data = "_end__";
+    // pub_run_polaris_tr_bodyref_ptrtip_.publish(flag_start);
 
-    // Check validity and save
-    if (datacache_.landmarkdig.size()!=num_of_landmarks)
-    {
-        ResetOpsVolatileDataCache();
-        throw std::runtime_error(
-            "Number of the digitized landmarks does not match!");
-    }
-    else
-    {
-        SaveLandmarkDigData(datacache_, 
-            packpath + "/share/config/landmarkdig_"+ GetTimeString() + ".yaml");
-        SaveLandmarkDigData(datacache_, 
-            packpath + "/share/config/landmarkdig" + ".yaml");
-    }
+    // // Check validity and save
+    // if (datacache_.landmarkdig.size()!=num_of_landmarks)
+    // {
+    //     ResetOpsVolatileDataCache();
+    //     throw std::runtime_error(
+    //         "Number of the digitized landmarks does not match!");
+    // }
+    // else
+    // {
+    //     SaveLandmarkDigData(datacache_, 
+    //         packpath + "/share/data/landmarkdig_"+ GetTimeString() + ".yaml");
+    //     SaveLandmarkDigData(datacache_, 
+    //         packpath + "/share/cache/landmarkdig" + ".yaml");
+    // }
 
 }
 
@@ -167,8 +168,8 @@ void TMSOperations::OperationRegistration()
         };
         clouddig.push_back(temppnt);
     }
-    ROS_INFO_STREAM("Planned landmark size: " + std::to_string(cloudpln.size()));
-    ROS_INFO_STREAM("Digitized landmark size: " + std::to_string(clouddig.size()));
+    ROS_GREEN_STREAM("[ROTMS INFO] Planned landmark size: " + std::to_string(cloudpln.size()));
+    ROS_GREEN_STREAM("[ROTMS INFO] Digitized landmark size: " + std::to_string(clouddig.size()));
     if(cloudpln.size()!=clouddig.size())
         throw std::runtime_error(
             "Planned point cloud and the digitized point cloud have different size! [Read from cache]");
@@ -212,6 +213,27 @@ void TMSOperations::OperationResetToolPose()
     rotms_ros_msgs::PoseValid pv;
     pv.valid = false;
     pub_toolpose_.publish(pv);
+}
+
+void TMSOperations::OperationUsePreRegistration()
+{
+    std::string packpath = ros::package::getPath("rotms_ros_operations");
+        
+    // Read the registration from cache file
+    YAML::Node f = YAML::LoadFile(packpath + "/share/config/reg.yaml");
+    YAML::Node ft = f["TRANSLATION"];
+    YAML::Node fr = f["ROTATION"];
+
+    rotms_ros_msgs::PoseValid pv;
+    pv.valid = true;
+    pv.pose.position.x = ft["x"].as<double>();
+    pv.pose.position.y = ft["y"].as<double>();
+    pv.pose.position.z = ft["z"].as<double>();
+    pv.pose.orientation.x = fr["x"].as<double>();
+    pv.pose.orientation.y = fr["y"].as<double>();
+    pv.pose.orientation.z = fr["z"].as<double>();
+    pv.pose.orientation.w = fr["w"].as<double>();
+    pub_registration_.publish(pv);
 }
 
 void TMSOperations::ResetOpsVolatileDataCache()

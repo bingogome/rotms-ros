@@ -33,6 +33,8 @@ SOFTWARE.
 #include <boost/shared_ptr.hpp>
 #include <boost/asio.hpp>
 
+#include "ros_print_color.hpp"
+
 using boost::asio::ip::udp;
 
 ROSSideOut::ROSSideOut(ros::NodeHandle& n, boost::asio::io_context& io_context, 
@@ -52,8 +54,8 @@ void ROSSideOut::SubCallBack(const std_msgs::String::ConstPtr& msg)
 	socket_.send_to(boost::asio::buffer(ss_str_),remote_endpoint_);
 	if (cfg_.verbose == 1)
 	{
-		ROS_INFO("Following msg sent to an udp port:");
-		ROS_INFO_STREAM("Msg: "<<ss_str_);
+		ROS_GREEN_STREAM("[ROTMS INFO] Following message was sent out to an udp port:");
+		ROS_GREEN_STREAM("[ROTMS INFO] Message content: "<<ss_str_);
 	}
 }
 
@@ -62,6 +64,6 @@ void ROSSideOut::AckCallBack(const std_msgs::String::ConstPtr& msg)
 	socket_.send_to(boost::asio::buffer("ack"),remote_endpoint_);
 	if (cfg_.verbose == 1)
 	{
-		ROS_INFO("Ack the received msg from ros_side_in");
+		ROS_GREEN_STREAM("[ROTMS INFO] Ack the received message from ros_side_in.");
 	}
 }

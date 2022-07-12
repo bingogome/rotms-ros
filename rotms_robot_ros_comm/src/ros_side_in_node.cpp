@@ -29,6 +29,8 @@ SOFTWARE.
 #include <yaml-cpp/yaml.h>
 #include <boost/asio.hpp>
 
+#include "ros_print_color.hpp"
+
 void CommNodeInIniter(ros::NodeHandle& n, std::string modulesuffix)
 {
     boost::asio::io_context io_context;
@@ -54,7 +56,7 @@ void CommNodeInIniter(ros::NodeHandle& n, std::string modulesuffix)
 	catch (std::exception& e)
 	{
 		io_context.stop();
-		ROS_INFO("Error happened, or user interrupted");
+		ROS_RED_STREAM("[ROTMS ERROR] Error happened, or user interrupted! (1)");
         throw;
 	}
 }
