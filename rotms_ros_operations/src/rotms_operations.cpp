@@ -89,7 +89,7 @@ void TMSOperations::OperationDigitization()
         geometry_msgs::PointConstPtr curdigPtr = ros::topic::waitForMessage<geometry_msgs::Point>("/Kinematics/T_bodyref_ptrtip");
         std::vector<double> curlandmark{curdigPtr->x, curdigPtr->y, curdigPtr->z};
         datacache_.landmarkdig.push_back(curlandmark);
-        ROS_GREEN_STREAM("[ROTMS INFO] User digitized one point (#%d)", i);
+        ROS_GREEN_STREAM("[ROTMS INFO] User digitized one point " + std::to_string(i));
     }
 
     // Poke polaris_tr_bodyref_ptrtip node /Kinematics/Flag_bodyref_ptrtip

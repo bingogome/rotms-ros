@@ -29,12 +29,14 @@ SOFTWARE.
 #include "rotms_ros_msgs/PoseValid.h"
 #include "ros_print_color.hpp"
 
-#include <ros/ros.h>
-#include <ros/package.h>
 #include <rotms_ros_msgs/GetJnts.h>
 #include <rotms_ros_msgs/GetEFF.h>
+
+#include <ros/ros.h>
+#include <ros/package.h>
 #include <yaml-cpp/yaml.h>
 #include <iostream>
+#include <tf2/LinearMath/Transform.h>
 
 /*
 Dispatcher takes decoded messages from comm_decode and preprocesses
@@ -163,13 +165,33 @@ void Dispatcher::RegistrationCallBack(const std_msgs::String::ConstPtr& msg)
     {
         int new_state = states_[activated_state_]->UsePrevRegister();
         Dispatcher::StateTransitionCheck(new_state);
+        Dispatcher::RegistrationResidualCheck();
     }
     if (msg->data.compare("_register__")==0)
     {
         int new_state = states_[activated_state_]->Registered();
         Dispatcher::StateTransitionCheck(new_state);
+        Dispatcher::RegistrationResidualCheck();
     }
     
+}
+
+void Dispatcher::RegistrationResidualCheck()
+{
+    std::string packpath = ros::package::getPath("rotms_ros_operations");
+
+    std::vector<tf2::Vector3> cloudpln = 
+        ReadPointCloudFromYAML(packpath + "/share/cache/landmarkplan.yaml", "PLANNED");
+    std::vector<tf2::Vector3> clouddig =
+        ReadPointCloudFromYAML(packpath + "/share/cache/landmarkdig.yaml", "DIGITIZED");
+    
+    tf2::Transform reg = ReadTransformFromYAML(packpath + "/share/config/reg.yaml");
+
+    double resid = GetPairPointResidual(reg, cloudpln, clouddig);
+
+    std_msgs::String resid_msg;
+    resid_msg.data = std::to_string(resid * 1000.0); // convert to mm
+    pub_medplancomm_.publish(resid_msg);
 }
 
 void Dispatcher::ToolPoseOrientCallBack(const geometry_msgs::Quaternion::ConstPtr& msg)
