@@ -487,8 +487,9 @@ void Dispatcher::TargetVizCallBack(const std_msgs::String::ConstPtr& msg)
     std_msgs::String msg_out;
     if(msg->data.compare("_start__")==0) 
     {
-        if(activated_state_ != 0b1101 || activated_state_!= 0b1111)
+        if(activated_state_ != 0b1101 && activated_state_!= 0b1111)
         {
+            ROS_YELLOW_STREAM("Current state: " + std::to_string(activated_state_));
             ROS_YELLOW_STREAM("[ROTMS WARNING] Prerequisite is not met!");
             return;
         }
