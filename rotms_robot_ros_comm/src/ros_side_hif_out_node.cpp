@@ -22,25 +22,27 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
-#pragma once
-#include <string>
-#include <vector>
-#include <std_msgs/Float32MultiArray.h>
+#include <ros_side_out.hpp>
+#include <ros_side_hif_out_node.hpp>
+#include <ros/package.h>
 
-struct VolatileTempDataCache 
+#include <yaml-cpp/yaml.h>
+#include <boost/asio.hpp>
+
+ROSSideOut CommNodeHiFOutIniter(ros::NodeHandle& n, std::string modulesuffix)
 {
-    int landmark_total = -1;
-    std::vector<std::vector<double>> landmark_coords;
+    boost::asio::io_context io_context;
+    std::string packpath = ros::package::getPath("rotms_robot_ros_comm");
+	YAML::Node f = YAML::LoadFile(packpath + "/config_comm.yaml");
 
-    bool toolpose_t_recvd = false;
-    bool toolpose_r_recvd = false;
-    std::vector<double> toolpose_t;
-    std::vector<double> toolpose_r;
-};
+    struct ROSSideOutConfig cfg;
+	cfg.port_out = f["PORT_OUT_NNBLC_"+modulesuffix].as<int>();
+	cfg.msg_size = f["MSG_SIZE_"+modulesuffix].as<int>();
+	cfg.subscriber_name = f["SUBSCRIBER_HIF_NAME_"+modulesuffix].as<std::string>();
+    cfg.publisher_name = f["PUBLISHER_HIF_NAME_"+modulesuffix].as<std::string>();
+	cfg.verbose = f["VERBOSE_HIF_"+modulesuffix].as<int>();
 
-void SaveLandmarkPlanData(struct VolatileTempDataCache datacache, std::string f);
-void SaveToolPoseData(struct VolatileTempDataCache datacache, std::string f);
-void SaveCurrentJntsAsInit(std_msgs::Float32MultiArray jnts, std::string f);
-std::vector<double> ReadJntsFromConfig(std::string f);
-std::string FormatDouble2String(double a, int dec);
-std::string GetTimeString();
+	ROSSideOut server(n, io_context, cfg);
+
+	return server;
+}

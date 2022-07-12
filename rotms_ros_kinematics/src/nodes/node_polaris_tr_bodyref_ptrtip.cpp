@@ -71,6 +71,8 @@ int main(int argc, char **argv)
     tf2::Transform tr_pol_bodyref_;
     tf2::Transform tr_pol_ptr_;
     tf2::Transform tr_ptr_ptrtip_ = ConvertToTf2Transform(tr_ptr_ptrtip);
+
+    // Initialize the result transform
     tf2::Transform tr_bodyref_ptrtip_;
 
     // Initialize the result variable and its publisher

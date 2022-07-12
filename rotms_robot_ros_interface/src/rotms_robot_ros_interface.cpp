@@ -25,12 +25,14 @@ SOFTWARE.
 #include <ros/ros.h>
 #include <std_msgs/String.h>
 #include <std_msgs/Bool.h>
+#include <std_msgs/Float32MultiArray.h>
 #include <geometry_msgs/Pose.h>
 #include <rotms_ros_msgs/GetJnts.h>
 #include <rotms_ros_msgs/GetEFF.h>
 #include <vector>
 #include <math.h>
 #include "rotms_robot_ros_interface.hpp"
+#include "ros_print_color.hpp"
 
 std::vector<double> quat2eul(std::vector<double> q /*x,y,z,w*/)
 {
@@ -73,7 +75,7 @@ void RobotROSInterface::RobotConnectStatusQuery(const std_msgs::String::ConstPtr
         std_msgs::Bool robconnstatus;
         robconnstatus.data = flag_connected_;
         pub_robconnstatus_.publish(robconnstatus);
-        ROS_INFO_STREAM("Robot cabinet connection status: " + std::to_string(flag_connected_));
+        ROS_GREEN_STREAM("[ROTMS INFO] Robot cabinet connection status: " + std::to_string(flag_connected_));
     }
 }
 
@@ -86,14 +88,14 @@ void RobotROSInterface::RobotInitConnectionCallBack(const std_msgs::String::Cons
         {
             kst_.NetEstablishConnection();
             flag_connected_ = true;
-            ROS_INFO("Robot cabinet connection initialized");
+            ROS_GREEN_STREAM("[ROTMS INFO] Robot cabinet connection initialized.");
             std_msgs::Bool robconnstatus;
             robconnstatus.data = true;
             pub_robconnstatus_.publish(robconnstatus);
         }
         catch(...)
         {
-            ROS_INFO("ERROR ERROR ERROR (1)");
+            ROS_RED_STREAM("[ROTMS ERROR] ERROR ERROR ERROR (1)");
         }
     }   
 }
@@ -107,14 +109,14 @@ void RobotROSInterface::RobotDisconnectCallBack(const std_msgs::String::ConstPtr
         {
             kst_.NetTurnoffServer();
             flag_connected_ = false;
-            ROS_INFO("Robot cabinet disconnected");
+            ROS_GREEN_STREAM("[ROTMS INFO] Robot cabinet disconnected.");
             std_msgs::Bool robconnstatus;
             robconnstatus.data = false;
             pub_robconnstatus_.publish(robconnstatus);
         }
         catch(...)
         {
-            ROS_INFO("ERROR ERROR ERROR (2)");
+            ROS_RED_STREAM("[ROTMS ERROR] ERROR ERROR ERROR (2)");
         }
         
     }   
@@ -125,7 +127,7 @@ void RobotROSInterface::RobotEFFMotionCallBack(const geometry_msgs::Pose::ConstP
 {
     if(!flag_connected_)
     {
-        ROS_INFO("Robot cabinet connection has not been established");
+        ROS_YELLOW_STREAM("[ROTMS WARNING] Robot cabinet connection has not been established! (1)");
         return;
     }
     std::vector<double> quat{
@@ -145,19 +147,42 @@ void RobotROSInterface::RobotEFFMotionCallBack(const geometry_msgs::Pose::ConstP
     };
     try
     {
-        kst_.PTPLineEFF(epos, /*DON'T CHANGE!*/12.0); // second parameter is mm/sec
+        kst_.PTPLineEFF(epos, /*DON'T CHANGE!*/9.0); // second parameter is mm/sec
     }
     catch(...)
     {
-        ROS_INFO("ERROR ERROR ERROR (3)");
+        ROS_GREEN_STREAM("[ROTMS INFO] Robot start moving ...");
+        ROS_RED_STREAM("[ROTMS ERROR] ERROR ERROR ERROR (3.1)");
     }
+}
 
+void RobotROSInterface::RobotJntMotionCallBack(const std_msgs::Float32MultiArray::ConstPtr& msg)
+{
+    if(!flag_connected_)
+    {
+        ROS_YELLOW_STREAM("[ROTMS WARNING] Robot cabinet connection has not been established! (1)");
+        return;
+    }
+    std::vector<double> jnts; 
+    for(int i=0;i<msg->layout.dim[0].size;i++)
+    {
+        jnts.push_back(msg->data[i]);
+    }
+    try
+    {
+        ROS_GREEN_STREAM("[ROTMS INFO] Robot start moving ...");
+        kst_.PTPJointSpace(jnts, /*DON'T CHANGE!*/0.02); // relative to max speed
+    }
+    catch(...)
+    {
+        ROS_RED_STREAM("[ROTMS ERROR] ERROR ERROR ERROR (3.2)");
+    }
 }
 
 // Should be only called when terminating node
 void RobotROSInterface::RobotTerminateNodeCallBack(const std_msgs::String::ConstPtr& msg)
 {
-    if (!flag_end_handshaked_) ROS_INFO("Robot connection ending signal received by ROS node");
+    if (!flag_end_handshaked_) ROS_GREEN_STREAM("[ROTMS INFO] Robot connection ending signal received by ROS node.");
     if (msg->data.compare("_end_robot_connection_")==0 && !flag_end_handshaked_)
     {
         flag_end_handshaked_ = true;
@@ -165,14 +190,14 @@ void RobotROSInterface::RobotTerminateNodeCallBack(const std_msgs::String::Const
         {
             kst_.NetTurnoffServer();
             flag_connected_ = false;
-            ROS_INFO("Ending connection signal sent to cabinet");
+            ROS_GREEN_STREAM("[ROTMS INFO] Ending connection signal sent to cabinet.");
             std_msgs::Bool robconnstatus;
             robconnstatus.data = false;
             pub_robconnstatus_.publish(robconnstatus);
         }
         catch(...)
         {
-            ROS_INFO("ERROR ERROR ERROR (4)");
+            ROS_RED_STREAM("[ROTMS ERROR] ERROR ERROR ERROR (4)");
         }
     }
 }
@@ -181,29 +206,31 @@ void RobotROSInterface::RobotTerminateNodeCallBack(const std_msgs::String::Const
 bool RobotROSInterface::RobotGetJntsPosCallBack(
     rotms_ros_msgs::GetJnts::Request &req, rotms_ros_msgs::GetJnts::Response &res)
 {
+    std::vector<double> vec;
     if(!flag_connected_)
     {
-        ROS_INFO("Robot cabinet connection has not been established");
+        ROS_YELLOW_STREAM("[ROTMS WARNING] Robot cabinet connection has not been established! (2)");
         return false;
     }
     try
     {
-        std::vector<double> vec = kst_.GetJointPosition();
-        std_msgs::Float32MultiArray msg;
-        msg.layout.dim.push_back(std_msgs::MultiArrayDimension());
-        msg.layout.dim[0].size = 7; // Kuka iiwa has 7 joints
-        msg.layout.dim[0].stride = 1;
-        msg.layout.dim[0].label = "format__";
-        msg.data.clear();
-        msg.data.insert(msg.data.end(), vec.begin(), vec.end());
-        pub_jnt_.publish(msg);
-        res.jnt = msg;
+        vec = kst_.GetJointPosition();
     }
     catch(...)
     {
-        ROS_INFO("ERROR ERROR ERROR (5)");
+        ROS_RED_STREAM("[ROTMS ERROR] ERROR ERROR ERROR (5)");
         return false;
     }   
+    std_msgs::Float32MultiArray msg;
+    msg.layout.dim.push_back(std_msgs::MultiArrayDimension());
+    msg.layout.dim[0].size = 7; // Kuka iiwa has 7 joints
+    msg.layout.dim[0].stride = 1;
+    msg.layout.dim[0].label = "format__";
+    msg.data.clear();
+    msg.data.insert(msg.data.end(), vec.begin(), vec.end());
+    pub_jnt_.publish(msg);
+    res.jnt = msg;
+    
     return true;
 }
 
@@ -213,7 +240,7 @@ bool RobotROSInterface::RobotGetEFFPoseCallBack(
 {
     if(!flag_connected_)
     {
-        ROS_INFO("Robot cabinet connection has not been established");
+        ROS_YELLOW_STREAM("[ROTMS WARNING] Robot cabinet connection has not been established! (3)");
         return false;
     }
     try
@@ -229,7 +256,7 @@ bool RobotROSInterface::RobotGetEFFPoseCallBack(
     }
     catch(...)
     {
-        ROS_INFO("ERROR ERROR ERROR (6)");
+        ROS_RED_STREAM("[ROTMS ERROR] ERROR ERROR ERROR (6)");
         return false;
     }
     return true;

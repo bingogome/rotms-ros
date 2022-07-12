@@ -55,10 +55,16 @@ FuncMap GetFuncMapTargetViz()
 
 void VisualizeStart(std::string& ss, PublisherVec& pubs)
 {
-
+    std_msgs::String msg_test;
+    msg_test.data = "_start__";
+    // pubs[0] is the publisher /TargetViz/Visualize
+    pubs[0].publish(msg_test);
 }
 
 void VisualizeStop(std::string& ss, PublisherVec& pubs)
 {
-    
+    std_msgs::String msg_test;
+    msg_test.data = "_end__";
+    // pubs[0] is the publisher /TargetViz/Visualize
+    pubs[0].publish(msg_test);
 }

@@ -33,6 +33,8 @@ SOFTWARE.
 #include <boost/shared_ptr.hpp>
 #include <boost/asio.hpp>
 
+#include "ros_print_color.hpp"
+
 using boost::asio::ip::udp;
 
 ROSSideIn::ROSSideIn(ros::NodeHandle& n, boost::asio::io_context& io_context, 
@@ -49,7 +51,7 @@ ROSSideIn::ROSSideIn(ros::NodeHandle& n, boost::asio::io_context& io_context,
 void ROSSideIn::StartReceive()
 {
 	if (cfg_.verbose == 1)
-		ROS_INFO("Waiting Transmission");
+		ROS_GREEN_STREAM("[ROTMS INFO] Waiting for data transmission (in) ...");
 	socket_.async_receive_from(
 		boost::asio::buffer(recv_buffer_), 
 		remote_endpoint_,
@@ -83,7 +85,7 @@ void ROSSideIn::HandleReceive(const boost::system::error_code& error,
 void ROSSideIn::HandleIncoming()
 {
 	if (cfg_.verbose == 1)
-		ROS_INFO("Handling msg ...");
+		ROS_GREEN_STREAM("[ROTMS INFO] Handling received message ...");
 	std::stringstream sscmd;
 	std::stringstream ss;
 	for(int i=0;i<10;i++) // end msg header length is 10
@@ -102,7 +104,7 @@ void ROSSideIn::HandleIncoming()
 
 	if(sscmd_str_==cfg_.end_msg){
 		if (cfg_.verbose == 1)
-			ROS_INFO("Ending communication node ...");
+			ROS_GREEN_STREAM("[ROTMS INFO] Ending communication node ...");
 		ROSSideIn::EndServerClean();
 		throw;
 	}

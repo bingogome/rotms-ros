@@ -22,6 +22,7 @@
   {
     "GET_JNT_ANGS": "get_jnt_angsxxxx",
     "GET_EFF_POSE": "get_eff_posexxxx",
+    "GET_JNT_ANGS_TOINIT": "get_jnt_setinitx",
 
     "EXECUTE_MOTION": "execute_motionxx",
     "EXECUTE_MOVE_CONFIRM": "execute_confirmx",

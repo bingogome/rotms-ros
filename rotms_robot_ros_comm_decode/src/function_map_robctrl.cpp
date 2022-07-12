@@ -57,6 +57,7 @@ FuncMap GetFuncMapRobCtrl()
 
     fm["GET_JNT_ANGS"] = GetJntsAngs;
     fm["GET_EFF_POSE"] = GetEFFPose;
+    fm["GET_JNT_ANGS_TOINIT"] = SetCurJntsAsInit;
 
     fm["EXECUTE_MOTION"] = ExecuteMotion;
     fm["EXECUTE_MOVE_CONFIRM"] = ExecuteMoveConfirm;
@@ -87,6 +88,14 @@ void GetEFFPose(std::string& ss, PublisherVec& pubs)
 {
     std_msgs::String msg_test;
     msg_test.data = "_eff__";
+    // pubs[0] is the publisher /RobCtrl/GetInfo
+    pubs[0].publish(msg_test);
+}
+
+void SetCurJntsAsInit(std::string& ss, PublisherVec& pubs)
+{
+    std_msgs::String msg_test;
+    msg_test.data = "_initcur__";
     // pubs[0] is the publisher /RobCtrl/GetInfo
     pubs[0].publish(msg_test);
 }

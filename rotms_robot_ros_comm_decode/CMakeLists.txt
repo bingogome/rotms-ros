@@ -5,6 +5,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   roslib
   roslaunch
+  rotms_ros_universal_utility
   )
 
 find_package(PkgConfig REQUIRED)
@@ -15,7 +16,7 @@ roslaunch_add_file_check(launch)
 catkin_package(
   INCLUDE_DIRS include 
   LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS roscpp
+  CATKIN_DEPENDS roscpp rotms_ros_universal_utility
   DEPENDS YAML_CPP
 )
 
@@ -28,6 +29,7 @@ add_library(${PROJECT_NAME}
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   include/rotms_robot_ros_comm_decode
+  ../rotms_ros_universal_utility/include/rotms_ros_universal_utility
   ${catkin_INCLUDE_DIRS} 
   ${YAML_CPP_INCLUDEDIR} 
   )
