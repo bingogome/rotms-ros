@@ -45,6 +45,7 @@ FuncMap GetFuncMapRobCtrl();
 
 void GetJntsAngs(std::string& ss, PublisherVec& pubs);
 void GetEFFPose(std::string& ss, PublisherVec& pubs);
+void SetCurJntsAsInit(std::string& ss, PublisherVec& pubs);
 
 void ExecuteMotion(std::string& ss, PublisherVec& pubs);
 void ExecuteMoveConfirm(std::string& ss, PublisherVec& pubs);

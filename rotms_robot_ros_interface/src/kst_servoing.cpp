@@ -26,6 +26,10 @@ SOFTWARE.
 #include <boost/asio.hpp>
 #include <boost/lexical_cast.hpp>
 #include <iomanip>
+#include <ros/ros.h>
+
+#include "ros_print_color.hpp"
+
 
 /*****
  *
@@ -75,9 +79,15 @@ KstServoing::KstServoing(
 // Send connection request to Sunrise Cabinet
 void KstServoing::NetEstablishConnection()
 {
+
     tcp::endpoint remote_endpoint = tcp::endpoint(boost::asio::ip::address_v4::from_string(ip_), 30001);
 	tcp_sock_.connect(remote_endpoint);
 
+	// TODO: test if: successful connection when received 
+	// May need to add a pause (or better, check if can do a handshake type of ack)
+	// Previously using ros sleep
+
+	ros::Duration(1).sleep();
 
 	boost::system::error_code error;
 
@@ -87,18 +97,21 @@ void KstServoing::NetEstablishConnection()
 	const std::string msg1 = "TFtrans_0.0_0.0_0.0_0.0_0.0_0.0\n";
 	size_t lenmsgr1;
 
+	boost::asio::write(tcp_sock_, boost::asio::buffer(msg1), error);
+	ROS_GREEN_STREAM("[ROTMS INFO] Connection request sent.");
+	lenmsgr1 = tcp_sock_.read_some(boost::asio::buffer(buf_));
+	
 	// TODO: test if: successful connection when received 
 	// May need to add a pause (or better, check if can do a handshake type of ack)
 	// Previously using ros sleep
 
-	boost::asio::write(tcp_sock_, boost::asio::buffer(msg1), error);
-	lenmsgr1 = tcp_sock_.read_some(boost::asio::buffer(buf_));
+	ros::Duration(0.5).sleep();
 	
 }
 
 // Send a point-to-point command, in joint space
 void KstServoing::PTPJointSpace(std::vector<double> jpos , double relVel)
-{
+{// vel: relative to max vel
 	try
 	{
 		boost::system::error_code error;
@@ -144,10 +157,10 @@ void KstServoing::PTPLineEFF(std::vector<double> epos, double vel)
 		boost::asio::write(tcp_sock_, boost::asio::buffer(msg1), error);
 		size_t lenmsgr1 = tcp_sock_.read_some(boost::asio::buffer(buf_), error);
 
-		const std::string msgjs = "cArtixanPosition_" +
-			std::to_string(epos[0]) + "_" +
-			std::to_string(epos[1]) + "_" +
-			std::to_string(epos[2]) + "_" +
+		const std::string msgjs = "cArtixanPosition_" + // Convert to m
+			std::to_string(epos[0]*1000.0) + "_" +
+			std::to_string(epos[1]*1000.0) + "_" +
+			std::to_string(epos[2]*1000.0) + "_" +
 			std::to_string(epos[3]) + "_" +
 			std::to_string(epos[4]) + "_" +
 			std::to_string(epos[5]) + "_\n";
@@ -297,7 +310,6 @@ std::vector<double> KstServoing::GetJointPosition()
 		std::stringstream ssmsgr;
 		for(int i=0;i<lenmsgr;i++)
 			ssmsgr << buf_[i];
-		ssmsgr << "_"; // this is for getting jpos only, because the kuka java side miss a _
 		strmsgr = ssmsgr.str();
 	}
 	catch(std::exception& e)
@@ -305,6 +317,7 @@ std::vector<double> KstServoing::GetJointPosition()
 		throw;
 	}
 	std::vector<double> vec = ParseString2DoubleVec(strmsgr);
+
 	// vector format: a1 a2 a3 a4 a5 a6 a7
 	
 	return vec;
@@ -330,6 +343,7 @@ std::vector<double> KstServoing::GetEFFPosition()
 		throw;
 	}
 	std::vector<double> vec = ParseString2DoubleVec(strmsgr);
+	for(int i=0;i<3;i++) vec[i] /= 1000; // Convert to m
 	// vector format: x y z rz ry rx
 
 	return vec;

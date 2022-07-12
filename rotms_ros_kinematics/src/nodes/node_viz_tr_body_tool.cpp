@@ -77,7 +77,7 @@ int main(int argc, char **argv)
     rotms_ros_msgs::PoseValidConstPtr tr_bodyref_body = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
             "/Kinematics/TR_bodyref_body");
     while(!tr_bodyref_body->valid)
-        rotms_ros_msgs::PoseValidConstPtr tr_bodyref_body = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
+        tr_bodyref_body = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
             "/Kinematics/TR_bodyref_body");
     geometry_msgs::PoseConstPtr tr_tool_toolref = ros::topic::waitForMessage<geometry_msgs::Pose>(
         "/Kinematics/TR_tool_toolref");
@@ -104,6 +104,12 @@ int main(int argc, char **argv)
     {
         if (mngr.run_flag)
         {
+            tr_pol_bodyref = ros::topic::waitForMessage<geometry_msgs::TransformStamped>(
+                "/NDI/HeadRef/local/measured_cp");
+            tr_pol_toolref = ros::topic::waitForMessage<geometry_msgs::TransformStamped>(
+                "/NDI/CoilRef/local/measured_cp");
+            tr_pol_bodyref_ = ConvertToTf2Transform(tr_pol_bodyref);
+            tr_pol_toolref_ = ConvertToTf2Transform(tr_pol_toolref);
             tr_body_tool_ = 
                 tr_bodyref_body_.inverse() * tr_pol_bodyref_.inverse() *
                 tr_pol_toolref_ * tr_tool_toolref_.inverse();

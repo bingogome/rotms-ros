@@ -26,6 +26,7 @@ SOFTWARE.
 #include "flag_machine.hpp"
 #include "state_machine_states.hpp"
 #include "rotms_operations.hpp"
+#include "ros_print_color.hpp"
 
 #include <ros/ros.h>
 #include <tuple>
@@ -35,6 +36,8 @@ int main(int argc, char **argv)
 
     ros::init(argc, argv, "NodeDispatcher");
     ros::NodeHandle nh;
+
+    ROS_GREEN_STREAM("[ROTMS INFO] Dispatcher on.");
 
     // Initialize flags, states, operations and pass to dispatcher
     FlagMachine f = FlagMachine();

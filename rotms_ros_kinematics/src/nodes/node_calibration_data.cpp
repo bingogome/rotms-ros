@@ -66,6 +66,10 @@ private:
     
     ros::Subscriber sub_reinit = n_.subscribe(
         "/Kinematics/Query_ReInit", 2, &CalibrationDataMngr::ReInitCallback, this);
+    ros::Subscriber sub_updateoffset = n_.subscribe(
+        "/Kinematics/Update_TR_cntct_offset", 2, &CalibrationDataMngr::ChangeOffsetCallBack, this);
+    ros::Subscriber sub_reinitoffset = n_.subscribe(
+        "/Kinematics/Reinit_TR_cntct_offset", 2, &CalibrationDataMngr::ReinitOffsetCallBack, this);
 
     void ReInitCallback(const std_msgs::String::ConstPtr& msg)
     {
@@ -75,6 +79,20 @@ private:
             ReadAndPublishCalibrations(it->first, pubs_);
         }
     }
+    
+    void ChangeOffsetCallBack(const geometry_msgs::Pose::ConstPtr& msg)
+    {
+        geometry_msgs::Pose out;
+        out.position = msg->position;
+        out.orientation = msg->orientation;
+        pubs_["cntct_offset"].publish(out);
+    }
+
+    void ReinitOffsetCallBack(const std_msgs::String::ConstPtr& msg)
+    {
+        if(!msg->data.compare("_reinitoffset__")==0) return;
+        ReadAndPublishCalibrations("cntct_offset", pubs_);
+    }
 };
 
 int main(int argc, char **argv)
@@ -83,15 +101,15 @@ int main(int argc, char **argv)
     ros::NodeHandle nh;
 
     ros::Publisher pub_cntct_offset = nh.advertise<geometry_msgs::Pose>(
-        "/Kinematics/TR_cntct_offset", 2, true);
+        "/Kinematics/TR_cntct_offset", 1, true);
     ros::Publisher pub_offset_tool = nh.advertise<geometry_msgs::Pose>(
-        "/Kinematics/TR_offset_tool", 2, true);
+        "/Kinematics/TR_offset_tool", 1, true);
     ros::Publisher pub_tool_toolref = nh.advertise<geometry_msgs::Pose>(
-        "/Kinematics/TR_tool_toolref", 2, true);
+        "/Kinematics/TR_tool_toolref", 1, true);
     ros::Publisher pub_toolref_eff = nh.advertise<geometry_msgs::Pose>(
-        "/Kinematics/TR_toolref_eff", 2, true);
+        "/Kinematics/TR_toolref_eff", 1, true);
     ros::Publisher pub_ptr_ptrtip = nh.advertise<geometry_msgs::Pose>(
-        "/Kinematics/TR_ptr_ptrtip", 2, true);
+        "/Kinematics/TR_ptr_ptrtip", 1, true);
 
     PubMap pubs;
     pubs["cntct_offset"] = pub_cntct_offset;

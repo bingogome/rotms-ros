@@ -74,6 +74,7 @@ public:
     virtual int ClearToolPosePlan();
 
     virtual int ReinitState();
+    virtual int UsePrevRegister();
 
 protected:
     
