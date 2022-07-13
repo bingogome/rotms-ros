@@ -84,7 +84,7 @@ int main(int argc, char **argv)
     // ROS stuff
     ros::init(argc, argv, "NodeVizTrBodyTool");
     ros::NodeHandle nh;
-    ros::Rate rate(30.0);
+    ros::Rate rate(60.0);
 
     // Instantiate the flag manager
     TransformMngrBodyTool mngr(nh);
