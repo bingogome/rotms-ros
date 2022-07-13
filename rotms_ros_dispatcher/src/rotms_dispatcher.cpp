@@ -29,12 +29,14 @@ SOFTWARE.
 #include "rotms_ros_msgs/PoseValid.h"
 #include "ros_print_color.hpp"
 
-#include <ros/ros.h>
-#include <ros/package.h>
 #include <rotms_ros_msgs/GetJnts.h>
 #include <rotms_ros_msgs/GetEFF.h>
+
+#include <ros/ros.h>
+#include <ros/package.h>
 #include <yaml-cpp/yaml.h>
 #include <iostream>
+#include <tf2/LinearMath/Transform.h>
 
 /*
 Dispatcher takes decoded messages from comm_decode and preprocesses
@@ -163,13 +165,33 @@ void Dispatcher::RegistrationCallBack(const std_msgs::String::ConstPtr& msg)
     {
         int new_state = states_[activated_state_]->UsePrevRegister();
         Dispatcher::StateTransitionCheck(new_state);
+        Dispatcher::RegistrationResidualCheck();
     }
     if (msg->data.compare("_register__")==0)
     {
         int new_state = states_[activated_state_]->Registered();
         Dispatcher::StateTransitionCheck(new_state);
+        Dispatcher::RegistrationResidualCheck();
     }
     
+}
+
+void Dispatcher::RegistrationResidualCheck()
+{
+    std::string packpath = ros::package::getPath("rotms_ros_operations");
+
+    std::vector<tf2::Vector3> cloudpln = 
+        ReadPointCloudFromYAML(packpath + "/share/cache/landmarkplan.yaml", "PLANNED");
+    std::vector<tf2::Vector3> clouddig =
+        ReadPointCloudFromYAML(packpath + "/share/cache/landmarkdig.yaml", "DIGITIZED");
+    
+    tf2::Transform reg = ReadTransformFromYAML(packpath + "/share/config/reg.yaml");
+
+    double resid = GetPairPointResidual(reg, cloudpln, clouddig);
+
+    std_msgs::String resid_msg;
+    resid_msg.data = std::to_string(resid * 1000.0); // convert to mm
+    pub_medplancomm_.publish(resid_msg);
 }
 
 void Dispatcher::ToolPoseOrientCallBack(const geometry_msgs::Quaternion::ConstPtr& msg)
@@ -348,6 +370,39 @@ void Dispatcher::ExecuteConfirmMotionCallBack(const std_msgs::String::ConstPtr& 
     Dispatcher::ExecuteMotionToTargetEFFPose();
 }
 
+void Dispatcher::ExecuteManualAdjust(const std_msgs::Float32MultiArray::ConstPtr& msg)
+{
+    if(activated_state_!=0b1111)
+    {
+        ROS_YELLOW_STREAM("[ROTMS WARNING] The prerequisites are not met. Check before robot motion. (code 2)");
+        return;
+    }
+    geometry_msgs::PoseConstPtr tr_curoffset = ros::topic::waitForMessage<geometry_msgs::Pose>(
+        "/Kinematics/TR_cntct_offset");
+    std::vector<double> q_temp{
+        tr_curoffset->orientation.x,tr_curoffset->orientation.y,
+        tr_curoffset->orientation.z,tr_curoffset->orientation.w
+    };
+    std::vector<double> eul_temp = quat2eul(q_temp);
+    std::vector<double> eul{
+        eul_temp[0] + msg->data[3],
+        eul_temp[1] + msg->data[4],
+        eul_temp[2] + msg->data[5]
+    };
+    std::vector<double> quat = eul2quat(eul);
+    geometry_msgs::Pose changeoffset;
+    changeoffset.position.x = tr_curoffset->position.x + msg->data[0]; 
+    changeoffset.position.y = tr_curoffset->position.y + msg->data[1]; 
+    changeoffset.position.z = tr_curoffset->position.z + msg->data[2];
+    changeoffset.orientation.x = quat[0]; 
+    changeoffset.orientation.y = quat[1]; 
+    changeoffset.orientation.z = quat[2];
+    changeoffset.orientation.w = quat[3];
+    pub_changeoffset_.publish(changeoffset);
+    ros::spinOnce();
+    Dispatcher::ExecuteMotionToTargetEFFPose();
+}
+
 void Dispatcher::ExecuteMotionToTargetEFFPose()
 {   
 
@@ -386,10 +441,14 @@ void Dispatcher::ExecuteMotionToTargetEFFPose()
 
     ROS_GREEN_STREAM("[ROTMS INFO] Target pose received, test validaty......");
 
+    ros::Rate check_valid_rate(10);
     while(!tr_targeteff->valid)
+    {
         tr_targeteff = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
             "/Kinematics/TR_derivedeff");
-
+        check_valid_rate.sleep();
+    }
+    
     ROS_GREEN_STREAM("[ROTMS INFO] Target pose valid. ");
 
     geometry_msgs::Pose tr_targeteff_;
@@ -461,8 +520,9 @@ void Dispatcher::TargetVizCallBack(const std_msgs::String::ConstPtr& msg)
     std_msgs::String msg_out;
     if(msg->data.compare("_start__")==0) 
     {
-        if(activated_state_ != 0b1101 || activated_state_!= 0b1111)
+        if(activated_state_ != 0b1101 && activated_state_!= 0b1111)
         {
+            ROS_YELLOW_STREAM("Current state: " + std::to_string(activated_state_));
             ROS_YELLOW_STREAM("[ROTMS WARNING] Prerequisite is not met!");
             return;
         }

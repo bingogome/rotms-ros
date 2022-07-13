@@ -81,6 +81,8 @@ private:
         "/RobCtrl/Motion", 2, &Dispatcher::ExecuteBackOffsetCallBack, this);
     ros::Subscriber sub_robctrl_executebackinit_ = n_.subscribe(
         "/RobCtrl/Motion", 2, &Dispatcher::ExecuteBackInitCallBack, this);
+    ros::Subscriber sub_robctrl_executemanadjust_ = n_.subscribe(
+        "/RobCtrl/MotionAdjust", 2, &Dispatcher::ExecuteManualAdjust, this);
     ros::Subscriber sub_robctrl_sessionreinit_ = n_.subscribe(
         "/RobCtrl/Session", 2, &Dispatcher::SessionReinitCallBack, this);
     ros::Subscriber sub_targetviz_ = n_.subscribe(
@@ -89,6 +91,8 @@ private:
     // Dispatcher sending query response signals
     ros::Publisher pub_robctrlcomm_ = n_.advertise<std_msgs::String>(
         "/RobCtrlComm/msg_to_send", 2);
+    ros::Publisher pub_medplancomm_ = n_.advertise<std_msgs::String>(
+        "/MedImgComm/msg_to_send", 2);
     ros::Publisher pub_effold_ = n_.advertise<rotms_ros_msgs::PoseValid>( 
         "/Kinematics/TR_robbase_effold", 1, true); // should only be called by ExecuteMotionToTargetEFFPose
     
@@ -108,7 +112,6 @@ private:
     void LandmarkPlanMetaCallBack(const std_msgs::Int16::ConstPtr& msg);
     void AutodigitizationCallBack(const std_msgs::String::ConstPtr& msg);
     void RegistrationCallBack(const std_msgs::String::ConstPtr& msg);
-    void RegistrationUsePrevCallBack(const std_msgs::String::ConstPtr& msg);
     void ToolPoseOrientCallBack(const geometry_msgs::Quaternion::ConstPtr& msg);
     void ToolPoseTransCallBack(const geometry_msgs::Point::ConstPtr& msg);
 
@@ -116,6 +119,7 @@ private:
     void LandmarkPlanFidsCallBack(const std_msgs::Float32MultiArray::ConstPtr& msg);
     void SessionReinitCallBack(const std_msgs::String::ConstPtr& msg);
     void TargetVizCallBack(const std_msgs::String::ConstPtr& msg);
+    void RegistrationResidualCheck();
 
     // Robot operations
     void UpdateRobotConnFlagCallBack(const std_msgs::Bool::ConstPtr& msg);
@@ -128,6 +132,7 @@ private:
     void ExecuteMotionToTargetEFFPose();
     void ExecuteBackOffsetCallBack(const std_msgs::String::ConstPtr& msg);
     void ExecuteBackInitCallBack(const std_msgs::String::ConstPtr& msg);
+    void ExecuteManualAdjust(const std_msgs::Float32MultiArray::ConstPtr& msg);
 
     // Robot interface
     ros::Publisher pub_init_conn_ = n_.advertise<std_msgs::String>(

@@ -54,62 +54,61 @@ void TMSOperations::OperationPlanLandmarks()
 
 void TMSOperations::OperationDigitization()
 {
-    // // Get meta data of planned landmarks
-    // std::string packpath = ros::package::getPath("rotms_ros_operations");
-    // YAML::Node f = YAML::LoadFile(packpath + "/share/cache/landmarkplan.yaml");
-    // int num_of_landmarks = f["NUM"].as<int>();
+    // Get meta data of planned landmarks
+    std::string packpath = ros::package::getPath("rotms_ros_operations");
+    YAML::Node f = YAML::LoadFile(packpath + "/share/cache/landmarkplan.yaml");
+    int num_of_landmarks = f["NUM"].as<int>();
+
+    ROS_INFO_STREAM(num_of_landmarks);
+    datacache_.landmark_total = num_of_landmarks;
+
+    // Poke polaris_tr_bodyref_ptrtip node /Kinematics/Flag_bodyref_ptrtip
+    std_msgs::String flag_start;
+    flag_start.data = "_start__";
+    pub_run_polaris_tr_bodyref_ptrtip_.publish(flag_start);
+
+    // Beep the Polaris 3 times to indicate get prepared for digitization
+    ros::Publisher pub_beep = n_.advertise<std_msgs::Int32>("/NDI/beep", 10);
+    ros::Duration(3).sleep();
+    std_msgs::Int32 beep_num;
+    beep_num.data = 3;
+    pub_beep.publish(beep_num); 
+    ros::spinOnce();
+
+    // Wait 7 seconds to get prepared
+    ros::Duration(7).sleep();
+
+    // Start digitization
+    for(int i=0;i<num_of_landmarks;i++)
+    {
+        // Beep 2 times for each landmark
+        beep_num.data = 2;
+        ros::Duration(7).sleep();
+        pub_beep.publish(beep_num); ros::spinOnce();
+        // Wait for a 
+        geometry_msgs::PointConstPtr curdigPtr = ros::topic::waitForMessage<geometry_msgs::Point>("/Kinematics/T_bodyref_ptrtip");
+        std::vector<double> curlandmark{curdigPtr->x, curdigPtr->y, curdigPtr->z};
+        datacache_.landmarkdig.push_back(curlandmark);
+        ROS_GREEN_STREAM("[ROTMS INFO] User digitized one point " + std::to_string(i));
+    }
 
     // ROS_INFO_STREAM(num_of_landmarks);
     // datacache_.landmark_total = num_of_landmarks;
 
-    // // Poke polaris_tr_bodyref_ptrtip node /Kinematics/Flag_bodyref_ptrtip
-    // std_msgs::String flag_start;
-    // flag_start.data = "_start__";
-    // pub_run_polaris_tr_bodyref_ptrtip_.publish(flag_start);
-
-    // // Beep the Polaris 3 times to indicate get prepared for digitization
-    // ros::Publisher pub_beep = n_.advertise<std_msgs::Int32>("/NDI/beep", 10);
-    // ros::Duration(3).sleep();
-    // std_msgs::Int32 beep_num;
-    // beep_num.data = 3;
-    // pub_beep.publish(beep_num); 
-    // ros::spinOnce();
-
-    // // Wait 7 seconds to get prepared
-    // ros::Duration(7).sleep();
-
-    // // Start digitization
-    // for(int i=0;i<num_of_landmarks;i++)
-    // {
-    //     // Beep 2 times for each landmark
-    //     beep_num.data = 2;
-    //     ros::Duration(7).sleep();
-    //     pub_beep.publish(beep_num); ros::spinOnce();
-    //     // Wait for a 
-    //     geometry_msgs::PointConstPtr curdigPtr = ros::topic::waitForMessage<geometry_msgs::Point>("/Kinematics/T_bodyref_ptrtip");
-    //     std::vector<double> curlandmark{curdigPtr->x, curdigPtr->y, curdigPtr->z};
-    //     datacache_.landmarkdig.push_back(curlandmark);
-    //     ROS_GREEN_STREAM("[ROTMS INFO] User digitized one point (#%d)", i);
-    // }
-
-    // // Poke polaris_tr_bodyref_ptrtip node /Kinematics/Flag_bodyref_ptrtip
-    // flag_start.data = "_end__";
-    // pub_run_polaris_tr_bodyref_ptrtip_.publish(flag_start);
-
-    // // Check validity and save
-    // if (datacache_.landmarkdig.size()!=num_of_landmarks)
-    // {
-    //     ResetOpsVolatileDataCache();
-    //     throw std::runtime_error(
-    //         "Number of the digitized landmarks does not match!");
-    // }
-    // else
-    // {
-    //     SaveLandmarkDigData(datacache_, 
-    //         packpath + "/share/data/landmarkdig_"+ GetTimeString() + ".yaml");
-    //     SaveLandmarkDigData(datacache_, 
-    //         packpath + "/share/cache/landmarkdig" + ".yaml");
-    // }
+    // Check validity and save
+    if (datacache_.landmarkdig.size()!=num_of_landmarks)
+    {
+        ResetOpsVolatileDataCache();
+        throw std::runtime_error(
+            "Number of the digitized landmarks does not match!");
+    }
+    else
+    {
+        SaveLandmarkDigData(datacache_, 
+            packpath + "/share/data/landmarkdig_"+ GetTimeString() + ".yaml");
+        SaveLandmarkDigData(datacache_, 
+            packpath + "/share/cache/landmarkdig" + ".yaml");
+    }
 
 }
 
