@@ -47,6 +47,7 @@ std::string FormatedDouble2String(double a, int dec)
 }
 
 // Parse received messages into double vector
+// Input format has to be num1_num2_num3_ (cannot be num1_num2_num3)
 std::vector<double> ParseString2DoubleVec(std::string s)
 {
 	std::vector<double> vec;

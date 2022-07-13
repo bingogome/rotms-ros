@@ -41,15 +41,33 @@ public:
     TransformMngrBodyTool(ros::NodeHandle& n) : n_(n){}
     bool run_flag = false;
 
+    tf2::Transform tr_pol_bodyref_;
+    tf2::Transform tr_pol_toolref_;
+
 private:
 
     ros::NodeHandle& n_;
     ros::Subscriber sub_run_ = n_.subscribe(
         "/Kinematics/Flag_body_tool", 2, &TransformMngrBodyTool::FlagCallBack, this);
+    ros::Subscriber sub_tr_pol_bodyref_ = n_.subscribe(
+        "/NDI/HeadRef/local/measured_cp", 2, &TransformMngrBodyTool::PolBodyRefCallBack, this);
+    ros::Subscriber sub_tr_pol_toolref_ = n_.subscribe(
+        "/NDI/CoilRef/local/measured_cp", 2, &TransformMngrBodyTool::PolToolRefCallBack, this);
+
     void FlagCallBack(const std_msgs::String::ConstPtr& msg)
     {
         if(msg->data.compare("_start__")==0) run_flag = true;
         if(msg->data.compare("_end__")==0) run_flag = false;
+    }
+
+    void PolBodyRefCallBack(const geometry_msgs::TransformStamped::ConstPtr& msg)
+    {
+        if(run_flag) tr_pol_bodyref_ = ConvertToTf2Transform(msg);
+    }
+
+    void PolToolRefCallBack(const geometry_msgs::TransformStamped::ConstPtr& msg)
+    {
+        if(run_flag) tr_pol_toolref_ = ConvertToTf2Transform(msg);
     }
 };
 
@@ -66,19 +84,22 @@ int main(int argc, char **argv)
     // ROS stuff
     ros::init(argc, argv, "NodeVizTrBodyTool");
     ros::NodeHandle nh;
-    ros::Rate rate(30.0);
+    ros::Rate rate(60.0);
 
     // Instantiate the flag manager
     TransformMngrBodyTool mngr(nh);
 
     // Initialize the requred transforms
-    geometry_msgs::TransformStampedConstPtr tr_pol_bodyref;
-    geometry_msgs::TransformStampedConstPtr tr_pol_toolref;
     rotms_ros_msgs::PoseValidConstPtr tr_bodyref_body = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
             "/Kinematics/TR_bodyref_body");
+    ros::Rate check_valid_rate(10);
     while(!tr_bodyref_body->valid)
+    {
         tr_bodyref_body = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
             "/Kinematics/TR_bodyref_body");
+        check_valid_rate.sleep();
+    }
+        
     geometry_msgs::PoseConstPtr tr_tool_toolref = ros::topic::waitForMessage<geometry_msgs::Pose>(
         "/Kinematics/TR_tool_toolref");
 
@@ -104,12 +125,8 @@ int main(int argc, char **argv)
     {
         if (mngr.run_flag)
         {
-            tr_pol_bodyref = ros::topic::waitForMessage<geometry_msgs::TransformStamped>(
-                "/NDI/HeadRef/local/measured_cp");
-            tr_pol_toolref = ros::topic::waitForMessage<geometry_msgs::TransformStamped>(
-                "/NDI/CoilRef/local/measured_cp");
-            tr_pol_bodyref_ = ConvertToTf2Transform(tr_pol_bodyref);
-            tr_pol_toolref_ = ConvertToTf2Transform(tr_pol_toolref);
+            tr_pol_bodyref_ = mngr.tr_pol_bodyref_;
+            tr_pol_toolref_ = mngr.tr_pol_toolref_;
             tr_body_tool_ = 
                 tr_bodyref_body_.inverse() * tr_pol_bodyref_.inverse() *
                 tr_pol_toolref_ * tr_tool_toolref_.inverse();

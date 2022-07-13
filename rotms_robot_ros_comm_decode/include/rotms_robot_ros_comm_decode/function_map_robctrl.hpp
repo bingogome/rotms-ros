@@ -43,6 +43,10 @@ public:
 
 FuncMap GetFuncMapRobCtrl();
 
+// Parse received messages into double vector
+// Input format has to be num1_num2_num3_ (cannot be num1_num2_num3)
+std::vector<double> ParseString2DoubleVec(std::string s);
+
 void GetJntsAngs(std::string& ss, PublisherVec& pubs);
 void GetEFFPose(std::string& ss, PublisherVec& pubs);
 void SetCurJntsAsInit(std::string& ss, PublisherVec& pubs);
