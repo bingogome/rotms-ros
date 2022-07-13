@@ -81,6 +81,8 @@ private:
         "/RobCtrl/Motion", 2, &Dispatcher::ExecuteBackOffsetCallBack, this);
     ros::Subscriber sub_robctrl_executebackinit_ = n_.subscribe(
         "/RobCtrl/Motion", 2, &Dispatcher::ExecuteBackInitCallBack, this);
+    ros::Subscriber sub_robctrl_executemanadjust_ = n_.subscribe(
+        "/RobCtrl/MotionAdjust", 2, &Dispatcher::ExecuteManualAdjust, this);
     ros::Subscriber sub_robctrl_sessionreinit_ = n_.subscribe(
         "/RobCtrl/Session", 2, &Dispatcher::SessionReinitCallBack, this);
     ros::Subscriber sub_targetviz_ = n_.subscribe(
@@ -130,6 +132,7 @@ private:
     void ExecuteMotionToTargetEFFPose();
     void ExecuteBackOffsetCallBack(const std_msgs::String::ConstPtr& msg);
     void ExecuteBackInitCallBack(const std_msgs::String::ConstPtr& msg);
+    void ExecuteManualAdjust(const std_msgs::Float32MultiArray::ConstPtr& msg);
 
     // Robot interface
     ros::Publisher pub_init_conn_ = n_.advertise<std_msgs::String>(

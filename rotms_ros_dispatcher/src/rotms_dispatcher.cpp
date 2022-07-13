@@ -370,6 +370,39 @@ void Dispatcher::ExecuteConfirmMotionCallBack(const std_msgs::String::ConstPtr& 
     Dispatcher::ExecuteMotionToTargetEFFPose();
 }
 
+void Dispatcher::ExecuteManualAdjust(const std_msgs::Float32MultiArray::ConstPtr& msg)
+{
+    if(activated_state_!=0b1111)
+    {
+        ROS_YELLOW_STREAM("[ROTMS WARNING] The prerequisites are not met. Check before robot motion. (code 2)");
+        return;
+    }
+    geometry_msgs::PoseConstPtr tr_curoffset = ros::topic::waitForMessage<geometry_msgs::Pose>(
+        "/Kinematics/TR_cntct_offset");
+    std::vector<double> q_temp{
+        tr_curoffset->orientation.x,tr_curoffset->orientation.y,
+        tr_curoffset->orientation.z,tr_curoffset->orientation.w
+    };
+    std::vector<double> eul_temp = quat2eul(q_temp);
+    std::vector<double> eul{
+        eul_temp[0] + msg->data[3],
+        eul_temp[1] + msg->data[4],
+        eul_temp[2] + msg->data[5]
+    };
+    std::vector<double> quat = eul2quat(eul);
+    geometry_msgs::Pose changeoffset;
+    changeoffset.position.x = tr_curoffset->position.x + msg->data[0]; 
+    changeoffset.position.y = tr_curoffset->position.y + msg->data[1]; 
+    changeoffset.position.z = tr_curoffset->position.z + msg->data[2];
+    changeoffset.orientation.x = quat[0]; 
+    changeoffset.orientation.y = quat[1]; 
+    changeoffset.orientation.z = quat[2];
+    changeoffset.orientation.w = quat[3];
+    pub_changeoffset_.publish(changeoffset);
+    ros::spinOnce();
+    Dispatcher::ExecuteMotionToTargetEFFPose();
+}
+
 void Dispatcher::ExecuteMotionToTargetEFFPose()
 {   
 

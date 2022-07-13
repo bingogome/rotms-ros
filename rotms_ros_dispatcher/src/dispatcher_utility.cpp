@@ -193,3 +193,32 @@ double GetPairPointResidual(
     out /= A.size();
     return out;
 }
+
+std::vector<double> quat2eul(std::vector<double> q /*x,y,z,w*/)
+{
+    double aSinInput = -2.0 * (q[0] * q[2] - q[3] * q[1]);
+    if(aSinInput > 1.0)
+        aSinInput = 1.0;
+    if(aSinInput < -1.0)
+        aSinInput = -1.0;
+    
+    std::vector<double> ans{
+        atan2( 2.0 * (q[0] * q[1] + q[3] * q[2]), q[3] * q[3] + q[0] * q[0] - q[1] * q[1] - q[2] * q[2] ), 
+        asin( aSinInput ), 
+        atan2( 2.0 * (q[1] * q[2] + q[3] * q[0]), q[3] * q[3] - q[0] * q[0] - q[1] * q[1] + q[2] * q[2] )
+    };
+    return ans;
+}
+
+std::vector<double> eul2quat(std::vector<double> eul)
+{
+	std::vector<double> eulhalf{eul[0]/2,eul[1]/2,eul[2]/2};
+    eul = eulhalf;
+    std::vector<double> ans{
+        cos(eul[0]) * cos(eul[1]) * sin(eul[2]) - sin(eul[0]) * sin(eul[1]) * cos(eul[2]),
+        cos(eul[0]) * sin(eul[1]) * cos(eul[2]) + sin(eul[0]) * cos(eul[1]) * sin(eul[2]),
+        sin(eul[0]) * cos(eul[1]) * cos(eul[2]) - cos(eul[0]) * sin(eul[1]) * sin(eul[2]),
+        cos(eul[0]) * cos(eul[1]) * cos(eul[2]) + sin(eul[0]) * sin(eul[1]) * sin(eul[2])
+    };
+    return ans; // x y z w
+}
