@@ -26,6 +26,7 @@ SOFTWARE.
 #include <string>
 #include <vector>
 #include <std_msgs/Float32MultiArray.h>
+#include <tf2/LinearMath/Transform.h>
 
 struct VolatileTempDataCache 
 {
@@ -44,3 +45,9 @@ void SaveCurrentJntsAsInit(std_msgs::Float32MultiArray jnts, std::string f);
 std::vector<double> ReadJntsFromConfig(std::string f);
 std::string FormatDouble2String(double a, int dec);
 std::string GetTimeString();
+std::vector<tf2::Vector3> ReadPointCloudFromYAML(std::string f, std::string pnt);
+tf2::Transform ReadTransformFromYAML(std::string f);
+double GetPairPointResidual(
+    tf2::Transform tr, std::vector<tf2::Vector3> A, std::vector<tf2::Vector3> B);
+std::vector<double> quat2eul(std::vector<double> q /*x,y,z,w*/);
+std::vector<double> eul2quat(std::vector<double> eul);

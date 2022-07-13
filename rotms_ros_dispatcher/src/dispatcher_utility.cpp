@@ -30,8 +30,10 @@ SOFTWARE.
 #include <iostream>
 #include <iomanip>
 #include <time.h>
+#include <math.h> 
 #include <yaml-cpp/yaml.h>
 #include <std_msgs/Float32MultiArray.h>
+#include <tf2/LinearMath/Transform.h>
 
 
 void SaveLandmarkPlanData(struct VolatileTempDataCache datacache, std::string f)
@@ -133,4 +135,90 @@ std::string GetTimeString()
 	strftime (buffer,80,"%Y%m%d_%I%M%p",timeinfo);
 
 	return buffer;
+}
+
+std::vector<tf2::Vector3> ReadPointCloudFromYAML(std::string f, std::string pnt)
+{
+    std::vector<tf2::Vector3> cloud;
+    YAML::Node f1 = YAML::LoadFile(f);
+    YAML::Node ff1 = f1[pnt];
+    for(YAML::const_iterator it=ff1.begin(); it!=ff1.end(); ++it)
+    {
+        YAML::Node value = it->second;
+        tf2::Vector3 temppnt{
+            value["x"].as<double>(),
+            value["y"].as<double>(),
+            value["z"].as<double>()
+        };
+        cloud.push_back(temppnt);
+    }
+    return cloud;
+}
+
+tf2::Transform ReadTransformFromYAML(std::string f)
+{
+    YAML::Node reg = YAML::LoadFile(f);
+    YAML::Node t_ = reg["TRANSLATION"];
+    YAML::Node r_ = reg["ROTATION"];
+    tf2::Vector3 t{
+        t_["x"].as<double>(),
+        t_["y"].as<double>(),
+        t_["z"].as<double>()
+    };
+    tf2::Quaternion r{
+        r_["x"].as<double>(),
+        r_["y"].as<double>(),
+        r_["z"].as<double>(),
+        r_["w"].as<double>()
+    };
+    tf2::Transform out{
+        r, t
+    };
+    return out;
+}
+
+double GetPairPointResidual(
+    tf2::Transform tr, std::vector<tf2::Vector3> A, std::vector<tf2::Vector3> B)
+{
+    double out = 0;
+    for(int i=0;i<A.size();i++)
+    {
+        tf2::Vector3 cur_err = tr * A[i];
+        cur_err -= B[i];
+        double x = cur_err.getX();
+        double y = cur_err.getY();
+        double z = cur_err.getZ();
+        out += sqrt(x*x+y*y+z*z);
+    }
+    out /= A.size();
+    return out;
+}
+
+std::vector<double> quat2eul(std::vector<double> q /*x,y,z,w*/)
+{
+    double aSinInput = -2.0 * (q[0] * q[2] - q[3] * q[1]);
+    if(aSinInput > 1.0)
+        aSinInput = 1.0;
+    if(aSinInput < -1.0)
+        aSinInput = -1.0;
+    
+    std::vector<double> ans{
+        atan2( 2.0 * (q[0] * q[1] + q[3] * q[2]), q[3] * q[3] + q[0] * q[0] - q[1] * q[1] - q[2] * q[2] ), 
+        asin( aSinInput ), 
+        atan2( 2.0 * (q[1] * q[2] + q[3] * q[0]), q[3] * q[3] - q[0] * q[0] - q[1] * q[1] + q[2] * q[2] )
+    };
+    return ans;
+}
+
+std::vector<double> eul2quat(std::vector<double> eul)
+{
+	std::vector<double> eulhalf{eul[0]/2,eul[1]/2,eul[2]/2};
+    eul = eulhalf;
+    std::vector<double> ans{
+        cos(eul[0]) * cos(eul[1]) * sin(eul[2]) - sin(eul[0]) * sin(eul[1]) * cos(eul[2]),
+        cos(eul[0]) * sin(eul[1]) * cos(eul[2]) + sin(eul[0]) * cos(eul[1]) * sin(eul[2]),
+        sin(eul[0]) * cos(eul[1]) * cos(eul[2]) - cos(eul[0]) * sin(eul[1]) * sin(eul[2]),
+        cos(eul[0]) * cos(eul[1]) * cos(eul[2]) + sin(eul[0]) * sin(eul[1]) * sin(eul[2])
+    };
+    return ans; // x y z w
 }

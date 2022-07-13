@@ -54,16 +54,25 @@ private:
             "/Kinematics/TR_offset_tool");
         geometry_msgs::PoseConstPtr tr_cntct_offset = ros::topic::waitForMessage<geometry_msgs::Pose>(
             "/Kinematics/TR_cntct_offset");
+
+        ros::Rate check_valid_rate(10);
         rotms_ros_msgs::PoseValidConstPtr tr_body_cntct = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
             "/Kinematics/TR_body_cntct");
         while(!tr_body_cntct->valid)
+        {
             tr_body_cntct = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
                 "/Kinematics/TR_body_cntct");
+            check_valid_rate.sleep();
+        }
         rotms_ros_msgs::PoseValidConstPtr tr_bodyref_body = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
             "/Kinematics/TR_bodyref_body");
         while(!tr_bodyref_body->valid)
+        {
             tr_bodyref_body = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
                 "/Kinematics/TR_bodyref_body");
+            check_valid_rate.sleep();
+        }
+        
         tf2::Transform tr_toolref_eff_ = ConvertToTf2Transform(tr_toolref_eff);
         tf2::Transform tr_tool_toolref_ = ConvertToTf2Transform(tr_tool_toolref);
         tf2::Transform tr_offset_tool_ = ConvertToTf2Transform(tr_offset_tool);
@@ -75,8 +84,11 @@ private:
         rotms_ros_msgs::PoseValidConstPtr tr_robbase_effold = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
             "/Kinematics/TR_robbase_effold");
         while(!tr_robbase_effold->valid)
+        {
             tr_robbase_effold = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
                 "/Kinematics/TR_robbase_effold");
+            check_valid_rate.sleep();
+        }
         tf2::Transform tr_robbase_effold_ = ConvertToTf2Transform(tr_robbase_effold);
 
         // Sensor data (real-time)

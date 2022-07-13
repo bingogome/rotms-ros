@@ -25,6 +25,7 @@ SOFTWARE.
 #include <map>
 #include <string>
 #include <ros/ros.h>
+#include <std_msgs/Float32MultiArray.h>
 #include "function_map_robctrl.hpp"
 #include "decode_node.hpp"
 
@@ -44,7 +45,7 @@ CommDecoderRobCtrl::CommDecoderRobCtrl(
     pubs_.push_back(
         n_.advertise<std_msgs::String>("/RobCtrl/Motion", 2));
     pubs_.push_back(
-        n_.advertise<std_msgs::String>("/RobCtrl/Adjust", 2));
+        n_.advertise<std_msgs::Float32MultiArray>("/RobCtrl/MotionAdjust", 2));
     pubs_.push_back(
         n_.advertise<std_msgs::String>("/RobCtrl/Session", 2));
     pubs_.push_back(
@@ -74,6 +75,21 @@ FuncMap GetFuncMapRobCtrl()
     fm["ROB_CONN_OFF"] = DisconnectRobot;
 
     return fm;
+}
+
+// Parse received messages into double vector
+// Input format has to be num1_num2_num3_ (cannot be num1_num2_num3)
+std::vector<double> ParseString2DoubleVec(std::string s)
+{
+	std::vector<double> vec;
+	std::string delimiter = "_";
+	size_t pos = 0;
+	while ((pos = s.find(delimiter)) != std::string::npos) 
+	{
+	    vec.push_back(std::stod(s.substr(0, pos)));
+	    s.erase(0, pos + delimiter.length());
+	}
+	return vec;
 }
 
 void GetJntsAngs(std::string& ss, PublisherVec& pubs)
@@ -149,12 +165,30 @@ void SessionReinit(std::string& ss, PublisherVec& pubs)
 
 void ManualAdjustT(std::string& ss, PublisherVec& pubs)
 {
-    
+    std::vector<double>  vec = ParseString2DoubleVec(ss+"_0.0_0.0_0.0_");
+    std_msgs::Float32MultiArray msg;
+    msg.layout.dim.push_back(std_msgs::MultiArrayDimension());
+    msg.layout.dim[0].size = 6;
+    msg.layout.dim[0].stride = 1;
+    msg.layout.dim[0].label = "format__x_y_z_rz_ry_rx"; // euler angles
+    msg.data.clear();
+    msg.data.insert(msg.data.end(), vec.begin(), vec.end());
+    // pubs[2] is the publisher /RobCtrl/MotionAdjust
+    pubs[2].publish(msg);
 }
 
 void ManualAdjustR(std::string& ss, PublisherVec& pubs)
 {
-    
+    std::vector<double>  vec = ParseString2DoubleVec("0.0_0.0_0.0_"+ss+"_");
+    std_msgs::Float32MultiArray msg;
+    msg.layout.dim.push_back(std_msgs::MultiArrayDimension());
+    msg.layout.dim[0].size = 6;
+    msg.layout.dim[0].stride = 1;
+    msg.layout.dim[0].label = "format__x_y_z_rz_ry_rx"; // euler angles
+    msg.data.clear();
+    msg.data.insert(msg.data.end(), vec.begin(), vec.end());
+    // pubs[2] is the publisher /RobCtrl/MotionAdjust
+    pubs[2].publish(msg);
 }
 
 void ConnectRobot(std::string& ss, PublisherVec& pubs)

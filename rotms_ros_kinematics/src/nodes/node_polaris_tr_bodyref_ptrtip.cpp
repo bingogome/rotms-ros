@@ -39,15 +39,33 @@ public:
     TransformMngrBodyrefPtrtip(ros::NodeHandle& n) : n_(n){}
     bool run_flag = false;
 
+    tf2::Transform tr_pol_bodyref_;
+    tf2::Transform tr_pol_ptr_;
+
 private:
 
     ros::NodeHandle& n_;
     ros::Subscriber sub_run_ = n_.subscribe(
         "/Kinematics/Flag_bodyref_ptrtip", 2, &TransformMngrBodyrefPtrtip::FlagCallBack, this);
+    ros::Subscriber sub_tr_pol_bodyref_ = n_.subscribe(
+        "/NDI/HeadRef/local/measured_cp", 2, &TransformMngrBodyrefPtrtip::PolBodyRefCallBack, this);
+    ros::Subscriber sub_tr_pol_ptr_ = n_.subscribe(
+        "/NDI/PointerNew/local/measured_cp", 2, &TransformMngrBodyrefPtrtip::PolPtrCallBack, this);
+
     void FlagCallBack(const std_msgs::String::ConstPtr& msg)
     {
         if(msg->data.compare("_start__")==0) run_flag = true;
         if(msg->data.compare("_end__")==0) run_flag = false;
+    }
+
+    void PolBodyRefCallBack(const geometry_msgs::TransformStamped::ConstPtr& msg)
+    {
+        if(run_flag) tr_pol_bodyref_ = ConvertToTf2Transform(msg);
+    }
+
+    void PolPtrCallBack(const geometry_msgs::TransformStamped::ConstPtr& msg)
+    {
+        if(run_flag) tr_pol_ptr_ = ConvertToTf2Transform(msg);
     }
 };
 
@@ -62,8 +80,6 @@ int main(int argc, char **argv)
     TransformMngrBodyrefPtrtip mngr1(nh);
 
     // Initialize the requred transforms
-    geometry_msgs::TransformStampedConstPtr tr_pol_bodyref;
-    geometry_msgs::TransformStampedConstPtr tr_pol_ptr;
     geometry_msgs::PoseConstPtr tr_ptr_ptrtip = ros::topic::waitForMessage<geometry_msgs::Pose>(
         "/Kinematics/TR_ptr_ptrtip");
 
@@ -85,13 +101,8 @@ int main(int argc, char **argv)
     {
         if (mngr1.run_flag)
         {
-            tr_pol_bodyref = ros::topic::waitForMessage<geometry_msgs::TransformStamped>(
-                "/NDI/HeadRef/local/measured_cp");
-            tr_pol_ptr = ros::topic::waitForMessage<geometry_msgs::TransformStamped>(
-                "/NDI/PointerNew/local/measured_cp");
-
-            tr_pol_bodyref_ = ConvertToTf2Transform(tr_pol_bodyref);
-            tr_pol_ptr_ = ConvertToTf2Transform(tr_pol_ptr);
+            tr_pol_bodyref_ = mngr1.tr_pol_bodyref_;
+            tr_pol_ptr_ = mngr1.tr_pol_ptr_;
 
             tr_bodyref_ptrtip_ = tr_pol_bodyref_.inverse() * tr_pol_ptr_ * tr_ptr_ptrtip_;
             tr_bodyref_ptrtip = ConvertToGeometryPose(tr_bodyref_ptrtip_);
