@@ -1,0 +1,10 @@
+<launch>
+    <node name="node_comm_end" pkg="rotms_ros_comm" type="node_comm_end" output="screen"/>
+    <node name="node_medimg_comm_in" pkg="rotms_ros_comm" type="node_medimg_comm_in" output="screen"/>
+    <node name="node_robctrl_comm_in" pkg="rotms_ros_comm" type="node_robctrl_comm_in" output="screen"/>
+    <node name="node_targetviz_comm_in" pkg="rotms_ros_comm" type="node_targetviz_comm_in" output="screen"/>
+    <node name="node_medimg_comm_out" pkg="rotms_ros_comm" type="node_medimg_comm_out" output="screen"/>
+    <node name="node_robctrl_comm_out" pkg="rotms_ros_comm" type="node_robctrl_comm_out" output="screen"/>
+    <node name="node_targetviz_comm_out" pkg="rotms_ros_comm" type="node_targetviz_comm_out" output="screen"/>
+    <node name="node_targetviz_comm_hif_out" pkg="rotms_ros_comm" type="node_targetviz_comm_hif_out" output="screen"/>
+</launch>
