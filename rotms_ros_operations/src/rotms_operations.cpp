@@ -92,9 +92,8 @@ void TMSOperations::OperationDigitization()
         ROS_GREEN_STREAM("[ROTMS INFO] User digitized one point " + std::to_string(i));
     }
 
-    // Poke polaris_tr_bodyref_ptrtip node /Kinematics/Flag_bodyref_ptrtip
-    flag_start.data = "_end__";
-    pub_run_polaris_tr_bodyref_ptrtip_.publish(flag_start);
+    // ROS_INFO_STREAM(num_of_landmarks);
+    // datacache_.landmark_total = num_of_landmarks;
 
     // Check validity and save
     if (datacache_.landmarkdig.size()!=num_of_landmarks)
