@@ -498,11 +498,11 @@ void Dispatcher::ExecuteBackOffsetCallBack(const std_msgs::String::ConstPtr& msg
 void Dispatcher::ExecuteBackInitCallBack(const std_msgs::String::ConstPtr& msg)
 {
     if(!msg->data.compare("_backinit__")==0) return;
-    if(activated_state_!=0b1111)
-    {
-        ROS_YELLOW_STREAM("[ROTMS WARNING] The prerequisites are not met. Check before robot motion. (code 3)");
-        return;
-    }
+    // if(activated_state_!=0b1111)
+    // {
+    //     ROS_YELLOW_STREAM("[ROTMS WARNING] The prerequisites are not met. Check before robot motion. (code 3)");
+    //     return;
+    // }
     std::string packpath = ros::package::getPath("rotms_ros_operations");
     std::vector<double> vec = ReadJntsFromConfig(packpath + "/share/config/initjnts.yaml");
     std_msgs::Float32MultiArray msg_out;
