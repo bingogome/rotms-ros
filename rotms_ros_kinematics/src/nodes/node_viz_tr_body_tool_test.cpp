@@ -75,7 +75,7 @@ int main(int argc, char **argv)
         if (mngr.run_flag)
         {
             t+=1;
-            msg_out.data = "__msg_pose_0010.00000_" + std::to_string(10.0+10*sin(0.5*t)) + "_0000.00000_0000.00000_0000.00000_0000.00000_0001.00000";
+            msg_out.data = "__msg_pose_0010.00000_" + std::to_string(10.0+50*sin(0.5*t)) + "_0000.00000_0000.00000_0000.00000_0000.00000_0001.00000";
             pub_encode_body_tool.publish(msg_out);
         }
         ros::spinOnce();
