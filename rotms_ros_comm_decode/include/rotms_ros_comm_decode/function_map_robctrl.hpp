@@ -56,6 +56,7 @@ void ExecuteMoveConfirm(std::string& ss, PublisherVec& pubs);
 void ExecuteEndAndBack(std::string& ss, PublisherVec& pubs);
 void ExecuteBackInit(std::string& ss, PublisherVec& pubs);
 void ExecuteBackOffset(std::string& ss, PublisherVec& pubs);
+void ExecuteRobotHoming(std::string& ss, PublisherVec& pubs);
 
 void SessionReinit(std::string& ss, PublisherVec& pubs);
 

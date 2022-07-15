@@ -473,46 +473,55 @@ void Dispatcher::ExecuteMotionToTargetEFFPose()
     ROS_GREEN_STREAM("[ROTMS INFO] End of robot motion call. ");
 }
 
-void Dispatcher::ExecuteBackOffsetCallBack(const std_msgs::String::ConstPtr& msg)
+void Dispatcher::ExecuteBackToCallBack(const std_msgs::String::ConstPtr& msg)
 {
-    if(!msg->data.compare("_backoffset__")==0) return;
-    if(activated_state_!=0b1111)
+    if(msg->data.compare("_backoffset__")==0)
     {
-        ROS_YELLOW_STREAM("[ROTMS WARNING] The prerequisites are not met. Check before robot motion. (code 3)");
-        return;
+        if(activated_state_!=0b1111)
+        {
+            ROS_YELLOW_STREAM("[ROTMS WARNING] The prerequisites are not met. Check before robot motion. (code 3)");
+            return;
+        }
+        geometry_msgs::Pose changeoffset;
+        std::string packpath = ros::package::getPath("rotms_ros_kinematics");
+        YAML::Node f = YAML::LoadFile(packpath + "/share/cntct_offset.yaml");
+        changeoffset.position.x = f["x"].as<double>();
+        changeoffset.position.y = f["y"].as<double>();
+        changeoffset.position.z = f["z"].as<double>();
+        changeoffset.orientation.x = f["rx"].as<double>();
+        changeoffset.orientation.y = f["ry"].as<double>();
+        changeoffset.orientation.z = f["rz"].as<double>();
+        changeoffset.orientation.w = f["rw"].as<double>();
+        pub_changeoffset_.publish(changeoffset);
+        Dispatcher::ExecuteMotionToTargetEFFPose();
     }
-    geometry_msgs::Pose changeoffset;
-    std::string packpath = ros::package::getPath("rotms_ros_kinematics");
-	YAML::Node f = YAML::LoadFile(packpath + "/share/cntct_offset.yaml");
-    changeoffset.position.x = f["x"].as<double>();
-    changeoffset.position.y = f["y"].as<double>();
-    changeoffset.position.z = f["z"].as<double>();
-    changeoffset.orientation.x = f["rx"].as<double>();
-    changeoffset.orientation.y = f["ry"].as<double>();
-    changeoffset.orientation.z = f["rz"].as<double>();
-    changeoffset.orientation.w = f["rw"].as<double>();
-    pub_changeoffset_.publish(changeoffset);
-    Dispatcher::ExecuteMotionToTargetEFFPose();
-}
-
-void Dispatcher::ExecuteBackInitCallBack(const std_msgs::String::ConstPtr& msg)
-{
-    if(!msg->data.compare("_backinit__")==0) return;
-    // if(activated_state_!=0b1111)
-    // {
-    //     ROS_YELLOW_STREAM("[ROTMS WARNING] The prerequisites are not met. Check before robot motion. (code 3)");
-    //     return;
-    // }
-    std::string packpath = ros::package::getPath("rotms_ros_operations");
-    std::vector<double> vec = ReadJntsFromConfig(packpath + "/share/config/initjnts.yaml");
-    std_msgs::Float32MultiArray msg_out;
-    msg_out.layout.dim.push_back(std_msgs::MultiArrayDimension());
-    msg_out.layout.dim[0].size = vec.size(); 
-    msg_out.layout.dim[0].stride = 1;
-    msg_out.layout.dim[0].label = "format__";
-    msg_out.data.clear();
-    msg_out.data.insert(msg_out.data.end(), vec.begin(), vec.end());
-    pub_robjntmove_.publish(msg_out);
+    if(msg->data.compare("_backinit__")==0)
+    {
+        std::string packpath = ros::package::getPath("rotms_ros_operations");
+        std::vector<double> vec = ReadJntsFromConfig(packpath + "/share/config/initjnts.yaml");
+        std_msgs::Float32MultiArray msg_out;
+        msg_out.layout.dim.push_back(std_msgs::MultiArrayDimension());
+        msg_out.layout.dim[0].size = vec.size(); 
+        msg_out.layout.dim[0].stride = 1;
+        msg_out.layout.dim[0].label = "format__a1_a2_a3_a4_a5_a6_a7_";
+        msg_out.data.clear();
+        msg_out.data.insert(msg_out.data.end(), vec.begin(), vec.end());
+        pub_robjntmove_.publish(msg_out);
+    }
+    if(msg->data.compare("_robothoming__")==0) 
+    {
+        std::vector<double> vec{
+            0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+        std_msgs::Float32MultiArray msg_out;
+        msg_out.layout.dim.push_back(std_msgs::MultiArrayDimension());
+        msg_out.layout.dim[0].size = vec.size(); 
+        msg_out.layout.dim[0].stride = 1;
+        msg_out.layout.dim[0].label = "format__a1_a2_a3_a4_a5_a6_a7_";
+        msg_out.data.clear();
+        msg_out.data.insert(msg_out.data.end(), vec.begin(), vec.end());
+        pub_robjntmove_.publish(msg_out);
+    }
+    
 }
 
 void Dispatcher::TargetVizCallBack(const std_msgs::String::ConstPtr& msg)

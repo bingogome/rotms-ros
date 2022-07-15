@@ -29,6 +29,7 @@
     "EXECUTE_ENDBACK": "end_session_back",
     "EXECUTE_BACKINIT": "execute_backinit",
     "EXECUTE_BACKOFFSET": "execute_bkoffset",
+    "EXECUTE_ROB_HOMING": "execute_homexxxx",
 
     "SESSION_REINIT": "session_reinitxx",
     

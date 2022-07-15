@@ -77,10 +77,8 @@ private:
         "/RobCtrl/Motion", 2, &Dispatcher::ExecuteMotionToOffsetCallBack, this);
     ros::Subscriber sub_robctrl_executeconfirm_ = n_.subscribe(
         "/RobCtrl/Motion", 2, &Dispatcher::ExecuteConfirmMotionCallBack, this);
-    ros::Subscriber sub_robctrl_executebackoffset_ = n_.subscribe(
-        "/RobCtrl/Motion", 2, &Dispatcher::ExecuteBackOffsetCallBack, this);
-    ros::Subscriber sub_robctrl_executebackinit_ = n_.subscribe(
-        "/RobCtrl/Motion", 2, &Dispatcher::ExecuteBackInitCallBack, this);
+    ros::Subscriber sub_robctrl_executebackto_ = n_.subscribe(
+        "/RobCtrl/Motion", 2, &Dispatcher::ExecuteBackToCallBack, this);
     ros::Subscriber sub_robctrl_executemanadjust_ = n_.subscribe(
         "/RobCtrl/MotionAdjust", 2, &Dispatcher::ExecuteManualAdjust, this);
     ros::Subscriber sub_robctrl_sessionreinit_ = n_.subscribe(
@@ -130,8 +128,7 @@ private:
     void ExecuteMotionToOffsetCallBack(const std_msgs::String::ConstPtr& msg);
     void ExecuteConfirmMotionCallBack(const std_msgs::String::ConstPtr& msg);
     void ExecuteMotionToTargetEFFPose();
-    void ExecuteBackOffsetCallBack(const std_msgs::String::ConstPtr& msg);
-    void ExecuteBackInitCallBack(const std_msgs::String::ConstPtr& msg);
+    void ExecuteBackToCallBack(const std_msgs::String::ConstPtr& msg);
     void ExecuteManualAdjust(const std_msgs::Float32MultiArray::ConstPtr& msg);
 
     // Robot interface

@@ -65,6 +65,7 @@ FuncMap GetFuncMapRobCtrl()
     fm["EXECUTE_ENDBACK"] = ExecuteEndAndBack;
     fm["EXECUTE_BACKINIT"] = ExecuteBackInit;
     fm["EXECUTE_BACKOFFSET"] = ExecuteBackOffset;
+    fm["EXECUTE_ROB_HOMING"] = ExecuteRobotHoming;
 
     fm["SESSION_REINIT"] = SessionReinit;
 
@@ -154,6 +155,14 @@ void ExecuteBackOffset(std::string& ss, PublisherVec& pubs)
     pubs[1].publish(msg_test);
 }
 
+void ExecuteRobotHoming(std::string& ss, PublisherVec& pubs)
+{
+    std_msgs::String msg_test;
+    msg_test.data = "_robothoming__";
+    // pubs[1] is the publisher /RobCtrl/Motion
+    pubs[1].publish(msg_test);
+}
+
 void SessionReinit(std::string& ss, PublisherVec& pubs)
 {
     std_msgs::String msg_test;
@@ -161,7 +170,6 @@ void SessionReinit(std::string& ss, PublisherVec& pubs)
     // pubs[3] is the publisher /RobCtrl/Session
     pubs[3].publish(msg_test);
 }
-
 
 void ManualAdjustT(std::string& ss, PublisherVec& pubs)
 {
