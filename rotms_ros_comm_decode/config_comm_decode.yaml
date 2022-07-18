@@ -7,6 +7,8 @@
     "START_AUTO_DIGITIZE": "start_autodigitz",
     "START_REGISTRATION": "start_registrati",
     "START_USE_PREV_REGISTRATION": "start_useprevreg",
+    "START_TRE_CALCULATION_START": "tre_startcalcuxx",
+    "START_TRE_CALCULATION_STOP": "tre_stopcalcuxxx",
 
     "LANDMARK_CURRENT_ON_IMG": "img_fid_pntxxxxx",
     "LANDMARK_NUM_OF_ON_IMG": "img_fid_numxxxxx",

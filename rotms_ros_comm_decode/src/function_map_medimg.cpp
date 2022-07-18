@@ -79,6 +79,8 @@ FuncMap GetFuncMapMedImg()
     fm["START_AUTO_DIGITIZE"] = StartAutoDigitize;
     fm["START_REGISTRATION"] = StartRegistration;
     fm["START_USE_PREV_REGISTRATION"] = StartUsePrevRegistration;
+    fm["START_TRE_CALCULATION_START"] = StartTRECalculation;
+    fm["START_TRE_CALCULATION_STOP"] = StopTRECalculation;
 
     fm["LANDMARK_CURRENT_ON_IMG"] = LandmarkCurrentOnImg;
     fm["LANDMARK_NUM_OF_ON_IMG"] = LandmarkNumOnImg;
@@ -111,6 +113,22 @@ void StartUsePrevRegistration(std::string& ss, PublisherVec& pubs)
     // pubs[0] is the publisher /MedImg/StartAct
     std_msgs::String msg;
     msg.data = "_prevregister__";
+    pubs[0].publish(msg);
+}
+
+void StartTRECalculation(std::string& ss, PublisherVec& pubs)
+{
+    // pubs[0] is the publisher /MedImg/StartAct
+    std_msgs::String msg;
+    msg.data = "_starttre__";
+    pubs[0].publish(msg);
+}
+
+void StopTRECalculation(std::string& ss, PublisherVec& pubs)
+{
+    // pubs[0] is the publisher /MedImg/StartAct
+    std_msgs::String msg;
+    msg.data = "_stoptre__";
     pubs[0].publish(msg);
 }
 

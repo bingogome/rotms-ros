@@ -194,6 +194,37 @@ void Dispatcher::RegistrationResidualCheck()
     pub_medplancomm_.publish(resid_msg);
 }
 
+void Dispatcher::TRECalculationCallBack(const std_msgs::String::ConstPtr& msg){
+    if (msg->data.compare("_starttre__")==0)
+    {
+        if(activated_state_ != 0b1101 && activated_state_!= 0b1111)
+        {
+            ROS_YELLOW_STREAM("Current state: " + std::to_string(activated_state_));
+            ROS_YELLOW_STREAM("[ROTMS WARNING] Prerequisite is not met!");
+            return;
+        }
+        // Poke opttracker_tr_bodyref_ptrtip node /Kinematics/Flag_bodyref_ptrtip
+        std_msgs::String flag_opttracker;
+        flag_opttracker.data = "_start__";
+        pub_run_opttracker_tr_bodyref_ptrtip_.publish(flag_opttracker);
+        // Poke node_TRE_t_body_ptrtip
+        std_msgs::String msg_out;
+        msg_out.data = "_start__";
+        pub_flag_t_body_ptrtip_.publish(msg_out);
+    }
+    if (msg->data.compare("_stoptre__")==0)
+    {
+        // Poke node_TRE_t_body_ptrtip
+        std_msgs::String msg_out;
+        msg_out.data = "_end__";
+        pub_flag_t_body_ptrtip_.publish(msg_out);
+        // Poke opttracker_tr_bodyref_ptrtip node /Kinematics/Flag_bodyref_ptrtip
+        std_msgs::String flag_opttracker;
+        flag_opttracker.data = "_end__";
+        pub_run_opttracker_tr_bodyref_ptrtip_.publish(flag_opttracker);
+    }
+}
+
 void Dispatcher::ToolPoseOrientCallBack(const geometry_msgs::Quaternion::ConstPtr& msg)
 {
     std::vector<double> toolpose_r{

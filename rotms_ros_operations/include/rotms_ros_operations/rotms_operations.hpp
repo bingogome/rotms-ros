@@ -63,7 +63,7 @@ private:
         n_.advertise<rotms_ros_msgs::PoseValid>("/Kinematics/TR_bodyref_body", 1, true);
     ros::Publisher pub_toolpose_ = 
         n_.advertise<rotms_ros_msgs::PoseValid>("/Kinematics/TR_body_cntct", 1, true);
-    ros::Publisher pub_run_polaris_tr_bodyref_ptrtip_ = 
+    ros::Publisher pub_run_opttracker_tr_bodyref_ptrtip_ = 
         n_.advertise<std_msgs::String>("/Kinematics/Flag_bodyref_ptrtip", 2);
 
     struct OpsVolatileTempDataCache datacache_;

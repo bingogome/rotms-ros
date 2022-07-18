@@ -59,6 +59,8 @@ private:
         "/MedImg/StartAct", 2, &Dispatcher::AutodigitizationCallBack, this);
     ros::Subscriber sub_medimg_registration_ = n_.subscribe(
         "/MedImg/StartAct", 2, &Dispatcher::RegistrationCallBack, this);
+    ros::Subscriber sub_medimg_tre_ = n_.subscribe(
+        "/MedImg/StartAct", 2, &Dispatcher::TRECalculationCallBack, this);
     ros::Subscriber sub_medimg_toolposeorient_ = n_.subscribe(
         "/MedImg/ToolPoseOrient", 2, &Dispatcher::ToolPoseOrientCallBack, this);
     ros::Subscriber sub_medimg_toolposetrans_ = n_.subscribe(
@@ -105,7 +107,11 @@ private:
         "/Kinematics/Query_ReInit", 2);
     ros::Publisher pub_flag_bodytoolviz_ = n_.advertise<std_msgs::String>(
         "/Kinematics/Flag_body_tool", 2);
-
+    ros::Publisher pub_flag_t_body_ptrtip_ = n_.advertise<std_msgs::String>(
+        "/Kinematics/Flag_t_body_ptrtip", 2);
+    ros::Publisher pub_run_opttracker_tr_bodyref_ptrtip_ = n_.advertise<std_msgs::String>(
+        "/Kinematics/Flag_bodyref_ptrtip", 2);
+        
     // Cruicial operations (operations that affect main user logic and its states/flags/operations)
     void LandmarkPlanMetaCallBack(const std_msgs::Int16::ConstPtr& msg);
     void AutodigitizationCallBack(const std_msgs::String::ConstPtr& msg);
@@ -118,6 +124,7 @@ private:
     void SessionReinitCallBack(const std_msgs::String::ConstPtr& msg);
     void TargetVizCallBack(const std_msgs::String::ConstPtr& msg);
     void RegistrationResidualCheck();
+    void TRECalculationCallBack(const std_msgs::String::ConstPtr& msg);
 
     // Robot operations
     void UpdateRobotConnFlagCallBack(const std_msgs::Bool::ConstPtr& msg);

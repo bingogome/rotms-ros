@@ -23,15 +23,15 @@ SOFTWARE.
 ***/
 
 #include <ros/ros.h>
-#include <ros_side_out_node.hpp>
+#include <ros_side_hif_out_node.hpp>
 #include <ros_side_out.hpp>
 
 int main(int argc, char **argv)
 {
-	ros::init(argc, argv, "CommOutTargetViz");
+	ros::init(argc, argv, "CommHiFOutMedImg");
     ros::NodeHandle n;
 
-	ROSSideOutAndAck server = CommNodeOutAndAckIniter(n, "TARGETVIZ");
+	ROSSideOut server = CommNodeHiFOutIniter(n, "MEDIMG");
 
 	ros::spin();
 	return 0;

@@ -31,7 +31,7 @@ int main(int argc, char **argv)
 	ros::init(argc, argv, "CommOutMedImg");
     ros::NodeHandle n;
 
-	ROSSideOut server = CommNodeOutIniter(n, "MEDIMG");
+	ROSSideOutAndAck server = CommNodeOutAndAckIniter(n, "MEDIMG");
 
 	ros::spin();
 	return 0;

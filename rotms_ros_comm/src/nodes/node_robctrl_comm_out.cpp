@@ -31,7 +31,7 @@ int main(int argc, char **argv)
 	ros::init(argc, argv, "CommOutRobCtrl");
     ros::NodeHandle n;
 
-	ROSSideOut server = CommNodeOutIniter(n, "ROBCTRL");
+	ROSSideOutAndAck server = CommNodeOutAndAckIniter(n, "ROBCTRL");
 
 	ros::spin();
 	return 0;

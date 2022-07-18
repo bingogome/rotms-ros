@@ -72,7 +72,7 @@ private:
 int main(int argc, char **argv)
 {
     // ROS stuff
-    ros::init(argc, argv, "NodePolarisTrBodyrefPtrtip");
+    ros::init(argc, argv, "NodeOpttrackerTrBodyrefPtrtip");
     ros::NodeHandle nh;
     ros::Rate rate(50.0);
 

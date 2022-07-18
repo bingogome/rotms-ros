@@ -62,12 +62,12 @@ void TMSOperations::OperationDigitization()
     ROS_INFO_STREAM(num_of_landmarks);
     datacache_.landmark_total = num_of_landmarks;
 
-    // Poke polaris_tr_bodyref_ptrtip node /Kinematics/Flag_bodyref_ptrtip
+    // Poke opttracker_tr_bodyref_ptrtip node /Kinematics/Flag_bodyref_ptrtip
     std_msgs::String flag_start;
     flag_start.data = "_start__";
-    pub_run_polaris_tr_bodyref_ptrtip_.publish(flag_start);
+    pub_run_opttracker_tr_bodyref_ptrtip_.publish(flag_start);
 
-    // Beep the Polaris 3 times to indicate get prepared for digitization
+    // Beep the Opttracker 3 times to indicate get prepared for digitization
     ros::Publisher pub_beep = n_.advertise<std_msgs::Int32>("/NDI/beep", 10);
     ros::Duration(3).sleep();
     std_msgs::Int32 beep_num;
@@ -92,9 +92,9 @@ void TMSOperations::OperationDigitization()
         ROS_GREEN_STREAM("[ROTMS INFO] User digitized one point " + std::to_string(i));
     }
 
-    // Poke polaris_tr_bodyref_ptrtip node /Kinematics/Flag_bodyref_ptrtip
+    // Poke opttracker_tr_bodyref_ptrtip node /Kinematics/Flag_bodyref_ptrtip
     flag_start.data = "_end__";
-    pub_run_polaris_tr_bodyref_ptrtip_.publish(flag_start);
+    pub_run_opttracker_tr_bodyref_ptrtip_.publish(flag_start);
 
     // Check validity and save
     if (datacache_.landmarkdig.size()!=num_of_landmarks)
