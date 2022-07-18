@@ -58,7 +58,7 @@ private:
 
     void BodyRefBodyCallBack(const rotms_ros_msgs::PoseValid::ConstPtr& msg)
     {
-        if(run_flag) if(msg->valid) tr_body_bodyref_ = ConvertToTf2Transform(msg).inverse();
+        if(msg->valid) tr_body_bodyref_ = ConvertToTf2Transform(msg).inverse();
     }
 
     void BodyRefPtrtipCallBack(const geometry_msgs::Point::ConstPtr& msg)
