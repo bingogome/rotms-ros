@@ -1,0 +1,151 @@
+\hypertarget{classMngrTrBodyTool}{}\doxysection{Mngr\+Tr\+Body\+Tool Class Reference}
+\label{classMngrTrBodyTool}\index{MngrTrBodyTool@{MngrTrBodyTool}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classMngrTrBodyTool_a7873a83a5333da4d6f3ff1e24167178e}{Mngr\+Tr\+Body\+Tool}} (ros\+::\+Node\+Handle \&n)
+\item 
+\mbox{\hyperlink{classMngrTrBodyTool_a7873a83a5333da4d6f3ff1e24167178e}{Mngr\+Tr\+Body\+Tool}} (ros\+::\+Node\+Handle \&n)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{classMngrTrBodyTool_a2a1cec0211f864ab6674b6c9c1f9ab9e}{run\+\_\+flag}} = false
+\item 
+tf2\+::\+Transform \mbox{\hyperlink{classMngrTrBodyTool_a40a66a9249a074e57352f059f5271b31}{tr\+\_\+pol\+\_\+bodyref\+\_\+}}
+\item 
+tf2\+::\+Transform \mbox{\hyperlink{classMngrTrBodyTool_a82abfd177d23ca4cc5a050873a5947db}{tr\+\_\+pol\+\_\+toolref\+\_\+}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classMngrTrBodyTool_a058be512614df06f2cd9af12cbb11ad6}{Flag\+Call\+Back}} (const std\+\_\+msgs\+::\+String\+::\+Const\+Ptr \&msg)
+\item 
+void \mbox{\hyperlink{classMngrTrBodyTool_af01a84d4a443e241066111e51bd3ba00}{Pol\+Body\+Ref\+Call\+Back}} (const geometry\+\_\+msgs\+::\+Transform\+Stamped\+::\+Const\+Ptr \&msg)
+\item 
+void \mbox{\hyperlink{classMngrTrBodyTool_a7bcd444a34337083ebb701a08bd3214b}{Pol\+Tool\+Ref\+Call\+Back}} (const geometry\+\_\+msgs\+::\+Transform\+Stamped\+::\+Const\+Ptr \&msg)
+\item 
+void \mbox{\hyperlink{classMngrTrBodyTool_a058be512614df06f2cd9af12cbb11ad6}{Flag\+Call\+Back}} (const std\+\_\+msgs\+::\+String\+::\+Const\+Ptr \&msg)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+ros\+::\+Node\+Handle \& \mbox{\hyperlink{classMngrTrBodyTool_aa8c7dde9d9a1263bedea0795974033d0}{n\+\_\+}}
+\item 
+ros\+::\+Subscriber \mbox{\hyperlink{classMngrTrBodyTool_a78bbe5d0113960de95027cf282e16c26}{sub\+\_\+run\+\_\+}}
+\item 
+ros\+::\+Subscriber \mbox{\hyperlink{classMngrTrBodyTool_a17c0083427acc2eaa83710e8a2e8c63a}{sub\+\_\+tr\+\_\+pol\+\_\+bodyref\+\_\+}}
+\item 
+ros\+::\+Subscriber \mbox{\hyperlink{classMngrTrBodyTool_a17ac1ae5fc2706116db537abece1d961}{sub\+\_\+tr\+\_\+pol\+\_\+toolref\+\_\+}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classMngrTrBodyTool_a7873a83a5333da4d6f3ff1e24167178e}\label{classMngrTrBodyTool_a7873a83a5333da4d6f3ff1e24167178e}} 
+\index{MngrTrBodyTool@{MngrTrBodyTool}!MngrTrBodyTool@{MngrTrBodyTool}}
+\index{MngrTrBodyTool@{MngrTrBodyTool}!MngrTrBodyTool@{MngrTrBodyTool}}
+\doxysubsubsection{\texorpdfstring{MngrTrBodyTool()}{MngrTrBodyTool()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classMngrTrBodyTool}{Mngr\+Tr\+Body\+Tool\+::\+Mngr\+Tr\+Body\+Tool}} (\begin{DoxyParamCaption}\item[{ros\+::\+Node\+Handle \&}]{n }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classMngrTrBodyTool_a7873a83a5333da4d6f3ff1e24167178e}\label{classMngrTrBodyTool_a7873a83a5333da4d6f3ff1e24167178e}} 
+\index{MngrTrBodyTool@{MngrTrBodyTool}!MngrTrBodyTool@{MngrTrBodyTool}}
+\index{MngrTrBodyTool@{MngrTrBodyTool}!MngrTrBodyTool@{MngrTrBodyTool}}
+\doxysubsubsection{\texorpdfstring{MngrTrBodyTool()}{MngrTrBodyTool()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classMngrTrBodyTool}{Mngr\+Tr\+Body\+Tool\+::\+Mngr\+Tr\+Body\+Tool}} (\begin{DoxyParamCaption}\item[{ros\+::\+Node\+Handle \&}]{n }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classMngrTrBodyTool_a058be512614df06f2cd9af12cbb11ad6}\label{classMngrTrBodyTool_a058be512614df06f2cd9af12cbb11ad6}} 
+\index{MngrTrBodyTool@{MngrTrBodyTool}!FlagCallBack@{FlagCallBack}}
+\index{FlagCallBack@{FlagCallBack}!MngrTrBodyTool@{MngrTrBodyTool}}
+\doxysubsubsection{\texorpdfstring{FlagCallBack()}{FlagCallBack()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Mngr\+Tr\+Body\+Tool\+::\+Flag\+Call\+Back (\begin{DoxyParamCaption}\item[{const std\+\_\+msgs\+::\+String\+::\+Const\+Ptr \&}]{msg }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+\mbox{\Hypertarget{classMngrTrBodyTool_a058be512614df06f2cd9af12cbb11ad6}\label{classMngrTrBodyTool_a058be512614df06f2cd9af12cbb11ad6}} 
+\index{MngrTrBodyTool@{MngrTrBodyTool}!FlagCallBack@{FlagCallBack}}
+\index{FlagCallBack@{FlagCallBack}!MngrTrBodyTool@{MngrTrBodyTool}}
+\doxysubsubsection{\texorpdfstring{FlagCallBack()}{FlagCallBack()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void Mngr\+Tr\+Body\+Tool\+::\+Flag\+Call\+Back (\begin{DoxyParamCaption}\item[{const std\+\_\+msgs\+::\+String\+::\+Const\+Ptr \&}]{msg }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+\mbox{\Hypertarget{classMngrTrBodyTool_af01a84d4a443e241066111e51bd3ba00}\label{classMngrTrBodyTool_af01a84d4a443e241066111e51bd3ba00}} 
+\index{MngrTrBodyTool@{MngrTrBodyTool}!PolBodyRefCallBack@{PolBodyRefCallBack}}
+\index{PolBodyRefCallBack@{PolBodyRefCallBack}!MngrTrBodyTool@{MngrTrBodyTool}}
+\doxysubsubsection{\texorpdfstring{PolBodyRefCallBack()}{PolBodyRefCallBack()}}
+{\footnotesize\ttfamily void Mngr\+Tr\+Body\+Tool\+::\+Pol\+Body\+Ref\+Call\+Back (\begin{DoxyParamCaption}\item[{const geometry\+\_\+msgs\+::\+Transform\+Stamped\+::\+Const\+Ptr \&}]{msg }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+\mbox{\Hypertarget{classMngrTrBodyTool_a7bcd444a34337083ebb701a08bd3214b}\label{classMngrTrBodyTool_a7bcd444a34337083ebb701a08bd3214b}} 
+\index{MngrTrBodyTool@{MngrTrBodyTool}!PolToolRefCallBack@{PolToolRefCallBack}}
+\index{PolToolRefCallBack@{PolToolRefCallBack}!MngrTrBodyTool@{MngrTrBodyTool}}
+\doxysubsubsection{\texorpdfstring{PolToolRefCallBack()}{PolToolRefCallBack()}}
+{\footnotesize\ttfamily void Mngr\+Tr\+Body\+Tool\+::\+Pol\+Tool\+Ref\+Call\+Back (\begin{DoxyParamCaption}\item[{const geometry\+\_\+msgs\+::\+Transform\+Stamped\+::\+Const\+Ptr \&}]{msg }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classMngrTrBodyTool_aa8c7dde9d9a1263bedea0795974033d0}\label{classMngrTrBodyTool_aa8c7dde9d9a1263bedea0795974033d0}} 
+\index{MngrTrBodyTool@{MngrTrBodyTool}!n\_@{n\_}}
+\index{n\_@{n\_}!MngrTrBodyTool@{MngrTrBodyTool}}
+\doxysubsubsection{\texorpdfstring{n\_}{n\_}}
+{\footnotesize\ttfamily ros\+::\+Node\+Handle \& Mngr\+Tr\+Body\+Tool\+::n\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classMngrTrBodyTool_a2a1cec0211f864ab6674b6c9c1f9ab9e}\label{classMngrTrBodyTool_a2a1cec0211f864ab6674b6c9c1f9ab9e}} 
+\index{MngrTrBodyTool@{MngrTrBodyTool}!run\_flag@{run\_flag}}
+\index{run\_flag@{run\_flag}!MngrTrBodyTool@{MngrTrBodyTool}}
+\doxysubsubsection{\texorpdfstring{run\_flag}{run\_flag}}
+{\footnotesize\ttfamily bool Mngr\+Tr\+Body\+Tool\+::run\+\_\+flag = false}
+
+\mbox{\Hypertarget{classMngrTrBodyTool_a78bbe5d0113960de95027cf282e16c26}\label{classMngrTrBodyTool_a78bbe5d0113960de95027cf282e16c26}} 
+\index{MngrTrBodyTool@{MngrTrBodyTool}!sub\_run\_@{sub\_run\_}}
+\index{sub\_run\_@{sub\_run\_}!MngrTrBodyTool@{MngrTrBodyTool}}
+\doxysubsubsection{\texorpdfstring{sub\_run\_}{sub\_run\_}}
+{\footnotesize\ttfamily ros\+::\+Subscriber Mngr\+Tr\+Body\+Tool\+::sub\+\_\+run\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \mbox{\hyperlink{classMngrTrBodyTool_aa8c7dde9d9a1263bedea0795974033d0}{n\_}}.subscribe(}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}/Kinematics/Flag\_body\_tool"{}}, 2, \&\mbox{\hyperlink{classMngrTrBodyTool_a058be512614df06f2cd9af12cbb11ad6}{MngrTrBodyTool::FlagCallBack}}, \textcolor{keyword}{this})}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{classMngrTrBodyTool_a17c0083427acc2eaa83710e8a2e8c63a}\label{classMngrTrBodyTool_a17c0083427acc2eaa83710e8a2e8c63a}} 
+\index{MngrTrBodyTool@{MngrTrBodyTool}!sub\_tr\_pol\_bodyref\_@{sub\_tr\_pol\_bodyref\_}}
+\index{sub\_tr\_pol\_bodyref\_@{sub\_tr\_pol\_bodyref\_}!MngrTrBodyTool@{MngrTrBodyTool}}
+\doxysubsubsection{\texorpdfstring{sub\_tr\_pol\_bodyref\_}{sub\_tr\_pol\_bodyref\_}}
+{\footnotesize\ttfamily ros\+::\+Subscriber Mngr\+Tr\+Body\+Tool\+::sub\+\_\+tr\+\_\+pol\+\_\+bodyref\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \mbox{\hyperlink{classMngrTrBodyTool_aa8c7dde9d9a1263bedea0795974033d0}{n\_}}.subscribe(}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}/NDI/HeadRef/local/measured\_cp"{}}, 2, \&\mbox{\hyperlink{classMngrTrBodyTool_af01a84d4a443e241066111e51bd3ba00}{MngrTrBodyTool::PolBodyRefCallBack}}, \textcolor{keyword}{this})}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{classMngrTrBodyTool_a17ac1ae5fc2706116db537abece1d961}\label{classMngrTrBodyTool_a17ac1ae5fc2706116db537abece1d961}} 
+\index{MngrTrBodyTool@{MngrTrBodyTool}!sub\_tr\_pol\_toolref\_@{sub\_tr\_pol\_toolref\_}}
+\index{sub\_tr\_pol\_toolref\_@{sub\_tr\_pol\_toolref\_}!MngrTrBodyTool@{MngrTrBodyTool}}
+\doxysubsubsection{\texorpdfstring{sub\_tr\_pol\_toolref\_}{sub\_tr\_pol\_toolref\_}}
+{\footnotesize\ttfamily ros\+::\+Subscriber Mngr\+Tr\+Body\+Tool\+::sub\+\_\+tr\+\_\+pol\+\_\+toolref\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \mbox{\hyperlink{classMngrTrBodyTool_aa8c7dde9d9a1263bedea0795974033d0}{n\_}}.subscribe(}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}/NDI/CoilRef/local/measured\_cp"{}}, 2, \&\mbox{\hyperlink{classMngrTrBodyTool_a7bcd444a34337083ebb701a08bd3214b}{MngrTrBodyTool::PolToolRefCallBack}}, \textcolor{keyword}{this})}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{classMngrTrBodyTool_a40a66a9249a074e57352f059f5271b31}\label{classMngrTrBodyTool_a40a66a9249a074e57352f059f5271b31}} 
+\index{MngrTrBodyTool@{MngrTrBodyTool}!tr\_pol\_bodyref\_@{tr\_pol\_bodyref\_}}
+\index{tr\_pol\_bodyref\_@{tr\_pol\_bodyref\_}!MngrTrBodyTool@{MngrTrBodyTool}}
+\doxysubsubsection{\texorpdfstring{tr\_pol\_bodyref\_}{tr\_pol\_bodyref\_}}
+{\footnotesize\ttfamily tf2\+::\+Transform Mngr\+Tr\+Body\+Tool\+::tr\+\_\+pol\+\_\+bodyref\+\_\+}
+
+\mbox{\Hypertarget{classMngrTrBodyTool_a82abfd177d23ca4cc5a050873a5947db}\label{classMngrTrBodyTool_a82abfd177d23ca4cc5a050873a5947db}} 
+\index{MngrTrBodyTool@{MngrTrBodyTool}!tr\_pol\_toolref\_@{tr\_pol\_toolref\_}}
+\index{tr\_pol\_toolref\_@{tr\_pol\_toolref\_}!MngrTrBodyTool@{MngrTrBodyTool}}
+\doxysubsubsection{\texorpdfstring{tr\_pol\_toolref\_}{tr\_pol\_toolref\_}}
+{\footnotesize\ttfamily tf2\+::\+Transform Mngr\+Tr\+Body\+Tool\+::tr\+\_\+pol\+\_\+toolref\+\_\+}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+rotms\+\_\+ros\+\_\+kinematics/src/nodes/\mbox{\hyperlink{node__viz__tr__body__tool_8cpp}{node\+\_\+viz\+\_\+tr\+\_\+body\+\_\+tool.\+cpp}}\item 
+rotms\+\_\+ros\+\_\+kinematics/src/nodes/\mbox{\hyperlink{node__viz__tr__body__tool__test_8cpp}{node\+\_\+viz\+\_\+tr\+\_\+body\+\_\+tool\+\_\+test.\+cpp}}\end{DoxyCompactItemize}

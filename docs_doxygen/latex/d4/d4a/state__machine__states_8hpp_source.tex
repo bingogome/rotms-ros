@@ -1,0 +1,145 @@
+\hypertarget{state__machine__states_8hpp_source}{}\doxysection{state\+\_\+machine\+\_\+states.\+hpp}
+\label{state__machine__states_8hpp_source}\index{rotms\_ros\_state/include/rotms\_ros\_state/state\_machine\_states.hpp@{rotms\_ros\_state/include/rotms\_ros\_state/state\_machine\_states.hpp}}
+\mbox{\hyperlink{state__machine__states_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/***}}
+\DoxyCodeLine{2 \textcolor{comment}{MIT License}}
+\DoxyCodeLine{3 \textcolor{comment}{}}
+\DoxyCodeLine{4 \textcolor{comment}{Copyright (c) 2022 Yihao Liu, Johns Hopkins University}}
+\DoxyCodeLine{5 \textcolor{comment}{}}
+\DoxyCodeLine{6 \textcolor{comment}{Permission is hereby granted, free of charge, to any person obtaining a copy}}
+\DoxyCodeLine{7 \textcolor{comment}{of this software and associated documentation files (the "{}Software"{}), to deal}}
+\DoxyCodeLine{8 \textcolor{comment}{in the Software without restriction, including without limitation the rights}}
+\DoxyCodeLine{9 \textcolor{comment}{to use, copy, modify, merge, publish, distribute, sublicense, and/or sell}}
+\DoxyCodeLine{10 \textcolor{comment}{copies of the Software, and to permit persons to whom the Software is}}
+\DoxyCodeLine{11 \textcolor{comment}{furnished to do so, subject to the following conditions:}}
+\DoxyCodeLine{12 \textcolor{comment}{}}
+\DoxyCodeLine{13 \textcolor{comment}{The above copyright notice and this permission notice shall be included in all}}
+\DoxyCodeLine{14 \textcolor{comment}{copies or substantial portions of the Software.}}
+\DoxyCodeLine{15 \textcolor{comment}{}}
+\DoxyCodeLine{16 \textcolor{comment}{THE SOFTWARE IS PROVIDED "{}AS IS"{}, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR}}
+\DoxyCodeLine{17 \textcolor{comment}{IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,}}
+\DoxyCodeLine{18 \textcolor{comment}{FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE}}
+\DoxyCodeLine{19 \textcolor{comment}{AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER}}
+\DoxyCodeLine{20 \textcolor{comment}{LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,}}
+\DoxyCodeLine{21 \textcolor{comment}{OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE}}
+\DoxyCodeLine{22 \textcolor{comment}{SOFTWARE.}}
+\DoxyCodeLine{23 \textcolor{comment}{***/}}
+\DoxyCodeLine{24 }
+\DoxyCodeLine{25 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{26 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{flag__machine_8hpp}{flag\_machine.hpp}}"{}}}
+\DoxyCodeLine{27 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{state__machine_8hpp}{state\_machine.hpp}}"{}}}
+\DoxyCodeLine{28 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{rotms__operations_8hpp}{rotms\_operations.hpp}}"{}}}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32 \textcolor{keywordtype}{bool} \mbox{\hyperlink{state__machine__states_8hpp_a1988ba5f977eadf1937b74c0adb05ad9}{CheckFlagIntegrity}}(\textcolor{keyword}{const} std::vector<StateBase*>\& states);}
+\DoxyCodeLine{33 }
+\DoxyCodeLine{34 std::vector<StateBase*> \mbox{\hyperlink{state__machine__states_8hpp_a93925129ff6c4e6f3977d0a83ce01952}{GetStatesVector}}(}
+\DoxyCodeLine{35     \mbox{\hyperlink{classFlagMachine}{FlagMachine}}\& f, \mbox{\hyperlink{classTMSOperations}{TMSOperations}}\& ops);}
+\DoxyCodeLine{36 }
+\DoxyCodeLine{37 \textcolor{keyword}{class }\mbox{\hyperlink{classState0000}{State0000}} : \textcolor{keyword}{public} \mbox{\hyperlink{classStateBase}{StateBase}}}
+\DoxyCodeLine{38 \{}
+\DoxyCodeLine{39 \textcolor{keyword}{public}:}
+\DoxyCodeLine{40     \mbox{\hyperlink{classState0000}{State0000}}(std::vector<StateBase*>\& v, \mbox{\hyperlink{classFlagMachine}{FlagMachine}}\& f, \mbox{\hyperlink{classTMSOperations}{TMSOperations}}\& ops);}
+\DoxyCodeLine{41 }
+\DoxyCodeLine{42     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState0000_affc12936947012f9c905d6fbe14fb069}{LandmarksPlanned}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{43     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState0000_ae5252e4bf478f595d321b247aa7d04db}{ToolPosePlanned}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{44     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState0000_a665ec5bb5e85d6b16dc1caf06b0fd420}{ReinitState}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{45     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState0000_a46488288d35e12b46040561575c5adaa}{UsePrevRegister}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{46 \};}
+\DoxyCodeLine{47 }
+\DoxyCodeLine{48 \textcolor{keyword}{class }\mbox{\hyperlink{classState1000}{State1000}} : \textcolor{keyword}{public} \mbox{\hyperlink{classStateBase}{StateBase}}}
+\DoxyCodeLine{49 \{}
+\DoxyCodeLine{50 \textcolor{keyword}{public}:}
+\DoxyCodeLine{51     \mbox{\hyperlink{classState1000}{State1000}}(std::vector<StateBase*>\& v, \mbox{\hyperlink{classFlagMachine}{FlagMachine}}\& f, \mbox{\hyperlink{classTMSOperations}{TMSOperations}}\& ops);}
+\DoxyCodeLine{52 }
+\DoxyCodeLine{53     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1000_a72da465eca32814f3c09deadfcfbfd65}{LandmarksDigitized}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{54     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1000_afaf78ae74afa2adfda310c7d02af027d}{ToolPosePlanned}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{55     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1000_a7a4226249ecac26a8cd8ff9bbb46edaa}{ClearLandmarks}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{56     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1000_add195081634ecec0265ce465ec820426}{LandmarksPlanned}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{57     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1000_ac4fc0ae2893599ce70915b041018ccb3}{ReinitState}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{58     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1000_a7ac40eabf08dd4fd9362d6581834cb1a}{UsePrevRegister}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{59 \};}
+\DoxyCodeLine{60 }
+\DoxyCodeLine{61 \textcolor{keyword}{class }\mbox{\hyperlink{classState1100}{State1100}} : \textcolor{keyword}{public} \mbox{\hyperlink{classStateBase}{StateBase}}}
+\DoxyCodeLine{62 \{}
+\DoxyCodeLine{63 \textcolor{keyword}{public}:}
+\DoxyCodeLine{64     \mbox{\hyperlink{classState1100}{State1100}}(std::vector<StateBase*>\& v, \mbox{\hyperlink{classFlagMachine}{FlagMachine}}\& f, \mbox{\hyperlink{classTMSOperations}{TMSOperations}}\& ops);}
+\DoxyCodeLine{65 }
+\DoxyCodeLine{66     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1100_ad7d51732e1d568755ec415c78dc3d154}{ToolPosePlanned}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{67     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1100_adabaa5a5280d7f2c08c6e7afcf14feee}{Registered}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{68     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1100_ae4b56e086c8e8ee572fe4507a87aeaea}{ClearDigitization}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{69     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1100_ae8386562426d93bec4bc77909575c261}{ClearLandmarks}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{70     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1100_a67b413184715cc88f29b8e932fea3bde}{LandmarksDigitized}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{71     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1100_a8973c3002ff09db9a861f7a2a6058ecf}{ReinitState}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{72     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1100_ac70450c2462204b185cea96ccec2e067}{UsePrevRegister}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{73 \};}
+\DoxyCodeLine{74 }
+\DoxyCodeLine{75 \textcolor{keyword}{class }\mbox{\hyperlink{classState1101}{State1101}} : \textcolor{keyword}{public} \mbox{\hyperlink{classStateBase}{StateBase}}}
+\DoxyCodeLine{76 \{}
+\DoxyCodeLine{77 \textcolor{keyword}{public}:}
+\DoxyCodeLine{78     \mbox{\hyperlink{classState1101}{State1101}}(std::vector<StateBase*>\& v, \mbox{\hyperlink{classFlagMachine}{FlagMachine}}\& f, \mbox{\hyperlink{classTMSOperations}{TMSOperations}}\& ops);}
+\DoxyCodeLine{79 }
+\DoxyCodeLine{80     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1101_a4100590433e627caa19548c42fa428cf}{ToolPosePlanned}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{81     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1101_a1fa1cc3546875e904f5d095fb349f319}{ClearRegistration}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{82     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1101_a0407146c8bc3b5d4fab02c2636479478}{ClearLandmarks}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{83     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1101_af3f1f19b2ca0d9b0c108349247124d87}{ReinitState}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{84     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1101_a052f8c779cd1efb58ce4435c89fe9a0d}{UsePrevRegister}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{85 \};}
+\DoxyCodeLine{86 }
+\DoxyCodeLine{87 \textcolor{keyword}{class }\mbox{\hyperlink{classState0010}{State0010}} : \textcolor{keyword}{public} \mbox{\hyperlink{classStateBase}{StateBase}}}
+\DoxyCodeLine{88 \{}
+\DoxyCodeLine{89 \textcolor{keyword}{public}:}
+\DoxyCodeLine{90     \mbox{\hyperlink{classState0010}{State0010}}(std::vector<StateBase*>\& v, \mbox{\hyperlink{classFlagMachine}{FlagMachine}}\& f, \mbox{\hyperlink{classTMSOperations}{TMSOperations}}\& ops);}
+\DoxyCodeLine{91 }
+\DoxyCodeLine{92     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState0010_a19185eefbc08d54d67cbbac932243f9c}{LandmarksPlanned}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{93     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState0010_a15557f8170f79f9cc52a4d33f5c0b208}{ClearToolPosePlan}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{94     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState0010_a70578568429d9dd868b7eb83591aafda}{ToolPosePlanned}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{95     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState0010_a26a95c199ac854717c3b771a61fe1a6a}{ReinitState}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{96     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState0010_a952edb29becec1f3da09175c9d7b449b}{UsePrevRegister}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{97 \};}
+\DoxyCodeLine{98 }
+\DoxyCodeLine{99 \textcolor{keyword}{class }\mbox{\hyperlink{classState1010}{State1010}} : \textcolor{keyword}{public} \mbox{\hyperlink{classStateBase}{StateBase}}}
+\DoxyCodeLine{100 \{}
+\DoxyCodeLine{101 \textcolor{keyword}{public}:}
+\DoxyCodeLine{102     \mbox{\hyperlink{classState1010}{State1010}}(std::vector<StateBase*>\& v, \mbox{\hyperlink{classFlagMachine}{FlagMachine}}\& f, \mbox{\hyperlink{classTMSOperations}{TMSOperations}}\& ops);}
+\DoxyCodeLine{103 }
+\DoxyCodeLine{104     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1010_a15ecd0d6f5d2d740c0522aa8d71a77e3}{ClearToolPosePlan}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{105     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1010_a8cecb08f29a15fdb4e8747342f4b9baf}{ClearLandmarks}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{106     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1010_ab1e90231def95d75fdcdf3228fe4e89e}{ToolPosePlanned}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{107     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1010_af09ad51a092c339eb4af58be1a5c1122}{LandmarksPlanned}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{108     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1010_a1208b2693b8e4a48ecd38caf114d8990}{LandmarksDigitized}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{109     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1010_a7984d19105dcead822ad59c75a5774c9}{ReinitState}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{110     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1010_a853f3dfffb1d399a86e4520b5db65c20}{UsePrevRegister}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{111 \};}
+\DoxyCodeLine{112 }
+\DoxyCodeLine{113 \textcolor{keyword}{class }\mbox{\hyperlink{classState1110}{State1110}} : \textcolor{keyword}{public} \mbox{\hyperlink{classStateBase}{StateBase}}}
+\DoxyCodeLine{114 \{}
+\DoxyCodeLine{115 \textcolor{keyword}{public}:}
+\DoxyCodeLine{116     \mbox{\hyperlink{classState1110}{State1110}}(std::vector<StateBase*>\& v, \mbox{\hyperlink{classFlagMachine}{FlagMachine}}\& f, \mbox{\hyperlink{classTMSOperations}{TMSOperations}}\& ops);}
+\DoxyCodeLine{117 }
+\DoxyCodeLine{118     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1110_ade285033af2ab7a32dabec807e243324}{ClearToolPosePlan}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{119     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1110_aaaf38918ae2bd4ae58af55ef2941b4c3}{LandmarksDigitized}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{120     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1110_a2792860382155455e7af1881297b5b9f}{ToolPosePlanned}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{121     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1110_a0f42f2b3baa708566843b59746d4e959}{ClearDigitization}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{122     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1110_a8f70350eb59134a8bd6424ef8f4d0598}{ClearLandmarks}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{123     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1110_a8946b52b687ffb7127735daacddf828b}{Registered}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{124     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1110_a245c7fa436e9f187fc523ca5f63b4c51}{ReinitState}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{125     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1110_a7c3142d1527bdd74d98db2ce9ede10c4}{UsePrevRegister}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{126 \};}
+\DoxyCodeLine{127 }
+\DoxyCodeLine{128 \textcolor{keyword}{class }\mbox{\hyperlink{classState1111}{State1111}} : \textcolor{keyword}{public} \mbox{\hyperlink{classStateBase}{StateBase}}}
+\DoxyCodeLine{129 \{}
+\DoxyCodeLine{130 \textcolor{keyword}{public}:}
+\DoxyCodeLine{131     \mbox{\hyperlink{classState1111}{State1111}}(std::vector<StateBase*>\& v, \mbox{\hyperlink{classFlagMachine}{FlagMachine}}\& f, \mbox{\hyperlink{classTMSOperations}{TMSOperations}}\& ops);}
+\DoxyCodeLine{132 }
+\DoxyCodeLine{133     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1111_a2311a41c24dfa8ebf766b73a71d60f6c}{ClearToolPosePlan}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{134     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1111_a7e7fd90f29863bd6fdb8c2507bb0bcc1}{ToolPosePlanned}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{135     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1111_a22e2b8977b6faa8b326e799520ff80af}{ClearRegistration}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{136     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1111_a16037b6da2ed0ec7b4f60df9d114b6c1}{ClearLandmarks}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{137     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1111_a9d2b8d735846e846f22efe7d6e36ad8f}{ReinitState}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{138     \textcolor{keywordtype}{int} \mbox{\hyperlink{classState1111_a5eb851ed047be560a9f4583025e40f49}{UsePrevRegister}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{139 \};}
+
+\end{DoxyCode}

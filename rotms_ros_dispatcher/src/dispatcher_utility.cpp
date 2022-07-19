@@ -36,7 +36,7 @@ SOFTWARE.
 #include <tf2/LinearMath/Transform.h>
 
 
-void SaveLandmarkPlanData(struct VolatileTempDataCache datacache, std::string f)
+void SaveLandmarkPlanData(struct TempDataCache datacache, std::string f)
 {
     std::ofstream filesave(f);
     if(filesave.is_open())
@@ -64,7 +64,7 @@ void SaveLandmarkPlanData(struct VolatileTempDataCache datacache, std::string f)
     }
 }
 
-void SaveToolPoseData(struct VolatileTempDataCache datacache, std::string f)
+void SaveToolPoseData(struct TempDataCache datacache, std::string f)
 {
     std::ofstream filesave(f);
     if(filesave.is_open())

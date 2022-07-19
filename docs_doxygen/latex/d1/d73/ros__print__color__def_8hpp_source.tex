@@ -1,0 +1,46 @@
+\hypertarget{ros__print__color__def_8hpp_source}{}\doxysection{ros\+\_\+print\+\_\+color\+\_\+def.\+hpp}
+\label{ros__print__color__def_8hpp_source}\index{rotms\_ros\_universal\_utility/include/rotms\_ros\_universal\_utility/ros\_print\_color\_def.hpp@{rotms\_ros\_universal\_utility/include/rotms\_ros\_universal\_utility/ros\_print\_color\_def.hpp}}
+\mbox{\hyperlink{ros__print__color__def_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef ROS\_PRINT\_COLOR\_DEF\_HPP}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define ROS\_PRINT\_COLOR\_DEF\_HPP}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <ostream>}}
+\DoxyCodeLine{5 }
+\DoxyCodeLine{6 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespaceprint__color__ros}{print\_color\_ros}}}
+\DoxyCodeLine{7 \{}
+\DoxyCodeLine{8   \textcolor{keyword}{enum} \mbox{\hyperlink{namespaceprint__color__ros_a06f471e260a2bf60b6da2fe25bf9f460}{PRINT\_COLOR}}}
+\DoxyCodeLine{9   \{}
+\DoxyCodeLine{10     \mbox{\hyperlink{namespaceprint__color__ros_a06f471e260a2bf60b6da2fe25bf9f460a9cc998073e8bfef5ae423cc38a7bcd98}{BLACK}},}
+\DoxyCodeLine{11     \mbox{\hyperlink{namespaceprint__color__ros_a06f471e260a2bf60b6da2fe25bf9f460ae61f227e35f8a9d4de7e9e21fabccaaa}{RED}},}
+\DoxyCodeLine{12     \mbox{\hyperlink{namespaceprint__color__ros_a06f471e260a2bf60b6da2fe25bf9f460a9585bcfd9ee066f5e9de34be81535adf}{GREEN}},}
+\DoxyCodeLine{13     \mbox{\hyperlink{namespaceprint__color__ros_a06f471e260a2bf60b6da2fe25bf9f460a3eb2bd286f82bfcda87517d771082e9e}{YELLOW}},}
+\DoxyCodeLine{14     \mbox{\hyperlink{namespaceprint__color__ros_a06f471e260a2bf60b6da2fe25bf9f460a34308b6c9d0f49668811228ebecd566f}{BLUE}},}
+\DoxyCodeLine{15     \mbox{\hyperlink{namespaceprint__color__ros_a06f471e260a2bf60b6da2fe25bf9f460a95d94c830d25e7d884804b0f50e1165f}{MAGENTA}},}
+\DoxyCodeLine{16     \mbox{\hyperlink{namespaceprint__color__ros_a06f471e260a2bf60b6da2fe25bf9f460a24bc53d2b7335e4fb736f6e81956bb14}{CYAN}},}
+\DoxyCodeLine{17     \mbox{\hyperlink{namespaceprint__color__ros_a06f471e260a2bf60b6da2fe25bf9f460a0ced16610c942b0b119a2051b0687ac9}{WHITE}},}
+\DoxyCodeLine{18     \mbox{\hyperlink{namespaceprint__color__ros_a06f471e260a2bf60b6da2fe25bf9f460aeef12c915974b84e3f324ffc39b4960d}{ENDCOLOR}}}
+\DoxyCodeLine{19   \};}
+\DoxyCodeLine{20 }
+\DoxyCodeLine{21   \textcolor{keyword}{static} \textcolor{keyword}{inline} std::ostream\& \mbox{\hyperlink{namespaceprint__color__ros_a1d4188f021b0efce90989813751a9c75}{operator<<}}(std::ostream\& os, \mbox{\hyperlink{namespaceprint__color__ros_a06f471e260a2bf60b6da2fe25bf9f460}{PRINT\_COLOR}} c)}
+\DoxyCodeLine{22   \{}
+\DoxyCodeLine{23     \textcolor{keywordflow}{switch}(c)}
+\DoxyCodeLine{24     \{}
+\DoxyCodeLine{25       \textcolor{keywordflow}{case} \mbox{\hyperlink{namespaceprint__color__ros_a06f471e260a2bf60b6da2fe25bf9f460a9cc998073e8bfef5ae423cc38a7bcd98}{BLACK}}    : os << \textcolor{stringliteral}{"{}\(\backslash\)033[1;30m"{}}; \textcolor{keywordflow}{break};}
+\DoxyCodeLine{26       \textcolor{keywordflow}{case} \mbox{\hyperlink{namespaceprint__color__ros_a06f471e260a2bf60b6da2fe25bf9f460ae61f227e35f8a9d4de7e9e21fabccaaa}{RED}}      : os << \textcolor{stringliteral}{"{}\(\backslash\)033[1;31m"{}}; \textcolor{keywordflow}{break};}
+\DoxyCodeLine{27       \textcolor{keywordflow}{case} \mbox{\hyperlink{namespaceprint__color__ros_a06f471e260a2bf60b6da2fe25bf9f460a9585bcfd9ee066f5e9de34be81535adf}{GREEN}}    : os << \textcolor{stringliteral}{"{}\(\backslash\)033[1;32m"{}}; \textcolor{keywordflow}{break};}
+\DoxyCodeLine{28       \textcolor{keywordflow}{case} \mbox{\hyperlink{namespaceprint__color__ros_a06f471e260a2bf60b6da2fe25bf9f460a3eb2bd286f82bfcda87517d771082e9e}{YELLOW}}   : os << \textcolor{stringliteral}{"{}\(\backslash\)033[1;33m"{}}; \textcolor{keywordflow}{break};}
+\DoxyCodeLine{29       \textcolor{keywordflow}{case} \mbox{\hyperlink{namespaceprint__color__ros_a06f471e260a2bf60b6da2fe25bf9f460a34308b6c9d0f49668811228ebecd566f}{BLUE}}     : os << \textcolor{stringliteral}{"{}\(\backslash\)033[1;34m"{}}; \textcolor{keywordflow}{break};}
+\DoxyCodeLine{30       \textcolor{keywordflow}{case} \mbox{\hyperlink{namespaceprint__color__ros_a06f471e260a2bf60b6da2fe25bf9f460a95d94c830d25e7d884804b0f50e1165f}{MAGENTA}}  : os << \textcolor{stringliteral}{"{}\(\backslash\)033[1;35m"{}}; \textcolor{keywordflow}{break};}
+\DoxyCodeLine{31       \textcolor{keywordflow}{case} \mbox{\hyperlink{namespaceprint__color__ros_a06f471e260a2bf60b6da2fe25bf9f460a24bc53d2b7335e4fb736f6e81956bb14}{CYAN}}     : os << \textcolor{stringliteral}{"{}\(\backslash\)033[1;36m"{}}; \textcolor{keywordflow}{break};}
+\DoxyCodeLine{32       \textcolor{keywordflow}{case} \mbox{\hyperlink{namespaceprint__color__ros_a06f471e260a2bf60b6da2fe25bf9f460a0ced16610c942b0b119a2051b0687ac9}{WHITE}}    : os << \textcolor{stringliteral}{"{}\(\backslash\)033[1;37m"{}}; \textcolor{keywordflow}{break};}
+\DoxyCodeLine{33       \textcolor{keywordflow}{case} \mbox{\hyperlink{namespaceprint__color__ros_a06f471e260a2bf60b6da2fe25bf9f460aeef12c915974b84e3f324ffc39b4960d}{ENDCOLOR}} : os << \textcolor{stringliteral}{"{}\(\backslash\)033[0m"{}};    \textcolor{keywordflow}{break};}
+\DoxyCodeLine{34       default       : os << \textcolor{stringliteral}{"{}\(\backslash\)033[1;37m"{}};}
+\DoxyCodeLine{35     \}}
+\DoxyCodeLine{36     \textcolor{keywordflow}{return} os;}
+\DoxyCodeLine{37   \}}
+\DoxyCodeLine{38 \} \textcolor{comment}{//namespace print\_color\_ros}}
+\DoxyCodeLine{39 }
+\DoxyCodeLine{40 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

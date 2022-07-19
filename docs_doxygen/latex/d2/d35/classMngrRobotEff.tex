@@ -1,0 +1,78 @@
+\hypertarget{classMngrRobotEff}{}\doxysection{Mngr\+Robot\+Eff Class Reference}
+\label{classMngrRobotEff}\index{MngrRobotEff@{MngrRobotEff}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classMngrRobotEff_ad5a0b7c9ea1a1ca4d594c0df14b617a5}{Mngr\+Robot\+Eff}} (ros\+::\+Node\+Handle \&n)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classMngrRobotEff_ac89f826dda3356c0d51359b747dc97bb}{Get\+Target\+Eff\+Callback}} (const std\+\_\+msgs\+::\+String\+::\+Const\+Ptr \&msg)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+ros\+::\+Node\+Handle \& \mbox{\hyperlink{classMngrRobotEff_ad592dab5a1188471a4f5633784c1df6e}{n\+\_\+}}
+\item 
+ros\+::\+Publisher \mbox{\hyperlink{classMngrRobotEff_a0da820613a3ac661978bc75c6640c056}{pub\+\_\+eff}}
+\item 
+ros\+::\+Subscriber \mbox{\hyperlink{classMngrRobotEff_ab8ac7f806ba9ee027cf5b6db6c819c79}{sub}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classMngrRobotEff_ad5a0b7c9ea1a1ca4d594c0df14b617a5}\label{classMngrRobotEff_ad5a0b7c9ea1a1ca4d594c0df14b617a5}} 
+\index{MngrRobotEff@{MngrRobotEff}!MngrRobotEff@{MngrRobotEff}}
+\index{MngrRobotEff@{MngrRobotEff}!MngrRobotEff@{MngrRobotEff}}
+\doxysubsubsection{\texorpdfstring{MngrRobotEff()}{MngrRobotEff()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classMngrRobotEff}{Mngr\+Robot\+Eff\+::\+Mngr\+Robot\+Eff}} (\begin{DoxyParamCaption}\item[{ros\+::\+Node\+Handle \&}]{n }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classMngrRobotEff_ac89f826dda3356c0d51359b747dc97bb}\label{classMngrRobotEff_ac89f826dda3356c0d51359b747dc97bb}} 
+\index{MngrRobotEff@{MngrRobotEff}!GetTargetEffCallback@{GetTargetEffCallback}}
+\index{GetTargetEffCallback@{GetTargetEffCallback}!MngrRobotEff@{MngrRobotEff}}
+\doxysubsubsection{\texorpdfstring{GetTargetEffCallback()}{GetTargetEffCallback()}}
+{\footnotesize\ttfamily void Mngr\+Robot\+Eff\+::\+Get\+Target\+Eff\+Callback (\begin{DoxyParamCaption}\item[{const std\+\_\+msgs\+::\+String\+::\+Const\+Ptr \&}]{msg }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classMngrRobotEff_ad592dab5a1188471a4f5633784c1df6e}\label{classMngrRobotEff_ad592dab5a1188471a4f5633784c1df6e}} 
+\index{MngrRobotEff@{MngrRobotEff}!n\_@{n\_}}
+\index{n\_@{n\_}!MngrRobotEff@{MngrRobotEff}}
+\doxysubsubsection{\texorpdfstring{n\_}{n\_}}
+{\footnotesize\ttfamily ros\+::\+Node\+Handle\& Mngr\+Robot\+Eff\+::n\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classMngrRobotEff_a0da820613a3ac661978bc75c6640c056}\label{classMngrRobotEff_a0da820613a3ac661978bc75c6640c056}} 
+\index{MngrRobotEff@{MngrRobotEff}!pub\_eff@{pub\_eff}}
+\index{pub\_eff@{pub\_eff}!MngrRobotEff@{MngrRobotEff}}
+\doxysubsubsection{\texorpdfstring{pub\_eff}{pub\_eff}}
+{\footnotesize\ttfamily ros\+::\+Publisher Mngr\+Robot\+Eff\+::pub\+\_\+eff\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \mbox{\hyperlink{classMngrRobotEff_ad592dab5a1188471a4f5633784c1df6e}{n\_}}.advertise<rotms\_ros\_msgs::PoseValid>(}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}/Kinematics/TR\_derivedeff"{}}, 1, \textcolor{keyword}{true})}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{classMngrRobotEff_ab8ac7f806ba9ee027cf5b6db6c819c79}\label{classMngrRobotEff_ab8ac7f806ba9ee027cf5b6db6c819c79}} 
+\index{MngrRobotEff@{MngrRobotEff}!sub@{sub}}
+\index{sub@{sub}!MngrRobotEff@{MngrRobotEff}}
+\doxysubsubsection{\texorpdfstring{sub}{sub}}
+{\footnotesize\ttfamily ros\+::\+Subscriber Mngr\+Robot\+Eff\+::sub\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \mbox{\hyperlink{classMngrRobotEff_ad592dab5a1188471a4f5633784c1df6e}{n\_}}.subscribe(}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}/Kinematics/Query\_GetTargetEff"{}}, }
+\DoxyCodeLine{        10, \&\mbox{\hyperlink{classMngrRobotEff_ac89f826dda3356c0d51359b747dc97bb}{MngrRobotEff::GetTargetEffCallback}}, \textcolor{keyword}{this})}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+rotms\+\_\+ros\+\_\+kinematics/src/nodes/\mbox{\hyperlink{node__robot__eff_8cpp}{node\+\_\+robot\+\_\+eff.\+cpp}}\end{DoxyCompactItemize}

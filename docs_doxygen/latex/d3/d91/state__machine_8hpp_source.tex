@@ -1,0 +1,95 @@
+\hypertarget{state__machine_8hpp_source}{}\doxysection{state\+\_\+machine.\+hpp}
+\label{state__machine_8hpp_source}\index{rotms\_ros\_state/include/rotms\_ros\_state/state\_machine.hpp@{rotms\_ros\_state/include/rotms\_ros\_state/state\_machine.hpp}}
+\mbox{\hyperlink{state__machine_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/***}}
+\DoxyCodeLine{2 \textcolor{comment}{MIT License}}
+\DoxyCodeLine{3 \textcolor{comment}{}}
+\DoxyCodeLine{4 \textcolor{comment}{Copyright (c) 2022 Yihao Liu, Johns Hopkins University}}
+\DoxyCodeLine{5 \textcolor{comment}{}}
+\DoxyCodeLine{6 \textcolor{comment}{Permission is hereby granted, free of charge, to any person obtaining a copy}}
+\DoxyCodeLine{7 \textcolor{comment}{of this software and associated documentation files (the "{}Software"{}), to deal}}
+\DoxyCodeLine{8 \textcolor{comment}{in the Software without restriction, including without limitation the rights}}
+\DoxyCodeLine{9 \textcolor{comment}{to use, copy, modify, merge, publish, distribute, sublicense, and/or sell}}
+\DoxyCodeLine{10 \textcolor{comment}{copies of the Software, and to permit persons to whom the Software is}}
+\DoxyCodeLine{11 \textcolor{comment}{furnished to do so, subject to the following conditions:}}
+\DoxyCodeLine{12 \textcolor{comment}{}}
+\DoxyCodeLine{13 \textcolor{comment}{The above copyright notice and this permission notice shall be included in all}}
+\DoxyCodeLine{14 \textcolor{comment}{copies or substantial portions of the Software.}}
+\DoxyCodeLine{15 \textcolor{comment}{}}
+\DoxyCodeLine{16 \textcolor{comment}{THE SOFTWARE IS PROVIDED "{}AS IS"{}, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR}}
+\DoxyCodeLine{17 \textcolor{comment}{IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,}}
+\DoxyCodeLine{18 \textcolor{comment}{FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE}}
+\DoxyCodeLine{19 \textcolor{comment}{AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER}}
+\DoxyCodeLine{20 \textcolor{comment}{LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,}}
+\DoxyCodeLine{21 \textcolor{comment}{OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE}}
+\DoxyCodeLine{22 \textcolor{comment}{SOFTWARE.}}
+\DoxyCodeLine{23 \textcolor{comment}{***/}}
+\DoxyCodeLine{24 }
+\DoxyCodeLine{25 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{26 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{27 \textcolor{preprocessor}{\#include <functional>}}
+\DoxyCodeLine{28 }
+\DoxyCodeLine{29 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{flag__machine_8hpp}{flag\_machine.hpp}}"{}}}
+\DoxyCodeLine{30 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{rotms__operations_8hpp}{rotms\_operations.hpp}}"{}}}
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32 \textcolor{keyword}{typedef} std::vector<std::function<void()>> \mbox{\hyperlink{state__machine_8hpp_ad3a7e3899702159a13369e20e6906080}{TransitionOps}};}
+\DoxyCodeLine{33 }
+\DoxyCodeLine{34 \textcolor{comment}{/***}}
+\DoxyCodeLine{35 \textcolor{comment}{* Current design: }}
+\DoxyCodeLine{36 \textcolor{comment}{* StateBase should have the virtual functions of all possible state transition operations (edges).}}
+\DoxyCodeLine{37 \textcolor{comment}{* These virtual functions are to be inhereted by the subclasses of StateBase. If they are not }}
+\DoxyCodeLine{38 \textcolor{comment}{* inhereted, the operation or transition is not possible from that state.}}
+\DoxyCodeLine{39 \textcolor{comment}{*}}
+\DoxyCodeLine{40 \textcolor{comment}{* NO LONGER USING THIS :}}
+\DoxyCodeLine{41 \textcolor{comment}{* Old design: }}
+\DoxyCodeLine{42 \textcolor{comment}{* nested siwch-\/case.}}
+\DoxyCodeLine{43 \textcolor{comment}{***/}}
+\DoxyCodeLine{44 }
+\DoxyCodeLine{45 \textcolor{keyword}{class }\mbox{\hyperlink{classStateBase}{StateBase}}}
+\DoxyCodeLine{46 \{}
+\DoxyCodeLine{47 }
+\DoxyCodeLine{48 \textcolor{keyword}{public}:}
+\DoxyCodeLine{49 }
+\DoxyCodeLine{50     \mbox{\hyperlink{classStateBase}{StateBase}}(}
+\DoxyCodeLine{51         \textcolor{keywordtype}{int} state\_num,}
+\DoxyCodeLine{52         std::vector<StateBase*>\& v,}
+\DoxyCodeLine{53         \mbox{\hyperlink{classFlagMachine}{FlagMachine}}\& f,}
+\DoxyCodeLine{54         \mbox{\hyperlink{classTMSOperations}{TMSOperations}}\& ops);}
+\DoxyCodeLine{55     \textcolor{keyword}{virtual} \mbox{\hyperlink{classStateBase_ac5467363c95fb05265cd39d827fbea3b}{\string~StateBase}}();}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{57     \mbox{\hyperlink{classFlagMachine}{FlagMachine}}\& \mbox{\hyperlink{classStateBase_a390a2e2e436261f798f25ae7b245ffef}{flags\_}};}
+\DoxyCodeLine{58     }
+\DoxyCodeLine{59     \textcolor{keywordtype}{bool} \mbox{\hyperlink{classStateBase_a17bdafa3f818580d3ad83c20b2943531}{CheckActivated}}();}
+\DoxyCodeLine{60     \textcolor{keywordtype}{void} \mbox{\hyperlink{classStateBase_a32393e632e5e1fdae18b5443232e334e}{Activate}}();}
+\DoxyCodeLine{61     \textcolor{keywordtype}{void} \mbox{\hyperlink{classStateBase_af8a670a6c148fb05aff174c4b8cd9e93}{Deactivate}}();}
+\DoxyCodeLine{62     \textcolor{keywordtype}{int} \mbox{\hyperlink{classStateBase_a628d9f9859640f85c5becc26c5506bc4}{GetStateNum}}();}
+\DoxyCodeLine{63     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} \mbox{\hyperlink{classStateBase_a6914735a0e6e3b612b14908f0f2880c2}{CheckIfUniqueActivation}}(\textcolor{keyword}{const} std::vector<StateBase*>\& states);}
+\DoxyCodeLine{64     \textcolor{keyword}{static} \textcolor{keywordtype}{int} \mbox{\hyperlink{classStateBase_a1d20c01ec6b79779a6a43ce51c4c21a1}{GetActivatedState}}(\textcolor{keyword}{const} std::vector<StateBase*>\& states);}
+\DoxyCodeLine{65 }
+\DoxyCodeLine{66     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} \mbox{\hyperlink{classStateBase_abdb2ff0388db0a43df333d62ff0f328c}{LandmarksPlanned}}();}
+\DoxyCodeLine{67     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} \mbox{\hyperlink{classStateBase_af644810402950ae6bf5548c3a7459d18}{LandmarksDigitized}}();}
+\DoxyCodeLine{68     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} \mbox{\hyperlink{classStateBase_aa4e592cd80b00c52e9191c42d3901e0e}{ToolPosePlanned}}();}
+\DoxyCodeLine{69     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} \mbox{\hyperlink{classStateBase_aec6b935494b97e79d229e08b39084fa3}{Registered}}();}
+\DoxyCodeLine{70 }
+\DoxyCodeLine{71     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} \mbox{\hyperlink{classStateBase_ae05477a41453340d1e1a8f0ca9c95205}{ClearLandmarks}}();}
+\DoxyCodeLine{72     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} \mbox{\hyperlink{classStateBase_a13783db2d1581e874c8d87bb9e8e250c}{ClearDigitization}}();}
+\DoxyCodeLine{73     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} \mbox{\hyperlink{classStateBase_aaa130ea9b22bd642af2153f35e51fd71}{ClearRegistration}}();}
+\DoxyCodeLine{74     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} \mbox{\hyperlink{classStateBase_abd12638a9bfb343b0282a3e982d562e9}{ClearToolPosePlan}}();}
+\DoxyCodeLine{75 }
+\DoxyCodeLine{76     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} \mbox{\hyperlink{classStateBase_add421ed4671b1ec6e474661d8fd7181d}{ReinitState}}();}
+\DoxyCodeLine{77     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} \mbox{\hyperlink{classStateBase_a95517ed8278dd5a3ae0ca909ca3d1bbb}{UsePrevRegister}}();}
+\DoxyCodeLine{78 }
+\DoxyCodeLine{79 \textcolor{keyword}{protected}:}
+\DoxyCodeLine{80     }
+\DoxyCodeLine{81     \textcolor{keyword}{const} \textcolor{keywordtype}{int} \mbox{\hyperlink{classStateBase_ae4adfdc2998c7ef3d715a8387af780ec}{state\_num\_}};}
+\DoxyCodeLine{82     \textcolor{keyword}{const} std::vector<StateBase*>\& \mbox{\hyperlink{classStateBase_ab36b37f8e4d1faf17d1ebc60630b735c}{states\_}};}
+\DoxyCodeLine{83     \mbox{\hyperlink{classTMSOperations}{TMSOperations}}\& \mbox{\hyperlink{classStateBase_aeea3b2e620ac9af2e71d5537f255ac77}{ops\_}};}
+\DoxyCodeLine{84     \textcolor{keywordtype}{bool} \mbox{\hyperlink{classStateBase_a5870ffd1f3dbdf4679ff81020fdb91cf}{activated\_}};}
+\DoxyCodeLine{85     }
+\DoxyCodeLine{86     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} \mbox{\hyperlink{classStateBase_ad6cfeac692f599ac9c2426feda585e30}{TransitionNotPossible}}();}
+\DoxyCodeLine{87     \textcolor{keywordtype}{void} \mbox{\hyperlink{classStateBase_acf3da2ed941278c797dc46d4e70c88c1}{Transition}}(\textcolor{keywordtype}{int} target\_state, \mbox{\hyperlink{state__machine_8hpp_ad3a7e3899702159a13369e20e6906080}{TransitionOps}} funcs);}
+\DoxyCodeLine{88 }
+\DoxyCodeLine{89 \};}
+
+\end{DoxyCode}

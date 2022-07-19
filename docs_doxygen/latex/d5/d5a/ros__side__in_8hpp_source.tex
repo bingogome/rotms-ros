@@ -1,0 +1,88 @@
+\hypertarget{ros__side__in_8hpp_source}{}\doxysection{ros\+\_\+side\+\_\+in.\+hpp}
+\label{ros__side__in_8hpp_source}\index{rotms\_ros\_comm/include/rotms\_ros\_comm/ros\_side\_in.hpp@{rotms\_ros\_comm/include/rotms\_ros\_comm/ros\_side\_in.hpp}}
+\mbox{\hyperlink{ros__side__in_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/***}}
+\DoxyCodeLine{2 \textcolor{comment}{MIT License}}
+\DoxyCodeLine{3 \textcolor{comment}{}}
+\DoxyCodeLine{4 \textcolor{comment}{Copyright (c) 2022 Yihao Liu, Johns Hopkins University}}
+\DoxyCodeLine{5 \textcolor{comment}{}}
+\DoxyCodeLine{6 \textcolor{comment}{Permission is hereby granted, free of charge, to any person obtaining a copy}}
+\DoxyCodeLine{7 \textcolor{comment}{of this software and associated documentation files (the "{}Software"{}), to deal}}
+\DoxyCodeLine{8 \textcolor{comment}{in the Software without restriction, including without limitation the rights}}
+\DoxyCodeLine{9 \textcolor{comment}{to use, copy, modify, merge, publish, distribute, sublicense, and/or sell}}
+\DoxyCodeLine{10 \textcolor{comment}{copies of the Software, and to permit persons to whom the Software is}}
+\DoxyCodeLine{11 \textcolor{comment}{furnished to do so, subject to the following conditions:}}
+\DoxyCodeLine{12 \textcolor{comment}{}}
+\DoxyCodeLine{13 \textcolor{comment}{The above copyright notice and this permission notice shall be included in all}}
+\DoxyCodeLine{14 \textcolor{comment}{copies or substantial portions of the Software.}}
+\DoxyCodeLine{15 \textcolor{comment}{}}
+\DoxyCodeLine{16 \textcolor{comment}{THE SOFTWARE IS PROVIDED "{}AS IS"{}, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR}}
+\DoxyCodeLine{17 \textcolor{comment}{IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,}}
+\DoxyCodeLine{18 \textcolor{comment}{FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE}}
+\DoxyCodeLine{19 \textcolor{comment}{AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER}}
+\DoxyCodeLine{20 \textcolor{comment}{LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,}}
+\DoxyCodeLine{21 \textcolor{comment}{OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE}}
+\DoxyCodeLine{22 \textcolor{comment}{SOFTWARE.}}
+\DoxyCodeLine{23 \textcolor{comment}{***/}}
+\DoxyCodeLine{24 }
+\DoxyCodeLine{25 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{26 }
+\DoxyCodeLine{27 \textcolor{preprocessor}{\#include <ros/ros.h>}}
+\DoxyCodeLine{28 \textcolor{preprocessor}{\#include <std\_msgs/String.h>}}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30 \textcolor{preprocessor}{\#include <string>}}
+\DoxyCodeLine{31 \textcolor{preprocessor}{\#include <boost/array.hpp>}}
+\DoxyCodeLine{32 \textcolor{preprocessor}{\#include <boost/asio.hpp>}}
+\DoxyCodeLine{33 }
+\DoxyCodeLine{34 \textcolor{keyword}{using }boost::asio::ip::udp;}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36 \textcolor{comment}{// Configuration parameters struct. Will be initialized by }}
+\DoxyCodeLine{37 \textcolor{comment}{// data from config\_ros.yaml}}
+\DoxyCodeLine{38 \textcolor{keyword}{struct }\mbox{\hyperlink{ros__side__in_8hpp_d0/d5c/structROSSideInConfig}{ROSSideInConfig}}}
+\DoxyCodeLine{39 \{}
+\DoxyCodeLine{40     \textcolor{keywordtype}{int} \mbox{\hyperlink{ros__side__in_8hpp_a5a57c2e8ed04225b09c3097469f2b7fa}{port\_in}};}
+\DoxyCodeLine{41     std::string \mbox{\hyperlink{ros__side__in_8hpp_a4f7036b4f24cc8af0dbf8d37f4e18805}{end\_msg}};}
+\DoxyCodeLine{42     std::string \mbox{\hyperlink{ros__side__in_8hpp_a6d5633f35117b107410967a9c8b80e1e}{publisher\_name}};}
+\DoxyCodeLine{43     \textcolor{keywordtype}{int} \mbox{\hyperlink{ros__side__in_8hpp_af46c03e77e5312484a30b9bc75d780fa}{verbose}};}
+\DoxyCodeLine{44     \textcolor{keywordtype}{int} \mbox{\hyperlink{ros__side__in_8hpp_a0f8658aecc2d3df8d6bc5318e9ccf0cb}{msg\_size}};}
+\DoxyCodeLine{45     \textcolor{keywordtype}{char} \mbox{\hyperlink{ros__side__in_8hpp_a077ed811af6360f4058ee7ac6b10f1c5}{eom}};}
+\DoxyCodeLine{46 \};}
+\DoxyCodeLine{47 }
+\DoxyCodeLine{48 \textcolor{comment}{// Main class of the program. Will be called by the main function and constantly}}
+\DoxyCodeLine{49 \textcolor{comment}{// receives messages}}
+\DoxyCodeLine{50 \textcolor{keyword}{class }\mbox{\hyperlink{classROSSideIn}{ROSSideIn}}}
+\DoxyCodeLine{51 \{}
+\DoxyCodeLine{52 }
+\DoxyCodeLine{53 \textcolor{keyword}{public}: }
+\DoxyCodeLine{54     \textcolor{comment}{// constructor and start receiving}}
+\DoxyCodeLine{55     \mbox{\hyperlink{classROSSideIn}{ROSSideIn}}(ros::NodeHandle\& n, boost::asio::io\_context\& io\_context, \textcolor{keyword}{struct} \mbox{\hyperlink{ros__side__in_8hpp_d0/d5c/structROSSideInConfig}{ROSSideInConfig}} cfg);}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{57 \textcolor{keyword}{private}:}
+\DoxyCodeLine{58 }
+\DoxyCodeLine{59     \textcolor{keywordtype}{void} \mbox{\hyperlink{classROSSideIn_abff463e1e7a99dada49dd65a4a8d3433}{StartReceive}}();}
+\DoxyCodeLine{60     \textcolor{keywordtype}{void} \mbox{\hyperlink{classROSSideIn_ad9fc755999ebe8c24440cfa4ea2e5534}{EndServerClean}}();}
+\DoxyCodeLine{61     \textcolor{keywordtype}{void} \mbox{\hyperlink{classROSSideIn_a7978acbe96a73b74fc7914b0682eb0f8}{HandleReceive}}(\textcolor{keyword}{const} boost::system::error\_code\& error, std::size\_t \textcolor{comment}{/*bytes\_transferred*/});}
+\DoxyCodeLine{62     \textcolor{keywordtype}{void} \mbox{\hyperlink{classROSSideIn_a6a7e75ef8ea3cfe6a4a3432ba30a4079}{HandleIncoming}}();}
+\DoxyCodeLine{63 }
+\DoxyCodeLine{64     \textcolor{comment}{// ros related members}}
+\DoxyCodeLine{65     ros::NodeHandle\& \mbox{\hyperlink{classROSSideIn_a18188221b73b0b01fe6687b08de1d567}{n\_}};}
+\DoxyCodeLine{66     ros::Publisher \mbox{\hyperlink{classROSSideIn_a651f413d6a507434f7b59e403ce93be1}{pub\_test\_}}; \textcolor{comment}{// can be action, service. Use topic as a demo}}
+\DoxyCodeLine{67     std\_msgs::String \mbox{\hyperlink{classROSSideIn_af1151a5cdbc36211416831e1b00feaf3}{msg\_test\_}};}
+\DoxyCodeLine{68 }
+\DoxyCodeLine{69     \textcolor{comment}{// asio related members}}
+\DoxyCodeLine{70     udp::socket \mbox{\hyperlink{classROSSideIn_aff00cdec17875ea5f54e496f5fe7e177}{socket\_}};}
+\DoxyCodeLine{71     udp::endpoint \mbox{\hyperlink{classROSSideIn_a2feb80ee61e0141bfe706483b18b3b4a}{remote\_endpoint\_}};}
+\DoxyCodeLine{72     boost::array<char, 256> \mbox{\hyperlink{classROSSideIn_af0b2045b9c527bc488ab79b3bc09ad21}{recv\_buffer\_}};}
+\DoxyCodeLine{73     \textcolor{comment}{// TODO: make socket array so that multiple channels are possible (or dynamic expansion)}}
+\DoxyCodeLine{74     \textcolor{comment}{// TODO: make TCP optional}}
+\DoxyCodeLine{75 }
+\DoxyCodeLine{76     \textcolor{keyword}{struct }\mbox{\hyperlink{ros__side__in_8hpp_d0/d5c/structROSSideInConfig}{ROSSideInConfig}} \mbox{\hyperlink{classROSSideIn_ad086a736ff7c6834249ae59897ea8e08}{cfg\_}};}
+\DoxyCodeLine{77     std::string \mbox{\hyperlink{classROSSideIn_aeeecaac9e531799627f68bc741621f02}{sscmd\_str\_}}; \textcolor{comment}{// command header of current messege}}
+\DoxyCodeLine{78     std::string \mbox{\hyperlink{classROSSideIn_a866c1fc0cd451f258293c88df570e99a}{ss\_str\_}}; \textcolor{comment}{// whole msg}}
+\DoxyCodeLine{79     \textcolor{keywordtype}{char} \mbox{\hyperlink{classROSSideIn_a5a5975554db4e3c33c9035c91e34dbce}{eom\_}}; \textcolor{comment}{// End of message indicator}}
+\DoxyCodeLine{80 }
+\DoxyCodeLine{81 }
+\DoxyCodeLine{82 \};}
+
+\end{DoxyCode}

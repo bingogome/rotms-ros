@@ -1,0 +1,282 @@
+\hypertarget{classStateBase}{}\doxysection{State\+Base Class Reference}
+\label{classStateBase}\index{StateBase@{StateBase}}
+
+
+{\ttfamily \#include $<$state\+\_\+machine.\+hpp$>$}
+
+Inheritance diagram for State\+Base\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=9.000000cm]{d0/d57/classStateBase}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classStateBase_a0cbcc2bad688af16b8b646dc2f2a2357}{State\+Base}} (int state\+\_\+num, std\+::vector$<$ \mbox{\hyperlink{classStateBase}{State\+Base}} $\ast$ $>$ \&v, \mbox{\hyperlink{classFlagMachine}{Flag\+Machine}} \&f, \mbox{\hyperlink{classTMSOperations}{TMSOperations}} \&ops)
+\item 
+virtual \mbox{\hyperlink{classStateBase_ac5467363c95fb05265cd39d827fbea3b}{$\sim$\+State\+Base}} ()
+\item 
+bool \mbox{\hyperlink{classStateBase_a17bdafa3f818580d3ad83c20b2943531}{Check\+Activated}} ()
+\item 
+void \mbox{\hyperlink{classStateBase_a32393e632e5e1fdae18b5443232e334e}{Activate}} ()
+\item 
+void \mbox{\hyperlink{classStateBase_af8a670a6c148fb05aff174c4b8cd9e93}{Deactivate}} ()
+\item 
+int \mbox{\hyperlink{classStateBase_a628d9f9859640f85c5becc26c5506bc4}{Get\+State\+Num}} ()
+\item 
+virtual int \mbox{\hyperlink{classStateBase_abdb2ff0388db0a43df333d62ff0f328c}{Landmarks\+Planned}} ()
+\item 
+virtual int \mbox{\hyperlink{classStateBase_af644810402950ae6bf5548c3a7459d18}{Landmarks\+Digitized}} ()
+\item 
+virtual int \mbox{\hyperlink{classStateBase_aa4e592cd80b00c52e9191c42d3901e0e}{Tool\+Pose\+Planned}} ()
+\item 
+virtual int \mbox{\hyperlink{classStateBase_aec6b935494b97e79d229e08b39084fa3}{Registered}} ()
+\item 
+virtual int \mbox{\hyperlink{classStateBase_ae05477a41453340d1e1a8f0ca9c95205}{Clear\+Landmarks}} ()
+\item 
+virtual int \mbox{\hyperlink{classStateBase_a13783db2d1581e874c8d87bb9e8e250c}{Clear\+Digitization}} ()
+\item 
+virtual int \mbox{\hyperlink{classStateBase_aaa130ea9b22bd642af2153f35e51fd71}{Clear\+Registration}} ()
+\item 
+virtual int \mbox{\hyperlink{classStateBase_abd12638a9bfb343b0282a3e982d562e9}{Clear\+Tool\+Pose\+Plan}} ()
+\item 
+virtual int \mbox{\hyperlink{classStateBase_add421ed4671b1ec6e474661d8fd7181d}{Reinit\+State}} ()
+\item 
+virtual int \mbox{\hyperlink{classStateBase_a95517ed8278dd5a3ae0ca909ca3d1bbb}{Use\+Prev\+Register}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static bool \mbox{\hyperlink{classStateBase_a6914735a0e6e3b612b14908f0f2880c2}{Check\+If\+Unique\+Activation}} (const std\+::vector$<$ \mbox{\hyperlink{classStateBase}{State\+Base}} $\ast$ $>$ \&states)
+\item 
+static int \mbox{\hyperlink{classStateBase_a1d20c01ec6b79779a6a43ce51c4c21a1}{Get\+Activated\+State}} (const std\+::vector$<$ \mbox{\hyperlink{classStateBase}{State\+Base}} $\ast$ $>$ \&states)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classFlagMachine}{Flag\+Machine}} \& \mbox{\hyperlink{classStateBase_a390a2e2e436261f798f25ae7b245ffef}{flags\+\_\+}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual void \mbox{\hyperlink{classStateBase_ad6cfeac692f599ac9c2426feda585e30}{Transition\+Not\+Possible}} ()
+\item 
+void \mbox{\hyperlink{classStateBase_acf3da2ed941278c797dc46d4e70c88c1}{Transition}} (int target\+\_\+state, \mbox{\hyperlink{state__machine_8hpp_ad3a7e3899702159a13369e20e6906080}{Transition\+Ops}} funcs)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+const int \mbox{\hyperlink{classStateBase_ae4adfdc2998c7ef3d715a8387af780ec}{state\+\_\+num\+\_\+}}
+\item 
+const std\+::vector$<$ \mbox{\hyperlink{classStateBase}{State\+Base}} $\ast$ $>$ \& \mbox{\hyperlink{classStateBase_ab36b37f8e4d1faf17d1ebc60630b735c}{states\+\_\+}}
+\item 
+\mbox{\hyperlink{classTMSOperations}{TMSOperations}} \& \mbox{\hyperlink{classStateBase_aeea3b2e620ac9af2e71d5537f255ac77}{ops\+\_\+}}
+\item 
+bool \mbox{\hyperlink{classStateBase_a5870ffd1f3dbdf4679ff81020fdb91cf}{activated\+\_\+}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classStateBase_a0cbcc2bad688af16b8b646dc2f2a2357}\label{classStateBase_a0cbcc2bad688af16b8b646dc2f2a2357}} 
+\index{StateBase@{StateBase}!StateBase@{StateBase}}
+\index{StateBase@{StateBase}!StateBase@{StateBase}}
+\doxysubsubsection{\texorpdfstring{StateBase()}{StateBase()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classStateBase}{State\+Base\+::\+State\+Base}} (\begin{DoxyParamCaption}\item[{int}]{state\+\_\+num,  }\item[{std\+::vector$<$ \mbox{\hyperlink{classStateBase}{State\+Base}} $\ast$ $>$ \&}]{v,  }\item[{\mbox{\hyperlink{classFlagMachine}{Flag\+Machine}} \&}]{f,  }\item[{\mbox{\hyperlink{classTMSOperations}{TMSOperations}} \&}]{ops }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classStateBase_ac5467363c95fb05265cd39d827fbea3b}\label{classStateBase_ac5467363c95fb05265cd39d827fbea3b}} 
+\index{StateBase@{StateBase}!````~StateBase@{$\sim$StateBase}}
+\index{````~StateBase@{$\sim$StateBase}!StateBase@{StateBase}}
+\doxysubsubsection{\texorpdfstring{$\sim$StateBase()}{~StateBase()}}
+{\footnotesize\ttfamily State\+Base\+::$\sim$\+State\+Base (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classStateBase_a32393e632e5e1fdae18b5443232e334e}\label{classStateBase_a32393e632e5e1fdae18b5443232e334e}} 
+\index{StateBase@{StateBase}!Activate@{Activate}}
+\index{Activate@{Activate}!StateBase@{StateBase}}
+\doxysubsubsection{\texorpdfstring{Activate()}{Activate()}}
+{\footnotesize\ttfamily void State\+Base\+::\+Activate (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classStateBase_a17bdafa3f818580d3ad83c20b2943531}\label{classStateBase_a17bdafa3f818580d3ad83c20b2943531}} 
+\index{StateBase@{StateBase}!CheckActivated@{CheckActivated}}
+\index{CheckActivated@{CheckActivated}!StateBase@{StateBase}}
+\doxysubsubsection{\texorpdfstring{CheckActivated()}{CheckActivated()}}
+{\footnotesize\ttfamily bool State\+Base\+::\+Check\+Activated (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classStateBase_a6914735a0e6e3b612b14908f0f2880c2}\label{classStateBase_a6914735a0e6e3b612b14908f0f2880c2}} 
+\index{StateBase@{StateBase}!CheckIfUniqueActivation@{CheckIfUniqueActivation}}
+\index{CheckIfUniqueActivation@{CheckIfUniqueActivation}!StateBase@{StateBase}}
+\doxysubsubsection{\texorpdfstring{CheckIfUniqueActivation()}{CheckIfUniqueActivation()}}
+{\footnotesize\ttfamily bool State\+Base\+::\+Check\+If\+Unique\+Activation (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ \mbox{\hyperlink{classStateBase}{State\+Base}} $\ast$ $>$ \&}]{states }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{classStateBase_a13783db2d1581e874c8d87bb9e8e250c}\label{classStateBase_a13783db2d1581e874c8d87bb9e8e250c}} 
+\index{StateBase@{StateBase}!ClearDigitization@{ClearDigitization}}
+\index{ClearDigitization@{ClearDigitization}!StateBase@{StateBase}}
+\doxysubsubsection{\texorpdfstring{ClearDigitization()}{ClearDigitization()}}
+{\footnotesize\ttfamily int State\+Base\+::\+Clear\+Digitization (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{classState1100_ae4b56e086c8e8ee572fe4507a87aeaea}{State1100}}, and \mbox{\hyperlink{classState1110_a0f42f2b3baa708566843b59746d4e959}{State1110}}.
+
+\mbox{\Hypertarget{classStateBase_ae05477a41453340d1e1a8f0ca9c95205}\label{classStateBase_ae05477a41453340d1e1a8f0ca9c95205}} 
+\index{StateBase@{StateBase}!ClearLandmarks@{ClearLandmarks}}
+\index{ClearLandmarks@{ClearLandmarks}!StateBase@{StateBase}}
+\doxysubsubsection{\texorpdfstring{ClearLandmarks()}{ClearLandmarks()}}
+{\footnotesize\ttfamily int State\+Base\+::\+Clear\+Landmarks (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{classState1000_a7a4226249ecac26a8cd8ff9bbb46edaa}{State1000}}, \mbox{\hyperlink{classState1100_ae8386562426d93bec4bc77909575c261}{State1100}}, \mbox{\hyperlink{classState1101_a0407146c8bc3b5d4fab02c2636479478}{State1101}}, \mbox{\hyperlink{classState1010_a8cecb08f29a15fdb4e8747342f4b9baf}{State1010}}, \mbox{\hyperlink{classState1110_a8f70350eb59134a8bd6424ef8f4d0598}{State1110}}, and \mbox{\hyperlink{classState1111_a16037b6da2ed0ec7b4f60df9d114b6c1}{State1111}}.
+
+\mbox{\Hypertarget{classStateBase_aaa130ea9b22bd642af2153f35e51fd71}\label{classStateBase_aaa130ea9b22bd642af2153f35e51fd71}} 
+\index{StateBase@{StateBase}!ClearRegistration@{ClearRegistration}}
+\index{ClearRegistration@{ClearRegistration}!StateBase@{StateBase}}
+\doxysubsubsection{\texorpdfstring{ClearRegistration()}{ClearRegistration()}}
+{\footnotesize\ttfamily int State\+Base\+::\+Clear\+Registration (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{classState1101_a1fa1cc3546875e904f5d095fb349f319}{State1101}}, and \mbox{\hyperlink{classState1111_a22e2b8977b6faa8b326e799520ff80af}{State1111}}.
+
+\mbox{\Hypertarget{classStateBase_abd12638a9bfb343b0282a3e982d562e9}\label{classStateBase_abd12638a9bfb343b0282a3e982d562e9}} 
+\index{StateBase@{StateBase}!ClearToolPosePlan@{ClearToolPosePlan}}
+\index{ClearToolPosePlan@{ClearToolPosePlan}!StateBase@{StateBase}}
+\doxysubsubsection{\texorpdfstring{ClearToolPosePlan()}{ClearToolPosePlan()}}
+{\footnotesize\ttfamily int State\+Base\+::\+Clear\+Tool\+Pose\+Plan (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{classState0010_a15557f8170f79f9cc52a4d33f5c0b208}{State0010}}, \mbox{\hyperlink{classState1010_a15ecd0d6f5d2d740c0522aa8d71a77e3}{State1010}}, \mbox{\hyperlink{classState1110_ade285033af2ab7a32dabec807e243324}{State1110}}, and \mbox{\hyperlink{classState1111_a2311a41c24dfa8ebf766b73a71d60f6c}{State1111}}.
+
+\mbox{\Hypertarget{classStateBase_af8a670a6c148fb05aff174c4b8cd9e93}\label{classStateBase_af8a670a6c148fb05aff174c4b8cd9e93}} 
+\index{StateBase@{StateBase}!Deactivate@{Deactivate}}
+\index{Deactivate@{Deactivate}!StateBase@{StateBase}}
+\doxysubsubsection{\texorpdfstring{Deactivate()}{Deactivate()}}
+{\footnotesize\ttfamily void State\+Base\+::\+Deactivate (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classStateBase_a1d20c01ec6b79779a6a43ce51c4c21a1}\label{classStateBase_a1d20c01ec6b79779a6a43ce51c4c21a1}} 
+\index{StateBase@{StateBase}!GetActivatedState@{GetActivatedState}}
+\index{GetActivatedState@{GetActivatedState}!StateBase@{StateBase}}
+\doxysubsubsection{\texorpdfstring{GetActivatedState()}{GetActivatedState()}}
+{\footnotesize\ttfamily int State\+Base\+::\+Get\+Activated\+State (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ \mbox{\hyperlink{classStateBase}{State\+Base}} $\ast$ $>$ \&}]{states }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{classStateBase_a628d9f9859640f85c5becc26c5506bc4}\label{classStateBase_a628d9f9859640f85c5becc26c5506bc4}} 
+\index{StateBase@{StateBase}!GetStateNum@{GetStateNum}}
+\index{GetStateNum@{GetStateNum}!StateBase@{StateBase}}
+\doxysubsubsection{\texorpdfstring{GetStateNum()}{GetStateNum()}}
+{\footnotesize\ttfamily int State\+Base\+::\+Get\+State\+Num (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classStateBase_af644810402950ae6bf5548c3a7459d18}\label{classStateBase_af644810402950ae6bf5548c3a7459d18}} 
+\index{StateBase@{StateBase}!LandmarksDigitized@{LandmarksDigitized}}
+\index{LandmarksDigitized@{LandmarksDigitized}!StateBase@{StateBase}}
+\doxysubsubsection{\texorpdfstring{LandmarksDigitized()}{LandmarksDigitized()}}
+{\footnotesize\ttfamily int State\+Base\+::\+Landmarks\+Digitized (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{classState1000_a72da465eca32814f3c09deadfcfbfd65}{State1000}}, \mbox{\hyperlink{classState1100_a67b413184715cc88f29b8e932fea3bde}{State1100}}, \mbox{\hyperlink{classState1010_a1208b2693b8e4a48ecd38caf114d8990}{State1010}}, and \mbox{\hyperlink{classState1110_aaaf38918ae2bd4ae58af55ef2941b4c3}{State1110}}.
+
+\mbox{\Hypertarget{classStateBase_abdb2ff0388db0a43df333d62ff0f328c}\label{classStateBase_abdb2ff0388db0a43df333d62ff0f328c}} 
+\index{StateBase@{StateBase}!LandmarksPlanned@{LandmarksPlanned}}
+\index{LandmarksPlanned@{LandmarksPlanned}!StateBase@{StateBase}}
+\doxysubsubsection{\texorpdfstring{LandmarksPlanned()}{LandmarksPlanned()}}
+{\footnotesize\ttfamily int State\+Base\+::\+Landmarks\+Planned (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{classState0000_affc12936947012f9c905d6fbe14fb069}{State0000}}, \mbox{\hyperlink{classState1000_add195081634ecec0265ce465ec820426}{State1000}}, \mbox{\hyperlink{classState0010_a19185eefbc08d54d67cbbac932243f9c}{State0010}}, and \mbox{\hyperlink{classState1010_af09ad51a092c339eb4af58be1a5c1122}{State1010}}.
+
+\mbox{\Hypertarget{classStateBase_aec6b935494b97e79d229e08b39084fa3}\label{classStateBase_aec6b935494b97e79d229e08b39084fa3}} 
+\index{StateBase@{StateBase}!Registered@{Registered}}
+\index{Registered@{Registered}!StateBase@{StateBase}}
+\doxysubsubsection{\texorpdfstring{Registered()}{Registered()}}
+{\footnotesize\ttfamily int State\+Base\+::\+Registered (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{classState1100_adabaa5a5280d7f2c08c6e7afcf14feee}{State1100}}, and \mbox{\hyperlink{classState1110_a8946b52b687ffb7127735daacddf828b}{State1110}}.
+
+\mbox{\Hypertarget{classStateBase_add421ed4671b1ec6e474661d8fd7181d}\label{classStateBase_add421ed4671b1ec6e474661d8fd7181d}} 
+\index{StateBase@{StateBase}!ReinitState@{ReinitState}}
+\index{ReinitState@{ReinitState}!StateBase@{StateBase}}
+\doxysubsubsection{\texorpdfstring{ReinitState()}{ReinitState()}}
+{\footnotesize\ttfamily int State\+Base\+::\+Reinit\+State (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{classState0000_a665ec5bb5e85d6b16dc1caf06b0fd420}{State0000}}, \mbox{\hyperlink{classState1000_ac4fc0ae2893599ce70915b041018ccb3}{State1000}}, \mbox{\hyperlink{classState1100_a8973c3002ff09db9a861f7a2a6058ecf}{State1100}}, \mbox{\hyperlink{classState1101_af3f1f19b2ca0d9b0c108349247124d87}{State1101}}, \mbox{\hyperlink{classState0010_a26a95c199ac854717c3b771a61fe1a6a}{State0010}}, \mbox{\hyperlink{classState1010_a7984d19105dcead822ad59c75a5774c9}{State1010}}, \mbox{\hyperlink{classState1110_a245c7fa436e9f187fc523ca5f63b4c51}{State1110}}, and \mbox{\hyperlink{classState1111_a9d2b8d735846e846f22efe7d6e36ad8f}{State1111}}.
+
+\mbox{\Hypertarget{classStateBase_aa4e592cd80b00c52e9191c42d3901e0e}\label{classStateBase_aa4e592cd80b00c52e9191c42d3901e0e}} 
+\index{StateBase@{StateBase}!ToolPosePlanned@{ToolPosePlanned}}
+\index{ToolPosePlanned@{ToolPosePlanned}!StateBase@{StateBase}}
+\doxysubsubsection{\texorpdfstring{ToolPosePlanned()}{ToolPosePlanned()}}
+{\footnotesize\ttfamily int State\+Base\+::\+Tool\+Pose\+Planned (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{classState0000_ae5252e4bf478f595d321b247aa7d04db}{State0000}}, \mbox{\hyperlink{classState1000_afaf78ae74afa2adfda310c7d02af027d}{State1000}}, \mbox{\hyperlink{classState1100_ad7d51732e1d568755ec415c78dc3d154}{State1100}}, \mbox{\hyperlink{classState1101_a4100590433e627caa19548c42fa428cf}{State1101}}, \mbox{\hyperlink{classState0010_a70578568429d9dd868b7eb83591aafda}{State0010}}, \mbox{\hyperlink{classState1010_ab1e90231def95d75fdcdf3228fe4e89e}{State1010}}, \mbox{\hyperlink{classState1110_a2792860382155455e7af1881297b5b9f}{State1110}}, and \mbox{\hyperlink{classState1111_a7e7fd90f29863bd6fdb8c2507bb0bcc1}{State1111}}.
+
+\mbox{\Hypertarget{classStateBase_acf3da2ed941278c797dc46d4e70c88c1}\label{classStateBase_acf3da2ed941278c797dc46d4e70c88c1}} 
+\index{StateBase@{StateBase}!Transition@{Transition}}
+\index{Transition@{Transition}!StateBase@{StateBase}}
+\doxysubsubsection{\texorpdfstring{Transition()}{Transition()}}
+{\footnotesize\ttfamily void State\+Base\+::\+Transition (\begin{DoxyParamCaption}\item[{int}]{target\+\_\+state,  }\item[{\mbox{\hyperlink{state__machine_8hpp_ad3a7e3899702159a13369e20e6906080}{Transition\+Ops}}}]{funcs }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classStateBase_ad6cfeac692f599ac9c2426feda585e30}\label{classStateBase_ad6cfeac692f599ac9c2426feda585e30}} 
+\index{StateBase@{StateBase}!TransitionNotPossible@{TransitionNotPossible}}
+\index{TransitionNotPossible@{TransitionNotPossible}!StateBase@{StateBase}}
+\doxysubsubsection{\texorpdfstring{TransitionNotPossible()}{TransitionNotPossible()}}
+{\footnotesize\ttfamily void State\+Base\+::\+Transition\+Not\+Possible (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+\mbox{\Hypertarget{classStateBase_a95517ed8278dd5a3ae0ca909ca3d1bbb}\label{classStateBase_a95517ed8278dd5a3ae0ca909ca3d1bbb}} 
+\index{StateBase@{StateBase}!UsePrevRegister@{UsePrevRegister}}
+\index{UsePrevRegister@{UsePrevRegister}!StateBase@{StateBase}}
+\doxysubsubsection{\texorpdfstring{UsePrevRegister()}{UsePrevRegister()}}
+{\footnotesize\ttfamily int State\+Base\+::\+Use\+Prev\+Register (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{classState0000_a46488288d35e12b46040561575c5adaa}{State0000}}, \mbox{\hyperlink{classState1000_a7ac40eabf08dd4fd9362d6581834cb1a}{State1000}}, \mbox{\hyperlink{classState1100_ac70450c2462204b185cea96ccec2e067}{State1100}}, \mbox{\hyperlink{classState1101_a052f8c779cd1efb58ce4435c89fe9a0d}{State1101}}, \mbox{\hyperlink{classState0010_a952edb29becec1f3da09175c9d7b449b}{State0010}}, \mbox{\hyperlink{classState1010_a853f3dfffb1d399a86e4520b5db65c20}{State1010}}, \mbox{\hyperlink{classState1110_a7c3142d1527bdd74d98db2ce9ede10c4}{State1110}}, and \mbox{\hyperlink{classState1111_a5eb851ed047be560a9f4583025e40f49}{State1111}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classStateBase_a5870ffd1f3dbdf4679ff81020fdb91cf}\label{classStateBase_a5870ffd1f3dbdf4679ff81020fdb91cf}} 
+\index{StateBase@{StateBase}!activated\_@{activated\_}}
+\index{activated\_@{activated\_}!StateBase@{StateBase}}
+\doxysubsubsection{\texorpdfstring{activated\_}{activated\_}}
+{\footnotesize\ttfamily bool State\+Base\+::activated\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classStateBase_a390a2e2e436261f798f25ae7b245ffef}\label{classStateBase_a390a2e2e436261f798f25ae7b245ffef}} 
+\index{StateBase@{StateBase}!flags\_@{flags\_}}
+\index{flags\_@{flags\_}!StateBase@{StateBase}}
+\doxysubsubsection{\texorpdfstring{flags\_}{flags\_}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classFlagMachine}{Flag\+Machine}}\& State\+Base\+::flags\+\_\+}
+
+\mbox{\Hypertarget{classStateBase_aeea3b2e620ac9af2e71d5537f255ac77}\label{classStateBase_aeea3b2e620ac9af2e71d5537f255ac77}} 
+\index{StateBase@{StateBase}!ops\_@{ops\_}}
+\index{ops\_@{ops\_}!StateBase@{StateBase}}
+\doxysubsubsection{\texorpdfstring{ops\_}{ops\_}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classTMSOperations}{TMSOperations}}\& State\+Base\+::ops\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classStateBase_ae4adfdc2998c7ef3d715a8387af780ec}\label{classStateBase_ae4adfdc2998c7ef3d715a8387af780ec}} 
+\index{StateBase@{StateBase}!state\_num\_@{state\_num\_}}
+\index{state\_num\_@{state\_num\_}!StateBase@{StateBase}}
+\doxysubsubsection{\texorpdfstring{state\_num\_}{state\_num\_}}
+{\footnotesize\ttfamily const int State\+Base\+::state\+\_\+num\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classStateBase_ab36b37f8e4d1faf17d1ebc60630b735c}\label{classStateBase_ab36b37f8e4d1faf17d1ebc60630b735c}} 
+\index{StateBase@{StateBase}!states\_@{states\_}}
+\index{states\_@{states\_}!StateBase@{StateBase}}
+\doxysubsubsection{\texorpdfstring{states\_}{states\_}}
+{\footnotesize\ttfamily const std\+::vector$<$\mbox{\hyperlink{classStateBase}{State\+Base}}$\ast$$>$\& State\+Base\+::states\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+rotms\+\_\+ros\+\_\+state/include/rotms\+\_\+ros\+\_\+state/\mbox{\hyperlink{state__machine_8hpp}{state\+\_\+machine.\+hpp}}\item 
+rotms\+\_\+ros\+\_\+state/src/\mbox{\hyperlink{state__machine_8cpp}{state\+\_\+machine.\+cpp}}\end{DoxyCompactItemize}

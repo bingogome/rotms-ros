@@ -1,0 +1,113 @@
+\hypertarget{function__map__medimg_8cpp}{}\doxysection{rotms\+\_\+ros\+\_\+comm\+\_\+decode/src/function\+\_\+map\+\_\+medimg.cpp File Reference}
+\label{function__map__medimg_8cpp}\index{rotms\_ros\_comm\_decode/src/function\_map\_medimg.cpp@{rotms\_ros\_comm\_decode/src/function\_map\_medimg.cpp}}
+{\ttfamily \#include $<$map$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$ros/ros.\+h$>$}\newline
+{\ttfamily \#include $<$std\+\_\+msgs/\+Int16.\+h$>$}\newline
+{\ttfamily \#include $<$std\+\_\+msgs/\+Float32\+Multi\+Array.\+h$>$}\newline
+{\ttfamily \#include $<$geometry\+\_\+msgs/\+Quaternion.\+h$>$}\newline
+{\ttfamily \#include $<$geometry\+\_\+msgs/\+Point.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}function\+\_\+map\+\_\+medimg.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}decode\+\_\+node.\+hpp\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ double $>$ \mbox{\hyperlink{function__map__medimg_8cpp_a80e2b4a496c2eb3891df5c7084bddabb}{Sub\+String\+Tokenize2\+Double}} (std\+::string s, std\+::string del=\char`\"{}\+\_\+\char`\"{})
+\item 
+\mbox{\hyperlink{decode__node_8hpp_adac2684fbdd6a967c85ba825652134c4}{Func\+Map}} \mbox{\hyperlink{function__map__medimg_8cpp_a2d98f6c50bbb10c6b614d51dc4f89c80}{Get\+Func\+Map\+Med\+Img}} ()
+\item 
+void \mbox{\hyperlink{function__map__medimg_8cpp_a61c20ac63e1122bd5e3f904f9cef760d}{Start\+Auto\+Digitize}} (std\+::string \&ss, \mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{Publisher\+Vec}} \&pubs)
+\item 
+void \mbox{\hyperlink{function__map__medimg_8cpp_af18b9e973f7102b8372a67701aed65a4}{Start\+Registration}} (std\+::string \&ss, \mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{Publisher\+Vec}} \&pubs)
+\item 
+void \mbox{\hyperlink{function__map__medimg_8cpp_ae29d2a12b99f0c1400bef4ce8814b4cd}{Start\+Use\+Prev\+Registration}} (std\+::string \&ss, \mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{Publisher\+Vec}} \&pubs)
+\item 
+void \mbox{\hyperlink{function__map__medimg_8cpp_a73e268a960f9e19c52f0eb8f5d8ab2de}{Start\+TRECalculation}} (std\+::string \&ss, \mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{Publisher\+Vec}} \&pubs)
+\item 
+void \mbox{\hyperlink{function__map__medimg_8cpp_a4c98133e4b75a5f3dc8bff53abbd0372}{Stop\+TRECalculation}} (std\+::string \&ss, \mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{Publisher\+Vec}} \&pubs)
+\item 
+void \mbox{\hyperlink{function__map__medimg_8cpp_a74130a18b3c118e155aa7890eda1984a}{Landmark\+Current\+On\+Img}} (std\+::string \&ss, \mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{Publisher\+Vec}} \&pubs)
+\item 
+void \mbox{\hyperlink{function__map__medimg_8cpp_a74dfe14f9e12d38a9f3865779de794d2}{Landmark\+Num\+On\+Img}} (std\+::string \&ss, \mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{Publisher\+Vec}} \&pubs)
+\item 
+void \mbox{\hyperlink{function__map__medimg_8cpp_a1b13bc34383b74ef7f728e5bfeb5a4a5}{Landmark\+Last\+Received}} (std\+::string \&ss, \mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{Publisher\+Vec}} \&pubs)
+\item 
+void \mbox{\hyperlink{function__map__medimg_8cpp_a753284409fff9b29e427af610d2d1404}{Target\+Pose\+Orientation}} (std\+::string \&ss, \mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{Publisher\+Vec}} \&pubs)
+\item 
+void \mbox{\hyperlink{function__map__medimg_8cpp_a1c088e0eaaddbbc68e7c1ed34ef13fcd}{Target\+Pose\+Translation}} (std\+::string \&ss, \mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{Publisher\+Vec}} \&pubs)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{function__map__medimg_8cpp_a2d98f6c50bbb10c6b614d51dc4f89c80}\label{function__map__medimg_8cpp_a2d98f6c50bbb10c6b614d51dc4f89c80}} 
+\index{function\_map\_medimg.cpp@{function\_map\_medimg.cpp}!GetFuncMapMedImg@{GetFuncMapMedImg}}
+\index{GetFuncMapMedImg@{GetFuncMapMedImg}!function\_map\_medimg.cpp@{function\_map\_medimg.cpp}}
+\doxysubsubsection{\texorpdfstring{GetFuncMapMedImg()}{GetFuncMapMedImg()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{decode__node_8hpp_adac2684fbdd6a967c85ba825652134c4}{Func\+Map}} Get\+Func\+Map\+Med\+Img (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{function__map__medimg_8cpp_a74130a18b3c118e155aa7890eda1984a}\label{function__map__medimg_8cpp_a74130a18b3c118e155aa7890eda1984a}} 
+\index{function\_map\_medimg.cpp@{function\_map\_medimg.cpp}!LandmarkCurrentOnImg@{LandmarkCurrentOnImg}}
+\index{LandmarkCurrentOnImg@{LandmarkCurrentOnImg}!function\_map\_medimg.cpp@{function\_map\_medimg.cpp}}
+\doxysubsubsection{\texorpdfstring{LandmarkCurrentOnImg()}{LandmarkCurrentOnImg()}}
+{\footnotesize\ttfamily void Landmark\+Current\+On\+Img (\begin{DoxyParamCaption}\item[{std\+::string \&}]{ss,  }\item[{\mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{Publisher\+Vec}} \&}]{pubs }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{function__map__medimg_8cpp_a1b13bc34383b74ef7f728e5bfeb5a4a5}\label{function__map__medimg_8cpp_a1b13bc34383b74ef7f728e5bfeb5a4a5}} 
+\index{function\_map\_medimg.cpp@{function\_map\_medimg.cpp}!LandmarkLastReceived@{LandmarkLastReceived}}
+\index{LandmarkLastReceived@{LandmarkLastReceived}!function\_map\_medimg.cpp@{function\_map\_medimg.cpp}}
+\doxysubsubsection{\texorpdfstring{LandmarkLastReceived()}{LandmarkLastReceived()}}
+{\footnotesize\ttfamily void Landmark\+Last\+Received (\begin{DoxyParamCaption}\item[{std\+::string \&}]{ss,  }\item[{\mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{Publisher\+Vec}} \&}]{pubs }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{function__map__medimg_8cpp_a74dfe14f9e12d38a9f3865779de794d2}\label{function__map__medimg_8cpp_a74dfe14f9e12d38a9f3865779de794d2}} 
+\index{function\_map\_medimg.cpp@{function\_map\_medimg.cpp}!LandmarkNumOnImg@{LandmarkNumOnImg}}
+\index{LandmarkNumOnImg@{LandmarkNumOnImg}!function\_map\_medimg.cpp@{function\_map\_medimg.cpp}}
+\doxysubsubsection{\texorpdfstring{LandmarkNumOnImg()}{LandmarkNumOnImg()}}
+{\footnotesize\ttfamily void Landmark\+Num\+On\+Img (\begin{DoxyParamCaption}\item[{std\+::string \&}]{ss,  }\item[{\mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{Publisher\+Vec}} \&}]{pubs }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{function__map__medimg_8cpp_a61c20ac63e1122bd5e3f904f9cef760d}\label{function__map__medimg_8cpp_a61c20ac63e1122bd5e3f904f9cef760d}} 
+\index{function\_map\_medimg.cpp@{function\_map\_medimg.cpp}!StartAutoDigitize@{StartAutoDigitize}}
+\index{StartAutoDigitize@{StartAutoDigitize}!function\_map\_medimg.cpp@{function\_map\_medimg.cpp}}
+\doxysubsubsection{\texorpdfstring{StartAutoDigitize()}{StartAutoDigitize()}}
+{\footnotesize\ttfamily void Start\+Auto\+Digitize (\begin{DoxyParamCaption}\item[{std\+::string \&}]{ss,  }\item[{\mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{Publisher\+Vec}} \&}]{pubs }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{function__map__medimg_8cpp_af18b9e973f7102b8372a67701aed65a4}\label{function__map__medimg_8cpp_af18b9e973f7102b8372a67701aed65a4}} 
+\index{function\_map\_medimg.cpp@{function\_map\_medimg.cpp}!StartRegistration@{StartRegistration}}
+\index{StartRegistration@{StartRegistration}!function\_map\_medimg.cpp@{function\_map\_medimg.cpp}}
+\doxysubsubsection{\texorpdfstring{StartRegistration()}{StartRegistration()}}
+{\footnotesize\ttfamily void Start\+Registration (\begin{DoxyParamCaption}\item[{std\+::string \&}]{ss,  }\item[{\mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{Publisher\+Vec}} \&}]{pubs }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{function__map__medimg_8cpp_a73e268a960f9e19c52f0eb8f5d8ab2de}\label{function__map__medimg_8cpp_a73e268a960f9e19c52f0eb8f5d8ab2de}} 
+\index{function\_map\_medimg.cpp@{function\_map\_medimg.cpp}!StartTRECalculation@{StartTRECalculation}}
+\index{StartTRECalculation@{StartTRECalculation}!function\_map\_medimg.cpp@{function\_map\_medimg.cpp}}
+\doxysubsubsection{\texorpdfstring{StartTRECalculation()}{StartTRECalculation()}}
+{\footnotesize\ttfamily void Start\+TRECalculation (\begin{DoxyParamCaption}\item[{std\+::string \&}]{ss,  }\item[{\mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{Publisher\+Vec}} \&}]{pubs }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{function__map__medimg_8cpp_ae29d2a12b99f0c1400bef4ce8814b4cd}\label{function__map__medimg_8cpp_ae29d2a12b99f0c1400bef4ce8814b4cd}} 
+\index{function\_map\_medimg.cpp@{function\_map\_medimg.cpp}!StartUsePrevRegistration@{StartUsePrevRegistration}}
+\index{StartUsePrevRegistration@{StartUsePrevRegistration}!function\_map\_medimg.cpp@{function\_map\_medimg.cpp}}
+\doxysubsubsection{\texorpdfstring{StartUsePrevRegistration()}{StartUsePrevRegistration()}}
+{\footnotesize\ttfamily void Start\+Use\+Prev\+Registration (\begin{DoxyParamCaption}\item[{std\+::string \&}]{ss,  }\item[{\mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{Publisher\+Vec}} \&}]{pubs }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{function__map__medimg_8cpp_a4c98133e4b75a5f3dc8bff53abbd0372}\label{function__map__medimg_8cpp_a4c98133e4b75a5f3dc8bff53abbd0372}} 
+\index{function\_map\_medimg.cpp@{function\_map\_medimg.cpp}!StopTRECalculation@{StopTRECalculation}}
+\index{StopTRECalculation@{StopTRECalculation}!function\_map\_medimg.cpp@{function\_map\_medimg.cpp}}
+\doxysubsubsection{\texorpdfstring{StopTRECalculation()}{StopTRECalculation()}}
+{\footnotesize\ttfamily void Stop\+TRECalculation (\begin{DoxyParamCaption}\item[{std\+::string \&}]{ss,  }\item[{\mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{Publisher\+Vec}} \&}]{pubs }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{function__map__medimg_8cpp_a80e2b4a496c2eb3891df5c7084bddabb}\label{function__map__medimg_8cpp_a80e2b4a496c2eb3891df5c7084bddabb}} 
+\index{function\_map\_medimg.cpp@{function\_map\_medimg.cpp}!SubStringTokenize2Double@{SubStringTokenize2Double}}
+\index{SubStringTokenize2Double@{SubStringTokenize2Double}!function\_map\_medimg.cpp@{function\_map\_medimg.cpp}}
+\doxysubsubsection{\texorpdfstring{SubStringTokenize2Double()}{SubStringTokenize2Double()}}
+{\footnotesize\ttfamily std\+::vector$<$ double $>$ Sub\+String\+Tokenize2\+Double (\begin{DoxyParamCaption}\item[{std\+::string}]{s,  }\item[{std\+::string}]{del = {\ttfamily \char`\"{}\+\_\+\char`\"{}} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{function__map__medimg_8cpp_a753284409fff9b29e427af610d2d1404}\label{function__map__medimg_8cpp_a753284409fff9b29e427af610d2d1404}} 
+\index{function\_map\_medimg.cpp@{function\_map\_medimg.cpp}!TargetPoseOrientation@{TargetPoseOrientation}}
+\index{TargetPoseOrientation@{TargetPoseOrientation}!function\_map\_medimg.cpp@{function\_map\_medimg.cpp}}
+\doxysubsubsection{\texorpdfstring{TargetPoseOrientation()}{TargetPoseOrientation()}}
+{\footnotesize\ttfamily void Target\+Pose\+Orientation (\begin{DoxyParamCaption}\item[{std\+::string \&}]{ss,  }\item[{\mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{Publisher\+Vec}} \&}]{pubs }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{function__map__medimg_8cpp_a1c088e0eaaddbbc68e7c1ed34ef13fcd}\label{function__map__medimg_8cpp_a1c088e0eaaddbbc68e7c1ed34ef13fcd}} 
+\index{function\_map\_medimg.cpp@{function\_map\_medimg.cpp}!TargetPoseTranslation@{TargetPoseTranslation}}
+\index{TargetPoseTranslation@{TargetPoseTranslation}!function\_map\_medimg.cpp@{function\_map\_medimg.cpp}}
+\doxysubsubsection{\texorpdfstring{TargetPoseTranslation()}{TargetPoseTranslation()}}
+{\footnotesize\ttfamily void Target\+Pose\+Translation (\begin{DoxyParamCaption}\item[{std\+::string \&}]{ss,  }\item[{\mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{Publisher\+Vec}} \&}]{pubs }\end{DoxyParamCaption})}
+

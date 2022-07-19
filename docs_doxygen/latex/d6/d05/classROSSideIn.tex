@@ -1,0 +1,150 @@
+\hypertarget{classROSSideIn}{}\doxysection{ROSSide\+In Class Reference}
+\label{classROSSideIn}\index{ROSSideIn@{ROSSideIn}}
+
+
+{\ttfamily \#include $<$ros\+\_\+side\+\_\+in.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classROSSideIn_a0c6533adb755810bf355cffc98f57d01}{ROSSide\+In}} (ros\+::\+Node\+Handle \&n, boost\+::asio\+::io\+\_\+context \&io\+\_\+context, struct \mbox{\hyperlink{ros__side__in_8hpp_d0/d5c/structROSSideInConfig}{ROSSide\+In\+Config}} cfg)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classROSSideIn_abff463e1e7a99dada49dd65a4a8d3433}{Start\+Receive}} ()
+\item 
+void \mbox{\hyperlink{classROSSideIn_ad9fc755999ebe8c24440cfa4ea2e5534}{End\+Server\+Clean}} ()
+\item 
+void \mbox{\hyperlink{classROSSideIn_a7978acbe96a73b74fc7914b0682eb0f8}{Handle\+Receive}} (const boost\+::system\+::error\+\_\+code \&error, std\+::size\+\_\+t)
+\item 
+void \mbox{\hyperlink{classROSSideIn_a6a7e75ef8ea3cfe6a4a3432ba30a4079}{Handle\+Incoming}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+ros\+::\+Node\+Handle \& \mbox{\hyperlink{classROSSideIn_a18188221b73b0b01fe6687b08de1d567}{n\+\_\+}}
+\item 
+ros\+::\+Publisher \mbox{\hyperlink{classROSSideIn_a651f413d6a507434f7b59e403ce93be1}{pub\+\_\+test\+\_\+}}
+\item 
+std\+\_\+msgs\+::\+String \mbox{\hyperlink{classROSSideIn_af1151a5cdbc36211416831e1b00feaf3}{msg\+\_\+test\+\_\+}}
+\item 
+udp\+::socket \mbox{\hyperlink{classROSSideIn_aff00cdec17875ea5f54e496f5fe7e177}{socket\+\_\+}}
+\item 
+udp\+::endpoint \mbox{\hyperlink{classROSSideIn_a2feb80ee61e0141bfe706483b18b3b4a}{remote\+\_\+endpoint\+\_\+}}
+\item 
+boost\+::array$<$ char, 256 $>$ \mbox{\hyperlink{classROSSideIn_af0b2045b9c527bc488ab79b3bc09ad21}{recv\+\_\+buffer\+\_\+}}
+\item 
+struct \mbox{\hyperlink{ros__side__in_8hpp_d0/d5c/structROSSideInConfig}{ROSSide\+In\+Config}} \mbox{\hyperlink{classROSSideIn_ad086a736ff7c6834249ae59897ea8e08}{cfg\+\_\+}}
+\item 
+std\+::string \mbox{\hyperlink{classROSSideIn_aeeecaac9e531799627f68bc741621f02}{sscmd\+\_\+str\+\_\+}}
+\item 
+std\+::string \mbox{\hyperlink{classROSSideIn_a866c1fc0cd451f258293c88df570e99a}{ss\+\_\+str\+\_\+}}
+\item 
+char \mbox{\hyperlink{classROSSideIn_a5a5975554db4e3c33c9035c91e34dbce}{eom\+\_\+}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classROSSideIn_a0c6533adb755810bf355cffc98f57d01}\label{classROSSideIn_a0c6533adb755810bf355cffc98f57d01}} 
+\index{ROSSideIn@{ROSSideIn}!ROSSideIn@{ROSSideIn}}
+\index{ROSSideIn@{ROSSideIn}!ROSSideIn@{ROSSideIn}}
+\doxysubsubsection{\texorpdfstring{ROSSideIn()}{ROSSideIn()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classROSSideIn}{ROSSide\+In\+::\+ROSSide\+In}} (\begin{DoxyParamCaption}\item[{ros\+::\+Node\+Handle \&}]{n,  }\item[{boost\+::asio\+::io\+\_\+context \&}]{io\+\_\+context,  }\item[{struct \mbox{\hyperlink{ros__side__in_8hpp_d0/d5c/structROSSideInConfig}{ROSSide\+In\+Config}}}]{cfg }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classROSSideIn_ad9fc755999ebe8c24440cfa4ea2e5534}\label{classROSSideIn_ad9fc755999ebe8c24440cfa4ea2e5534}} 
+\index{ROSSideIn@{ROSSideIn}!EndServerClean@{EndServerClean}}
+\index{EndServerClean@{EndServerClean}!ROSSideIn@{ROSSideIn}}
+\doxysubsubsection{\texorpdfstring{EndServerClean()}{EndServerClean()}}
+{\footnotesize\ttfamily void ROSSide\+In\+::\+End\+Server\+Clean (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classROSSideIn_a6a7e75ef8ea3cfe6a4a3432ba30a4079}\label{classROSSideIn_a6a7e75ef8ea3cfe6a4a3432ba30a4079}} 
+\index{ROSSideIn@{ROSSideIn}!HandleIncoming@{HandleIncoming}}
+\index{HandleIncoming@{HandleIncoming}!ROSSideIn@{ROSSideIn}}
+\doxysubsubsection{\texorpdfstring{HandleIncoming()}{HandleIncoming()}}
+{\footnotesize\ttfamily void ROSSide\+In\+::\+Handle\+Incoming (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classROSSideIn_a7978acbe96a73b74fc7914b0682eb0f8}\label{classROSSideIn_a7978acbe96a73b74fc7914b0682eb0f8}} 
+\index{ROSSideIn@{ROSSideIn}!HandleReceive@{HandleReceive}}
+\index{HandleReceive@{HandleReceive}!ROSSideIn@{ROSSideIn}}
+\doxysubsubsection{\texorpdfstring{HandleReceive()}{HandleReceive()}}
+{\footnotesize\ttfamily void ROSSide\+In\+::\+Handle\+Receive (\begin{DoxyParamCaption}\item[{const boost\+::system\+::error\+\_\+code \&}]{error,  }\item[{std\+::size\+\_\+t}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classROSSideIn_abff463e1e7a99dada49dd65a4a8d3433}\label{classROSSideIn_abff463e1e7a99dada49dd65a4a8d3433}} 
+\index{ROSSideIn@{ROSSideIn}!StartReceive@{StartReceive}}
+\index{StartReceive@{StartReceive}!ROSSideIn@{ROSSideIn}}
+\doxysubsubsection{\texorpdfstring{StartReceive()}{StartReceive()}}
+{\footnotesize\ttfamily void ROSSide\+In\+::\+Start\+Receive (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classROSSideIn_ad086a736ff7c6834249ae59897ea8e08}\label{classROSSideIn_ad086a736ff7c6834249ae59897ea8e08}} 
+\index{ROSSideIn@{ROSSideIn}!cfg\_@{cfg\_}}
+\index{cfg\_@{cfg\_}!ROSSideIn@{ROSSideIn}}
+\doxysubsubsection{\texorpdfstring{cfg\_}{cfg\_}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{ros__side__in_8hpp_d0/d5c/structROSSideInConfig}{ROSSide\+In\+Config}} ROSSide\+In\+::cfg\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classROSSideIn_a5a5975554db4e3c33c9035c91e34dbce}\label{classROSSideIn_a5a5975554db4e3c33c9035c91e34dbce}} 
+\index{ROSSideIn@{ROSSideIn}!eom\_@{eom\_}}
+\index{eom\_@{eom\_}!ROSSideIn@{ROSSideIn}}
+\doxysubsubsection{\texorpdfstring{eom\_}{eom\_}}
+{\footnotesize\ttfamily char ROSSide\+In\+::eom\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classROSSideIn_af1151a5cdbc36211416831e1b00feaf3}\label{classROSSideIn_af1151a5cdbc36211416831e1b00feaf3}} 
+\index{ROSSideIn@{ROSSideIn}!msg\_test\_@{msg\_test\_}}
+\index{msg\_test\_@{msg\_test\_}!ROSSideIn@{ROSSideIn}}
+\doxysubsubsection{\texorpdfstring{msg\_test\_}{msg\_test\_}}
+{\footnotesize\ttfamily std\+\_\+msgs\+::\+String ROSSide\+In\+::msg\+\_\+test\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classROSSideIn_a18188221b73b0b01fe6687b08de1d567}\label{classROSSideIn_a18188221b73b0b01fe6687b08de1d567}} 
+\index{ROSSideIn@{ROSSideIn}!n\_@{n\_}}
+\index{n\_@{n\_}!ROSSideIn@{ROSSideIn}}
+\doxysubsubsection{\texorpdfstring{n\_}{n\_}}
+{\footnotesize\ttfamily ros\+::\+Node\+Handle\& ROSSide\+In\+::n\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classROSSideIn_a651f413d6a507434f7b59e403ce93be1}\label{classROSSideIn_a651f413d6a507434f7b59e403ce93be1}} 
+\index{ROSSideIn@{ROSSideIn}!pub\_test\_@{pub\_test\_}}
+\index{pub\_test\_@{pub\_test\_}!ROSSideIn@{ROSSideIn}}
+\doxysubsubsection{\texorpdfstring{pub\_test\_}{pub\_test\_}}
+{\footnotesize\ttfamily ros\+::\+Publisher ROSSide\+In\+::pub\+\_\+test\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classROSSideIn_af0b2045b9c527bc488ab79b3bc09ad21}\label{classROSSideIn_af0b2045b9c527bc488ab79b3bc09ad21}} 
+\index{ROSSideIn@{ROSSideIn}!recv\_buffer\_@{recv\_buffer\_}}
+\index{recv\_buffer\_@{recv\_buffer\_}!ROSSideIn@{ROSSideIn}}
+\doxysubsubsection{\texorpdfstring{recv\_buffer\_}{recv\_buffer\_}}
+{\footnotesize\ttfamily boost\+::array$<$char, 256$>$ ROSSide\+In\+::recv\+\_\+buffer\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classROSSideIn_a2feb80ee61e0141bfe706483b18b3b4a}\label{classROSSideIn_a2feb80ee61e0141bfe706483b18b3b4a}} 
+\index{ROSSideIn@{ROSSideIn}!remote\_endpoint\_@{remote\_endpoint\_}}
+\index{remote\_endpoint\_@{remote\_endpoint\_}!ROSSideIn@{ROSSideIn}}
+\doxysubsubsection{\texorpdfstring{remote\_endpoint\_}{remote\_endpoint\_}}
+{\footnotesize\ttfamily udp\+::endpoint ROSSide\+In\+::remote\+\_\+endpoint\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classROSSideIn_aff00cdec17875ea5f54e496f5fe7e177}\label{classROSSideIn_aff00cdec17875ea5f54e496f5fe7e177}} 
+\index{ROSSideIn@{ROSSideIn}!socket\_@{socket\_}}
+\index{socket\_@{socket\_}!ROSSideIn@{ROSSideIn}}
+\doxysubsubsection{\texorpdfstring{socket\_}{socket\_}}
+{\footnotesize\ttfamily udp\+::socket ROSSide\+In\+::socket\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classROSSideIn_a866c1fc0cd451f258293c88df570e99a}\label{classROSSideIn_a866c1fc0cd451f258293c88df570e99a}} 
+\index{ROSSideIn@{ROSSideIn}!ss\_str\_@{ss\_str\_}}
+\index{ss\_str\_@{ss\_str\_}!ROSSideIn@{ROSSideIn}}
+\doxysubsubsection{\texorpdfstring{ss\_str\_}{ss\_str\_}}
+{\footnotesize\ttfamily std\+::string ROSSide\+In\+::ss\+\_\+str\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classROSSideIn_aeeecaac9e531799627f68bc741621f02}\label{classROSSideIn_aeeecaac9e531799627f68bc741621f02}} 
+\index{ROSSideIn@{ROSSideIn}!sscmd\_str\_@{sscmd\_str\_}}
+\index{sscmd\_str\_@{sscmd\_str\_}!ROSSideIn@{ROSSideIn}}
+\doxysubsubsection{\texorpdfstring{sscmd\_str\_}{sscmd\_str\_}}
+{\footnotesize\ttfamily std\+::string ROSSide\+In\+::sscmd\+\_\+str\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+rotms\+\_\+ros\+\_\+comm/include/rotms\+\_\+ros\+\_\+comm/\mbox{\hyperlink{ros__side__in_8hpp}{ros\+\_\+side\+\_\+in.\+hpp}}\item 
+rotms\+\_\+ros\+\_\+comm/src/\mbox{\hyperlink{ros__side__in_8cpp}{ros\+\_\+side\+\_\+in.\+cpp}}\end{DoxyCompactItemize}

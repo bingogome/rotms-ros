@@ -1,0 +1,107 @@
+\hypertarget{dispatcher__utility_8cpp}{}\doxysection{rotms\+\_\+ros\+\_\+dispatcher/src/dispatcher\+\_\+utility.cpp File Reference}
+\label{dispatcher__utility_8cpp}\index{rotms\_ros\_dispatcher/src/dispatcher\_utility.cpp@{rotms\_ros\_dispatcher/src/dispatcher\_utility.cpp}}
+{\ttfamily \#include \char`\"{}dispatcher\+\_\+utility.\+hpp\char`\"{}}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$iomanip$>$}\newline
+{\ttfamily \#include $<$time.\+h$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include $<$yaml-\/cpp/yaml.\+h$>$}\newline
+{\ttfamily \#include $<$std\+\_\+msgs/\+Float32\+Multi\+Array.\+h$>$}\newline
+{\ttfamily \#include $<$tf2/\+Linear\+Math/\+Transform.\+h$>$}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{dispatcher__utility_8cpp_a6380bb861b46be62a6f35766d9628b2f}{Save\+Landmark\+Plan\+Data}} (struct \mbox{\hyperlink{dispatcher__utility_8hpp_d8/de1/structTempDataCache}{Temp\+Data\+Cache}} datacache, std\+::string f)
+\item 
+void \mbox{\hyperlink{dispatcher__utility_8cpp_a01f7dcca87d58af6cfdf1daf37add215}{Save\+Tool\+Pose\+Data}} (struct \mbox{\hyperlink{dispatcher__utility_8hpp_d8/de1/structTempDataCache}{Temp\+Data\+Cache}} datacache, std\+::string f)
+\item 
+void \mbox{\hyperlink{dispatcher__utility_8cpp_a889f53d53e4c3f0f4ea3cc6334b4c03b}{Save\+Current\+Jnts\+As\+Init}} (std\+\_\+msgs\+::\+Float32\+Multi\+Array jnts, std\+::string f)
+\item 
+std\+::vector$<$ double $>$ \mbox{\hyperlink{dispatcher__utility_8cpp_ab771cfd06f9137bc411f57992c26cb26}{Read\+Jnts\+From\+Config}} (std\+::string f)
+\item 
+std\+::string \mbox{\hyperlink{dispatcher__utility_8cpp_ab2d753695663e20c34081be782e175ca}{Format\+Double2\+String}} (double a, int dec)
+\item 
+std\+::string \mbox{\hyperlink{dispatcher__utility_8cpp_ab49be3129113686ea2a942757c791ad3}{Get\+Time\+String}} ()
+\item 
+std\+::vector$<$ tf2\+::\+Vector3 $>$ \mbox{\hyperlink{dispatcher__utility_8cpp_acb4aa1770174db9251af33b5d27842b5}{Read\+Point\+Cloud\+From\+YAML}} (std\+::string f, std\+::string pnt)
+\item 
+tf2\+::\+Transform \mbox{\hyperlink{dispatcher__utility_8cpp_ae2932b217afe5ca3cf67b25c0f998408}{Read\+Transform\+From\+YAML}} (std\+::string f)
+\item 
+double \mbox{\hyperlink{dispatcher__utility_8cpp_aa54b16671b6d585e5790516d9a76224d}{Get\+Pair\+Point\+Residual}} (tf2\+::\+Transform tr, std\+::vector$<$ tf2\+::\+Vector3 $>$ A, std\+::vector$<$ tf2\+::\+Vector3 $>$ B)
+\item 
+std\+::vector$<$ double $>$ \mbox{\hyperlink{dispatcher__utility_8cpp_aeeb6f99506befb4a3c5d8b47b06f263b}{quat2eul}} (std\+::vector$<$ double $>$ q)
+\item 
+std\+::vector$<$ double $>$ \mbox{\hyperlink{dispatcher__utility_8cpp_a57c626904e9aa52cea36f71722072054}{eul2quat}} (std\+::vector$<$ double $>$ eul)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{dispatcher__utility_8cpp_a57c626904e9aa52cea36f71722072054}\label{dispatcher__utility_8cpp_a57c626904e9aa52cea36f71722072054}} 
+\index{dispatcher\_utility.cpp@{dispatcher\_utility.cpp}!eul2quat@{eul2quat}}
+\index{eul2quat@{eul2quat}!dispatcher\_utility.cpp@{dispatcher\_utility.cpp}}
+\doxysubsubsection{\texorpdfstring{eul2quat()}{eul2quat()}}
+{\footnotesize\ttfamily std\+::vector$<$ double $>$ eul2quat (\begin{DoxyParamCaption}\item[{std\+::vector$<$ double $>$}]{eul }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{dispatcher__utility_8cpp_ab2d753695663e20c34081be782e175ca}\label{dispatcher__utility_8cpp_ab2d753695663e20c34081be782e175ca}} 
+\index{dispatcher\_utility.cpp@{dispatcher\_utility.cpp}!FormatDouble2String@{FormatDouble2String}}
+\index{FormatDouble2String@{FormatDouble2String}!dispatcher\_utility.cpp@{dispatcher\_utility.cpp}}
+\doxysubsubsection{\texorpdfstring{FormatDouble2String()}{FormatDouble2String()}}
+{\footnotesize\ttfamily std\+::string Format\+Double2\+String (\begin{DoxyParamCaption}\item[{double}]{a,  }\item[{int}]{dec }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{dispatcher__utility_8cpp_aa54b16671b6d585e5790516d9a76224d}\label{dispatcher__utility_8cpp_aa54b16671b6d585e5790516d9a76224d}} 
+\index{dispatcher\_utility.cpp@{dispatcher\_utility.cpp}!GetPairPointResidual@{GetPairPointResidual}}
+\index{GetPairPointResidual@{GetPairPointResidual}!dispatcher\_utility.cpp@{dispatcher\_utility.cpp}}
+\doxysubsubsection{\texorpdfstring{GetPairPointResidual()}{GetPairPointResidual()}}
+{\footnotesize\ttfamily double Get\+Pair\+Point\+Residual (\begin{DoxyParamCaption}\item[{tf2\+::\+Transform}]{tr,  }\item[{std\+::vector$<$ tf2\+::\+Vector3 $>$}]{A,  }\item[{std\+::vector$<$ tf2\+::\+Vector3 $>$}]{B }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{dispatcher__utility_8cpp_ab49be3129113686ea2a942757c791ad3}\label{dispatcher__utility_8cpp_ab49be3129113686ea2a942757c791ad3}} 
+\index{dispatcher\_utility.cpp@{dispatcher\_utility.cpp}!GetTimeString@{GetTimeString}}
+\index{GetTimeString@{GetTimeString}!dispatcher\_utility.cpp@{dispatcher\_utility.cpp}}
+\doxysubsubsection{\texorpdfstring{GetTimeString()}{GetTimeString()}}
+{\footnotesize\ttfamily std\+::string Get\+Time\+String (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{dispatcher__utility_8cpp_aeeb6f99506befb4a3c5d8b47b06f263b}\label{dispatcher__utility_8cpp_aeeb6f99506befb4a3c5d8b47b06f263b}} 
+\index{dispatcher\_utility.cpp@{dispatcher\_utility.cpp}!quat2eul@{quat2eul}}
+\index{quat2eul@{quat2eul}!dispatcher\_utility.cpp@{dispatcher\_utility.cpp}}
+\doxysubsubsection{\texorpdfstring{quat2eul()}{quat2eul()}}
+{\footnotesize\ttfamily std\+::vector$<$ double $>$ quat2eul (\begin{DoxyParamCaption}\item[{std\+::vector$<$ double $>$}]{q }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{dispatcher__utility_8cpp_ab771cfd06f9137bc411f57992c26cb26}\label{dispatcher__utility_8cpp_ab771cfd06f9137bc411f57992c26cb26}} 
+\index{dispatcher\_utility.cpp@{dispatcher\_utility.cpp}!ReadJntsFromConfig@{ReadJntsFromConfig}}
+\index{ReadJntsFromConfig@{ReadJntsFromConfig}!dispatcher\_utility.cpp@{dispatcher\_utility.cpp}}
+\doxysubsubsection{\texorpdfstring{ReadJntsFromConfig()}{ReadJntsFromConfig()}}
+{\footnotesize\ttfamily std\+::vector$<$ double $>$ Read\+Jnts\+From\+Config (\begin{DoxyParamCaption}\item[{std\+::string}]{f }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{dispatcher__utility_8cpp_acb4aa1770174db9251af33b5d27842b5}\label{dispatcher__utility_8cpp_acb4aa1770174db9251af33b5d27842b5}} 
+\index{dispatcher\_utility.cpp@{dispatcher\_utility.cpp}!ReadPointCloudFromYAML@{ReadPointCloudFromYAML}}
+\index{ReadPointCloudFromYAML@{ReadPointCloudFromYAML}!dispatcher\_utility.cpp@{dispatcher\_utility.cpp}}
+\doxysubsubsection{\texorpdfstring{ReadPointCloudFromYAML()}{ReadPointCloudFromYAML()}}
+{\footnotesize\ttfamily std\+::vector$<$ tf2\+::\+Vector3 $>$ Read\+Point\+Cloud\+From\+YAML (\begin{DoxyParamCaption}\item[{std\+::string}]{f,  }\item[{std\+::string}]{pnt }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{dispatcher__utility_8cpp_ae2932b217afe5ca3cf67b25c0f998408}\label{dispatcher__utility_8cpp_ae2932b217afe5ca3cf67b25c0f998408}} 
+\index{dispatcher\_utility.cpp@{dispatcher\_utility.cpp}!ReadTransformFromYAML@{ReadTransformFromYAML}}
+\index{ReadTransformFromYAML@{ReadTransformFromYAML}!dispatcher\_utility.cpp@{dispatcher\_utility.cpp}}
+\doxysubsubsection{\texorpdfstring{ReadTransformFromYAML()}{ReadTransformFromYAML()}}
+{\footnotesize\ttfamily tf2\+::\+Transform Read\+Transform\+From\+YAML (\begin{DoxyParamCaption}\item[{std\+::string}]{f }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{dispatcher__utility_8cpp_a889f53d53e4c3f0f4ea3cc6334b4c03b}\label{dispatcher__utility_8cpp_a889f53d53e4c3f0f4ea3cc6334b4c03b}} 
+\index{dispatcher\_utility.cpp@{dispatcher\_utility.cpp}!SaveCurrentJntsAsInit@{SaveCurrentJntsAsInit}}
+\index{SaveCurrentJntsAsInit@{SaveCurrentJntsAsInit}!dispatcher\_utility.cpp@{dispatcher\_utility.cpp}}
+\doxysubsubsection{\texorpdfstring{SaveCurrentJntsAsInit()}{SaveCurrentJntsAsInit()}}
+{\footnotesize\ttfamily void Save\+Current\+Jnts\+As\+Init (\begin{DoxyParamCaption}\item[{std\+\_\+msgs\+::\+Float32\+Multi\+Array}]{jnts,  }\item[{std\+::string}]{f }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{dispatcher__utility_8cpp_a6380bb861b46be62a6f35766d9628b2f}\label{dispatcher__utility_8cpp_a6380bb861b46be62a6f35766d9628b2f}} 
+\index{dispatcher\_utility.cpp@{dispatcher\_utility.cpp}!SaveLandmarkPlanData@{SaveLandmarkPlanData}}
+\index{SaveLandmarkPlanData@{SaveLandmarkPlanData}!dispatcher\_utility.cpp@{dispatcher\_utility.cpp}}
+\doxysubsubsection{\texorpdfstring{SaveLandmarkPlanData()}{SaveLandmarkPlanData()}}
+{\footnotesize\ttfamily void Save\+Landmark\+Plan\+Data (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{dispatcher__utility_8hpp_d8/de1/structTempDataCache}{Temp\+Data\+Cache}}}]{datacache,  }\item[{std\+::string}]{f }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{dispatcher__utility_8cpp_a01f7dcca87d58af6cfdf1daf37add215}\label{dispatcher__utility_8cpp_a01f7dcca87d58af6cfdf1daf37add215}} 
+\index{dispatcher\_utility.cpp@{dispatcher\_utility.cpp}!SaveToolPoseData@{SaveToolPoseData}}
+\index{SaveToolPoseData@{SaveToolPoseData}!dispatcher\_utility.cpp@{dispatcher\_utility.cpp}}
+\doxysubsubsection{\texorpdfstring{SaveToolPoseData()}{SaveToolPoseData()}}
+{\footnotesize\ttfamily void Save\+Tool\+Pose\+Data (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{dispatcher__utility_8hpp_d8/de1/structTempDataCache}{Temp\+Data\+Cache}}}]{datacache,  }\item[{std\+::string}]{f }\end{DoxyParamCaption})}
+

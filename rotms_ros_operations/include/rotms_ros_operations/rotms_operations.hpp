@@ -29,7 +29,7 @@ SOFTWARE.
 #include "rotms_ros_msgs/PoseValid.h"
 
 
-struct OpsVolatileTempDataCache 
+struct TempDataCacheOps 
 {
     int landmark_total = -1;
     std::vector<std::vector<double>> landmarkdig;
@@ -66,9 +66,9 @@ private:
     ros::Publisher pub_run_opttracker_tr_bodyref_ptrtip_ = 
         n_.advertise<std_msgs::String>("/Kinematics/Flag_bodyref_ptrtip", 2);
 
-    struct OpsVolatileTempDataCache datacache_;
+    struct TempDataCacheOps datacache_;
     void ResetOpsVolatileDataCache();
 
 };
 
-void SaveLandmarkDigData(struct OpsVolatileTempDataCache datacache, std::string f);
+void SaveLandmarkDigData(struct TempDataCacheOps datacache, std::string f);

@@ -25,19 +25,19 @@ SOFTWARE.
 #include <ros/ros.h>
 #include <std_msgs/String.h>
 
-class TransformMngrBodyTool
+class MngrTrBodyTool
 {
 // Manages the flag of running the calculation of the transform
 public:
     
-    TransformMngrBodyTool(ros::NodeHandle& n) : n_(n){}
+    MngrTrBodyTool(ros::NodeHandle& n) : n_(n){}
     bool run_flag = false;
 
 private:
 
     ros::NodeHandle& n_;
     ros::Subscriber sub_run_ = n_.subscribe(
-        "/Kinematics/Flag_body_tool", 2, &TransformMngrBodyTool::FlagCallBack, this);
+        "/Kinematics/Flag_body_tool", 2, &MngrTrBodyTool::FlagCallBack, this);
     void FlagCallBack(const std_msgs::String::ConstPtr& msg)
     {
         if(msg->data.compare("_start__")==0) run_flag = true;
@@ -54,7 +54,7 @@ int main(int argc, char **argv)
     ros::Rate rate(10.0);
 
     // Instantiate the flag manager
-    TransformMngrBodyTool mngr(nh);
+    MngrTrBodyTool mngr(nh);
 
     // Initialize the requred transforms
 

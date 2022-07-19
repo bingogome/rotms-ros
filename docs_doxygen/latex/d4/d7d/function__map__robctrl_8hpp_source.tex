@@ -1,0 +1,73 @@
+\hypertarget{function__map__robctrl_8hpp_source}{}\doxysection{function\+\_\+map\+\_\+robctrl.\+hpp}
+\label{function__map__robctrl_8hpp_source}\index{rotms\_ros\_comm\_decode/include/rotms\_ros\_comm\_decode/function\_map\_robctrl.hpp@{rotms\_ros\_comm\_decode/include/rotms\_ros\_comm\_decode/function\_map\_robctrl.hpp}}
+\mbox{\hyperlink{function__map__robctrl_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/***}}
+\DoxyCodeLine{2 \textcolor{comment}{MIT License}}
+\DoxyCodeLine{3 \textcolor{comment}{}}
+\DoxyCodeLine{4 \textcolor{comment}{Copyright (c) 2022 Yihao Liu, Johns Hopkins University}}
+\DoxyCodeLine{5 \textcolor{comment}{}}
+\DoxyCodeLine{6 \textcolor{comment}{Permission is hereby granted, free of charge, to any person obtaining a copy}}
+\DoxyCodeLine{7 \textcolor{comment}{of this software and associated documentation files (the "{}Software"{}), to deal}}
+\DoxyCodeLine{8 \textcolor{comment}{in the Software without restriction, including without limitation the rights}}
+\DoxyCodeLine{9 \textcolor{comment}{to use, copy, modify, merge, publish, distribute, sublicense, and/or sell}}
+\DoxyCodeLine{10 \textcolor{comment}{copies of the Software, and to permit persons to whom the Software is}}
+\DoxyCodeLine{11 \textcolor{comment}{furnished to do so, subject to the following conditions:}}
+\DoxyCodeLine{12 \textcolor{comment}{}}
+\DoxyCodeLine{13 \textcolor{comment}{The above copyright notice and this permission notice shall be included in all}}
+\DoxyCodeLine{14 \textcolor{comment}{copies or substantial portions of the Software.}}
+\DoxyCodeLine{15 \textcolor{comment}{}}
+\DoxyCodeLine{16 \textcolor{comment}{THE SOFTWARE IS PROVIDED "{}AS IS"{}, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR}}
+\DoxyCodeLine{17 \textcolor{comment}{IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,}}
+\DoxyCodeLine{18 \textcolor{comment}{FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE}}
+\DoxyCodeLine{19 \textcolor{comment}{AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER}}
+\DoxyCodeLine{20 \textcolor{comment}{LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,}}
+\DoxyCodeLine{21 \textcolor{comment}{OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE}}
+\DoxyCodeLine{22 \textcolor{comment}{SOFTWARE.}}
+\DoxyCodeLine{23 \textcolor{comment}{***/}}
+\DoxyCodeLine{24 }
+\DoxyCodeLine{25 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{26 \textcolor{preprocessor}{\#include <map>}}
+\DoxyCodeLine{27 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{decode__node_8hpp}{decode\_node.hpp}}"{}}}
+\DoxyCodeLine{28 }
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30 }
+\DoxyCodeLine{31 \textcolor{keyword}{class }\mbox{\hyperlink{classCommDecoderRobCtrl}{CommDecoderRobCtrl}} : \textcolor{keyword}{public} \mbox{\hyperlink{classCommDecoder}{CommDecoder}}}
+\DoxyCodeLine{32 \{}
+\DoxyCodeLine{33 }
+\DoxyCodeLine{34 \textcolor{keyword}{public}:}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36     \mbox{\hyperlink{classCommDecoderRobCtrl}{CommDecoderRobCtrl}}(}
+\DoxyCodeLine{37         ros::NodeHandle\& n, }
+\DoxyCodeLine{38         \textcolor{keyword}{const} std::string modulesuffix,}
+\DoxyCodeLine{39         \mbox{\hyperlink{decode__node_8hpp_adac2684fbdd6a967c85ba825652134c4}{FuncMap}} opsdict}
+\DoxyCodeLine{40         );}
+\DoxyCodeLine{41 }
+\DoxyCodeLine{42 \};}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44 \mbox{\hyperlink{decode__node_8hpp_adac2684fbdd6a967c85ba825652134c4}{FuncMap}} \mbox{\hyperlink{function__map__robctrl_8hpp_aaad550c9df24f13b3036318e05916941}{GetFuncMapRobCtrl}}();}
+\DoxyCodeLine{45 }
+\DoxyCodeLine{46 \textcolor{comment}{// Parse received messages into double vector}}
+\DoxyCodeLine{47 \textcolor{comment}{// Input format has to be num1\_num2\_num3\_ (cannot be num1\_num2\_num3)}}
+\DoxyCodeLine{48 std::vector<double> \mbox{\hyperlink{function__map__robctrl_8hpp_acb80a80a05dfad63afb1f1966dc52b5d}{ParseString2DoubleVec}}(std::string s);}
+\DoxyCodeLine{49 }
+\DoxyCodeLine{50 \textcolor{keywordtype}{void} \mbox{\hyperlink{function__map__robctrl_8hpp_ad637e9f543d82daaa588316b690dcd83}{GetJntsAngs}}(std::string\& ss, \mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{PublisherVec}}\& pubs);}
+\DoxyCodeLine{51 \textcolor{keywordtype}{void} \mbox{\hyperlink{function__map__robctrl_8hpp_ac21f07b6119dfbd70a22f71c7a0129d7}{GetEFFPose}}(std::string\& ss, \mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{PublisherVec}}\& pubs);}
+\DoxyCodeLine{52 \textcolor{keywordtype}{void} \mbox{\hyperlink{function__map__robctrl_8hpp_a2e964bf5605406b79999ed5dfc848c5d}{SetCurJntsAsInit}}(std::string\& ss, \mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{PublisherVec}}\& pubs);}
+\DoxyCodeLine{53 }
+\DoxyCodeLine{54 \textcolor{keywordtype}{void} \mbox{\hyperlink{function__map__robctrl_8hpp_ad6bf9da7bd79d642a717dc788e91d552}{ExecuteMotion}}(std::string\& ss, \mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{PublisherVec}}\& pubs);}
+\DoxyCodeLine{55 \textcolor{keywordtype}{void} \mbox{\hyperlink{function__map__robctrl_8hpp_a2b4f1e85fd98cc4dbbcf74f962cf3ca9}{ExecuteMoveConfirm}}(std::string\& ss, \mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{PublisherVec}}\& pubs);}
+\DoxyCodeLine{56 \textcolor{keywordtype}{void} \mbox{\hyperlink{function__map__robctrl_8hpp_a163ff3886aeea3039d49b0d6f1daeb6b}{ExecuteEndAndBack}}(std::string\& ss, \mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{PublisherVec}}\& pubs);}
+\DoxyCodeLine{57 \textcolor{keywordtype}{void} \mbox{\hyperlink{function__map__robctrl_8hpp_a08974e84359ebac97dd794b64a2d981e}{ExecuteBackInit}}(std::string\& ss, \mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{PublisherVec}}\& pubs);}
+\DoxyCodeLine{58 \textcolor{keywordtype}{void} \mbox{\hyperlink{function__map__robctrl_8hpp_a94674ccc0697ce7597cfd54382c5b7c9}{ExecuteBackOffset}}(std::string\& ss, \mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{PublisherVec}}\& pubs);}
+\DoxyCodeLine{59 \textcolor{keywordtype}{void} \mbox{\hyperlink{function__map__robctrl_8hpp_a2b51dc82758fc4fc15fdd3979fc5bbab}{ExecuteRobotHoming}}(std::string\& ss, \mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{PublisherVec}}\& pubs);}
+\DoxyCodeLine{60 }
+\DoxyCodeLine{61 \textcolor{keywordtype}{void} \mbox{\hyperlink{function__map__robctrl_8hpp_a68af6342fe1f3cda1cc5d308da760b54}{SessionReinit}}(std::string\& ss, \mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{PublisherVec}}\& pubs);}
+\DoxyCodeLine{62 }
+\DoxyCodeLine{63 \textcolor{keywordtype}{void} \mbox{\hyperlink{function__map__robctrl_8hpp_a40f354cd4f1112165810f62e9fd71849}{ManualAdjustT}}(std::string\& ss, \mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{PublisherVec}}\& pubs);}
+\DoxyCodeLine{64 \textcolor{keywordtype}{void} \mbox{\hyperlink{function__map__robctrl_8hpp_a28de0e398466588f91affe36e2ed5ef1}{ManualAdjustR}}(std::string\& ss, \mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{PublisherVec}}\& pubs);}
+\DoxyCodeLine{65 }
+\DoxyCodeLine{66 \textcolor{keywordtype}{void} \mbox{\hyperlink{function__map__robctrl_8hpp_af45f2018c6da3735fecb47469f0f39d3}{ConnectRobot}}(std::string\& ss, \mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{PublisherVec}}\& pubs);}
+\DoxyCodeLine{67 \textcolor{keywordtype}{void} \mbox{\hyperlink{function__map__robctrl_8hpp_a2e889ea998d3741a7ffaf3cc93cb0dcb}{DisconnectRobot}}(std::string\& ss, \mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{PublisherVec}}\& pubs);}
+
+\end{DoxyCode}

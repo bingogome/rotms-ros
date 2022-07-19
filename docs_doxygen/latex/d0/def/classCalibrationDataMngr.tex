@@ -1,0 +1,115 @@
+\hypertarget{classCalibrationDataMngr}{}\doxysection{Calibration\+Data\+Mngr Class Reference}
+\label{classCalibrationDataMngr}\index{CalibrationDataMngr@{CalibrationDataMngr}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classCalibrationDataMngr_a9203dc94b428309c2362e71a947519ff}{Calibration\+Data\+Mngr}} (ros\+::\+Node\+Handle \&n, \mbox{\hyperlink{node__calibration__data_8cpp_ad176ab05112e9ddb9a8f498bf0edef4a}{Pub\+Map}} \&pubs)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classCalibrationDataMngr_a1e01ef84d0c144e731c0e91a2c187e51}{Re\+Init\+Callback}} (const std\+\_\+msgs\+::\+String\+::\+Const\+Ptr \&msg)
+\item 
+void \mbox{\hyperlink{classCalibrationDataMngr_abee5705d6f700beeb8f9ad4ea19622bc}{Change\+Offset\+Call\+Back}} (const geometry\+\_\+msgs\+::\+Pose\+::\+Const\+Ptr \&msg)
+\item 
+void \mbox{\hyperlink{classCalibrationDataMngr_aae731b16d407949a64bcfd795440202b}{Reinit\+Offset\+Call\+Back}} (const std\+\_\+msgs\+::\+String\+::\+Const\+Ptr \&msg)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+ros\+::\+Node\+Handle \& \mbox{\hyperlink{classCalibrationDataMngr_a10c8e06719d187cb08607cb08dfbe66e}{n\+\_\+}}
+\item 
+\mbox{\hyperlink{node__calibration__data_8cpp_ad176ab05112e9ddb9a8f498bf0edef4a}{Pub\+Map}} \& \mbox{\hyperlink{classCalibrationDataMngr_afe2c99a4b71f4e92a8bc2616dbce3692}{pubs\+\_\+}}
+\item 
+ros\+::\+Subscriber \mbox{\hyperlink{classCalibrationDataMngr_a1b3cf245f95fe2bafae458526537b6eb}{sub\+\_\+reinit}}
+\item 
+ros\+::\+Subscriber \mbox{\hyperlink{classCalibrationDataMngr_aba237b0cd8611ec63d8ae4106295b716}{sub\+\_\+updateoffset}}
+\item 
+ros\+::\+Subscriber \mbox{\hyperlink{classCalibrationDataMngr_a6ad39f5e64048e9e87e0122fbd5e051c}{sub\+\_\+reinitoffset}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classCalibrationDataMngr_a9203dc94b428309c2362e71a947519ff}\label{classCalibrationDataMngr_a9203dc94b428309c2362e71a947519ff}} 
+\index{CalibrationDataMngr@{CalibrationDataMngr}!CalibrationDataMngr@{CalibrationDataMngr}}
+\index{CalibrationDataMngr@{CalibrationDataMngr}!CalibrationDataMngr@{CalibrationDataMngr}}
+\doxysubsubsection{\texorpdfstring{CalibrationDataMngr()}{CalibrationDataMngr()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classCalibrationDataMngr}{Calibration\+Data\+Mngr\+::\+Calibration\+Data\+Mngr}} (\begin{DoxyParamCaption}\item[{ros\+::\+Node\+Handle \&}]{n,  }\item[{\mbox{\hyperlink{node__calibration__data_8cpp_ad176ab05112e9ddb9a8f498bf0edef4a}{Pub\+Map}} \&}]{pubs }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classCalibrationDataMngr_abee5705d6f700beeb8f9ad4ea19622bc}\label{classCalibrationDataMngr_abee5705d6f700beeb8f9ad4ea19622bc}} 
+\index{CalibrationDataMngr@{CalibrationDataMngr}!ChangeOffsetCallBack@{ChangeOffsetCallBack}}
+\index{ChangeOffsetCallBack@{ChangeOffsetCallBack}!CalibrationDataMngr@{CalibrationDataMngr}}
+\doxysubsubsection{\texorpdfstring{ChangeOffsetCallBack()}{ChangeOffsetCallBack()}}
+{\footnotesize\ttfamily void Calibration\+Data\+Mngr\+::\+Change\+Offset\+Call\+Back (\begin{DoxyParamCaption}\item[{const geometry\+\_\+msgs\+::\+Pose\+::\+Const\+Ptr \&}]{msg }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+\mbox{\Hypertarget{classCalibrationDataMngr_a1e01ef84d0c144e731c0e91a2c187e51}\label{classCalibrationDataMngr_a1e01ef84d0c144e731c0e91a2c187e51}} 
+\index{CalibrationDataMngr@{CalibrationDataMngr}!ReInitCallback@{ReInitCallback}}
+\index{ReInitCallback@{ReInitCallback}!CalibrationDataMngr@{CalibrationDataMngr}}
+\doxysubsubsection{\texorpdfstring{ReInitCallback()}{ReInitCallback()}}
+{\footnotesize\ttfamily void Calibration\+Data\+Mngr\+::\+Re\+Init\+Callback (\begin{DoxyParamCaption}\item[{const std\+\_\+msgs\+::\+String\+::\+Const\+Ptr \&}]{msg }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+\mbox{\Hypertarget{classCalibrationDataMngr_aae731b16d407949a64bcfd795440202b}\label{classCalibrationDataMngr_aae731b16d407949a64bcfd795440202b}} 
+\index{CalibrationDataMngr@{CalibrationDataMngr}!ReinitOffsetCallBack@{ReinitOffsetCallBack}}
+\index{ReinitOffsetCallBack@{ReinitOffsetCallBack}!CalibrationDataMngr@{CalibrationDataMngr}}
+\doxysubsubsection{\texorpdfstring{ReinitOffsetCallBack()}{ReinitOffsetCallBack()}}
+{\footnotesize\ttfamily void Calibration\+Data\+Mngr\+::\+Reinit\+Offset\+Call\+Back (\begin{DoxyParamCaption}\item[{const std\+\_\+msgs\+::\+String\+::\+Const\+Ptr \&}]{msg }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classCalibrationDataMngr_a10c8e06719d187cb08607cb08dfbe66e}\label{classCalibrationDataMngr_a10c8e06719d187cb08607cb08dfbe66e}} 
+\index{CalibrationDataMngr@{CalibrationDataMngr}!n\_@{n\_}}
+\index{n\_@{n\_}!CalibrationDataMngr@{CalibrationDataMngr}}
+\doxysubsubsection{\texorpdfstring{n\_}{n\_}}
+{\footnotesize\ttfamily ros\+::\+Node\+Handle\& Calibration\+Data\+Mngr\+::n\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classCalibrationDataMngr_afe2c99a4b71f4e92a8bc2616dbce3692}\label{classCalibrationDataMngr_afe2c99a4b71f4e92a8bc2616dbce3692}} 
+\index{CalibrationDataMngr@{CalibrationDataMngr}!pubs\_@{pubs\_}}
+\index{pubs\_@{pubs\_}!CalibrationDataMngr@{CalibrationDataMngr}}
+\doxysubsubsection{\texorpdfstring{pubs\_}{pubs\_}}
+{\footnotesize\ttfamily \mbox{\hyperlink{node__calibration__data_8cpp_ad176ab05112e9ddb9a8f498bf0edef4a}{Pub\+Map}}\& Calibration\+Data\+Mngr\+::pubs\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classCalibrationDataMngr_a1b3cf245f95fe2bafae458526537b6eb}\label{classCalibrationDataMngr_a1b3cf245f95fe2bafae458526537b6eb}} 
+\index{CalibrationDataMngr@{CalibrationDataMngr}!sub\_reinit@{sub\_reinit}}
+\index{sub\_reinit@{sub\_reinit}!CalibrationDataMngr@{CalibrationDataMngr}}
+\doxysubsubsection{\texorpdfstring{sub\_reinit}{sub\_reinit}}
+{\footnotesize\ttfamily ros\+::\+Subscriber Calibration\+Data\+Mngr\+::sub\+\_\+reinit\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \mbox{\hyperlink{classCalibrationDataMngr_a10c8e06719d187cb08607cb08dfbe66e}{n\_}}.subscribe(}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}/Kinematics/Query\_ReInit"{}}, 2, \&\mbox{\hyperlink{classCalibrationDataMngr_a1e01ef84d0c144e731c0e91a2c187e51}{CalibrationDataMngr::ReInitCallback}}, \textcolor{keyword}{this})}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{classCalibrationDataMngr_a6ad39f5e64048e9e87e0122fbd5e051c}\label{classCalibrationDataMngr_a6ad39f5e64048e9e87e0122fbd5e051c}} 
+\index{CalibrationDataMngr@{CalibrationDataMngr}!sub\_reinitoffset@{sub\_reinitoffset}}
+\index{sub\_reinitoffset@{sub\_reinitoffset}!CalibrationDataMngr@{CalibrationDataMngr}}
+\doxysubsubsection{\texorpdfstring{sub\_reinitoffset}{sub\_reinitoffset}}
+{\footnotesize\ttfamily ros\+::\+Subscriber Calibration\+Data\+Mngr\+::sub\+\_\+reinitoffset\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \mbox{\hyperlink{classCalibrationDataMngr_a10c8e06719d187cb08607cb08dfbe66e}{n\_}}.subscribe(}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}/Kinematics/Reinit\_TR\_cntct\_offset"{}}, 2, \&\mbox{\hyperlink{classCalibrationDataMngr_aae731b16d407949a64bcfd795440202b}{CalibrationDataMngr::ReinitOffsetCallBack}}, \textcolor{keyword}{this})}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{classCalibrationDataMngr_aba237b0cd8611ec63d8ae4106295b716}\label{classCalibrationDataMngr_aba237b0cd8611ec63d8ae4106295b716}} 
+\index{CalibrationDataMngr@{CalibrationDataMngr}!sub\_updateoffset@{sub\_updateoffset}}
+\index{sub\_updateoffset@{sub\_updateoffset}!CalibrationDataMngr@{CalibrationDataMngr}}
+\doxysubsubsection{\texorpdfstring{sub\_updateoffset}{sub\_updateoffset}}
+{\footnotesize\ttfamily ros\+::\+Subscriber Calibration\+Data\+Mngr\+::sub\+\_\+updateoffset\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \mbox{\hyperlink{classCalibrationDataMngr_a10c8e06719d187cb08607cb08dfbe66e}{n\_}}.subscribe(}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}/Kinematics/Update\_TR\_cntct\_offset"{}}, 2, \&\mbox{\hyperlink{classCalibrationDataMngr_abee5705d6f700beeb8f9ad4ea19622bc}{CalibrationDataMngr::ChangeOffsetCallBack}}, \textcolor{keyword}{this})}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+rotms\+\_\+ros\+\_\+kinematics/src/nodes/\mbox{\hyperlink{node__calibration__data_8cpp}{node\+\_\+calibration\+\_\+data.\+cpp}}\end{DoxyCompactItemize}

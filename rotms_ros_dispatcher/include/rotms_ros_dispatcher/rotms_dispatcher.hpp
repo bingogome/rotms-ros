@@ -42,12 +42,12 @@ class Dispatcher
 
 public:
 
-    Dispatcher(ros::NodeHandle& n, const std::vector<WorkState*>& states);
+    Dispatcher(ros::NodeHandle& n, const std::vector<StateBase*>& states);
 
 private:
 
     ros::NodeHandle& n_;
-    const std::vector<WorkState*>& states_;
+    const std::vector<StateBase*>& states_;
     int activated_state_;
 
     // Dispatcher receiving query signals
@@ -153,7 +153,7 @@ private:
         "/RobInterface/MoveJnt", 2);
 
     // Temp data cache (volatile)
-    struct VolatileTempDataCache datacache_;
+    struct TempDataCache datacache_;
     void ResetVolatileDataCacheLandmarks();
     void ResetVolatileDataCacheToolPose();
 

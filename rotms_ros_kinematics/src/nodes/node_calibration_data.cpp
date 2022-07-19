@@ -51,12 +51,12 @@ void ReadAndPublishCalibrations(std::string tr_str, PubMap pubs)
     ros::spinOnce();
 }
 
-class CalibrationDataMngr
+class MngrCalibrationData
 {
 
 public:
 
-    CalibrationDataMngr(ros::NodeHandle& n, PubMap& pubs) : 
+    MngrCalibrationData(ros::NodeHandle& n, PubMap& pubs) : 
         n_(n), pubs_(pubs) {}
 
 private:
@@ -65,11 +65,11 @@ private:
     PubMap& pubs_;
     
     ros::Subscriber sub_reinit = n_.subscribe(
-        "/Kinematics/Query_ReInit", 2, &CalibrationDataMngr::ReInitCallback, this);
+        "/Kinematics/Query_ReInit", 2, &MngrCalibrationData::ReInitCallback, this);
     ros::Subscriber sub_updateoffset = n_.subscribe(
-        "/Kinematics/Update_TR_cntct_offset", 2, &CalibrationDataMngr::ChangeOffsetCallBack, this);
+        "/Kinematics/Update_TR_cntct_offset", 2, &MngrCalibrationData::ChangeOffsetCallBack, this);
     ros::Subscriber sub_reinitoffset = n_.subscribe(
-        "/Kinematics/Reinit_TR_cntct_offset", 2, &CalibrationDataMngr::ReinitOffsetCallBack, this);
+        "/Kinematics/Reinit_TR_cntct_offset", 2, &MngrCalibrationData::ReinitOffsetCallBack, this);
 
     void ReInitCallback(const std_msgs::String::ConstPtr& msg)
     {
@@ -118,7 +118,7 @@ int main(int argc, char **argv)
     pubs["toolref_eff"] = pub_toolref_eff;
     pubs["ptr_ptrtip"] = pub_ptr_ptrtip;
 
-    CalibrationDataMngr mngr(nh, pubs);
+    MngrCalibrationData mngr(nh, pubs);
 
     for (PubMap::iterator it = pubs.begin(); it != pubs.end(); it++)
     {

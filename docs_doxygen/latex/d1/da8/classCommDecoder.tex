@@ -1,0 +1,132 @@
+\hypertarget{classCommDecoder}{}\doxysection{Comm\+Decoder Class Reference}
+\label{classCommDecoder}\index{CommDecoder@{CommDecoder}}
+
+
+{\ttfamily \#include $<$decode\+\_\+node.\+hpp$>$}
+
+Inheritance diagram for Comm\+Decoder\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{d1/da8/classCommDecoder}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classCommDecoder_aecfcc1c4b859d17d84c6f6648a9f9fd0}{Comm\+Decoder}} (ros\+::\+Node\+Handle \&n, const std\+::string modulesuffix, \mbox{\hyperlink{decode__node_8hpp_adac2684fbdd6a967c85ba825652134c4}{Func\+Map}} opsdict)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classCommDecoder_a817a584fc381fbffdca998ebdc734ac4}{Sub\+Call\+Back}} (const std\+\_\+msgs\+::\+String\+::\+Const\+Ptr \&msg)
+\item 
+virtual void \mbox{\hyperlink{classCommDecoder_af00d32cc9daf32509513b4297765ddd6}{Cmds\+Process}} (std\+::string \&lookupkey, std\+::string \&msgcontent)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+ros\+::\+Node\+Handle \& \mbox{\hyperlink{classCommDecoder_ab4b1e9d50aa5c7a5f44c60a57a46bc87}{n\+\_\+}}
+\item 
+ros\+::\+Subscriber \mbox{\hyperlink{classCommDecoder_a670c9a6c514b936d963a0ae366e62d5f}{sub\+\_\+}}
+\item 
+\mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{Publisher\+Vec}} \mbox{\hyperlink{classCommDecoder_a4a7a7bdeaad2342f9d1a9a3cd8c99cff}{pubs\+\_\+}}
+\item 
+char \mbox{\hyperlink{classCommDecoder_a1d12d70007ddad3deb197f74d16c540f}{eom\+\_\+}}
+\item 
+int \mbox{\hyperlink{classCommDecoder_a110039cf02b614522ae4000c51a4eaa6}{msglen\+\_\+}}
+\item 
+int \mbox{\hyperlink{classCommDecoder_ab62d45611e3fe9927db37198da4339f7}{msgheaderlen\+\_\+}} = 16
+\item 
+const std\+::map$<$ std\+::string, std\+::string $>$ \mbox{\hyperlink{classCommDecoder_aabe3f1e2b769a24f3fc2062f4682bbf8}{cmddict\+\_\+}}
+\item 
+const \mbox{\hyperlink{decode__node_8hpp_adac2684fbdd6a967c85ba825652134c4}{Func\+Map}} \mbox{\hyperlink{classCommDecoder_a55efbb478995b4666ffc0718cd883d35}{opsdict\+\_\+}}
+\item 
+std\+::string \mbox{\hyperlink{classCommDecoder_a84c70bcca6df69e27e9a17712499977d}{ss\+\_\+str\+\_\+}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classCommDecoder_aecfcc1c4b859d17d84c6f6648a9f9fd0}\label{classCommDecoder_aecfcc1c4b859d17d84c6f6648a9f9fd0}} 
+\index{CommDecoder@{CommDecoder}!CommDecoder@{CommDecoder}}
+\index{CommDecoder@{CommDecoder}!CommDecoder@{CommDecoder}}
+\doxysubsubsection{\texorpdfstring{CommDecoder()}{CommDecoder()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classCommDecoder}{Comm\+Decoder\+::\+Comm\+Decoder}} (\begin{DoxyParamCaption}\item[{ros\+::\+Node\+Handle \&}]{n,  }\item[{const std\+::string}]{modulesuffix,  }\item[{\mbox{\hyperlink{decode__node_8hpp_adac2684fbdd6a967c85ba825652134c4}{Func\+Map}}}]{opsdict }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classCommDecoder_af00d32cc9daf32509513b4297765ddd6}\label{classCommDecoder_af00d32cc9daf32509513b4297765ddd6}} 
+\index{CommDecoder@{CommDecoder}!CmdsProcess@{CmdsProcess}}
+\index{CmdsProcess@{CmdsProcess}!CommDecoder@{CommDecoder}}
+\doxysubsubsection{\texorpdfstring{CmdsProcess()}{CmdsProcess()}}
+{\footnotesize\ttfamily void Comm\+Decoder\+::\+Cmds\+Process (\begin{DoxyParamCaption}\item[{std\+::string \&}]{lookupkey,  }\item[{std\+::string \&}]{msgcontent }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+\mbox{\Hypertarget{classCommDecoder_a817a584fc381fbffdca998ebdc734ac4}\label{classCommDecoder_a817a584fc381fbffdca998ebdc734ac4}} 
+\index{CommDecoder@{CommDecoder}!SubCallBack@{SubCallBack}}
+\index{SubCallBack@{SubCallBack}!CommDecoder@{CommDecoder}}
+\doxysubsubsection{\texorpdfstring{SubCallBack()}{SubCallBack()}}
+{\footnotesize\ttfamily void Comm\+Decoder\+::\+Sub\+Call\+Back (\begin{DoxyParamCaption}\item[{const std\+\_\+msgs\+::\+String\+::\+Const\+Ptr \&}]{msg }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classCommDecoder_aabe3f1e2b769a24f3fc2062f4682bbf8}\label{classCommDecoder_aabe3f1e2b769a24f3fc2062f4682bbf8}} 
+\index{CommDecoder@{CommDecoder}!cmddict\_@{cmddict\_}}
+\index{cmddict\_@{cmddict\_}!CommDecoder@{CommDecoder}}
+\doxysubsubsection{\texorpdfstring{cmddict\_}{cmddict\_}}
+{\footnotesize\ttfamily const std\+::map$<$std\+::string, std\+::string$>$ Comm\+Decoder\+::cmddict\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classCommDecoder_a1d12d70007ddad3deb197f74d16c540f}\label{classCommDecoder_a1d12d70007ddad3deb197f74d16c540f}} 
+\index{CommDecoder@{CommDecoder}!eom\_@{eom\_}}
+\index{eom\_@{eom\_}!CommDecoder@{CommDecoder}}
+\doxysubsubsection{\texorpdfstring{eom\_}{eom\_}}
+{\footnotesize\ttfamily char Comm\+Decoder\+::eom\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classCommDecoder_ab62d45611e3fe9927db37198da4339f7}\label{classCommDecoder_ab62d45611e3fe9927db37198da4339f7}} 
+\index{CommDecoder@{CommDecoder}!msgheaderlen\_@{msgheaderlen\_}}
+\index{msgheaderlen\_@{msgheaderlen\_}!CommDecoder@{CommDecoder}}
+\doxysubsubsection{\texorpdfstring{msgheaderlen\_}{msgheaderlen\_}}
+{\footnotesize\ttfamily int Comm\+Decoder\+::msgheaderlen\+\_\+ = 16\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classCommDecoder_a110039cf02b614522ae4000c51a4eaa6}\label{classCommDecoder_a110039cf02b614522ae4000c51a4eaa6}} 
+\index{CommDecoder@{CommDecoder}!msglen\_@{msglen\_}}
+\index{msglen\_@{msglen\_}!CommDecoder@{CommDecoder}}
+\doxysubsubsection{\texorpdfstring{msglen\_}{msglen\_}}
+{\footnotesize\ttfamily int Comm\+Decoder\+::msglen\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classCommDecoder_ab4b1e9d50aa5c7a5f44c60a57a46bc87}\label{classCommDecoder_ab4b1e9d50aa5c7a5f44c60a57a46bc87}} 
+\index{CommDecoder@{CommDecoder}!n\_@{n\_}}
+\index{n\_@{n\_}!CommDecoder@{CommDecoder}}
+\doxysubsubsection{\texorpdfstring{n\_}{n\_}}
+{\footnotesize\ttfamily ros\+::\+Node\+Handle\& Comm\+Decoder\+::n\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classCommDecoder_a55efbb478995b4666ffc0718cd883d35}\label{classCommDecoder_a55efbb478995b4666ffc0718cd883d35}} 
+\index{CommDecoder@{CommDecoder}!opsdict\_@{opsdict\_}}
+\index{opsdict\_@{opsdict\_}!CommDecoder@{CommDecoder}}
+\doxysubsubsection{\texorpdfstring{opsdict\_}{opsdict\_}}
+{\footnotesize\ttfamily const \mbox{\hyperlink{decode__node_8hpp_adac2684fbdd6a967c85ba825652134c4}{Func\+Map}} Comm\+Decoder\+::opsdict\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classCommDecoder_a4a7a7bdeaad2342f9d1a9a3cd8c99cff}\label{classCommDecoder_a4a7a7bdeaad2342f9d1a9a3cd8c99cff}} 
+\index{CommDecoder@{CommDecoder}!pubs\_@{pubs\_}}
+\index{pubs\_@{pubs\_}!CommDecoder@{CommDecoder}}
+\doxysubsubsection{\texorpdfstring{pubs\_}{pubs\_}}
+{\footnotesize\ttfamily \mbox{\hyperlink{decode__node_8hpp_a3121bb37bc909d5ea55e14b62a560123}{Publisher\+Vec}} Comm\+Decoder\+::pubs\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classCommDecoder_a84c70bcca6df69e27e9a17712499977d}\label{classCommDecoder_a84c70bcca6df69e27e9a17712499977d}} 
+\index{CommDecoder@{CommDecoder}!ss\_str\_@{ss\_str\_}}
+\index{ss\_str\_@{ss\_str\_}!CommDecoder@{CommDecoder}}
+\doxysubsubsection{\texorpdfstring{ss\_str\_}{ss\_str\_}}
+{\footnotesize\ttfamily std\+::string Comm\+Decoder\+::ss\+\_\+str\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classCommDecoder_a670c9a6c514b936d963a0ae366e62d5f}\label{classCommDecoder_a670c9a6c514b936d963a0ae366e62d5f}} 
+\index{CommDecoder@{CommDecoder}!sub\_@{sub\_}}
+\index{sub\_@{sub\_}!CommDecoder@{CommDecoder}}
+\doxysubsubsection{\texorpdfstring{sub\_}{sub\_}}
+{\footnotesize\ttfamily ros\+::\+Subscriber Comm\+Decoder\+::sub\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+rotms\+\_\+ros\+\_\+comm\+\_\+decode/include/rotms\+\_\+ros\+\_\+comm\+\_\+decode/\mbox{\hyperlink{decode__node_8hpp}{decode\+\_\+node.\+hpp}}\item 
+rotms\+\_\+ros\+\_\+comm\+\_\+decode/src/\mbox{\hyperlink{decode__node_8cpp}{decode\+\_\+node.\+cpp}}\end{DoxyCompactItemize}

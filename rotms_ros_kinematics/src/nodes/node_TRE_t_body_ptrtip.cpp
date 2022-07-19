@@ -29,12 +29,12 @@ SOFTWARE.
 
 #include "transform_conversions.hpp"
 
-class TREMngrBodyPtrtip
+class MngrTBodyPtrtip
 {
 // Manages the flag of running the calculation of the transform
 public:
     
-    TREMngrBodyPtrtip(ros::NodeHandle& n) : n_(n){}
+    MngrTBodyPtrtip(ros::NodeHandle& n) : n_(n){}
     bool run_flag = false;
 
     tf2::Transform tr_body_bodyref_;
@@ -44,11 +44,11 @@ private:
 
     ros::NodeHandle& n_;
     ros::Subscriber sub_run_ = n_.subscribe(
-        "/Kinematics/Flag_t_body_ptrtip", 2, &TREMngrBodyPtrtip::FlagCallBack, this);
+        "/Kinematics/Flag_t_body_ptrtip", 2, &MngrTBodyPtrtip::FlagCallBack, this);
     ros::Subscriber sub_tr_bodyref_body_ = n_.subscribe(
-        "/Kinematics/TR_bodyref_body", 2, &TREMngrBodyPtrtip::BodyRefBodyCallBack, this);
+        "/Kinematics/TR_bodyref_body", 2, &MngrTBodyPtrtip::BodyRefBodyCallBack, this);
     ros::Subscriber sub_t_bodyref_ptrtip_ = n_.subscribe(
-        "/Kinematics/T_bodyref_ptrtip", 2, &TREMngrBodyPtrtip::BodyRefPtrtipCallBack, this);
+        "/Kinematics/T_bodyref_ptrtip", 2, &MngrTBodyPtrtip::BodyRefPtrtipCallBack, this);
 
     void FlagCallBack(const std_msgs::String::ConstPtr& msg)
     {
@@ -83,7 +83,7 @@ int main(int argc, char **argv)
     ros::Rate rate(5.0);
 
     // Instantiate the flag manager
-    TREMngrBodyPtrtip mngr1(nh);
+    MngrTBodyPtrtip mngr1(nh);
 
     // Initialize the result 
     tf2::Vector3 t_body_ptrtip_;

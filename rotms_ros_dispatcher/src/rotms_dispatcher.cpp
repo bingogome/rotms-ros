@@ -47,7 +47,7 @@ for state/flag/operation for postprocessing.
 On the other hand, state/flag/operation will postprocess any data 
 that have been preprocessed and cached.
 */
-Dispatcher::Dispatcher(ros::NodeHandle& n, const std::vector<WorkState*>& states) 
+Dispatcher::Dispatcher(ros::NodeHandle& n, const std::vector<StateBase*>& states) 
     : n_(n), states_(states)
 {
     bool integ = CheckFlagIntegrity(states_);

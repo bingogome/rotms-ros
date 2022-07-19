@@ -1,0 +1,35 @@
+\hypertarget{rotms__ros__robot__interface_8cpp}{}\doxysection{rotms\+\_\+ros\+\_\+robot\+\_\+interface/src/rotms\+\_\+ros\+\_\+robot\+\_\+interface.cpp File Reference}
+\label{rotms__ros__robot__interface_8cpp}\index{rotms\_ros\_robot\_interface/src/rotms\_ros\_robot\_interface.cpp@{rotms\_ros\_robot\_interface/src/rotms\_ros\_robot\_interface.cpp}}
+{\ttfamily \#include $<$ros/ros.\+h$>$}\newline
+{\ttfamily \#include $<$std\+\_\+msgs/\+String.\+h$>$}\newline
+{\ttfamily \#include $<$std\+\_\+msgs/\+Bool.\+h$>$}\newline
+{\ttfamily \#include $<$std\+\_\+msgs/\+Float32\+Multi\+Array.\+h$>$}\newline
+{\ttfamily \#include $<$geometry\+\_\+msgs/\+Pose.\+h$>$}\newline
+{\ttfamily \#include $<$rotms\+\_\+ros\+\_\+msgs/\+Get\+Jnts.\+h$>$}\newline
+{\ttfamily \#include $<$rotms\+\_\+ros\+\_\+msgs/\+Get\+EFF.\+h$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}rotms\+\_\+ros\+\_\+robot\+\_\+interface.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}ros\+\_\+print\+\_\+color.\+hpp\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ double $>$ \mbox{\hyperlink{rotms__ros__robot__interface_8cpp_aeeb6f99506befb4a3c5d8b47b06f263b}{quat2eul}} (std\+::vector$<$ double $>$ q)
+\item 
+std\+::vector$<$ double $>$ \mbox{\hyperlink{rotms__ros__robot__interface_8cpp_a57c626904e9aa52cea36f71722072054}{eul2quat}} (std\+::vector$<$ double $>$ eul)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{rotms__ros__robot__interface_8cpp_a57c626904e9aa52cea36f71722072054}\label{rotms__ros__robot__interface_8cpp_a57c626904e9aa52cea36f71722072054}} 
+\index{rotms\_ros\_robot\_interface.cpp@{rotms\_ros\_robot\_interface.cpp}!eul2quat@{eul2quat}}
+\index{eul2quat@{eul2quat}!rotms\_ros\_robot\_interface.cpp@{rotms\_ros\_robot\_interface.cpp}}
+\doxysubsubsection{\texorpdfstring{eul2quat()}{eul2quat()}}
+{\footnotesize\ttfamily std\+::vector$<$ double $>$ eul2quat (\begin{DoxyParamCaption}\item[{std\+::vector$<$ double $>$}]{eul }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{rotms__ros__robot__interface_8cpp_aeeb6f99506befb4a3c5d8b47b06f263b}\label{rotms__ros__robot__interface_8cpp_aeeb6f99506befb4a3c5d8b47b06f263b}} 
+\index{rotms\_ros\_robot\_interface.cpp@{rotms\_ros\_robot\_interface.cpp}!quat2eul@{quat2eul}}
+\index{quat2eul@{quat2eul}!rotms\_ros\_robot\_interface.cpp@{rotms\_ros\_robot\_interface.cpp}}
+\doxysubsubsection{\texorpdfstring{quat2eul()}{quat2eul()}}
+{\footnotesize\ttfamily std\+::vector$<$ double $>$ quat2eul (\begin{DoxyParamCaption}\item[{std\+::vector$<$ double $>$}]{q }\end{DoxyParamCaption})}
+

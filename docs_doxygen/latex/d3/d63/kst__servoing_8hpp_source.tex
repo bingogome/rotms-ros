@@ -1,0 +1,86 @@
+\hypertarget{kst__servoing_8hpp_source}{}\doxysection{kst\+\_\+servoing.\+hpp}
+\label{kst__servoing_8hpp_source}\index{rotms\_ros\_robot\_interface/include/rotms\_ros\_robot\_interface/kst\_servoing.hpp@{rotms\_ros\_robot\_interface/include/rotms\_ros\_robot\_interface/kst\_servoing.hpp}}
+\mbox{\hyperlink{kst__servoing_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/***}}
+\DoxyCodeLine{2 \textcolor{comment}{MIT License}}
+\DoxyCodeLine{3 \textcolor{comment}{}}
+\DoxyCodeLine{4 \textcolor{comment}{Copyright (c) 2022 Yihao Liu, Johns Hopkins University}}
+\DoxyCodeLine{5 \textcolor{comment}{}}
+\DoxyCodeLine{6 \textcolor{comment}{Permission is hereby granted, free of charge, to any person obtaining a copy}}
+\DoxyCodeLine{7 \textcolor{comment}{of this software and associated documentation files (the "{}Software"{}), to deal}}
+\DoxyCodeLine{8 \textcolor{comment}{in the Software without restriction, including without limitation the rights}}
+\DoxyCodeLine{9 \textcolor{comment}{to use, copy, modify, merge, publish, distribute, sublicense, and/or sell}}
+\DoxyCodeLine{10 \textcolor{comment}{copies of the Software, and to permit persons to whom the Software is}}
+\DoxyCodeLine{11 \textcolor{comment}{furnished to do so, subject to the following conditions:}}
+\DoxyCodeLine{12 \textcolor{comment}{}}
+\DoxyCodeLine{13 \textcolor{comment}{The above copyright notice and this permission notice shall be included in all}}
+\DoxyCodeLine{14 \textcolor{comment}{copies or substantial portions of the Software.}}
+\DoxyCodeLine{15 \textcolor{comment}{}}
+\DoxyCodeLine{16 \textcolor{comment}{THE SOFTWARE IS PROVIDED "{}AS IS"{}, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR}}
+\DoxyCodeLine{17 \textcolor{comment}{IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,}}
+\DoxyCodeLine{18 \textcolor{comment}{FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE}}
+\DoxyCodeLine{19 \textcolor{comment}{AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER}}
+\DoxyCodeLine{20 \textcolor{comment}{LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,}}
+\DoxyCodeLine{21 \textcolor{comment}{OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE}}
+\DoxyCodeLine{22 \textcolor{comment}{SOFTWARE.}}
+\DoxyCodeLine{23 \textcolor{comment}{***/}}
+\DoxyCodeLine{24 }
+\DoxyCodeLine{25 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{26 \textcolor{preprocessor}{\#include <boost/asio.hpp>}}
+\DoxyCodeLine{27 \textcolor{preprocessor}{\#include <boost/array.hpp>}}
+\DoxyCodeLine{28 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{29 \textcolor{keyword}{using }boost::asio::ip::tcp;}
+\DoxyCodeLine{30 }
+\DoxyCodeLine{31 \textcolor{keyword}{class }\mbox{\hyperlink{classKstServoing}{KstServoing}}\{}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33 \textcolor{keyword}{private}:}
+\DoxyCodeLine{34 }
+\DoxyCodeLine{35     \textcolor{comment}{// connection}}
+\DoxyCodeLine{36     std::string \mbox{\hyperlink{classKstServoing_aa23c12445e1a9ad410eccec6cdd35c46}{ip\_}};}
+\DoxyCodeLine{37     tcp::socket \mbox{\hyperlink{classKstServoing_aa1d54fff056eb8e4bf550acce12873a7}{tcp\_sock\_}}; \textcolor{comment}{// tcpip connection object}}
+\DoxyCodeLine{38     boost::array<char, 512> \mbox{\hyperlink{classKstServoing_af60350ebbd5cd8f3a14524046970c281}{buf\_}};}
+\DoxyCodeLine{39 }
+\DoxyCodeLine{40     \textcolor{comment}{// robot data}}
+\DoxyCodeLine{41     std::string \mbox{\hyperlink{classKstServoing_a1546b31749d015f7f628c6a3c43faaf9}{robot\_type\_}};}
+\DoxyCodeLine{42     \textcolor{keywordtype}{int} \mbox{\hyperlink{classKstServoing_a31c5764af5b807d1cb7dc2297bea8754}{flange\_type\_}};}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44     \textcolor{comment}{// flags}}
+\DoxyCodeLine{45     \textcolor{keywordtype}{bool} \mbox{\hyperlink{classKstServoing_aec7b8586738b00eb9e715f9efa4fa68b}{f\_sft\_real\_time\_}} = \textcolor{keyword}{false}; \textcolor{comment}{// status of soft real time}}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47 \textcolor{keyword}{public}:}
+\DoxyCodeLine{48 }
+\DoxyCodeLine{49     \textcolor{comment}{// constructor}}
+\DoxyCodeLine{50     \mbox{\hyperlink{classKstServoing}{KstServoing}}(}
+\DoxyCodeLine{51         std::string robot\_ip, }
+\DoxyCodeLine{52         boost::asio::io\_context\& io\_context}
+\DoxyCodeLine{53         );}
+\DoxyCodeLine{54     }
+\DoxyCodeLine{55     \textcolor{comment}{// PTP motion}}
+\DoxyCodeLine{56     \textcolor{keywordtype}{void} \mbox{\hyperlink{classKstServoing_a3a2bcd4efa379f9bea79a7b42bfa6ee0}{PTPJointSpace}}(std::vector<double> jpos , \textcolor{keywordtype}{double} relVel);}
+\DoxyCodeLine{57     \textcolor{keywordtype}{void} \mbox{\hyperlink{classKstServoing_a3dc423d9db6685b339b7914f921aba77}{PTPLineEFF}}(std::vector<double> epos, \textcolor{keywordtype}{double} vel); \textcolor{comment}{// vel: mm/sec}}
+\DoxyCodeLine{58     \textcolor{comment}{// epos: x y z rz ry rx}}
+\DoxyCodeLine{59 }
+\DoxyCodeLine{60     \textcolor{comment}{// Smart and direct servo methods}}
+\DoxyCodeLine{61     \textcolor{keywordtype}{void} \mbox{\hyperlink{classKstServoing_ac119504d22984789ecce200b997389eb}{ServoDirectCartesianStart}}();}
+\DoxyCodeLine{62     \textcolor{keywordtype}{void} \mbox{\hyperlink{classKstServoing_a925dee4a62aefa3c6fc9a65d96bd669f}{ServoDirectJointStart}}();}
+\DoxyCodeLine{63     \textcolor{keywordtype}{void} \mbox{\hyperlink{classKstServoing_a69bdd0131fd0382c8261efe4fe12b6ef}{ServoSmartCartesianStart}}();}
+\DoxyCodeLine{64     \textcolor{keywordtype}{void} \mbox{\hyperlink{classKstServoing_a4057164c39d0cdfcd3f517720d23fd0b}{ServoSmartJointStart}}();}
+\DoxyCodeLine{65     \textcolor{keywordtype}{void} \mbox{\hyperlink{classKstServoing_a397aa7e6285b821e5d63a9bc00b7800c}{ServoStop}}();}
+\DoxyCodeLine{66 }
+\DoxyCodeLine{67     \textcolor{keywordtype}{void} \mbox{\hyperlink{classKstServoing_a3d520da859dde772bdb38510c3125e1d}{ServoSendJoints}}(std::vector<double> jp);}
+\DoxyCodeLine{68     std::vector<double> \mbox{\hyperlink{classKstServoing_a164cbf263b484672a6416d5d2485eae3}{ServoSendJointsGetFeedback}}(std::vector<double> jp);}
+\DoxyCodeLine{69     \textcolor{keywordtype}{void} \mbox{\hyperlink{classKstServoing_a0c450adc74d5dd49c8de68c41388cecc}{ServoSendEFF}}(std::vector<double> eff); \textcolor{comment}{// x y z rz ry rx}}
+\DoxyCodeLine{70     std::vector<double> \mbox{\hyperlink{classKstServoing_a87c20e196ca28b8846789dca91a83e3c}{ServoSendEFFGetFeedback}}(std::vector<double> eff); \textcolor{comment}{// x y z rz ry rx}}
+\DoxyCodeLine{71 }
+\DoxyCodeLine{72     \textcolor{comment}{// getters}}
+\DoxyCodeLine{73     std::vector<double> \mbox{\hyperlink{classKstServoing_a262b428c756ec2ceb3658a40d39d6ffa}{GetJointPosition}}();}
+\DoxyCodeLine{74     std::vector<double> \mbox{\hyperlink{classKstServoing_a4638c01613f179d647294a55a0e89b85}{GetEFFPosition}}();}
+\DoxyCodeLine{75         }
+\DoxyCodeLine{76     \textcolor{comment}{// networking}}
+\DoxyCodeLine{77     \textcolor{keywordtype}{void} \mbox{\hyperlink{classKstServoing_a32fe9e6f0138faffe4bf66e7d5b32ce3}{NetEstablishConnection}}();}
+\DoxyCodeLine{78     \textcolor{keywordtype}{void} \mbox{\hyperlink{classKstServoing_a19ae51d9451aba244fb36a3b25472730}{NetTurnoffServer}}();}
+\DoxyCodeLine{79 }
+\DoxyCodeLine{80 \};}
+
+\end{DoxyCode}

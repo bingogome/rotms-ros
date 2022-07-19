@@ -31,12 +31,12 @@ SOFTWARE.
 
 #include "transform_conversions.hpp"
 
-class TransformMngrBodyrefPtrtip
+class MngrTBodyrefPtrtip
 {
 // Manages the flag of running the calculation of the transform
 public:
     
-    TransformMngrBodyrefPtrtip(ros::NodeHandle& n) : n_(n){}
+    MngrTBodyrefPtrtip(ros::NodeHandle& n) : n_(n){}
     bool run_flag = false;
 
     tf2::Transform tr_pol_bodyref_;
@@ -46,11 +46,11 @@ private:
 
     ros::NodeHandle& n_;
     ros::Subscriber sub_run_ = n_.subscribe(
-        "/Kinematics/Flag_bodyref_ptrtip", 2, &TransformMngrBodyrefPtrtip::FlagCallBack, this);
+        "/Kinematics/Flag_bodyref_ptrtip", 2, &MngrTBodyrefPtrtip::FlagCallBack, this);
     ros::Subscriber sub_tr_pol_bodyref_ = n_.subscribe(
-        "/NDI/HeadRef/local/measured_cp", 2, &TransformMngrBodyrefPtrtip::PolBodyRefCallBack, this);
+        "/NDI/HeadRef/local/measured_cp", 2, &MngrTBodyrefPtrtip::PolBodyRefCallBack, this);
     ros::Subscriber sub_tr_pol_ptr_ = n_.subscribe(
-        "/NDI/PointerNew/local/measured_cp", 2, &TransformMngrBodyrefPtrtip::PolPtrCallBack, this);
+        "/NDI/PointerNew/local/measured_cp", 2, &MngrTBodyrefPtrtip::PolPtrCallBack, this);
 
     void FlagCallBack(const std_msgs::String::ConstPtr& msg)
     {
@@ -77,7 +77,7 @@ int main(int argc, char **argv)
     ros::Rate rate(50.0);
 
     // Instantiate the flag manager
-    TransformMngrBodyrefPtrtip mngr1(nh);
+    MngrTBodyrefPtrtip mngr1(nh);
 
     // Initialize the requred transforms
     geometry_msgs::PoseConstPtr tr_ptr_ptrtip = ros::topic::waitForMessage<geometry_msgs::Pose>(

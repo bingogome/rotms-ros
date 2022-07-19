@@ -1,0 +1,107 @@
+\hypertarget{rotms__ros__robot__interface_8hpp_source}{}\doxysection{rotms\+\_\+ros\+\_\+robot\+\_\+interface.\+hpp}
+\label{rotms__ros__robot__interface_8hpp_source}\index{rotms\_ros\_robot\_interface/include/rotms\_ros\_robot\_interface/rotms\_ros\_robot\_interface.hpp@{rotms\_ros\_robot\_interface/include/rotms\_ros\_robot\_interface/rotms\_ros\_robot\_interface.hpp}}
+\mbox{\hyperlink{rotms__ros__robot__interface_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/***}}
+\DoxyCodeLine{2 \textcolor{comment}{MIT License}}
+\DoxyCodeLine{3 \textcolor{comment}{}}
+\DoxyCodeLine{4 \textcolor{comment}{Copyright (c) 2022 Yihao Liu, Johns Hopkins University}}
+\DoxyCodeLine{5 \textcolor{comment}{}}
+\DoxyCodeLine{6 \textcolor{comment}{Permission is hereby granted, free of charge, to any person obtaining a copy}}
+\DoxyCodeLine{7 \textcolor{comment}{of this software and associated documentation files (the "{}Software"{}), to deal}}
+\DoxyCodeLine{8 \textcolor{comment}{in the Software without restriction, including without limitation the rights}}
+\DoxyCodeLine{9 \textcolor{comment}{to use, copy, modify, merge, publish, distribute, sublicense, and/or sell}}
+\DoxyCodeLine{10 \textcolor{comment}{copies of the Software, and to permit persons to whom the Software is}}
+\DoxyCodeLine{11 \textcolor{comment}{furnished to do so, subject to the following conditions:}}
+\DoxyCodeLine{12 \textcolor{comment}{}}
+\DoxyCodeLine{13 \textcolor{comment}{The above copyright notice and this permission notice shall be included in all}}
+\DoxyCodeLine{14 \textcolor{comment}{copies or substantial portions of the Software.}}
+\DoxyCodeLine{15 \textcolor{comment}{}}
+\DoxyCodeLine{16 \textcolor{comment}{THE SOFTWARE IS PROVIDED "{}AS IS"{}, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR}}
+\DoxyCodeLine{17 \textcolor{comment}{IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,}}
+\DoxyCodeLine{18 \textcolor{comment}{FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE}}
+\DoxyCodeLine{19 \textcolor{comment}{AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER}}
+\DoxyCodeLine{20 \textcolor{comment}{LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,}}
+\DoxyCodeLine{21 \textcolor{comment}{OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE}}
+\DoxyCodeLine{22 \textcolor{comment}{SOFTWARE.}}
+\DoxyCodeLine{23 \textcolor{comment}{***/}}
+\DoxyCodeLine{24 }
+\DoxyCodeLine{25 \textcolor{preprocessor}{\#include <ros/ros.h>}}
+\DoxyCodeLine{26 \textcolor{preprocessor}{\#include <std\_msgs/String.h>}}
+\DoxyCodeLine{27 \textcolor{preprocessor}{\#include <std\_msgs/Bool.h>}}
+\DoxyCodeLine{28 \textcolor{preprocessor}{\#include <std\_msgs/Float32MultiArray.h>}}
+\DoxyCodeLine{29 \textcolor{preprocessor}{\#include <geometry\_msgs/Pose.h>}}
+\DoxyCodeLine{30 \textcolor{preprocessor}{\#include <rotms\_ros\_msgs/GetJnts.h>}}
+\DoxyCodeLine{31 \textcolor{preprocessor}{\#include <rotms\_ros\_msgs/GetEFF.h>}}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{kst__servoing_8hpp}{kst\_servoing.hpp}}"{}}}
+\DoxyCodeLine{34 }
+\DoxyCodeLine{35 \textcolor{keyword}{class }\mbox{\hyperlink{classRobotROSInterface}{RobotROSInterface}}}
+\DoxyCodeLine{36 \{}
+\DoxyCodeLine{37 }
+\DoxyCodeLine{38 \textcolor{keyword}{public}:}
+\DoxyCodeLine{39 }
+\DoxyCodeLine{40     \mbox{\hyperlink{classRobotROSInterface}{RobotROSInterface}}(\mbox{\hyperlink{classKstServoing}{KstServoing}}\& kst, ros::NodeHandle\& nh);}
+\DoxyCodeLine{41 }
+\DoxyCodeLine{42 \textcolor{keyword}{private}:}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44     \textcolor{keywordtype}{bool} \mbox{\hyperlink{classRobotROSInterface_a50d367ec5e2b8d2a64549df6eb4338fb}{flag\_end\_handshaked\_}} = \textcolor{keyword}{false}; \textcolor{comment}{// Used in terminating robot node.}}
+\DoxyCodeLine{45     \textcolor{keywordtype}{bool} \mbox{\hyperlink{classRobotROSInterface_a0acec94cd8beeba98943e078129adfbb}{flag\_connected\_}} = \textcolor{keyword}{false}; \textcolor{comment}{// robot cabinet connection state}}
+\DoxyCodeLine{46     \mbox{\hyperlink{classKstServoing}{KstServoing}}\& \mbox{\hyperlink{classRobotROSInterface_a7d4d4968ddd43e0473791b961820309c}{kst\_}};}
+\DoxyCodeLine{47     ros::NodeHandle\& \mbox{\hyperlink{classRobotROSInterface_a3680a2ab9cb4e907abb83bd99bf57984}{n\_}};}
+\DoxyCodeLine{48 }
+\DoxyCodeLine{49     ros::Subscriber \mbox{\hyperlink{classRobotROSInterface_a5eb45a146923dda66aa92817ec901ff6}{sub\_connstatus\_query\_}} = \mbox{\hyperlink{classRobotROSInterface_a3680a2ab9cb4e907abb83bd99bf57984}{n\_}}.subscribe(}
+\DoxyCodeLine{50         \textcolor{stringliteral}{"{}/RobInterface/ConnectStatusQuery"{}}, 2,}
+\DoxyCodeLine{51         \&\mbox{\hyperlink{classRobotROSInterface_abf13b9ced5a454b8d4d8a4b7e85948ef}{RobotROSInterface::RobotConnectStatusQuery}}, \textcolor{keyword}{this});}
+\DoxyCodeLine{52     ros::Subscriber \mbox{\hyperlink{classRobotROSInterface_ac3e6cd95bc9c6aa4a846eef9e679ab30}{sub\_init\_conn\_}} = \mbox{\hyperlink{classRobotROSInterface_a3680a2ab9cb4e907abb83bd99bf57984}{n\_}}.subscribe(}
+\DoxyCodeLine{53         \textcolor{stringliteral}{"{}/RobInterface/Connection"{}}, 2,}
+\DoxyCodeLine{54         \&\mbox{\hyperlink{classRobotROSInterface_a21385e3fff49ddbdaa25b80dab523dfe}{RobotROSInterface::RobotInitConnectionCallBack}}, \textcolor{keyword}{this});}
+\DoxyCodeLine{55     ros::Subscriber \mbox{\hyperlink{classRobotROSInterface_ac535576007fb9d7dd1dbc5a33302d404}{sub\_disconn\_}} = \mbox{\hyperlink{classRobotROSInterface_a3680a2ab9cb4e907abb83bd99bf57984}{n\_}}.subscribe(}
+\DoxyCodeLine{56         \textcolor{stringliteral}{"{}/RobInterface/Connection"{}}, 2,}
+\DoxyCodeLine{57         \&\mbox{\hyperlink{classRobotROSInterface_abf36eb6a80fa2f9dbc7356fe3d306bf0}{RobotROSInterface::RobotDisconnectCallBack}}, \textcolor{keyword}{this});}
+\DoxyCodeLine{58     ros::Subscriber \mbox{\hyperlink{classRobotROSInterface_af27b37bfaf50ad9e1e8c4898ed031945}{sub\_eff\_move\_}} = \mbox{\hyperlink{classRobotROSInterface_a3680a2ab9cb4e907abb83bd99bf57984}{n\_}}.subscribe(}
+\DoxyCodeLine{59         \textcolor{stringliteral}{"{}/RobInterface/MoveEFF"{}}, 2,}
+\DoxyCodeLine{60         \&\mbox{\hyperlink{classRobotROSInterface_a990539893f5993029155ce02661c4579}{RobotROSInterface::RobotEFFMotionCallBack}}, \textcolor{keyword}{this});}
+\DoxyCodeLine{61     ros::Subscriber \mbox{\hyperlink{classRobotROSInterface_a640f116fe3161d873175a75f78a949fc}{sub\_jnt\_move\_}} = \mbox{\hyperlink{classRobotROSInterface_a3680a2ab9cb4e907abb83bd99bf57984}{n\_}}.subscribe(}
+\DoxyCodeLine{62         \textcolor{stringliteral}{"{}/RobInterface/MoveJnt"{}}, 2,}
+\DoxyCodeLine{63         \&\mbox{\hyperlink{classRobotROSInterface_afd86020218b7e2bba91c8aadd87b10d6}{RobotROSInterface::RobotJntMotionCallBack}}, \textcolor{keyword}{this});}
+\DoxyCodeLine{64     }
+\DoxyCodeLine{65     ros::Publisher \mbox{\hyperlink{classRobotROSInterface_aedb5c2c5f98860b4f40a11beec27b27d}{pub\_eff\_}} = \mbox{\hyperlink{classRobotROSInterface_a3680a2ab9cb4e907abb83bd99bf57984}{n\_}}.advertise<geometry\_msgs::Pose>(}
+\DoxyCodeLine{66         \textcolor{stringliteral}{"{}/RobInterfaceOut/EFFPose"{}}, 2);}
+\DoxyCodeLine{67     ros::Publisher \mbox{\hyperlink{classRobotROSInterface_acde9ff15487e751c1729bc8c23cf25ba}{pub\_jnt\_}} = \mbox{\hyperlink{classRobotROSInterface_a3680a2ab9cb4e907abb83bd99bf57984}{n\_}}.advertise<std\_msgs::Float32MultiArray>(}
+\DoxyCodeLine{68         \textcolor{stringliteral}{"{}/RobInterfaceOut/JntPos"{}}, 2);}
+\DoxyCodeLine{69     ros::Publisher \mbox{\hyperlink{classRobotROSInterface_a0c252f6edb42fefbe818bf38648b53c4}{pub\_robconnstatus\_}} = \mbox{\hyperlink{classRobotROSInterface_a3680a2ab9cb4e907abb83bd99bf57984}{n\_}}.advertise<std\_msgs::Bool>(}
+\DoxyCodeLine{70         \textcolor{stringliteral}{"{}/RobInterfaceOut/RobConnStatus"{}}, 2);}
+\DoxyCodeLine{71 }
+\DoxyCodeLine{72     ros::ServiceServer \mbox{\hyperlink{classRobotROSInterface_af7444ccfeb281857c1d527c8790a5ff1}{srv\_get\_jnt\_}} = \mbox{\hyperlink{classRobotROSInterface_a3680a2ab9cb4e907abb83bd99bf57984}{n\_}}.advertiseService(}
+\DoxyCodeLine{73         \textcolor{stringliteral}{"{}/RobInterface/GetJntsPos"{}}, \&\mbox{\hyperlink{classRobotROSInterface_a04f6539ccd160bd4543b3b6afd19ae5a}{RobotROSInterface::RobotGetJntsPosCallBack}}, \textcolor{keyword}{this});}
+\DoxyCodeLine{74     ros::ServiceServer \mbox{\hyperlink{classRobotROSInterface_a6b6e7c87c222916dae3eec063e525063}{srv\_get\_eff\_}} = \mbox{\hyperlink{classRobotROSInterface_a3680a2ab9cb4e907abb83bd99bf57984}{n\_}}.advertiseService(}
+\DoxyCodeLine{75         \textcolor{stringliteral}{"{}/RobInterface/GetEFFPose"{}}, \&\mbox{\hyperlink{classRobotROSInterface_a997709a6910720fce120c65e89ac723e}{RobotROSInterface::RobotGetEFFPoseCallBack}}, \textcolor{keyword}{this});}
+\DoxyCodeLine{76 }
+\DoxyCodeLine{77     \textcolor{comment}{// Query the robot connection status}}
+\DoxyCodeLine{78     \textcolor{keywordtype}{void} \mbox{\hyperlink{classRobotROSInterface_abf13b9ced5a454b8d4d8a4b7e85948ef}{RobotConnectStatusQuery}}(\textcolor{keyword}{const} std\_msgs::String::ConstPtr\& msg);}
+\DoxyCodeLine{79     \textcolor{comment}{// Start the cabinet connection}}
+\DoxyCodeLine{80     \textcolor{keywordtype}{void} \mbox{\hyperlink{classRobotROSInterface_a21385e3fff49ddbdaa25b80dab523dfe}{RobotInitConnectionCallBack}}(\textcolor{keyword}{const} std\_msgs::String::ConstPtr\& msg);}
+\DoxyCodeLine{81     \textcolor{comment}{// End the cabinet connection}}
+\DoxyCodeLine{82     \textcolor{keywordtype}{void} \mbox{\hyperlink{classRobotROSInterface_abf36eb6a80fa2f9dbc7356fe3d306bf0}{RobotDisconnectCallBack}}(\textcolor{keyword}{const} std\_msgs::String::ConstPtr\& msg);}
+\DoxyCodeLine{83     \textcolor{comment}{// Move to received EFF pose at a slow speed}}
+\DoxyCodeLine{84     \textcolor{keywordtype}{void} \mbox{\hyperlink{classRobotROSInterface_a990539893f5993029155ce02661c4579}{RobotEFFMotionCallBack}}(\textcolor{keyword}{const} geometry\_msgs::Pose::ConstPtr\& msg);}
+\DoxyCodeLine{85     \textcolor{comment}{// Move to received joints at a slow speed}}
+\DoxyCodeLine{86     \textcolor{keywordtype}{void} \mbox{\hyperlink{classRobotROSInterface_afd86020218b7e2bba91c8aadd87b10d6}{RobotJntMotionCallBack}}(\textcolor{keyword}{const} std\_msgs::Float32MultiArray::ConstPtr\& msg);}
+\DoxyCodeLine{87 }
+\DoxyCodeLine{88     \textcolor{comment}{// Get joint positions}}
+\DoxyCodeLine{89     \textcolor{keywordtype}{bool} \mbox{\hyperlink{classRobotROSInterface_a04f6539ccd160bd4543b3b6afd19ae5a}{RobotGetJntsPosCallBack}}(}
+\DoxyCodeLine{90         rotms\_ros\_msgs::GetJnts::Request \&req, rotms\_ros\_msgs::GetJnts::Response \&res);}
+\DoxyCodeLine{91     \textcolor{comment}{// Get end-\/effector pose}}
+\DoxyCodeLine{92     \textcolor{keywordtype}{bool} \mbox{\hyperlink{classRobotROSInterface_a997709a6910720fce120c65e89ac723e}{RobotGetEFFPoseCallBack}}(}
+\DoxyCodeLine{93         rotms\_ros\_msgs::GetEFF::Request \&req, rotms\_ros\_msgs::GetEFF::Response \&res);}
+\DoxyCodeLine{94 }
+\DoxyCodeLine{95     \textcolor{comment}{// Should be only called when terminating node}}
+\DoxyCodeLine{96     ros::Subscriber \mbox{\hyperlink{classRobotROSInterface_a79c3a0e23b10c207b4789eb0943d9e90}{sub\_end\_}} = \mbox{\hyperlink{classRobotROSInterface_a3680a2ab9cb4e907abb83bd99bf57984}{n\_}}.subscribe(}
+\DoxyCodeLine{97         \textcolor{stringliteral}{"{}/RobInterface/TerminateNode"{}}, 2, }
+\DoxyCodeLine{98         \&\mbox{\hyperlink{classRobotROSInterface_adb41bef85e29fa480f5a3c8427006218}{RobotROSInterface::RobotTerminateNodeCallBack}}, \textcolor{keyword}{this});}
+\DoxyCodeLine{99     \textcolor{keywordtype}{void} \mbox{\hyperlink{classRobotROSInterface_adb41bef85e29fa480f5a3c8427006218}{RobotTerminateNodeCallBack}}(\textcolor{keyword}{const} std\_msgs::String::ConstPtr\& msg);}
+\DoxyCodeLine{100 }
+\DoxyCodeLine{101 \};}
+
+\end{DoxyCode}

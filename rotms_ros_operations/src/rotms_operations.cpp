@@ -242,7 +242,7 @@ void TMSOperations::ResetOpsVolatileDataCache()
     datacache_.landmarkdig.clear();
 }
 
-void SaveLandmarkDigData(struct OpsVolatileTempDataCache datacache, std::string f)
+void SaveLandmarkDigData(struct TempDataCacheOps datacache, std::string f)
 {
     std::ofstream filesave(f);
     if(filesave.is_open())

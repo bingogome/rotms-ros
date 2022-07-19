@@ -1,0 +1,134 @@
+\hypertarget{classTREMngrBodyPtrtip}{}\doxysection{TREMngr\+Body\+Ptrtip Class Reference}
+\label{classTREMngrBodyPtrtip}\index{TREMngrBodyPtrtip@{TREMngrBodyPtrtip}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classTREMngrBodyPtrtip_acf0b2892156f8119677b344105403c52}{TREMngr\+Body\+Ptrtip}} (ros\+::\+Node\+Handle \&n)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{classTREMngrBodyPtrtip_a447f0d3e5985ce5e34bbbd1a09580089}{run\+\_\+flag}} = false
+\item 
+tf2\+::\+Transform \mbox{\hyperlink{classTREMngrBodyPtrtip_af2336839323ef818d69baf655f7c41f4}{tr\+\_\+body\+\_\+bodyref\+\_\+}}
+\item 
+tf2\+::\+Vector3 \mbox{\hyperlink{classTREMngrBodyPtrtip_a2bae26548c6ed50d63aa442de4b3f981}{t\+\_\+bodyref\+\_\+ptrtip\+\_\+}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classTREMngrBodyPtrtip_abb83a0cc10078f0566aa150c14f29ed4}{Flag\+Call\+Back}} (const std\+\_\+msgs\+::\+String\+::\+Const\+Ptr \&msg)
+\item 
+void \mbox{\hyperlink{classTREMngrBodyPtrtip_a0e551a71f33f5277acd0bfd964a213b8}{Body\+Ref\+Body\+Call\+Back}} (const rotms\+\_\+ros\+\_\+msgs\+::\+Pose\+Valid\+::\+Const\+Ptr \&msg)
+\item 
+void \mbox{\hyperlink{classTREMngrBodyPtrtip_a8ca62c61e0c76f6cd2a7c4d3e0911d02}{Body\+Ref\+Ptrtip\+Call\+Back}} (const geometry\+\_\+msgs\+::\+Point\+::\+Const\+Ptr \&msg)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+ros\+::\+Node\+Handle \& \mbox{\hyperlink{classTREMngrBodyPtrtip_a73f0f440065570f40b71d443d6ed7044}{n\+\_\+}}
+\item 
+ros\+::\+Subscriber \mbox{\hyperlink{classTREMngrBodyPtrtip_aa3d14d657a2ca38f71a75e6e4cd50a37}{sub\+\_\+run\+\_\+}}
+\item 
+ros\+::\+Subscriber \mbox{\hyperlink{classTREMngrBodyPtrtip_acd8032150c74ac094cfba6a1cfc0ed54}{sub\+\_\+tr\+\_\+bodyref\+\_\+body\+\_\+}}
+\item 
+ros\+::\+Subscriber \mbox{\hyperlink{classTREMngrBodyPtrtip_a40896d3e27e4f028770ada0df94e9d41}{sub\+\_\+t\+\_\+bodyref\+\_\+ptrtip\+\_\+}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classTREMngrBodyPtrtip_acf0b2892156f8119677b344105403c52}\label{classTREMngrBodyPtrtip_acf0b2892156f8119677b344105403c52}} 
+\index{TREMngrBodyPtrtip@{TREMngrBodyPtrtip}!TREMngrBodyPtrtip@{TREMngrBodyPtrtip}}
+\index{TREMngrBodyPtrtip@{TREMngrBodyPtrtip}!TREMngrBodyPtrtip@{TREMngrBodyPtrtip}}
+\doxysubsubsection{\texorpdfstring{TREMngrBodyPtrtip()}{TREMngrBodyPtrtip()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classTREMngrBodyPtrtip}{TREMngr\+Body\+Ptrtip\+::\+TREMngr\+Body\+Ptrtip}} (\begin{DoxyParamCaption}\item[{ros\+::\+Node\+Handle \&}]{n }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classTREMngrBodyPtrtip_a0e551a71f33f5277acd0bfd964a213b8}\label{classTREMngrBodyPtrtip_a0e551a71f33f5277acd0bfd964a213b8}} 
+\index{TREMngrBodyPtrtip@{TREMngrBodyPtrtip}!BodyRefBodyCallBack@{BodyRefBodyCallBack}}
+\index{BodyRefBodyCallBack@{BodyRefBodyCallBack}!TREMngrBodyPtrtip@{TREMngrBodyPtrtip}}
+\doxysubsubsection{\texorpdfstring{BodyRefBodyCallBack()}{BodyRefBodyCallBack()}}
+{\footnotesize\ttfamily void TREMngr\+Body\+Ptrtip\+::\+Body\+Ref\+Body\+Call\+Back (\begin{DoxyParamCaption}\item[{const rotms\+\_\+ros\+\_\+msgs\+::\+Pose\+Valid\+::\+Const\+Ptr \&}]{msg }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+\mbox{\Hypertarget{classTREMngrBodyPtrtip_a8ca62c61e0c76f6cd2a7c4d3e0911d02}\label{classTREMngrBodyPtrtip_a8ca62c61e0c76f6cd2a7c4d3e0911d02}} 
+\index{TREMngrBodyPtrtip@{TREMngrBodyPtrtip}!BodyRefPtrtipCallBack@{BodyRefPtrtipCallBack}}
+\index{BodyRefPtrtipCallBack@{BodyRefPtrtipCallBack}!TREMngrBodyPtrtip@{TREMngrBodyPtrtip}}
+\doxysubsubsection{\texorpdfstring{BodyRefPtrtipCallBack()}{BodyRefPtrtipCallBack()}}
+{\footnotesize\ttfamily void TREMngr\+Body\+Ptrtip\+::\+Body\+Ref\+Ptrtip\+Call\+Back (\begin{DoxyParamCaption}\item[{const geometry\+\_\+msgs\+::\+Point\+::\+Const\+Ptr \&}]{msg }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+\mbox{\Hypertarget{classTREMngrBodyPtrtip_abb83a0cc10078f0566aa150c14f29ed4}\label{classTREMngrBodyPtrtip_abb83a0cc10078f0566aa150c14f29ed4}} 
+\index{TREMngrBodyPtrtip@{TREMngrBodyPtrtip}!FlagCallBack@{FlagCallBack}}
+\index{FlagCallBack@{FlagCallBack}!TREMngrBodyPtrtip@{TREMngrBodyPtrtip}}
+\doxysubsubsection{\texorpdfstring{FlagCallBack()}{FlagCallBack()}}
+{\footnotesize\ttfamily void TREMngr\+Body\+Ptrtip\+::\+Flag\+Call\+Back (\begin{DoxyParamCaption}\item[{const std\+\_\+msgs\+::\+String\+::\+Const\+Ptr \&}]{msg }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classTREMngrBodyPtrtip_a73f0f440065570f40b71d443d6ed7044}\label{classTREMngrBodyPtrtip_a73f0f440065570f40b71d443d6ed7044}} 
+\index{TREMngrBodyPtrtip@{TREMngrBodyPtrtip}!n\_@{n\_}}
+\index{n\_@{n\_}!TREMngrBodyPtrtip@{TREMngrBodyPtrtip}}
+\doxysubsubsection{\texorpdfstring{n\_}{n\_}}
+{\footnotesize\ttfamily ros\+::\+Node\+Handle\& TREMngr\+Body\+Ptrtip\+::n\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classTREMngrBodyPtrtip_a447f0d3e5985ce5e34bbbd1a09580089}\label{classTREMngrBodyPtrtip_a447f0d3e5985ce5e34bbbd1a09580089}} 
+\index{TREMngrBodyPtrtip@{TREMngrBodyPtrtip}!run\_flag@{run\_flag}}
+\index{run\_flag@{run\_flag}!TREMngrBodyPtrtip@{TREMngrBodyPtrtip}}
+\doxysubsubsection{\texorpdfstring{run\_flag}{run\_flag}}
+{\footnotesize\ttfamily bool TREMngr\+Body\+Ptrtip\+::run\+\_\+flag = false}
+
+\mbox{\Hypertarget{classTREMngrBodyPtrtip_aa3d14d657a2ca38f71a75e6e4cd50a37}\label{classTREMngrBodyPtrtip_aa3d14d657a2ca38f71a75e6e4cd50a37}} 
+\index{TREMngrBodyPtrtip@{TREMngrBodyPtrtip}!sub\_run\_@{sub\_run\_}}
+\index{sub\_run\_@{sub\_run\_}!TREMngrBodyPtrtip@{TREMngrBodyPtrtip}}
+\doxysubsubsection{\texorpdfstring{sub\_run\_}{sub\_run\_}}
+{\footnotesize\ttfamily ros\+::\+Subscriber TREMngr\+Body\+Ptrtip\+::sub\+\_\+run\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \mbox{\hyperlink{classTREMngrBodyPtrtip_a73f0f440065570f40b71d443d6ed7044}{n\_}}.subscribe(}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}/Kinematics/Flag\_t\_body\_ptrtip"{}}, 2, \&\mbox{\hyperlink{classTREMngrBodyPtrtip_abb83a0cc10078f0566aa150c14f29ed4}{TREMngrBodyPtrtip::FlagCallBack}}, \textcolor{keyword}{this})}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{classTREMngrBodyPtrtip_a40896d3e27e4f028770ada0df94e9d41}\label{classTREMngrBodyPtrtip_a40896d3e27e4f028770ada0df94e9d41}} 
+\index{TREMngrBodyPtrtip@{TREMngrBodyPtrtip}!sub\_t\_bodyref\_ptrtip\_@{sub\_t\_bodyref\_ptrtip\_}}
+\index{sub\_t\_bodyref\_ptrtip\_@{sub\_t\_bodyref\_ptrtip\_}!TREMngrBodyPtrtip@{TREMngrBodyPtrtip}}
+\doxysubsubsection{\texorpdfstring{sub\_t\_bodyref\_ptrtip\_}{sub\_t\_bodyref\_ptrtip\_}}
+{\footnotesize\ttfamily ros\+::\+Subscriber TREMngr\+Body\+Ptrtip\+::sub\+\_\+t\+\_\+bodyref\+\_\+ptrtip\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \mbox{\hyperlink{classTREMngrBodyPtrtip_a73f0f440065570f40b71d443d6ed7044}{n\_}}.subscribe(}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}/Kinematics/T\_bodyref\_ptrtip"{}}, 2, \&\mbox{\hyperlink{classTREMngrBodyPtrtip_a8ca62c61e0c76f6cd2a7c4d3e0911d02}{TREMngrBodyPtrtip::BodyRefPtrtipCallBack}}, \textcolor{keyword}{this})}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{classTREMngrBodyPtrtip_acd8032150c74ac094cfba6a1cfc0ed54}\label{classTREMngrBodyPtrtip_acd8032150c74ac094cfba6a1cfc0ed54}} 
+\index{TREMngrBodyPtrtip@{TREMngrBodyPtrtip}!sub\_tr\_bodyref\_body\_@{sub\_tr\_bodyref\_body\_}}
+\index{sub\_tr\_bodyref\_body\_@{sub\_tr\_bodyref\_body\_}!TREMngrBodyPtrtip@{TREMngrBodyPtrtip}}
+\doxysubsubsection{\texorpdfstring{sub\_tr\_bodyref\_body\_}{sub\_tr\_bodyref\_body\_}}
+{\footnotesize\ttfamily ros\+::\+Subscriber TREMngr\+Body\+Ptrtip\+::sub\+\_\+tr\+\_\+bodyref\+\_\+body\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \mbox{\hyperlink{classTREMngrBodyPtrtip_a73f0f440065570f40b71d443d6ed7044}{n\_}}.subscribe(}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}/Kinematics/TR\_bodyref\_body"{}}, 2, \&\mbox{\hyperlink{classTREMngrBodyPtrtip_a0e551a71f33f5277acd0bfd964a213b8}{TREMngrBodyPtrtip::BodyRefBodyCallBack}}, \textcolor{keyword}{this})}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{classTREMngrBodyPtrtip_a2bae26548c6ed50d63aa442de4b3f981}\label{classTREMngrBodyPtrtip_a2bae26548c6ed50d63aa442de4b3f981}} 
+\index{TREMngrBodyPtrtip@{TREMngrBodyPtrtip}!t\_bodyref\_ptrtip\_@{t\_bodyref\_ptrtip\_}}
+\index{t\_bodyref\_ptrtip\_@{t\_bodyref\_ptrtip\_}!TREMngrBodyPtrtip@{TREMngrBodyPtrtip}}
+\doxysubsubsection{\texorpdfstring{t\_bodyref\_ptrtip\_}{t\_bodyref\_ptrtip\_}}
+{\footnotesize\ttfamily tf2\+::\+Vector3 TREMngr\+Body\+Ptrtip\+::t\+\_\+bodyref\+\_\+ptrtip\+\_\+}
+
+\mbox{\Hypertarget{classTREMngrBodyPtrtip_af2336839323ef818d69baf655f7c41f4}\label{classTREMngrBodyPtrtip_af2336839323ef818d69baf655f7c41f4}} 
+\index{TREMngrBodyPtrtip@{TREMngrBodyPtrtip}!tr\_body\_bodyref\_@{tr\_body\_bodyref\_}}
+\index{tr\_body\_bodyref\_@{tr\_body\_bodyref\_}!TREMngrBodyPtrtip@{TREMngrBodyPtrtip}}
+\doxysubsubsection{\texorpdfstring{tr\_body\_bodyref\_}{tr\_body\_bodyref\_}}
+{\footnotesize\ttfamily tf2\+::\+Transform TREMngr\+Body\+Ptrtip\+::tr\+\_\+body\+\_\+bodyref\+\_\+}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+rotms\+\_\+ros\+\_\+kinematics/src/nodes/\mbox{\hyperlink{node__TRE__t__body__ptrtip_8cpp}{node\+\_\+\+TRE\+\_\+t\+\_\+body\+\_\+ptrtip.\+cpp}}\end{DoxyCompactItemize}

@@ -30,7 +30,7 @@ SOFTWARE.
 #include <stdexcept>
 #include <functional>
 
-bool CheckFlagIntegrity(const std::vector<WorkState*>& states)
+bool CheckFlagIntegrity(const std::vector<StateBase*>& states)
 {
     std::vector<int> musks {0B1000, 0B0100, 0B0010, 0B0001};
     std::vector<std::function<bool()>> flags {
@@ -55,9 +55,9 @@ bool CheckFlagIntegrity(const std::vector<WorkState*>& states)
     return true;
 }
 
-std::vector<WorkState*> GetStatesVector(FlagMachine& f, TMSOperations& ops)
+std::vector<StateBase*> GetStatesVector(FlagMachine& f, TMSOperations& ops)
 {   // ALWAYS CLEAN THE MEMORY AFTER FINISHED USING THE RETURNED VECTOR!!!
-    std::vector<WorkState*> vec;
+    std::vector<StateBase*> vec;
     for(int i=0; i<16; i++)
     {
         switch (i)
@@ -112,7 +112,7 @@ std::vector<WorkState*> GetStatesVector(FlagMachine& f, TMSOperations& ops)
                 
             default:
             {
-                vec.push_back(new WorkState(-1,vec,f,ops));
+                vec.push_back(new StateBase(-1,vec,f,ops));
                 break;
             }
                 
@@ -133,8 +133,8 @@ std::vector<WorkState*> GetStatesVector(FlagMachine& f, TMSOperations& ops)
 }
 
 // Initial state (default state)
-State0000::State0000(std::vector<WorkState*>& v, FlagMachine& f, TMSOperations& ops) 
-    : WorkState(0B0000, v, f, ops) {Activate();} // default state
+State0000::State0000(std::vector<StateBase*>& v, FlagMachine& f, TMSOperations& ops) 
+    : StateBase(0B0000, v, f, ops) {Activate();} // default state
 
 int State0000::LandmarksPlanned()
 {
@@ -168,8 +168,8 @@ int State0000::UsePrevRegister()
 }
 
 // 
-State1000::State1000(std::vector<WorkState*>& v, FlagMachine& f, TMSOperations& ops) 
-    : WorkState(0B1000, v, f, ops) {}
+State1000::State1000(std::vector<StateBase*>& v, FlagMachine& f, TMSOperations& ops) 
+    : StateBase(0B1000, v, f, ops) {}
 
 int State1000::LandmarksDigitized()
 {
@@ -219,8 +219,8 @@ int State1000::UsePrevRegister()
 }
 
 //
-State1100::State1100(std::vector<WorkState*>& v, FlagMachine& f, TMSOperations& ops)  
-    : WorkState(0B1100, v, f, ops) {}
+State1100::State1100(std::vector<StateBase*>& v, FlagMachine& f, TMSOperations& ops)  
+    : StateBase(0B1100, v, f, ops) {}
 
 int State1100::ToolPosePlanned()
 {
@@ -279,8 +279,8 @@ int State1100::UsePrevRegister()
 }
 
 //
-State1101::State1101(std::vector<WorkState*>& v, FlagMachine& f, TMSOperations& ops)  
-    : WorkState(0B1101, v, f, ops) {}
+State1101::State1101(std::vector<StateBase*>& v, FlagMachine& f, TMSOperations& ops)  
+    : StateBase(0B1101, v, f, ops) {}
 
 int State1101::ToolPosePlanned()
 {
@@ -326,8 +326,8 @@ int State1101::UsePrevRegister()
 }
 
 //
-State0010::State0010(std::vector<WorkState*>& v, FlagMachine& f, TMSOperations& ops)  
-    : WorkState(0B0010, v, f, ops) {}
+State0010::State0010(std::vector<StateBase*>& v, FlagMachine& f, TMSOperations& ops)  
+    : StateBase(0B0010, v, f, ops) {}
 
 int State0010::LandmarksPlanned()
 {
@@ -372,8 +372,8 @@ int State0010::UsePrevRegister()
 }
 
 //
-State1010::State1010(std::vector<WorkState*>& v, FlagMachine& f, TMSOperations& ops)  
-    : WorkState(0B1010, v, f, ops) {}
+State1010::State1010(std::vector<StateBase*>& v, FlagMachine& f, TMSOperations& ops)  
+    : StateBase(0B1010, v, f, ops) {}
 
 int State1010::ClearToolPosePlan()
 {
@@ -433,8 +433,8 @@ int State1010::UsePrevRegister()
 }
 
 //
-State1110::State1110(std::vector<WorkState*>& v, FlagMachine& f, TMSOperations& ops)  
-    : WorkState(0B1110, v, f, ops) {}
+State1110::State1110(std::vector<StateBase*>& v, FlagMachine& f, TMSOperations& ops)  
+    : StateBase(0B1110, v, f, ops) {}
 
 int State1110::ClearToolPosePlan()
 {
@@ -503,8 +503,8 @@ int State1110::UsePrevRegister()
 }
 
 //
-State1111::State1111(std::vector<WorkState*>& v, FlagMachine& f, TMSOperations& ops)  
-    : WorkState(0B1111, v, f, ops) {}
+State1111::State1111(std::vector<StateBase*>& v, FlagMachine& f, TMSOperations& ops)  
+    : StateBase(0B1111, v, f, ops) {}
 
 int State1111::ClearToolPosePlan()
 {
