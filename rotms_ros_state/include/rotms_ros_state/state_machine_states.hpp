@@ -63,6 +63,7 @@ class State1100 : public StateBase
 public:
     State1100(std::vector<StateBase*>& v, FlagMachine& f, TMSOperations& ops);
 
+    int LandmarksPlanned() override;
     int ToolPosePlanned() override;
     int Registered() override;
     int ClearDigitization() override;
@@ -115,6 +116,7 @@ class State1110 : public StateBase
 public:
     State1110(std::vector<StateBase*>& v, FlagMachine& f, TMSOperations& ops);
 
+    int LandmarksPlanned() override;
     int ClearToolPosePlan() override;
     int LandmarksDigitized() override;
     int ToolPosePlanned() override;

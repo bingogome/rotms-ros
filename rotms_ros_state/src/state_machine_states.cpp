@@ -141,7 +141,6 @@ int State0000::LandmarksPlanned()
     TransitionOps funcs;
     funcs.push_back(FlagMachine::PlanLandmarks);
     Transition(0B1000, funcs);
-    
     return 0B1000;
 }
 int State0000::ToolPosePlanned()
@@ -222,6 +221,13 @@ int State1000::UsePrevRegister()
 State1100::State1100(std::vector<StateBase*>& v, FlagMachine& f, TMSOperations& ops)  
     : StateBase(0B1100, v, f, ops) {}
 
+int State1100::LandmarksPlanned()
+{
+    TransitionOps funcs;
+    funcs.push_back(FlagMachine::PlanLandmarks);
+    Transition(0B1000, funcs);
+    return 0B1000;
+}
 int State1100::ToolPosePlanned()
 {
     TransitionOps funcs;
@@ -436,6 +442,13 @@ int State1010::UsePrevRegister()
 State1110::State1110(std::vector<StateBase*>& v, FlagMachine& f, TMSOperations& ops)  
     : StateBase(0B1110, v, f, ops) {}
 
+int State1110::LandmarksPlanned()
+{
+    TransitionOps funcs;
+    funcs.push_back(FlagMachine::PlanLandmarks);
+    Transition(0B1010, funcs);
+    return 0B1010;
+}
 int State1110::ClearToolPosePlan()
 {
     TransitionOps funcs;
