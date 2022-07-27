@@ -40,7 +40,7 @@ int main(int argc, char **argv)
     ROS_GREEN_STREAM("[ROTMS INFO] Dispatcher on.");
 
     // Initialize flags, states, operations and pass to dispatcher
-    FlagMachine f = FlagMachine();
+    FlagMachineTMS f = FlagMachineTMS();
     TMSOperations ops = TMSOperations(nh);
 
     // WARNING: this function will return a vector of pointers

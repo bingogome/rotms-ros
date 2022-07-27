@@ -24,12 +24,12 @@ SOFTWARE.
 
 #pragma once
 
-class FlagMachine
+class FlagMachineTMS
 {
 
 public:
 
-    FlagMachine();
+    FlagMachineTMS();
 
     static void PlanLandmarks();
     static void DigitizeLandmarks();

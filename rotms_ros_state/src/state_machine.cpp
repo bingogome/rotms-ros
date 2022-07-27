@@ -39,7 +39,7 @@ SOFTWARE.
 * nested siwch-case.
 ***/
 
-StateBase::StateBase(int state_num, std::vector<StateBase*>& v, FlagMachine& f, TMSOperations& ops) 
+StateBase::StateBase(int state_num, std::vector<StateBase*>& v, FlagMachineTMS& f, TMSOperations& ops) 
     : state_num_(state_num), states_(v), flags_(f), ops_(ops)
 {
     Deactivate();

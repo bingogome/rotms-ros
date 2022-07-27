@@ -25,7 +25,7 @@ SOFTWARE.
 #include "flag_machine.hpp"
 #include <vector>
 
-FlagMachine::FlagMachine()
+FlagMachineTMS::FlagMachineTMS()
 {
     flag_robot_conn_status_ = false;
 
@@ -36,31 +36,31 @@ FlagMachine::FlagMachine()
 }
 
 // Robot connection status flag
-bool FlagMachine::flag_robot_conn_status_;
+bool FlagMachineTMS::flag_robot_conn_status_;
 
 // Crucial operations status flags
-bool FlagMachine::flag_landmark_planned_;
-bool FlagMachine::flag_landmark_digitized_;
-bool FlagMachine::flag_toolpose_planned_;
-bool FlagMachine::flag_registration_completed_;
+bool FlagMachineTMS::flag_landmark_planned_;
+bool FlagMachineTMS::flag_landmark_digitized_;
+bool FlagMachineTMS::flag_toolpose_planned_;
+bool FlagMachineTMS::flag_registration_completed_;
 
 // Robot connection status setters and getters
-void FlagMachine::ConnectRobot(){flag_robot_conn_status_=true;}
-void FlagMachine::DisconnectRobot(){flag_robot_conn_status_=false;}
-bool FlagMachine::GetFlagRobotConnStatus(){return flag_robot_conn_status_;}
+void FlagMachineTMS::ConnectRobot(){flag_robot_conn_status_=true;}
+void FlagMachineTMS::DisconnectRobot(){flag_robot_conn_status_=false;}
+bool FlagMachineTMS::GetFlagRobotConnStatus(){return flag_robot_conn_status_;}
 
 // Crucial operations status setters and getters
-void FlagMachine::PlanLandmarks(){flag_landmark_planned_=true;}
-void FlagMachine::DigitizeLandmarks(){flag_landmark_digitized_=true;}
-void FlagMachine::PlanToolPose(){flag_toolpose_planned_=true;}
-void FlagMachine::CompleteRegistration(){flag_registration_completed_=true;}
+void FlagMachineTMS::PlanLandmarks(){flag_landmark_planned_=true;}
+void FlagMachineTMS::DigitizeLandmarks(){flag_landmark_digitized_=true;}
+void FlagMachineTMS::PlanToolPose(){flag_toolpose_planned_=true;}
+void FlagMachineTMS::CompleteRegistration(){flag_registration_completed_=true;}
 
-void FlagMachine::UnPlanLandmarks(){flag_landmark_planned_=false;}
-void FlagMachine::UnDigitizeLandmarks(){flag_landmark_digitized_=false;}
-void FlagMachine::UnPlanToolPose(){flag_toolpose_planned_=false;}
-void FlagMachine::UnCompleteRegistration(){flag_registration_completed_=false;}
+void FlagMachineTMS::UnPlanLandmarks(){flag_landmark_planned_=false;}
+void FlagMachineTMS::UnDigitizeLandmarks(){flag_landmark_digitized_=false;}
+void FlagMachineTMS::UnPlanToolPose(){flag_toolpose_planned_=false;}
+void FlagMachineTMS::UnCompleteRegistration(){flag_registration_completed_=false;}
 
-bool FlagMachine::GetFlagLandmarkPlanned(){return flag_landmark_planned_;}
-bool FlagMachine::GetFlagLandmarkDigitized(){return flag_landmark_digitized_;}
-bool FlagMachine::GetFlagToolPosePlanned(){return flag_toolpose_planned_;}
-bool FlagMachine::GetFlagRegistered(){return flag_registration_completed_;}
+bool FlagMachineTMS::GetFlagLandmarkPlanned(){return flag_landmark_planned_;}
+bool FlagMachineTMS::GetFlagLandmarkDigitized(){return flag_landmark_digitized_;}
+bool FlagMachineTMS::GetFlagToolPosePlanned(){return flag_toolpose_planned_;}
+bool FlagMachineTMS::GetFlagRegistered(){return flag_registration_completed_;}

@@ -50,11 +50,11 @@ public:
     StateBase(
         int state_num,
         std::vector<StateBase*>& v,
-        FlagMachine& f,
+        FlagMachineTMS& f,
         TMSOperations& ops);
     virtual ~StateBase();
 
-    FlagMachine& flags_;
+    FlagMachineTMS& flags_;
     
     bool CheckActivated();
     void Activate();

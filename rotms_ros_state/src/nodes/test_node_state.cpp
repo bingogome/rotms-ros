@@ -36,7 +36,7 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "DummyNode");
     ros::NodeHandle nh;
     
-    FlagMachine f = FlagMachine();
+    FlagMachineTMS f = FlagMachineTMS();
     TMSOperations o(nh);
 
     ros::spin();
