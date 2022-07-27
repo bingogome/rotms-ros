@@ -55,7 +55,7 @@ bool CheckFlagIntegrity(const std::vector<StateBase*>& states)
     return true;
 }
 
-std::vector<StateBase*> GetStatesVector(FlagMachineTMS& f, TMSOperations& ops)
+std::vector<StateBase*> GetStatesVector(FlagMachineTMS& f, OperationsTMS& ops)
 {   // ALWAYS CLEAN THE MEMORY AFTER FINISHED USING THE RETURNED VECTOR!!!
     std::vector<StateBase*> vec;
     for(int i=0; i<16; i++)
@@ -133,7 +133,7 @@ std::vector<StateBase*> GetStatesVector(FlagMachineTMS& f, TMSOperations& ops)
 }
 
 // Initial state (default state)
-State0000::State0000(std::vector<StateBase*>& v, FlagMachineTMS& f, TMSOperations& ops) 
+State0000::State0000(std::vector<StateBase*>& v, FlagMachineTMS& f, OperationsTMS& ops) 
     : StateBase(0B0000, v, f, ops) {Activate();} // default state
 
 int State0000::LandmarksPlanned()
@@ -146,7 +146,7 @@ int State0000::LandmarksPlanned()
 int State0000::ToolPosePlanned()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationPlanToolPose, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationPlanToolPose, ops_));
     funcs.push_back(FlagMachineTMS::PlanToolPose);
     Transition(0B0010, funcs);
     return 0B0010;
@@ -158,7 +158,7 @@ int State0000::ReinitState()
 int State0000::UsePrevRegister()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationUsePreRegistration, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationUsePreRegistration, ops_));
     funcs.push_back(FlagMachineTMS::PlanLandmarks);
     funcs.push_back(FlagMachineTMS::DigitizeLandmarks);
     funcs.push_back(FlagMachineTMS::CompleteRegistration);
@@ -167,13 +167,13 @@ int State0000::UsePrevRegister()
 }
 
 // 
-State1000::State1000(std::vector<StateBase*>& v, FlagMachineTMS& f, TMSOperations& ops) 
+State1000::State1000(std::vector<StateBase*>& v, FlagMachineTMS& f, OperationsTMS& ops) 
     : StateBase(0B1000, v, f, ops) {}
 
 int State1000::LandmarksDigitized()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationDigitization, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationDigitization, ops_));
     funcs.push_back(FlagMachineTMS::DigitizeLandmarks);
     Transition(0B1100, funcs);
     return 0B1100;
@@ -181,7 +181,7 @@ int State1000::LandmarksDigitized()
 int State1000::ToolPosePlanned()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationPlanToolPose, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationPlanToolPose, ops_));
     funcs.push_back(FlagMachineTMS::PlanToolPose);
     Transition(0B1010, funcs);
     return 0B1010;
@@ -210,7 +210,7 @@ int State1000::ReinitState()
 int State1000::UsePrevRegister()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationUsePreRegistration, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationUsePreRegistration, ops_));
     funcs.push_back(FlagMachineTMS::DigitizeLandmarks);
     funcs.push_back(FlagMachineTMS::CompleteRegistration);
     Transition(0B1101, funcs);
@@ -218,7 +218,7 @@ int State1000::UsePrevRegister()
 }
 
 //
-State1100::State1100(std::vector<StateBase*>& v, FlagMachineTMS& f, TMSOperations& ops)  
+State1100::State1100(std::vector<StateBase*>& v, FlagMachineTMS& f, OperationsTMS& ops)  
     : StateBase(0B1100, v, f, ops) {}
 
 int State1100::LandmarksPlanned()
@@ -231,7 +231,7 @@ int State1100::LandmarksPlanned()
 int State1100::ToolPosePlanned()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationPlanToolPose, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationPlanToolPose, ops_));
     funcs.push_back(FlagMachineTMS::PlanToolPose);
     Transition(0B1110, funcs);
     return 0B1110;
@@ -239,7 +239,7 @@ int State1100::ToolPosePlanned()
 int State1100::Registered()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationRegistration, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationRegistration, ops_));
     funcs.push_back(FlagMachineTMS::CompleteRegistration);
     Transition(0B1101, funcs);
     return 0B1101;
@@ -262,7 +262,7 @@ int State1100::ClearLandmarks()
 int State1100::LandmarksDigitized()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationDigitization, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationDigitization, ops_));
     funcs.push_back(FlagMachineTMS::DigitizeLandmarks);
     Transition(0B1100, funcs);
     return 0B1100;
@@ -278,20 +278,20 @@ int State1100::ReinitState()
 int State1100::UsePrevRegister()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationUsePreRegistration, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationUsePreRegistration, ops_));
     funcs.push_back(FlagMachineTMS::CompleteRegistration);
     Transition(0B1101, funcs);
     return 0B1101;
 }
 
 //
-State1101::State1101(std::vector<StateBase*>& v, FlagMachineTMS& f, TMSOperations& ops)  
+State1101::State1101(std::vector<StateBase*>& v, FlagMachineTMS& f, OperationsTMS& ops)  
     : StateBase(0B1101, v, f, ops) {}
 
 int State1101::ToolPosePlanned()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationPlanToolPose, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationPlanToolPose, ops_));
     funcs.push_back(FlagMachineTMS::PlanToolPose);
     Transition(0B1111, funcs);
     return 0B1111;
@@ -299,7 +299,7 @@ int State1101::ToolPosePlanned()
 int State1101::ClearRegistration()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationResetRegistration, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationResetRegistration, ops_));
     funcs.push_back(FlagMachineTMS::UnCompleteRegistration);
     Transition(0B1100, funcs);
     return 0B1100;
@@ -316,7 +316,7 @@ int State1101::ClearLandmarks()
 int State1101::ReinitState()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationResetRegistration, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationResetRegistration, ops_));
     funcs.push_back(FlagMachineTMS::UnPlanLandmarks);
     funcs.push_back(FlagMachineTMS::UnDigitizeLandmarks);
     funcs.push_back(FlagMachineTMS::UnCompleteRegistration);
@@ -326,13 +326,13 @@ int State1101::ReinitState()
 int State1101::UsePrevRegister()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationUsePreRegistration, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationUsePreRegistration, ops_));
     Transition(0B1101, funcs);
     return 0B1101;
 }
 
 //
-State0010::State0010(std::vector<StateBase*>& v, FlagMachineTMS& f, TMSOperations& ops)  
+State0010::State0010(std::vector<StateBase*>& v, FlagMachineTMS& f, OperationsTMS& ops)  
     : StateBase(0B0010, v, f, ops) {}
 
 int State0010::LandmarksPlanned()
@@ -345,7 +345,7 @@ int State0010::LandmarksPlanned()
 int State0010::ClearToolPosePlan()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationResetToolPose, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationResetToolPose, ops_));
     funcs.push_back(FlagMachineTMS::UnPlanToolPose);
     Transition(0B0000, funcs);
     return 0B0000;
@@ -353,7 +353,7 @@ int State0010::ClearToolPosePlan()
 int State0010::ToolPosePlanned()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationPlanToolPose, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationPlanToolPose, ops_));
     funcs.push_back(FlagMachineTMS::PlanToolPose);
     Transition(0B0010, funcs);
     return 0B0010;
@@ -361,7 +361,7 @@ int State0010::ToolPosePlanned()
 int State0010::ReinitState()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationResetToolPose, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationResetToolPose, ops_));
     funcs.push_back(FlagMachineTMS::UnPlanToolPose);
     Transition(0B0000, funcs);
     return 0B0000;
@@ -369,7 +369,7 @@ int State0010::ReinitState()
 int State0010::UsePrevRegister()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationUsePreRegistration, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationUsePreRegistration, ops_));
     funcs.push_back(FlagMachineTMS::PlanLandmarks);
     funcs.push_back(FlagMachineTMS::DigitizeLandmarks);
     funcs.push_back(FlagMachineTMS::CompleteRegistration);
@@ -378,13 +378,13 @@ int State0010::UsePrevRegister()
 }
 
 //
-State1010::State1010(std::vector<StateBase*>& v, FlagMachineTMS& f, TMSOperations& ops)  
+State1010::State1010(std::vector<StateBase*>& v, FlagMachineTMS& f, OperationsTMS& ops)  
     : StateBase(0B1010, v, f, ops) {}
 
 int State1010::ClearToolPosePlan()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationResetToolPose, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationResetToolPose, ops_));
     funcs.push_back(FlagMachineTMS::UnPlanToolPose);
     Transition(0B1000, funcs);
     return 0B1000;
@@ -399,7 +399,7 @@ int State1010::ClearLandmarks()
 int State1010::ToolPosePlanned()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationPlanToolPose, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationPlanToolPose, ops_));
     funcs.push_back(FlagMachineTMS::PlanToolPose);
     Transition(0B1010, funcs);
     return 0B1010;
@@ -414,7 +414,7 @@ int State1010::LandmarksPlanned()
 int State1010::LandmarksDigitized()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationDigitization, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationDigitization, ops_));
     funcs.push_back(FlagMachineTMS::DigitizeLandmarks);
     Transition(0B1110, funcs);
     return 0B1110;
@@ -422,7 +422,7 @@ int State1010::LandmarksDigitized()
 int State1010::ReinitState()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationResetToolPose, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationResetToolPose, ops_));
     funcs.push_back(FlagMachineTMS::UnPlanLandmarks);
     funcs.push_back(FlagMachineTMS::UnPlanToolPose);
     Transition(0B0000, funcs);
@@ -431,7 +431,7 @@ int State1010::ReinitState()
 int State1010::UsePrevRegister()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationUsePreRegistration, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationUsePreRegistration, ops_));
     funcs.push_back(FlagMachineTMS::DigitizeLandmarks);
     funcs.push_back(FlagMachineTMS::CompleteRegistration);
     Transition(0B1111, funcs);
@@ -439,7 +439,7 @@ int State1010::UsePrevRegister()
 }
 
 //
-State1110::State1110(std::vector<StateBase*>& v, FlagMachineTMS& f, TMSOperations& ops)  
+State1110::State1110(std::vector<StateBase*>& v, FlagMachineTMS& f, OperationsTMS& ops)  
     : StateBase(0B1110, v, f, ops) {}
 
 int State1110::LandmarksPlanned()
@@ -452,7 +452,7 @@ int State1110::LandmarksPlanned()
 int State1110::ClearToolPosePlan()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationResetToolPose, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationResetToolPose, ops_));
     funcs.push_back(FlagMachineTMS::UnPlanToolPose);
     Transition(0B1100, funcs);
     return 0B1100;
@@ -460,7 +460,7 @@ int State1110::ClearToolPosePlan()
 int State1110::LandmarksDigitized()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationDigitization, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationDigitization, ops_));
     funcs.push_back(FlagMachineTMS::DigitizeLandmarks);
     Transition(0B1110, funcs);
     return 0B1110;
@@ -468,7 +468,7 @@ int State1110::LandmarksDigitized()
 int State1110::ToolPosePlanned()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationPlanToolPose, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationPlanToolPose, ops_));
     funcs.push_back(FlagMachineTMS::PlanToolPose);
     Transition(0B1110, funcs);
     return 0B1110;
@@ -491,7 +491,7 @@ int State1110::ClearLandmarks()
 int State1110::Registered()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationRegistration, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationRegistration, ops_));
     funcs.push_back(FlagMachineTMS::CompleteRegistration);
     Transition(0B1111, funcs);
     return 0B1111;
@@ -499,7 +499,7 @@ int State1110::Registered()
 int State1110::ReinitState()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationResetToolPose, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationResetToolPose, ops_));
     funcs.push_back(FlagMachineTMS::UnPlanLandmarks);
     funcs.push_back(FlagMachineTMS::UnDigitizeLandmarks);
     funcs.push_back(FlagMachineTMS::UnPlanToolPose);
@@ -509,20 +509,20 @@ int State1110::ReinitState()
 int State1110::UsePrevRegister()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationUsePreRegistration, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationUsePreRegistration, ops_));
     funcs.push_back(FlagMachineTMS::CompleteRegistration);
     Transition(0B1111, funcs);
     return 0B1111;
 }
 
 //
-State1111::State1111(std::vector<StateBase*>& v, FlagMachineTMS& f, TMSOperations& ops)  
+State1111::State1111(std::vector<StateBase*>& v, FlagMachineTMS& f, OperationsTMS& ops)  
     : StateBase(0B1111, v, f, ops) {}
 
 int State1111::ClearToolPosePlan()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationResetToolPose, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationResetToolPose, ops_));
     funcs.push_back(FlagMachineTMS::UnPlanToolPose);
     Transition(0B1101, funcs);
     return 0B1101;
@@ -530,7 +530,7 @@ int State1111::ClearToolPosePlan()
 int State1111::ToolPosePlanned()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationPlanToolPose, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationPlanToolPose, ops_));
     funcs.push_back(FlagMachineTMS::PlanToolPose);
     Transition(0B1111, funcs);
     return 0B1111;
@@ -538,7 +538,7 @@ int State1111::ToolPosePlanned()
 int State1111::ClearRegistration()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationResetRegistration, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationResetRegistration, ops_));
     funcs.push_back(FlagMachineTMS::UnCompleteRegistration);
     Transition(0B1110, funcs);
     return 0B1110;
@@ -555,8 +555,8 @@ int State1111::ClearLandmarks()
 int State1111::ReinitState()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationResetRegistration, ops_));
-    funcs.push_back(std::bind(&TMSOperations::OperationResetToolPose, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationResetRegistration, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationResetToolPose, ops_));
     funcs.push_back(FlagMachineTMS::UnPlanLandmarks);
     funcs.push_back(FlagMachineTMS::UnDigitizeLandmarks);
     funcs.push_back(FlagMachineTMS::UnPlanToolPose);
@@ -567,7 +567,7 @@ int State1111::ReinitState()
 int State1111::UsePrevRegister()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&TMSOperations::OperationUsePreRegistration, ops_));
+    funcs.push_back(std::bind(&OperationsTMS::OperationUsePreRegistration, ops_));
     Transition(0B1111, funcs);
     return 0B1111;
 }

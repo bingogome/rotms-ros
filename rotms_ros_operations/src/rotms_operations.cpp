@@ -41,18 +41,18 @@ SOFTWARE.
 #include "rotms_ros_msgs/PoseValid.h"
 #include "ros_print_color.hpp"
 
-TMSOperations::TMSOperations(ros::NodeHandle& n)
+OperationsTMS::OperationsTMS(ros::NodeHandle& n)
     : n_(n)
 {}
 
-void TMSOperations::OperationPlanLandmarks()
+void OperationsTMS::OperationPlanLandmarks()
 {
     // The operation has been done by dispatcher and cached to /share/cache
     // no need to call this anymore.
     // Perhaps future change 
 }
 
-void TMSOperations::OperationDigitization()
+void OperationsTMS::OperationDigitization()
 {
     // Get meta data of planned landmarks
     std::string packpath = ros::package::getPath("rotms_ros_operations");
@@ -113,7 +113,7 @@ void TMSOperations::OperationDigitization()
 
 }
 
-void TMSOperations::OperationPlanToolPose()
+void OperationsTMS::OperationPlanToolPose()
 {
     // The operation has been done by dispatcher and cached to /share/config
     // Only need to publish
@@ -135,7 +135,7 @@ void TMSOperations::OperationPlanToolPose()
     pub_toolpose_.publish(pv);
 }
 
-void TMSOperations::OperationRegistration()
+void OperationsTMS::OperationRegistration()
 {
     std::string packpath = ros::package::getPath("rotms_ros_operations");
         
@@ -201,21 +201,21 @@ void TMSOperations::OperationRegistration()
 
 }
 
-void TMSOperations::OperationResetRegistration()
+void OperationsTMS::OperationResetRegistration()
 {
     rotms_ros_msgs::PoseValid pv;
     pv.valid = false;
     pub_registration_.publish(pv);
 }
 
-void TMSOperations::OperationResetToolPose()
+void OperationsTMS::OperationResetToolPose()
 {
     rotms_ros_msgs::PoseValid pv;
     pv.valid = false;
     pub_toolpose_.publish(pv);
 }
 
-void TMSOperations::OperationUsePreRegistration()
+void OperationsTMS::OperationUsePreRegistration()
 {
     std::string packpath = ros::package::getPath("rotms_ros_operations");
         
@@ -236,7 +236,7 @@ void TMSOperations::OperationUsePreRegistration()
     pub_registration_.publish(pv);
 }
 
-void TMSOperations::ResetOpsVolatileDataCache()
+void OperationsTMS::ResetOpsVolatileDataCache()
 {
     datacache_.landmark_total = -1;
     datacache_.landmarkdig.clear();

@@ -41,7 +41,7 @@ int main(int argc, char **argv)
 
     // Initialize flags, states, operations and pass to dispatcher
     FlagMachineTMS f = FlagMachineTMS();
-    TMSOperations ops = TMSOperations(nh);
+    OperationsTMS ops = OperationsTMS(nh);
 
     // WARNING: this function will return a vector of pointers
     // Remember to release memory !!

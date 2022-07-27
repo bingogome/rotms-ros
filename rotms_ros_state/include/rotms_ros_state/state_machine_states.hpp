@@ -32,12 +32,12 @@ SOFTWARE.
 bool CheckFlagIntegrity(const std::vector<StateBase*>& states);
 
 std::vector<StateBase*> GetStatesVector(
-    FlagMachineTMS& f, TMSOperations& ops);
+    FlagMachineTMS& f, OperationsTMS& ops);
 
 class State0000 : public StateBase
 {
 public:
-    State0000(std::vector<StateBase*>& v, FlagMachineTMS& f, TMSOperations& ops);
+    State0000(std::vector<StateBase*>& v, FlagMachineTMS& f, OperationsTMS& ops);
 
     int LandmarksPlanned() override;
     int ToolPosePlanned() override;
@@ -48,7 +48,7 @@ public:
 class State1000 : public StateBase
 {
 public:
-    State1000(std::vector<StateBase*>& v, FlagMachineTMS& f, TMSOperations& ops);
+    State1000(std::vector<StateBase*>& v, FlagMachineTMS& f, OperationsTMS& ops);
 
     int LandmarksDigitized() override;
     int ToolPosePlanned() override;
@@ -61,7 +61,7 @@ public:
 class State1100 : public StateBase
 {
 public:
-    State1100(std::vector<StateBase*>& v, FlagMachineTMS& f, TMSOperations& ops);
+    State1100(std::vector<StateBase*>& v, FlagMachineTMS& f, OperationsTMS& ops);
 
     int LandmarksPlanned() override;
     int ToolPosePlanned() override;
@@ -76,7 +76,7 @@ public:
 class State1101 : public StateBase
 {
 public:
-    State1101(std::vector<StateBase*>& v, FlagMachineTMS& f, TMSOperations& ops);
+    State1101(std::vector<StateBase*>& v, FlagMachineTMS& f, OperationsTMS& ops);
 
     int ToolPosePlanned() override;
     int ClearRegistration() override;
@@ -88,7 +88,7 @@ public:
 class State0010 : public StateBase
 {
 public:
-    State0010(std::vector<StateBase*>& v, FlagMachineTMS& f, TMSOperations& ops);
+    State0010(std::vector<StateBase*>& v, FlagMachineTMS& f, OperationsTMS& ops);
 
     int LandmarksPlanned() override;
     int ClearToolPosePlan() override;
@@ -100,7 +100,7 @@ public:
 class State1010 : public StateBase
 {
 public:
-    State1010(std::vector<StateBase*>& v, FlagMachineTMS& f, TMSOperations& ops);
+    State1010(std::vector<StateBase*>& v, FlagMachineTMS& f, OperationsTMS& ops);
 
     int ClearToolPosePlan() override;
     int ClearLandmarks() override;
@@ -114,7 +114,7 @@ public:
 class State1110 : public StateBase
 {
 public:
-    State1110(std::vector<StateBase*>& v, FlagMachineTMS& f, TMSOperations& ops);
+    State1110(std::vector<StateBase*>& v, FlagMachineTMS& f, OperationsTMS& ops);
 
     int LandmarksPlanned() override;
     int ClearToolPosePlan() override;
@@ -130,7 +130,7 @@ public:
 class State1111 : public StateBase
 {
 public:
-    State1111(std::vector<StateBase*>& v, FlagMachineTMS& f, TMSOperations& ops);
+    State1111(std::vector<StateBase*>& v, FlagMachineTMS& f, OperationsTMS& ops);
 
     int ClearToolPosePlan() override;
     int ToolPosePlanned() override;

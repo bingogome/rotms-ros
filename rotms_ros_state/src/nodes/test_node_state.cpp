@@ -37,7 +37,7 @@ int main(int argc, char **argv)
     ros::NodeHandle nh;
     
     FlagMachineTMS f = FlagMachineTMS();
-    TMSOperations o(nh);
+    OperationsTMS o(nh);
 
     ros::spin();
     return 0;

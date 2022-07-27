@@ -51,7 +51,7 @@ public:
         int state_num,
         std::vector<StateBase*>& v,
         FlagMachineTMS& f,
-        TMSOperations& ops);
+        OperationsTMS& ops);
     virtual ~StateBase();
 
     FlagMachineTMS& flags_;
@@ -80,7 +80,7 @@ protected:
     
     const int state_num_;
     const std::vector<StateBase*>& states_;
-    TMSOperations& ops_;
+    OperationsTMS& ops_;
     bool activated_;
     
     virtual void TransitionNotPossible();

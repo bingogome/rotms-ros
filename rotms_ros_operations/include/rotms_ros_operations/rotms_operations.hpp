@@ -35,11 +35,11 @@ struct TempDataCacheOps
     std::vector<std::vector<double>> landmarkdig;
 };
 
-class TMSOperations
+class OperationsTMS
 {
 public:
 
-    TMSOperations(ros::NodeHandle& n);
+    OperationsTMS(ros::NodeHandle& n);
 
     // Cruicial operations
     void OperationPlanLandmarks();
