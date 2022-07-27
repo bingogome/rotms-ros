@@ -30,8 +30,8 @@ SOFTWARE.
 
 /***
 * Current design: 
-* StateBase should have the virtual functions of all possible state transition operations (edges).
-* These virtual functions are to be inhereted by the subclasses of StateBase. If they are not 
+* StateTMS should have the virtual functions of all possible state transition operations (edges).
+* These virtual functions are to be inhereted by the subclasses of StateTMS. If they are not 
 * inhereted, the operation or transition is not possible from that state.
 *
 * NO LONGER USING THIS :
@@ -39,13 +39,13 @@ SOFTWARE.
 * nested siwch-case.
 ***/
 
-StateBase::StateBase(int state_num, std::vector<StateBase*>& v, FlagMachineTMS& f, OperationsTMS& ops) 
+StateTMS::StateTMS(int state_num, std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops) 
     : state_num_(state_num), states_(v), flags_(f), ops_(ops)
 {
     Deactivate();
 }
 
-StateBase::~StateBase()
+StateTMS::~StateTMS()
 {
     for (auto p : states_)
     {
@@ -53,11 +53,11 @@ StateBase::~StateBase()
     } 
 }
 
-bool StateBase::CheckActivated(){return activated_;}
-void StateBase::Activate(){activated_=true;}
-void StateBase::Deactivate(){activated_=false;}
-int StateBase::GetStateNum(){return state_num_;}
-bool StateBase::CheckIfUniqueActivation(const std::vector<StateBase*>& states)
+bool StateTMS::CheckActivated(){return activated_;}
+void StateTMS::Activate(){activated_=true;}
+void StateTMS::Deactivate(){activated_=false;}
+int StateTMS::GetStateNum(){return state_num_;}
+bool StateTMS::CheckIfUniqueActivation(const std::vector<StateTMS*>& states)
 {
     int s = 0;
     for(int i=0; i<states.size(); i++)
@@ -67,9 +67,9 @@ bool StateBase::CheckIfUniqueActivation(const std::vector<StateBase*>& states)
     return s<=1;
 }
 
-int StateBase::GetActivatedState(const std::vector<StateBase*>& states)
+int StateTMS::GetActivatedState(const std::vector<StateTMS*>& states)
 {
-    if ( ! StateBase::CheckIfUniqueActivation(states) )
+    if ( ! StateTMS::CheckIfUniqueActivation(states) )
         throw std::runtime_error(
             "State machine error: not unique states are activated!");
     
@@ -83,24 +83,24 @@ int StateBase::GetActivatedState(const std::vector<StateBase*>& states)
 }
 
 
-int StateBase::LandmarksPlanned() { TransitionNotPossible(); return -1; }
-int StateBase::LandmarksDigitized() { TransitionNotPossible(); return -1; }
-int StateBase::ToolPosePlanned() { TransitionNotPossible(); return -1; }
-int StateBase::Registered() { TransitionNotPossible(); return -1; }
+int StateTMS::LandmarksPlanned() { TransitionNotPossible(); return -1; }
+int StateTMS::LandmarksDigitized() { TransitionNotPossible(); return -1; }
+int StateTMS::ToolPosePlanned() { TransitionNotPossible(); return -1; }
+int StateTMS::Registered() { TransitionNotPossible(); return -1; }
 
-int StateBase::ClearLandmarks() { TransitionNotPossible(); return -1; }
-int StateBase::ClearDigitization() { TransitionNotPossible(); return -1; }
-int StateBase::ClearRegistration() { TransitionNotPossible(); return -1; }
-int StateBase::ClearToolPosePlan() { TransitionNotPossible(); return -1; }
+int StateTMS::ClearLandmarks() { TransitionNotPossible(); return -1; }
+int StateTMS::ClearDigitization() { TransitionNotPossible(); return -1; }
+int StateTMS::ClearRegistration() { TransitionNotPossible(); return -1; }
+int StateTMS::ClearToolPosePlan() { TransitionNotPossible(); return -1; }
 
-int StateBase::ReinitState() { TransitionNotPossible(); return -1; }
-int StateBase::UsePrevRegister() { TransitionNotPossible(); return -1; }
+int StateTMS::ReinitState() { TransitionNotPossible(); return -1; }
+int StateTMS::UsePrevRegister() { TransitionNotPossible(); return -1; }
 
-void StateBase::TransitionNotPossible()
+void StateTMS::TransitionNotPossible()
 {
     // TODO: implement this. Optional
 }
-void StateBase::Transition(int target_state, TransitionOps funcs)
+void StateTMS::Transition(int target_state, TransitionOps funcs)
 {
     Deactivate();
 
@@ -110,7 +110,7 @@ void StateBase::Transition(int target_state, TransitionOps funcs)
     }
 
     states_[target_state]->Activate();
-    if ( ! StateBase::CheckIfUniqueActivation(states_) )
+    if ( ! StateTMS::CheckIfUniqueActivation(states_) )
         throw std::runtime_error(
             "State machine error: not unique states are activated!");
 }

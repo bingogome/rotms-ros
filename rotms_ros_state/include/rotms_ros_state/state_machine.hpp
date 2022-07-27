@@ -33,8 +33,8 @@ typedef std::vector<std::function<void()>> TransitionOps;
 
 /***
 * Current design: 
-* StateBase should have the virtual functions of all possible state transition operations (edges).
-* These virtual functions are to be inhereted by the subclasses of StateBase. If they are not 
+* StateTMS should have the virtual functions of all possible state transition operations (edges).
+* These virtual functions are to be inhereted by the subclasses of StateTMS. If they are not 
 * inhereted, the operation or transition is not possible from that state.
 *
 * NO LONGER USING THIS :
@@ -42,17 +42,17 @@ typedef std::vector<std::function<void()>> TransitionOps;
 * nested siwch-case.
 ***/
 
-class StateBase
+class StateTMS
 {
 
 public:
 
-    StateBase(
+    StateTMS(
         int state_num,
-        std::vector<StateBase*>& v,
+        std::vector<StateTMS*>& v,
         FlagMachineTMS& f,
         OperationsTMS& ops);
-    virtual ~StateBase();
+    virtual ~StateTMS();
 
     FlagMachineTMS& flags_;
     
@@ -60,8 +60,8 @@ public:
     void Activate();
     void Deactivate();
     int GetStateNum();
-    static bool CheckIfUniqueActivation(const std::vector<StateBase*>& states);
-    static int GetActivatedState(const std::vector<StateBase*>& states);
+    static bool CheckIfUniqueActivation(const std::vector<StateTMS*>& states);
+    static int GetActivatedState(const std::vector<StateTMS*>& states);
 
     virtual int LandmarksPlanned();
     virtual int LandmarksDigitized();
@@ -79,7 +79,7 @@ public:
 protected:
     
     const int state_num_;
-    const std::vector<StateBase*>& states_;
+    const std::vector<StateTMS*>& states_;
     OperationsTMS& ops_;
     bool activated_;
     

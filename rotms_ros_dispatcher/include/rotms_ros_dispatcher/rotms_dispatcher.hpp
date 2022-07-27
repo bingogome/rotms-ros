@@ -42,12 +42,12 @@ class Dispatcher
 
 public:
 
-    Dispatcher(ros::NodeHandle& n, const std::vector<StateBase*>& states);
+    Dispatcher(ros::NodeHandle& n, const std::vector<StateTMS*>& states);
 
 private:
 
     ros::NodeHandle& n_;
-    const std::vector<StateBase*>& states_;
+    const std::vector<StateTMS*>& states_;
     int activated_state_;
 
     // Dispatcher receiving query signals
