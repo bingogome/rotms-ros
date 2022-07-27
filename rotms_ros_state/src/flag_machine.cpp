@@ -26,7 +26,10 @@ SOFTWARE.
 #include <vector>
 
 //
-FlagMachineRobot::FlagMachineRobot()
+FlagMachineBase::FlagMachineBase(){}
+
+//
+FlagMachineRobot::FlagMachineRobot() : FlagMachineBase()
 {
     flag_robot_conn_status_ = false;
 }

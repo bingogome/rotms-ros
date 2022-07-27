@@ -32,7 +32,7 @@ SOFTWARE.
 
 bool CheckFlagIntegrityTMS(const std::vector<StateTMS*>& states)
 {
-    std::vector<int> musks {0B1000, 0B0100, 0B0010, 0B0001};
+    std::vector<int> masks {0B1000, 0B0100, 0B0010, 0B0001};
     std::vector<std::function<bool()>> flags {
         FlagMachineTMS::GetFlagLandmarkPlanned,
         FlagMachineTMS::GetFlagLandmarkDigitized,
@@ -46,7 +46,7 @@ bool CheckFlagIntegrityTMS(const std::vector<StateTMS*>& states)
             int state_num = states[i]->GetStateNum();
             for (int idx=0;idx<4;idx++)
             {
-                bool temp = (bool)((state_num & musks[idx]) >> (4-idx-1));
+                bool temp = (bool)((state_num & masks[idx]) >> (4-idx-1));
                 if (!(flags[idx]()==temp)) // detected inconsistence
                     return false;
             }

@@ -28,6 +28,15 @@ SOFTWARE.
 #include <std_msgs/String.h>
 #include "rotms_ros_msgs/PoseValid.h"
 
+class OperatonsBase
+{
+public:
+    OperatonsBase(ros::NodeHandle& n);
+
+protected:
+    ros::NodeHandle& n_;
+
+};
 
 struct TempDataCacheOps 
 {
@@ -35,7 +44,7 @@ struct TempDataCacheOps
     std::vector<std::vector<double>> landmarkdig;
 };
 
-class OperationsTMS
+class OperationsTMS : public OperatonsBase
 {
 public:
 
@@ -58,7 +67,6 @@ public:
 
 private:
 
-    ros::NodeHandle& n_;
     ros::Publisher pub_registration_ = 
         n_.advertise<rotms_ros_msgs::PoseValid>("/Kinematics/TR_bodyref_body", 1, true);
     ros::Publisher pub_toolpose_ = 

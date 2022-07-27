@@ -24,7 +24,18 @@ SOFTWARE.
 
 #pragma once
 
-class FlagMachineRobot
+class FlagMachineBase
+{
+
+public:
+
+    FlagMachineBase();
+
+private:
+
+};
+
+class FlagMachineRobot : public FlagMachineBase
 {
 
 public:

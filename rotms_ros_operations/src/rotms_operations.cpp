@@ -41,8 +41,10 @@ SOFTWARE.
 #include "rotms_ros_msgs/PoseValid.h"
 #include "ros_print_color.hpp"
 
-OperationsTMS::OperationsTMS(ros::NodeHandle& n)
-    : n_(n)
+OperatonsBase::OperatonsBase(ros::NodeHandle& n) : n_(n)
+{}
+
+OperationsTMS::OperationsTMS(ros::NodeHandle& n) : OperatonsBase(n)
 {}
 
 void OperationsTMS::OperationPlanLandmarks()
