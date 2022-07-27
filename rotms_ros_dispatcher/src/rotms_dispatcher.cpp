@@ -50,7 +50,7 @@ that have been preprocessed and cached.
 Dispatcher::Dispatcher(ros::NodeHandle& n, const std::vector<StateTMS*>& states) 
     : n_(n), states_(states)
 {
-    bool integ = CheckTMSFlagIntegrity(states_);
+    bool integ = CheckFlagIntegrityTMS(states_);
     ROS_GREEN_STREAM("[ROTMS INFO] Flag integrity check: " + std::to_string(integ));
 }
 

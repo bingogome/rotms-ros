@@ -30,7 +30,7 @@ SOFTWARE.
 #include <stdexcept>
 #include <functional>
 
-bool CheckTMSFlagIntegrity(const std::vector<StateTMS*>& states)
+bool CheckFlagIntegrityTMS(const std::vector<StateTMS*>& states)
 {
     std::vector<int> musks {0B1000, 0B0100, 0B0010, 0B0001};
     std::vector<std::function<bool()>> flags {
@@ -55,7 +55,7 @@ bool CheckTMSFlagIntegrity(const std::vector<StateTMS*>& states)
     return true;
 }
 
-std::vector<StateTMS*> GetStatesVector(FlagMachineTMS& f, OperationsTMS& ops)
+std::vector<StateTMS*> GetStatesVectorTMS(FlagMachineTMS& f, OperationsTMS& ops)
 {   // ALWAYS CLEAN THE MEMORY AFTER FINISHED USING THE RETURNED VECTOR!!!
     std::vector<StateTMS*> vec;
     for(int i=0; i<16; i++)

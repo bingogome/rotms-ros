@@ -29,9 +29,9 @@ SOFTWARE.
 
 #include <vector>
 
-bool CheckTMSFlagIntegrity(const std::vector<StateTMS*>& states);
+bool CheckFlagIntegrityTMS(const std::vector<StateTMS*>& states);
 
-std::vector<StateTMS*> GetStatesVector(
+std::vector<StateTMS*> GetStatesVectorTMS(
     FlagMachineTMS& f, OperationsTMS& ops);
 
 class State0000 : public StateTMS

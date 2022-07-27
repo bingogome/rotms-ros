@@ -47,7 +47,7 @@ int main(int argc, char **argv)
     // Remember to release memory !!
     // In this node, the memory is released by Dispatcher when 
     // destroying the Dispatcher object
-    const std::vector<StateTMS*> states = GetStatesVector(f, ops);
+    const std::vector<StateTMS*> states = GetStatesVectorTMS(f, ops);
 
     // Initialize dispatcher
     Dispatcher d = Dispatcher(nh, states);
