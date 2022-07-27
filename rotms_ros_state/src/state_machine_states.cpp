@@ -30,7 +30,7 @@ SOFTWARE.
 #include <stdexcept>
 #include <functional>
 
-bool CheckFlagIntegrity(const std::vector<StateTMS*>& states)
+bool CheckTMSFlagIntegrity(const std::vector<StateTMS*>& states)
 {
     std::vector<int> musks {0B1000, 0B0100, 0B0010, 0B0001};
     std::vector<std::function<bool()>> flags {

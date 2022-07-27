@@ -29,7 +29,7 @@ SOFTWARE.
 
 #include <vector>
 
-bool CheckFlagIntegrity(const std::vector<StateTMS*>& states);
+bool CheckTMSFlagIntegrity(const std::vector<StateTMS*>& states);
 
 std::vector<StateTMS*> GetStatesVector(
     FlagMachineTMS& f, OperationsTMS& ops);
