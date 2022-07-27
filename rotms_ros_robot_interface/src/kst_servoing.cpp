@@ -158,7 +158,7 @@ void KstServoing::PTPLineEFF(std::vector<double> epos, double vel)
 		boost::asio::write(tcp_sock_, boost::asio::buffer(msg1), error);
 		size_t lenmsgr1 = tcp_sock_.read_some(boost::asio::buffer(buf_), error);
 
-		const std::string msgjs = "cArtixanPosition_" + // Convert to m
+		const std::string msgjs = "cArtixanPosition_" + // Convert to mm
 			std::to_string(epos[0]*1000.0) + "_" +
 			std::to_string(epos[1]*1000.0) + "_" +
 			std::to_string(epos[2]*1000.0) + "_" +
