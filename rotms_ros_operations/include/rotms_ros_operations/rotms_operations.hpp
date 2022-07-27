@@ -28,10 +28,10 @@ SOFTWARE.
 #include <std_msgs/String.h>
 #include "rotms_ros_msgs/PoseValid.h"
 
-class OperatonsBase
+class OperationsBase
 {
 public:
-    OperatonsBase(ros::NodeHandle& n);
+    OperationsBase(ros::NodeHandle& n);
 
 protected:
     ros::NodeHandle& n_;
@@ -44,7 +44,7 @@ struct TempDataCacheOps
     std::vector<std::vector<double>> landmarkdig;
 };
 
-class OperationsTMS : public OperatonsBase
+class OperationsTMS : public OperationsBase
 {
 public:
 

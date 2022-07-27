@@ -39,77 +39,36 @@ SOFTWARE.
 * nested siwch-case.
 ***/
 
-StateBase::StateBase(int state_num, std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops) 
-    : state_num_(state_num), states_(v), flags_(f), ops_(ops)
+StateBase::StateBase(int state_num) 
+    : state_num_(state_num)
 {
     Deactivate();
 }
 
 StateBase::~StateBase()
-{
-    for (auto p : states_)
-    {
-        delete p;
-    } 
-}
+{}
 
 bool StateBase::CheckActivated(){return activated_;}
 void StateBase::Activate(){activated_=true;}
 void StateBase::Deactivate(){activated_=false;}
 int StateBase::GetStateNum(){return state_num_;}
 
-bool StateBase::CheckIfUniqueActivation(const std::vector<StateBase*>& states)
-{
-    int s = 0;
-    for(int i=0; i<states.size(); i++)
-    {
-        if(states[i]->CheckActivated()) s++;
-    }
-    return s<=1;
-}
-
-int StateBase::GetActivatedState(const std::vector<StateBase*>& states)
-{
-    if ( ! StateBase::CheckIfUniqueActivation(states) )
-        throw std::runtime_error(
-            "State machine error: not unique states are activated!");
-    
-    for(int i=0;i<states.size();i++)
-    {
-        if (states[i]->CheckActivated())
-            return i;
-    }
-
-    return -1;
-}
-
 void StateBase::TransitionNotPossible()
 {
     // TODO: implement this. Optional
 }
 
-void StateBase::Transition(int target_state, TransitionOps funcs)
-{
-    Deactivate();
-
-    for(int i=0; i<funcs.size(); i++)
-    {
-        funcs[i]();
-    }
-
-    states_[target_state]->Activate();
-    if ( ! StateBase::CheckIfUniqueActivation(states_) )
-        throw std::runtime_error(
-            "State machine error: not unique states are activated!");
-}
-
-
 StateTMS::StateTMS(int state_num, std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops) 
-    : StateBase(state_num,v,f,ops)
+    : StateBase(state_num), states_(v), flags_(f), ops_(ops)
 {}
 
 StateTMS::~StateTMS()
-{}
+{
+    for (auto p : states_)
+    {
+        delete p;
+    } 
+}
 
 int StateTMS::LandmarksPlanned() { TransitionNotPossible(); return -1; }
 int StateTMS::LandmarksDigitized() { TransitionNotPossible(); return -1; }
@@ -124,3 +83,43 @@ int StateTMS::ClearToolPosePlan() { TransitionNotPossible(); return -1; }
 int StateTMS::ReinitState() { TransitionNotPossible(); return -1; }
 int StateTMS::UsePrevRegister() { TransitionNotPossible(); return -1; }
 
+bool StateTMS::CheckIfUniqueActivation(const std::vector<StateTMS*>& states)
+{
+    int s = 0;
+    for(int i=0; i<states.size(); i++)
+    {
+        if(states[i]->CheckActivated()) s++;
+    }
+    return s<=1;
+}
+
+int StateTMS::GetActivatedState(const std::vector<StateTMS*>& states)
+{
+    if ( ! StateTMS::CheckIfUniqueActivation(states) )
+        throw std::runtime_error(
+            "State machine error: not unique states are activated!");
+    
+    for(int i=0;i<states.size();i++)
+    {
+        if (states[i]->CheckActivated())
+            return i;
+    }
+
+    return -1;
+}
+
+
+void StateTMS::Transition(int target_state, TransitionOps funcs)
+{
+    Deactivate();
+
+    for(int i=0; i<funcs.size(); i++)
+    {
+        funcs[i]();
+    }
+
+    states_[target_state]->Activate();
+    if ( ! StateTMS::CheckIfUniqueActivation(states_) )
+        throw std::runtime_error(
+            "State machine error: not unique states are activated!");
+}

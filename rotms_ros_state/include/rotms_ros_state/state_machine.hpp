@@ -48,32 +48,23 @@ class StateBase
 public:
 
     StateBase(
-        int state_num,
-        std::vector<StateBase*>& v,
-        FlagMachine& f,
-        Operations& ops);
+        int state_num
+        );
     virtual ~StateBase();
-
-    FlagMachineBase& flags_;
 
     bool CheckActivated();
     void Activate();
     void Deactivate();
     int GetStateNum();
-    static bool CheckIfUniqueActivation(const std::vector<StateBase*>& states);
-    static int GetActivatedState(const std::vector<StateBase*>& states);
 
 protected:
 
     const int state_num_;
-    const std::vector<StateTMS*>& states_;
-    OperationsBase& ops_;
     bool activated_;
     
     virtual void TransitionNotPossible();
-    void Transition(int target_state, TransitionOps funcs);
 
-}
+};
 
 class StateTMS : public StateBase
 {
@@ -86,6 +77,8 @@ public:
         FlagMachineTMS& f,
         OperationsTMS& ops);
     virtual ~StateTMS();
+
+    FlagMachineTMS& flags_;
 
     virtual int LandmarksPlanned();
     virtual int LandmarksDigitized();
@@ -100,6 +93,13 @@ public:
     virtual int ReinitState();
     virtual int UsePrevRegister();
 
+    static bool CheckIfUniqueActivation(const std::vector<StateTMS*>& states);
+    static int GetActivatedState(const std::vector<StateTMS*>& states);
+
 protected:
+
+    OperationsTMS& ops_;
+    const std::vector<StateTMS*>& states_;
+    void Transition(int target_state, TransitionOps funcs);
 
 };

@@ -43,11 +43,15 @@ int main(int argc, char **argv)
     FlagMachineTMS f = FlagMachineTMS();
     OperationsTMS ops = OperationsTMS(nh);
 
+    ROS_GREEN_STREAM("[ROTMS INFO] Flag Machine and Operations initialized.");
+
     // WARNING: this function will return a vector of pointers
     // Remember to release memory !!
     // In this node, the memory is released by Dispatcher when 
     // destroying the Dispatcher object
     const std::vector<StateTMS*> states = GetStatesVectorTMS(f, ops);
+
+    ROS_GREEN_STREAM("[ROTMS INFO] State Vector initialized.");
 
     // Initialize dispatcher
     Dispatcher d = Dispatcher(nh, states);
