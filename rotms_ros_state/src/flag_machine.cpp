@@ -25,9 +25,24 @@ SOFTWARE.
 #include "flag_machine.hpp"
 #include <vector>
 
-FlagMachineTMS::FlagMachineTMS()
+//
+FlagMachineRobot::FlagMachineRobot()
 {
     flag_robot_conn_status_ = false;
+}
+
+// Robot connection status flag
+bool FlagMachineRobot::flag_robot_conn_status_;
+
+// Robot connection status setters and getters
+void FlagMachineRobot::ConnectRobot(){flag_robot_conn_status_=true;}
+void FlagMachineRobot::DisconnectRobot(){flag_robot_conn_status_=false;}
+bool FlagMachineRobot::GetFlagRobotConnStatus(){return flag_robot_conn_status_;}
+
+
+//
+FlagMachineTMS::FlagMachineTMS() : FlagMachineRobot()
+{
 
     flag_landmark_planned_ = false;
     flag_landmark_digitized_ = false;
@@ -35,19 +50,11 @@ FlagMachineTMS::FlagMachineTMS()
     flag_registration_completed_ = false;
 }
 
-// Robot connection status flag
-bool FlagMachineTMS::flag_robot_conn_status_;
-
 // Crucial operations status flags
 bool FlagMachineTMS::flag_landmark_planned_;
 bool FlagMachineTMS::flag_landmark_digitized_;
 bool FlagMachineTMS::flag_toolpose_planned_;
 bool FlagMachineTMS::flag_registration_completed_;
-
-// Robot connection status setters and getters
-void FlagMachineTMS::ConnectRobot(){flag_robot_conn_status_=true;}
-void FlagMachineTMS::DisconnectRobot(){flag_robot_conn_status_=false;}
-bool FlagMachineTMS::GetFlagRobotConnStatus(){return flag_robot_conn_status_;}
 
 // Crucial operations status setters and getters
 void FlagMachineTMS::PlanLandmarks(){flag_landmark_planned_=true;}
