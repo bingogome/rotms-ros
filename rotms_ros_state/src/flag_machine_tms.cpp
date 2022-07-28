@@ -23,20 +23,31 @@ SOFTWARE.
 ***/
 
 #include "flag_machine.hpp"
+#include "flag_machine_tms.hpp"
 
 //
-FlagMachineBase::FlagMachineBase(){}
-
-//
-FlagMachineRobot::FlagMachineRobot() : FlagMachineBase()
+FlagMachineTMS::FlagMachineTMS() : FlagMachineBase()
 {
-    flag_robot_conn_status_ = false;
+
+    flag_landmark_planned_ = false;
+    flag_landmark_digitized_ = false;
+    flag_registration_completed_ = false;
 }
 
-// Robot connection status flag
-bool FlagMachineRobot::flag_robot_conn_status_;
+// Crucial operations status flags
+bool FlagMachineTMS::flag_landmark_planned_;
+bool FlagMachineTMS::flag_landmark_digitized_;
+bool FlagMachineTMS::flag_registration_completed_;
 
-// Robot connection status setters and getters
-void FlagMachineRobot::ConnectRobot(){flag_robot_conn_status_=true;}
-void FlagMachineRobot::DisconnectRobot(){flag_robot_conn_status_=false;}
-bool FlagMachineRobot::GetFlagRobotConnStatus(){return flag_robot_conn_status_;}
+// Crucial operations status setters and getters
+void FlagMachineTMS::PlanLandmarks(){flag_landmark_planned_=true;}
+void FlagMachineTMS::DigitizeLandmarks(){flag_landmark_digitized_=true;}
+void FlagMachineTMS::CompleteRegistration(){flag_registration_completed_=true;}
+
+void FlagMachineTMS::UnPlanLandmarks(){flag_landmark_planned_=false;}
+void FlagMachineTMS::UnDigitizeLandmarks(){flag_landmark_digitized_=false;}
+void FlagMachineTMS::UnCompleteRegistration(){flag_registration_completed_=false;}
+
+bool FlagMachineTMS::GetFlagLandmarkPlanned(){return flag_landmark_planned_;}
+bool FlagMachineTMS::GetFlagLandmarkDigitized(){return flag_landmark_digitized_;}
+bool FlagMachineTMS::GetFlagRegistered(){return flag_registration_completed_;}

@@ -23,20 +23,18 @@ SOFTWARE.
 ***/
 
 #include "flag_machine.hpp"
+#include "flag_machine_tool.hpp"
 
 //
-FlagMachineBase::FlagMachineBase(){}
-
-//
-FlagMachineRobot::FlagMachineRobot() : FlagMachineBase()
+FlagMachineTool::FlagMachineTool() : FlagMachineBase()
 {
-    flag_robot_conn_status_ = false;
+    flag_toolpose_planned_ = false;
 }
 
-// Robot connection status flag
-bool FlagMachineRobot::flag_robot_conn_status_;
+// Crucial operations status flags
+bool FlagMachineTool::flag_toolpose_planned_;
 
-// Robot connection status setters and getters
-void FlagMachineRobot::ConnectRobot(){flag_robot_conn_status_=true;}
-void FlagMachineRobot::DisconnectRobot(){flag_robot_conn_status_=false;}
-bool FlagMachineRobot::GetFlagRobotConnStatus(){return flag_robot_conn_status_;}
+// Crucial operations status setters and getters
+void FlagMachineTMS::PlanToolPose(){flag_toolpose_planned_=true;}
+void FlagMachineTMS::UnPlanToolPose(){flag_toolpose_planned_=false;}
+bool FlagMachineTMS::GetFlagToolPosePlanned(){return flag_toolpose_planned_;}

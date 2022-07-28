@@ -23,20 +23,3 @@ SOFTWARE.
 ***/
 
 #include "flag_machine.hpp"
-
-//
-FlagMachineBase::FlagMachineBase(){}
-
-//
-FlagMachineRobot::FlagMachineRobot() : FlagMachineBase()
-{
-    flag_robot_conn_status_ = false;
-}
-
-// Robot connection status flag
-bool FlagMachineRobot::flag_robot_conn_status_;
-
-// Robot connection status setters and getters
-void FlagMachineRobot::ConnectRobot(){flag_robot_conn_status_=true;}
-void FlagMachineRobot::DisconnectRobot(){flag_robot_conn_status_=false;}
-bool FlagMachineRobot::GetFlagRobotConnStatus(){return flag_robot_conn_status_;}
