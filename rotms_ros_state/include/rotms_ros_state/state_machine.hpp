@@ -26,21 +26,7 @@ SOFTWARE.
 #include <vector>
 #include <functional>
 
-#include "flag_machine.hpp"
-#include "rotms_operations.hpp"
-
 typedef std::vector<std::function<void()>> TransitionOps;
-
-/***
-* Current design: 
-* StateTMS should have the virtual functions of all possible state transition operations (edges).
-* These virtual functions are to be inhereted by the subclasses of StateTMS. If they are not 
-* inhereted, the operation or transition is not possible from that state.
-*
-* NO LONGER USING THIS :
-* Old design: 
-* nested siwch-case.
-***/
 
 class StateBase
 {
@@ -63,43 +49,5 @@ protected:
     bool activated_;
     
     virtual void TransitionNotPossible();
-
-};
-
-class StateTMS : public StateBase
-{
-
-public:
-
-    StateTMS(
-        int state_num,
-        std::vector<StateTMS*>& v,
-        FlagMachineTMS& f,
-        OperationsTMS& ops);
-    virtual ~StateTMS();
-
-    FlagMachineTMS& flags_;
-
-    virtual int LandmarksPlanned();
-    virtual int LandmarksDigitized();
-    virtual int ToolPosePlanned();
-    virtual int Registered();
-
-    virtual int ClearLandmarks();
-    virtual int ClearDigitization();
-    virtual int ClearRegistration();
-    virtual int ClearToolPosePlan();
-
-    virtual int ReinitState();
-    virtual int UsePrevRegister();
-
-    static bool CheckIfUniqueActivation(const std::vector<StateTMS*>& states);
-    static int GetActivatedState(const std::vector<StateTMS*>& states);
-
-protected:
-
-    OperationsTMS& ops_;
-    const std::vector<StateTMS*>& states_;
-    void Transition(int target_state, TransitionOps funcs);
 
 };

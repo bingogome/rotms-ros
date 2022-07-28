@@ -34,37 +34,34 @@ bool CheckFlagIntegrityTMS(const std::vector<StateTMS*>& states);
 std::vector<StateTMS*> GetStatesVectorTMS(
     FlagMachineTMS& f, OperationsTMS& ops);
 
-class State0000 : public StateTMS
+class State000 : public StateTMS
 {
 public:
-    State0000(std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops);
+    State000(std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops);
 
     int LandmarksPlanned() override;
-    int ToolPosePlanned() override;
     int ReinitState() override;
     int UsePrevRegister() override;
 };
 
-class State1000 : public StateTMS
+class State100 : public StateTMS
 {
 public:
-    State1000(std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops);
+    State100(std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops);
 
     int LandmarksDigitized() override;
-    int ToolPosePlanned() override;
     int ClearLandmarks() override;
     int LandmarksPlanned() override;
     int ReinitState() override;
     int UsePrevRegister() override;
 };
 
-class State1100 : public StateTMS
+class State110 : public StateTMS
 {
 public:
-    State1100(std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops);
+    State110(std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops);
 
     int LandmarksPlanned() override;
-    int ToolPosePlanned() override;
     int Registered() override;
     int ClearDigitization() override;
     int ClearLandmarks() override;
@@ -73,67 +70,11 @@ public:
     int UsePrevRegister() override;
 };
 
-class State1101 : public StateTMS
+class State111 : public StateTMS
 {
 public:
-    State1101(std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops);
+    State111(std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops);
 
-    int ToolPosePlanned() override;
-    int ClearRegistration() override;
-    int ClearLandmarks() override;
-    int ReinitState() override;
-    int UsePrevRegister() override;
-};
-
-class State0010 : public StateTMS
-{
-public:
-    State0010(std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops);
-
-    int LandmarksPlanned() override;
-    int ClearToolPosePlan() override;
-    int ToolPosePlanned() override;
-    int ReinitState() override;
-    int UsePrevRegister() override;
-};
-
-class State1010 : public StateTMS
-{
-public:
-    State1010(std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops);
-
-    int ClearToolPosePlan() override;
-    int ClearLandmarks() override;
-    int ToolPosePlanned() override;
-    int LandmarksPlanned() override;
-    int LandmarksDigitized() override;
-    int ReinitState() override;
-    int UsePrevRegister() override;
-};
-
-class State1110 : public StateTMS
-{
-public:
-    State1110(std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops);
-
-    int LandmarksPlanned() override;
-    int ClearToolPosePlan() override;
-    int LandmarksDigitized() override;
-    int ToolPosePlanned() override;
-    int ClearDigitization() override;
-    int ClearLandmarks() override;
-    int Registered() override;
-    int ReinitState() override;
-    int UsePrevRegister() override;
-};
-
-class State1111 : public StateTMS
-{
-public:
-    State1111(std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops);
-
-    int ClearToolPosePlan() override;
-    int ToolPosePlanned() override;
     int ClearRegistration() override;
     int ClearLandmarks() override;
     int ReinitState() override;

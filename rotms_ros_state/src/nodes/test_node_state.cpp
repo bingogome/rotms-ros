@@ -25,7 +25,7 @@ SOFTWARE.
 #include <ros/ros.h>
 #include "flag_machine.hpp"
 #include "state_machine.hpp"
-#include "state_machine_states.hpp"
+#include "state_machine_tms.hpp"
 #include "rotms_operations.hpp"
 
 // This node not needed in the final system. 

@@ -28,7 +28,7 @@ add_library(${PROJECT_NAME}
   src/dispatcher_utility.cpp
   ../rotms_ros_state/src/flag_machine.cpp
   ../rotms_ros_state/src/state_machine.cpp
-  ../rotms_ros_state/src/state_machine_states.cpp
+  ../rotms_ros_state/src/state_machine_tms.cpp
   ../rotms_ros_operations/src/rotms_operations.cpp
 )
 

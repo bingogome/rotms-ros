@@ -25,7 +25,7 @@ SOFTWARE.
 #include "dispatcher_utility.hpp"
 #include "rotms_dispatcher.hpp"
 #include "state_machine.hpp"
-#include "state_machine_states.hpp"
+#include "state_machine_tms.hpp"
 #include "rotms_ros_msgs/PoseValid.h"
 #include "ros_print_color.hpp"
 

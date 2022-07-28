@@ -24,7 +24,7 @@ SOFTWARE.
 
 #include "rotms_dispatcher.hpp"
 #include "flag_machine.hpp"
-#include "state_machine_states.hpp"
+#include "state_machine_tms.hpp"
 #include "rotms_operations.hpp"
 #include "ros_print_color.hpp"
 
