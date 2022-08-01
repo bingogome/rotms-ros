@@ -22,31 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
-#pragma once
-#include "state_machine_tool.hpp"
-#include <vector>
+#include "operations.hpp"
+#include <ros/ros.h>
 
-bool CheckFlagIntegrityTool(const std::vector<StateTool*>& states);
-
-std::vector<StateTool*> GetStatesVectorTool(
-    FlagMachineTool& f, OperationsTool& ops);
-
-class StateTool0 : public StateTool
-{
-public:
-    StateTool0(std::vector<StateTool*>& v, FlagMachineTool& f, OperationsTool& ops);
-
-    int ToolPosePlanned() override;
-    int ReinitState() override;
-
-};
-
-class StateTool1 : public StateTool
-{
-public:
-    StateTool1(std::vector<StateTool*>& v, FlagMachineTool& f, OperationsTool& ops);
-
-    int ClearToolPosePlan() override;
-    int ToolPosePlanned() override;
-    int ReinitState() override;
-};
+OperationsBase::OperationsBase(ros::NodeHandle& n) : n_(n)
+{}

@@ -35,8 +35,8 @@ SOFTWARE.
 
 #include "state_machine_tms.hpp"
 #include "state_machine.hpp"
-#include "flag_machine.hpp"
-#include "rotms_operations.hpp"
+#include "flag_machine_tms.hpp"
+#include "operations_tms.hpp"
 
 #include <vector>
 #include <functional>
@@ -56,13 +56,11 @@ StateTMS::~StateTMS()
 
 int StateTMS::LandmarksPlanned() { TransitionNotPossible(); return -1; }
 int StateTMS::LandmarksDigitized() { TransitionNotPossible(); return -1; }
-int StateTMS::ToolPosePlanned() { TransitionNotPossible(); return -1; }
 int StateTMS::Registered() { TransitionNotPossible(); return -1; }
 
 int StateTMS::ClearLandmarks() { TransitionNotPossible(); return -1; }
 int StateTMS::ClearDigitization() { TransitionNotPossible(); return -1; }
 int StateTMS::ClearRegistration() { TransitionNotPossible(); return -1; }
-int StateTMS::ClearToolPosePlan() { TransitionNotPossible(); return -1; }
 
 int StateTMS::ReinitState() { TransitionNotPossible(); return -1; }
 int StateTMS::UsePrevRegister() { TransitionNotPossible(); return -1; }

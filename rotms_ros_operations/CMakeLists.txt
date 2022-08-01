@@ -19,7 +19,9 @@ catkin_package(
 )
 
 add_library(${PROJECT_NAME} 
-  src/rotms_operations.cpp
+  src/operations.cpp
+  src/operations_tool.cpp
+  src/operations_tms.cpp
   src/registration_funcs.cpp
 )
 

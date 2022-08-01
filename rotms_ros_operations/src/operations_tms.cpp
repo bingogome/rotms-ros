@@ -37,12 +37,9 @@ SOFTWARE.
 #include <yaml-cpp/yaml.h>
 
 #include "registration_funcs.hpp"
-#include "rotms_operations.hpp"
+#include "operations_tms.hpp"
 #include "rotms_ros_msgs/PoseValid.h"
 #include "ros_print_color.hpp"
-
-OperationsBase::OperationsBase(ros::NodeHandle& n) : n_(n)
-{}
 
 OperationsTMS::OperationsTMS(ros::NodeHandle& n) : OperationsBase(n)
 {}
@@ -113,28 +110,6 @@ void OperationsTMS::OperationDigitization()
             packpath + "/share/cache/landmarkdig" + ".yaml");
     }
 
-}
-
-void OperationsTMS::OperationPlanToolPose()
-{
-    // The operation has been done by dispatcher and cached to /share/config
-    // Only need to publish
-    std::string packpath = ros::package::getPath("rotms_ros_operations");
-    YAML::Node f = YAML::LoadFile(packpath + "/share/config/toolpose.yaml");
-    YAML::Node ff1 = f["TRANSLATION"];
-    YAML::Node ff2 = f["ROTATION"];
-    geometry_msgs::Pose tr;
-    tr.position.x = ff1["x"].as<double>();
-    tr.position.y = ff1["y"].as<double>();
-    tr.position.z = ff1["z"].as<double>();
-    tr.orientation.x = ff2["x"].as<double>();
-    tr.orientation.y = ff2["y"].as<double>();
-    tr.orientation.z = ff2["z"].as<double>();
-    tr.orientation.w = ff2["w"].as<double>();
-    rotms_ros_msgs::PoseValid pv;
-    pv.valid = true;
-    pv.pose = tr;
-    pub_toolpose_.publish(pv);
 }
 
 void OperationsTMS::OperationRegistration()
@@ -208,13 +183,6 @@ void OperationsTMS::OperationResetRegistration()
     rotms_ros_msgs::PoseValid pv;
     pv.valid = false;
     pub_registration_.publish(pv);
-}
-
-void OperationsTMS::OperationResetToolPose()
-{
-    rotms_ros_msgs::PoseValid pv;
-    pv.valid = false;
-    pub_toolpose_.publish(pv);
 }
 
 void OperationsTMS::OperationUsePreRegistration()

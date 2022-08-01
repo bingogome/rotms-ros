@@ -29,7 +29,13 @@ add_library(${PROJECT_NAME}
   ../rotms_ros_state/src/flag_machine.cpp
   ../rotms_ros_state/src/state_machine.cpp
   ../rotms_ros_state/src/state_machine_tms.cpp
-  ../rotms_ros_operations/src/rotms_operations.cpp
+  ../rotms_ros_state/src/flag_machine_tms.cpp
+  ../rotms_ros_operations/src/operations_tms.cpp
+  ../rotms_ros_operations/src/state_machine_tms_states.cpp
+  ../rotms_ros_state/src/state_machine_tool.cpp
+  ../rotms_ros_state/src/flag_machine_tool.cpp
+  ../rotms_ros_operations/src/operations_tool.cpp
+  ../rotms_ros_operations/src/state_machine_tool_states.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC

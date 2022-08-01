@@ -24,9 +24,15 @@ catkin_package(
 
 add_library(${PROJECT_NAME} 
   src/state_machine.cpp
-  src/state_machine_tms.cpp
   src/flag_machine.cpp
-  ../rotms_ros_operations/src/rotms_operations.cpp
+  src/flag_machine_tool.cpp
+  src/flag_machine_tms.cpp
+  src/state_machine_tool.cpp
+  src/state_machine_tms.cpp
+  src/state_machine_tool_states.cpp
+  src/state_machine_tms_states.cpp
+  ../rotms_ros_operations/src/operations_tms.cpp
+  ../rotms_ros_operations/src/operations_tool.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC

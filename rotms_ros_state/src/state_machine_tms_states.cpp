@@ -21,11 +21,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
-
-#include "flag_machine.hpp"
-#include "state_machine.hpp"
+#include "state_machine_tms_states.hpp"
+#include "flag_machine_tms.hpp"
 #include "state_machine_tms.hpp"
-#include "rotms_operations.hpp"
+#include "operations_tms.hpp"
 
 #include <vector>
 #include <stdexcept>
@@ -33,6 +32,7 @@ SOFTWARE.
 
 bool CheckFlagIntegrityTMS(const std::vector<StateTMS*>& states)
 {
+    int num_flag = 3;
     std::vector<int> masks {0B100, 0B010, 0B001};
     std::vector<std::function<bool()>> flags {
         FlagMachineTMS::GetFlagLandmarkPlanned,
@@ -44,9 +44,9 @@ bool CheckFlagIntegrityTMS(const std::vector<StateTMS*>& states)
         if (states[i]->CheckActivated())
         {
             int state_num = states[i]->GetStateNum();
-            for (int idx=0;idx<3;idx++)
+            for (int idx=0;idx<num_flag;idx++)
             {
-                bool temp = (bool)((state_num & masks[idx]) >> (3-idx-1));
+                bool temp = (bool)((state_num & masks[idx]) >> (num_flag-idx-1));
                 if (!(flags[idx]()==temp)) // detected inconsistence
                     return false;
             }
@@ -57,32 +57,35 @@ bool CheckFlagIntegrityTMS(const std::vector<StateTMS*>& states)
 
 std::vector<StateTMS*> GetStatesVectorTMS(FlagMachineTMS& f, OperationsTMS& ops)
 {   // ALWAYS CLEAN THE MEMORY AFTER FINISHED USING THE RETURNED VECTOR!!!
+    
+    int num_flag = 3;
+
     std::vector<StateTMS*> vec;
-    for(int i=0; i<8; i++)
+    for(int i=0; i<std::pow(2.0,num_flag); i++)
     {
         switch (i)
         {
             case 0B000:
             {
-                vec.push_back(new State0000(vec,f,ops));
+                vec.push_back(new StateTMS000(vec,f,ops));
                 break;
             }
                 
             case 0B100:
             {
-                vec.push_back(new State1000(vec,f,ops));
+                vec.push_back(new StateTMS100(vec,f,ops));
                 break;
             }
                 
             case 0B110:
             {
-                vec.push_back(new State1100(vec,f,ops));
+                vec.push_back(new StateTMS110(vec,f,ops));
                 break;
             }
                 
             case 0B111:
             {
-                vec.push_back(new State1101(vec,f,ops));
+                vec.push_back(new StateTMS111(vec,f,ops));
                 break;
             }
                 
@@ -96,7 +99,7 @@ std::vector<StateTMS*> GetStatesVectorTMS(FlagMachineTMS& f, OperationsTMS& ops)
     }
 
     // check if state matches index
-    for(int i=0; i<8; i++)
+    for(int i=0; i<std::pow(2.0,num_flag); i++)
     {
         if (i!=vec[i]->GetStateNum() && vec[i]->GetStateNum()!=-1) 
             throw std::runtime_error(
@@ -109,21 +112,21 @@ std::vector<StateTMS*> GetStatesVectorTMS(FlagMachineTMS& f, OperationsTMS& ops)
 }
 
 // Initial state (default state)
-State000::State000(std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops) 
+StateTMS000::StateTMS000(std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops) 
     : StateTMS(0B000, v, f, ops) {Activate();} // default state
 
-int State000::LandmarksPlanned()
+int StateTMS000::LandmarksPlanned()
 {
     TransitionOps funcs;
     funcs.push_back(FlagMachineTMS::PlanLandmarks);
     Transition(0B100, funcs);
     return 0B100;
 }
-int State000::ReinitState()
+int StateTMS000::ReinitState()
 {
     return 0B000;
 }
-int State000::UsePrevRegister()
+int StateTMS000::UsePrevRegister()
 {
     TransitionOps funcs;
     funcs.push_back(std::bind(&OperationsTMS::OperationUsePreRegistration, ops_));
@@ -135,10 +138,10 @@ int State000::UsePrevRegister()
 }
 
 // 
-State100::State100(std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops) 
+StateTMS100::StateTMS100(std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops) 
     : StateTMS(0B100, v, f, ops) {}
 
-int State100::LandmarksDigitized()
+int StateTMS100::LandmarksDigitized()
 {
     TransitionOps funcs;
     funcs.push_back(std::bind(&OperationsTMS::OperationDigitization, ops_));
@@ -146,28 +149,28 @@ int State100::LandmarksDigitized()
     Transition(0B110, funcs);
     return 0B110;
 }
-int State100::ClearLandmarks()
+int StateTMS100::ClearLandmarks()
 {
     TransitionOps funcs;
     funcs.push_back(FlagMachineTMS::UnPlanLandmarks);
     Transition(0B000, funcs);
     return 0B000;
 }
-int State100::LandmarksPlanned()
+int StateTMS100::LandmarksPlanned()
 {
     TransitionOps funcs;
     funcs.push_back(FlagMachineTMS::PlanLandmarks);
     Transition(0B100, funcs);
     return 0B100;
 }
-int State100::ReinitState()
+int StateTMS100::ReinitState()
 {
     TransitionOps funcs;
     funcs.push_back(FlagMachineTMS::UnPlanLandmarks);
     Transition(0B000, funcs);
     return 0B000;
 }
-int State100::UsePrevRegister()
+int StateTMS100::UsePrevRegister()
 {
     TransitionOps funcs;
     funcs.push_back(std::bind(&OperationsTMS::OperationUsePreRegistration, ops_));
@@ -178,17 +181,17 @@ int State100::UsePrevRegister()
 }
 
 //
-State110::State110(std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops)  
+StateTMS110::StateTMS110(std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops)  
     : StateTMS(0B110, v, f, ops) {}
 
-int State110::LandmarksPlanned()
+int StateTMS110::LandmarksPlanned()
 {
     TransitionOps funcs;
     funcs.push_back(FlagMachineTMS::PlanLandmarks);
     Transition(0B100, funcs);
     return 0B100;
 }
-int State110::Registered()
+int StateTMS110::Registered()
 {
     TransitionOps funcs;
     funcs.push_back(std::bind(&OperationsTMS::OperationRegistration, ops_));
@@ -196,14 +199,14 @@ int State110::Registered()
     Transition(0B111, funcs);
     return 0B111;
 }
-int State110::ClearDigitization()
+int StateTMS110::ClearDigitization()
 {
     TransitionOps funcs;
     funcs.push_back(FlagMachineTMS::UnDigitizeLandmarks);
     Transition(0B100, funcs);
     return 0B100;
 }
-int State110::ClearLandmarks()
+int StateTMS110::ClearLandmarks()
 {
     TransitionOps funcs;
     funcs.push_back(FlagMachineTMS::UnDigitizeLandmarks);
@@ -211,7 +214,7 @@ int State110::ClearLandmarks()
     Transition(0B000, funcs);
     return 0B000;
 }
-int State110::LandmarksDigitized()
+int StateTMS110::LandmarksDigitized()
 {
     TransitionOps funcs;
     funcs.push_back(std::bind(&OperationsTMS::OperationDigitization, ops_));
@@ -219,7 +222,7 @@ int State110::LandmarksDigitized()
     Transition(0B110, funcs);
     return 0B110;
 }
-int State110::ReinitState()
+int StateTMS110::ReinitState()
 {
     TransitionOps funcs;
     funcs.push_back(FlagMachineTMS::UnPlanLandmarks);
@@ -227,7 +230,7 @@ int State110::ReinitState()
     Transition(0B000, funcs);
     return 0B000;
 }
-int State110::UsePrevRegister()
+int StateTMS110::UsePrevRegister()
 {
     TransitionOps funcs;
     funcs.push_back(std::bind(&OperationsTMS::OperationUsePreRegistration, ops_));
@@ -237,10 +240,10 @@ int State110::UsePrevRegister()
 }
 
 //
-State111::State111(std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops)  
+StateTMS111::StateTMS111(std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops)  
     : StateTMS(0B111, v, f, ops) {}
 
-int State111::ClearRegistration()
+int StateTMS111::ClearRegistration()
 {
     TransitionOps funcs;
     funcs.push_back(std::bind(&OperationsTMS::OperationResetRegistration, ops_));
@@ -248,7 +251,7 @@ int State111::ClearRegistration()
     Transition(0B110, funcs);
     return 0B110;
 }
-int State111::ClearLandmarks()
+int StateTMS111::ClearLandmarks()
 {
     TransitionOps funcs;
     funcs.push_back(FlagMachineTMS::UnCompleteRegistration);
@@ -257,7 +260,7 @@ int State111::ClearLandmarks()
     Transition(0B000, funcs);
     return 0B000;
 }
-int State111::ReinitState()
+int StateTMS111::ReinitState()
 {
     TransitionOps funcs;
     funcs.push_back(std::bind(&OperationsTMS::OperationResetRegistration, ops_));
@@ -267,7 +270,7 @@ int State111::ReinitState()
     Transition(0B000, funcs);
     return 0B000;
 }
-int State111::UsePrevRegister()
+int StateTMS111::UsePrevRegister()
 {
     TransitionOps funcs;
     funcs.push_back(std::bind(&OperationsTMS::OperationUsePreRegistration, ops_));

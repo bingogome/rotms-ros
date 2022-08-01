@@ -22,41 +22,40 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
-#include "rotms_dispatcher.hpp"
-#include "flag_machine.hpp"
-#include "state_machine_tms.hpp"
-#include "operations_tms.hpp"
-#include "ros_print_color.hpp"
-
 #include <ros/ros.h>
-#include <tuple>
+#include <ros/package.h>
 
-int main(int argc, char **argv)
+#include "operations.hpp"
+#include "operations_tool.hpp"
+
+OperationsTool::OperationsTool(ros::NodeHandle& n) : OperationsBase(n)
+{}
+
+void OperationsTool::OperationPlanToolPose()
 {
+    // The operation has been done by dispatcher and cached to /share/config
+    // Only need to publish
+    std::string packpath = ros::package::getPath("rotms_ros_operations");
+    YAML::Node f = YAML::LoadFile(packpath + "/share/config/toolpose.yaml");
+    YAML::Node ff1 = f["TRANSLATION"];
+    YAML::Node ff2 = f["ROTATION"];
+    geometry_msgs::Pose tr;
+    tr.position.x = ff1["x"].as<double>();
+    tr.position.y = ff1["y"].as<double>();
+    tr.position.z = ff1["z"].as<double>();
+    tr.orientation.x = ff2["x"].as<double>();
+    tr.orientation.y = ff2["y"].as<double>();
+    tr.orientation.z = ff2["z"].as<double>();
+    tr.orientation.w = ff2["w"].as<double>();
+    rotms_ros_msgs::PoseValid pv;
+    pv.valid = true;
+    pv.pose = tr;
+    pub_toolpose_.publish(pv);
+}
 
-    ros::init(argc, argv, "NodeDispatcher");
-    ros::NodeHandle nh;
-
-    ROS_GREEN_STREAM("[ROTMS INFO] Dispatcher on.");
-
-    // Initialize flags, states, operations and pass to dispatcher
-    FlagMachineTMS f = FlagMachineTMS();
-    OperationsTMS ops = OperationsTMS(nh);
-
-    ROS_GREEN_STREAM("[ROTMS INFO] Flag Machine and Operations initialized.");
-
-    // WARNING: this function will return a vector of pointers
-    // Remember to release memory !!
-    // In this node, the memory is released by Dispatcher when 
-    // destroying the Dispatcher object
-    const std::vector<StateTMS*> states = GetStatesVectorTMS(f, ops);
-
-    ROS_GREEN_STREAM("[ROTMS INFO] State Vector initialized.");
-
-    // Initialize dispatcher
-    Dispatcher d = Dispatcher(nh, states);
-
-    ros::spin();
-
-    return 0;
+void OperationsTool::OperationResetToolPose()
+{
+    rotms_ros_msgs::PoseValid pv;
+    pv.valid = false;
+    pub_toolpose_.publish(pv);
 }

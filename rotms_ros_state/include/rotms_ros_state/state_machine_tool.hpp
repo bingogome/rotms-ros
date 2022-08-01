@@ -21,3 +21,38 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
+
+#pragma once
+#include "state_machine.hpp"
+#include "flag_machine_tool.hpp"
+
+class StateTool : public StateBase
+{
+
+public:
+
+    StateTool(
+        int state_num,
+        std::vector<StateTool*>& v,
+        FlagMachineTool& f,
+        OperationsTool& ops);
+    virtual ~StateTool();
+
+    FlagMachineTool& flags_;
+
+    virtual int ToolPosePlanned();
+
+    virtual int ClearToolPosePlan();
+
+    virtual int ReinitState();
+
+    static bool CheckIfUniqueActivation(const std::vector<StateTool*>& states);
+    static int GetActivatedState(const std::vector<StateTool*>& states);
+
+protected:
+
+    OperationsTool& ops_;
+    const std::vector<StateTool*>& states_;
+    void Transition(int target_state, TransitionOps funcs);
+
+};

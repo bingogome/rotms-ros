@@ -23,9 +23,9 @@ SOFTWARE.
 ***/
 
 #pragma once
-#include "flag_machine.hpp"
-#include "state_machine.hpp"
-#include "rotms_operations.hpp"
+#include "flag_machine_tms.hpp"
+#include "state_machine_tms.hpp"
+#include "operations_tms.hpp"
 
 #include <vector>
 
@@ -34,20 +34,20 @@ bool CheckFlagIntegrityTMS(const std::vector<StateTMS*>& states);
 std::vector<StateTMS*> GetStatesVectorTMS(
     FlagMachineTMS& f, OperationsTMS& ops);
 
-class State000 : public StateTMS
+class StateTMS000 : public StateTMS
 {
 public:
-    State000(std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops);
+    StateTMS000(std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops);
 
     int LandmarksPlanned() override;
     int ReinitState() override;
     int UsePrevRegister() override;
 };
 
-class State100 : public StateTMS
+class StateTMS100 : public StateTMS
 {
 public:
-    State100(std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops);
+    StateTMS100(std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops);
 
     int LandmarksDigitized() override;
     int ClearLandmarks() override;
@@ -56,10 +56,10 @@ public:
     int UsePrevRegister() override;
 };
 
-class State110 : public StateTMS
+class StateTMS110 : public StateTMS
 {
 public:
-    State110(std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops);
+    StateTMS110(std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops);
 
     int LandmarksPlanned() override;
     int Registered() override;
@@ -70,10 +70,10 @@ public:
     int UsePrevRegister() override;
 };
 
-class State111 : public StateTMS
+class StateTMS111 : public StateTMS
 {
 public:
-    State111(std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops);
+    StateTMS111(std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops);
 
     int ClearRegistration() override;
     int ClearLandmarks() override;

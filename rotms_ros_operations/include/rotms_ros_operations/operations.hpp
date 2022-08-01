@@ -23,30 +23,14 @@ SOFTWARE.
 ***/
 
 #pragma once
-#include "state_machine_tool.hpp"
-#include <vector>
+#include <ros/ros.h>
 
-bool CheckFlagIntegrityTool(const std::vector<StateTool*>& states);
-
-std::vector<StateTool*> GetStatesVectorTool(
-    FlagMachineTool& f, OperationsTool& ops);
-
-class StateTool0 : public StateTool
+class OperationsBase
 {
 public:
-    StateTool0(std::vector<StateTool*>& v, FlagMachineTool& f, OperationsTool& ops);
+    OperationsBase(ros::NodeHandle& n);
 
-    int ToolPosePlanned() override;
-    int ReinitState() override;
+protected:
+    ros::NodeHandle& n_;
 
-};
-
-class StateTool1 : public StateTool
-{
-public:
-    StateTool1(std::vector<StateTool*>& v, FlagMachineTool& f, OperationsTool& ops);
-
-    int ClearToolPosePlan() override;
-    int ToolPosePlanned() override;
-    int ReinitState() override;
 };

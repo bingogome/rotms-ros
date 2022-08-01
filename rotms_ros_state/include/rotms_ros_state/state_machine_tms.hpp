@@ -34,6 +34,7 @@ SOFTWARE.
 ***/
 
 #pragma once
+#include "state_machine.hpp"
 
 class StateTMS : public StateBase
 {

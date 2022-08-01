@@ -26,7 +26,7 @@ SOFTWARE.
 #include "flag_machine.hpp"
 #include "state_machine.hpp"
 #include "state_machine_tms.hpp"
-#include "rotms_operations.hpp"
+#include "operations_tms.hpp"
 
 // This node not needed in the final system. 
 // The headers and definition files from this package will be 
