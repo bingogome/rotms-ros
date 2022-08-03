@@ -20,8 +20,8 @@ catkin_package(
 
 add_library(${PROJECT_NAME} 
   src/operations.cpp
-  src/operations_tool.cpp
-  src/operations_tms.cpp
+  src/operations_toolplan.cpp
+  src/operations_registration.cpp
   src/registration_funcs.cpp
 )
 

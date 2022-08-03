@@ -37,21 +37,21 @@ SOFTWARE.
 #include <yaml-cpp/yaml.h>
 
 #include "registration_funcs.hpp"
-#include "operations_tms.hpp"
+#include "operations_registration.hpp"
 #include "rotms_ros_msgs/PoseValid.h"
 #include "ros_print_color.hpp"
 
-OperationsTMS::OperationsTMS(ros::NodeHandle& n) : OperationsBase(n)
+OperationsRegistration::OperationsRegistration(ros::NodeHandle& n) : OperationsBase(n)
 {}
 
-void OperationsTMS::OperationPlanLandmarks()
+void OperationsRegistration::OperationPlanLandmarks()
 {
     // The operation has been done by dispatcher and cached to /share/cache
     // no need to call this anymore.
     // Perhaps future change 
 }
 
-void OperationsTMS::OperationDigitization()
+void OperationsRegistration::OperationDigitization()
 {
     // Get meta data of planned landmarks
     std::string packpath = ros::package::getPath("rotms_ros_operations");
@@ -112,7 +112,7 @@ void OperationsTMS::OperationDigitization()
 
 }
 
-void OperationsTMS::OperationRegistration()
+void OperationsRegistration::OperationRegistration()
 {
     std::string packpath = ros::package::getPath("rotms_ros_operations");
         
@@ -178,14 +178,14 @@ void OperationsTMS::OperationRegistration()
 
 }
 
-void OperationsTMS::OperationResetRegistration()
+void OperationsRegistration::OperationResetRegistration()
 {
     rotms_ros_msgs::PoseValid pv;
     pv.valid = false;
     pub_registration_.publish(pv);
 }
 
-void OperationsTMS::OperationUsePreRegistration()
+void OperationsRegistration::OperationUsePreRegistration()
 {
     std::string packpath = ros::package::getPath("rotms_ros_operations");
         
@@ -206,7 +206,7 @@ void OperationsTMS::OperationUsePreRegistration()
     pub_registration_.publish(pv);
 }
 
-void OperationsTMS::ResetOpsVolatileDataCache()
+void OperationsRegistration::ResetOpsVolatileDataCache()
 {
     datacache_.landmark_total = -1;
     datacache_.landmarkdig.clear();

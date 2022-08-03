@@ -23,30 +23,30 @@ SOFTWARE.
 ***/
 
 #pragma once
-#include <ros/ros.h>
+#include "state_machine_toolplan.hpp"
+#include <vector>
 
-#include "rotms_ros_msgs/PoseValid.h"
-#include "operations.hpp"
+bool CheckFlagIntegrityTool(const std::vector<StateToolplan*>& states);
 
-class OperationsTool : public OperationsBase
+std::vector<StateToolplan*> GetStatesVectorTool(
+    FlagMachineToolplan& f, OperationsToolplan& ops);
+
+class StateToolplan0 : public StateToolplan
 {
 public:
+    StateToolplan0(std::vector<StateToolplan*>& v, FlagMachineToolplan& f, OperationsToolplan& ops);
 
-    OperationsTool(ros::NodeHandle& n);
+    int ToolPosePlanned() override;
+    int ReinitState() override;
 
-    // Cruicial operations
-    void OperationPlanToolPose();
+};
 
-    void OperationResetToolPose();
+class StateToolplan1 : public StateToolplan
+{
+public:
+    StateToolplan1(std::vector<StateToolplan*>& v, FlagMachineToolplan& f, OperationsToolplan& ops);
 
-    // Secondary and intermediate operations
-    // void Operation();
-    // void Operation();
-    // void Operation();
-
-private:
-
-    ros::Publisher pub_toolpose_ = 
-        n_.advertise<rotms_ros_msgs::PoseValid>("/Kinematics/TR_body_cntct", 1, true);
-
+    int ClearToolPosePlan() override;
+    int ToolPosePlanned() override;
+    int ReinitState() override;
 };

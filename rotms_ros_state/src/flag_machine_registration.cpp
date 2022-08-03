@@ -23,10 +23,10 @@ SOFTWARE.
 ***/
 
 #include "flag_machine.hpp"
-#include "flag_machine_tms.hpp"
+#include "flag_machine_registration.hpp"
 
 //
-FlagMachineTMS::FlagMachineTMS() : FlagMachineBase()
+FlagMachineRegistration::FlagMachineRegistration() : FlagMachineBase()
 {
 
     flag_landmark_planned_ = false;
@@ -35,19 +35,19 @@ FlagMachineTMS::FlagMachineTMS() : FlagMachineBase()
 }
 
 // Crucial operations status flags
-bool FlagMachineTMS::flag_landmark_planned_;
-bool FlagMachineTMS::flag_landmark_digitized_;
-bool FlagMachineTMS::flag_registration_completed_;
+bool FlagMachineRegistration::flag_landmark_planned_;
+bool FlagMachineRegistration::flag_landmark_digitized_;
+bool FlagMachineRegistration::flag_registration_completed_;
 
 // Crucial operations status setters and getters
-void FlagMachineTMS::PlanLandmarks(){flag_landmark_planned_=true;}
-void FlagMachineTMS::DigitizeLandmarks(){flag_landmark_digitized_=true;}
-void FlagMachineTMS::CompleteRegistration(){flag_registration_completed_=true;}
+void FlagMachineRegistration::PlanLandmarks(){flag_landmark_planned_=true;}
+void FlagMachineRegistration::DigitizeLandmarks(){flag_landmark_digitized_=true;}
+void FlagMachineRegistration::CompleteRegistration(){flag_registration_completed_=true;}
 
-void FlagMachineTMS::UnPlanLandmarks(){flag_landmark_planned_=false;}
-void FlagMachineTMS::UnDigitizeLandmarks(){flag_landmark_digitized_=false;}
-void FlagMachineTMS::UnCompleteRegistration(){flag_registration_completed_=false;}
+void FlagMachineRegistration::UnPlanLandmarks(){flag_landmark_planned_=false;}
+void FlagMachineRegistration::UnDigitizeLandmarks(){flag_landmark_digitized_=false;}
+void FlagMachineRegistration::UnCompleteRegistration(){flag_registration_completed_=false;}
 
-bool FlagMachineTMS::GetFlagLandmarkPlanned(){return flag_landmark_planned_;}
-bool FlagMachineTMS::GetFlagLandmarkDigitized(){return flag_landmark_digitized_;}
-bool FlagMachineTMS::GetFlagRegistered(){return flag_registration_completed_;}
+bool FlagMachineRegistration::GetFlagLandmarkPlanned(){return flag_landmark_planned_;}
+bool FlagMachineRegistration::GetFlagLandmarkDigitized(){return flag_landmark_digitized_;}
+bool FlagMachineRegistration::GetFlagRegistered(){return flag_registration_completed_;}

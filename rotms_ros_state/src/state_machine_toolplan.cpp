@@ -22,31 +22,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
-/***
-* Current design: 
-* StateTMS should have the virtual functions of all possible state transition operations (edges).
-* These virtual functions are to be inhereted by the subclasses of StateTMS. If they are not 
-* inhereted, the operation or transition is not possible from that state.
-*
-* NO LONGER USING THIS :
-* Old design: 
-* nested siwch-case.
-***/
-
-#include "state_machine_tms.hpp"
+#include "state_machine_toolplan.hpp"
 #include "state_machine.hpp"
-#include "flag_machine_tms.hpp"
-#include "operations_tms.hpp"
+#include "flag_machine_toolplan.hpp"
+#include "operations_toolplan.hpp"
 
 #include <vector>
 #include <functional>
 
-
-StateTMS::StateTMS(int state_num, std::vector<StateTMS*>& v, FlagMachineTMS& f, OperationsTMS& ops) 
+StateToolplan::StateToolplan(int state_num, std::vector<StateToolplan*>& v, FlagMachineToolplan& f, OperationsToolplan& ops) 
     : StateBase(state_num), states_(v), flags_(f), ops_(ops)
 {}
 
-StateTMS::~StateTMS()
+StateToolplan::~StateToolplan()
 {
     for (auto p : states_)
     {
@@ -54,18 +42,13 @@ StateTMS::~StateTMS()
     } 
 }
 
-int StateTMS::LandmarksPlanned() { TransitionNotPossible(); return -1; }
-int StateTMS::LandmarksDigitized() { TransitionNotPossible(); return -1; }
-int StateTMS::Registered() { TransitionNotPossible(); return -1; }
+int StateToolplan::ToolPosePlanned() { TransitionNotPossible(); return -1; }
 
-int StateTMS::ClearLandmarks() { TransitionNotPossible(); return -1; }
-int StateTMS::ClearDigitization() { TransitionNotPossible(); return -1; }
-int StateTMS::ClearRegistration() { TransitionNotPossible(); return -1; }
+int StateToolplan::ClearToolPosePlan() { TransitionNotPossible(); return -1; }
 
-int StateTMS::ReinitState() { TransitionNotPossible(); return -1; }
-int StateTMS::UsePrevRegister() { TransitionNotPossible(); return -1; }
+int StateToolplan::ReinitState() { TransitionNotPossible(); return -1; }
 
-bool StateTMS::CheckIfUniqueActivation(const std::vector<StateTMS*>& states)
+bool StateToolplan::CheckIfUniqueActivation(const std::vector<StateToolplan*>& states)
 {
     int s = 0;
     for(int i=0; i<states.size(); i++)
@@ -75,9 +58,9 @@ bool StateTMS::CheckIfUniqueActivation(const std::vector<StateTMS*>& states)
     return s<=1;
 }
 
-int StateTMS::GetActivatedState(const std::vector<StateTMS*>& states)
+int StateToolplan::GetActivatedState(const std::vector<StateToolplan*>& states)
 {
-    if ( ! StateTMS::CheckIfUniqueActivation(states) )
+    if ( ! StateToolplan::CheckIfUniqueActivation(states) )
         throw std::runtime_error(
             "State machine error: not unique states are activated!");
     
@@ -90,8 +73,7 @@ int StateTMS::GetActivatedState(const std::vector<StateTMS*>& states)
     return -1;
 }
 
-
-void StateTMS::Transition(int target_state, TransitionOps funcs)
+void StateToolplan::Transition(int target_state, TransitionOps funcs)
 {
     Deactivate();
 
@@ -101,7 +83,7 @@ void StateTMS::Transition(int target_state, TransitionOps funcs)
     }
 
     states_[target_state]->Activate();
-    if ( ! StateTMS::CheckIfUniqueActivation(states_) )
+    if ( ! StateToolplan::CheckIfUniqueActivation(states_) )
         throw std::runtime_error(
             "State machine error: not unique states are activated!");
 }

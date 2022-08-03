@@ -22,21 +22,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
-#include "state_machine_tool_states.hpp"
-#include "flag_machine_tool.hpp"
-#include "state_machine_tool.hpp"
-#include "operations_tool.hpp"
+#include "state_machine_toolplan_states.hpp"
+#include "flag_machine_toolplan.hpp"
+#include "state_machine_toolplan.hpp"
+#include "operations_toolplan.hpp"
 
 #include <vector>
 #include <stdexcept>
 #include <cmath>
 
-bool CheckFlagIntegrityTool(const std::vector<StateTool*>& states)
+bool CheckFlagIntegrityTool(const std::vector<StateToolplan*>& states)
 {
     int num_flag = 1;
     std::vector<int> masks {0B1};
     std::vector<std::function<bool()>> flags {
-        FlagMachineTool::GetFlagToolPosePlanned
+        FlagMachineToolplan::GetFlagToolPosePlanned
     };
     for(int i=0;i<states.size();i++)
     {
@@ -54,12 +54,12 @@ bool CheckFlagIntegrityTool(const std::vector<StateTool*>& states)
     return true;
 }
 
-std::vector<StateTool*> GetStatesVectorTool(FlagMachineTool& f, OperationsTool& ops)
+std::vector<StateToolplan*> GetStatesVectorTool(FlagMachineToolplan& f, OperationsToolplan& ops)
 {   // ALWAYS CLEAN THE MEMORY AFTER FINISHED USING THE RETURNED VECTOR!!!
 
     int num_flag = 1;
 
-    std::vector<StateTool*> vec;
+    std::vector<StateToolplan*> vec;
     
     for(int i=0; i<std::pow(2.0,num_flag); i++)
     {
@@ -67,19 +67,19 @@ std::vector<StateTool*> GetStatesVectorTool(FlagMachineTool& f, OperationsTool& 
         {
             case 0B0:
             {
-                vec.push_back(new StateTool0(vec,f,ops));
+                vec.push_back(new StateToolplan0(vec,f,ops));
                 break;
             }
                 
             case 0B1:
             {
-                vec.push_back(new StateTool1(vec,f,ops));
+                vec.push_back(new StateToolplan1(vec,f,ops));
                 break;
             }
                 
             default:
             {
-                vec.push_back(new StateTool(-1,vec,f,ops));
+                vec.push_back(new StateToolplan(-1,vec,f,ops));
                 break;
             }
                 
@@ -100,50 +100,50 @@ std::vector<StateTool*> GetStatesVectorTool(FlagMachineTool& f, OperationsTool& 
 }
 
 // Initial state (default state)
-StateTool0::StateTool0(std::vector<StateTool*>& v, FlagMachineTool& f, OperationsTool& ops) 
-    : StateTool(0B0, v, f, ops) {Activate();} // default state
+StateToolplan0::StateToolplan0(std::vector<StateToolplan*>& v, FlagMachineToolplan& f, OperationsToolplan& ops) 
+    : StateToolplan(0B0, v, f, ops) {Activate();} // default state
 
-int StateTool0::ToolPosePlanned()
+int StateToolplan0::ToolPosePlanned()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&OperationsTool::OperationPlanToolPose, ops_));
-    funcs.push_back(FlagMachineTool::PlanToolPose);
+    funcs.push_back(std::bind(&OperationsToolplan::OperationPlanToolPose, ops_));
+    funcs.push_back(FlagMachineToolplan::PlanToolPose);
     Transition(0B1, funcs);
     return 0B1;
 }
 
-int StateTool0::ReinitState()
+int StateToolplan0::ReinitState()
 {
     return 0B0;
 }
 
 //
-StateTool1::StateTool1(std::vector<StateTool*>& v, FlagMachineTool& f, OperationsTool& ops) 
-    : StateTool(0B0, v, f, ops) {Activate();} // default state
+StateToolplan1::StateToolplan1(std::vector<StateToolplan*>& v, FlagMachineToolplan& f, OperationsToolplan& ops) 
+    : StateToolplan(0B0, v, f, ops) {Activate();} // default state
 
-int StateTool1::ClearToolPosePlan()
+int StateToolplan1::ClearToolPosePlan()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&OperationsTool::OperationResetToolPose, ops_));
-    funcs.push_back(FlagMachineTool::UnPlanToolPose);
+    funcs.push_back(std::bind(&OperationsToolplan::OperationResetToolPose, ops_));
+    funcs.push_back(FlagMachineToolplan::UnPlanToolPose);
     Transition(0B0, funcs);
     return 0B0;
 }
 
-int StateTool1::ToolPosePlanned()
+int StateToolplan1::ToolPosePlanned()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&OperationsTool::OperationPlanToolPose, ops_));
-    funcs.push_back(FlagMachineTool::PlanToolPose);
+    funcs.push_back(std::bind(&OperationsToolplan::OperationPlanToolPose, ops_));
+    funcs.push_back(FlagMachineToolplan::PlanToolPose);
     Transition(0B1, funcs);
     return 0B1;
 }
 
-int StateTool1::ReinitState()
+int StateToolplan1::ReinitState()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&OperationsTool::OperationResetToolPose, ops_));
-    funcs.push_back(FlagMachineTool::UnPlanToolPose);
+    funcs.push_back(std::bind(&OperationsToolplan::OperationResetToolPose, ops_));
+    funcs.push_back(FlagMachineToolplan::UnPlanToolPose);
     Transition(0B0, funcs);
     return 0B0;
 }

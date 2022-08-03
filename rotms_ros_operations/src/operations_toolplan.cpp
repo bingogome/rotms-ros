@@ -26,12 +26,12 @@ SOFTWARE.
 #include <ros/package.h>
 
 #include "operations.hpp"
-#include "operations_tool.hpp"
+#include "operations_toolplan.hpp"
 
-OperationsTool::OperationsTool(ros::NodeHandle& n) : OperationsBase(n)
+OperationsToolplan::OperationsToolplan(ros::NodeHandle& n) : OperationsBase(n)
 {}
 
-void OperationsTool::OperationPlanToolPose()
+void OperationsToolplan::OperationPlanToolPose()
 {
     // The operation has been done by dispatcher and cached to /share/config
     // Only need to publish
@@ -53,7 +53,7 @@ void OperationsTool::OperationPlanToolPose()
     pub_toolpose_.publish(pv);
 }
 
-void OperationsTool::OperationResetToolPose()
+void OperationsToolplan::OperationResetToolPose()
 {
     rotms_ros_msgs::PoseValid pv;
     pv.valid = false;

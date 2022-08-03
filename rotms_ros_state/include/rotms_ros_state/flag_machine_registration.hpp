@@ -23,30 +23,31 @@ SOFTWARE.
 ***/
 
 #pragma once
-#include "state_machine_tool.hpp"
-#include <vector>
+#include "flag_machine.hpp"
 
-bool CheckFlagIntegrityTool(const std::vector<StateTool*>& states);
-
-std::vector<StateTool*> GetStatesVectorTool(
-    FlagMachineTool& f, OperationsTool& ops);
-
-class StateTool0 : public StateTool
+class FlagMachineRegistration : public FlagMachineBase
 {
+
 public:
-    StateTool0(std::vector<StateTool*>& v, FlagMachineTool& f, OperationsTool& ops);
 
-    int ToolPosePlanned() override;
-    int ReinitState() override;
+    FlagMachineRegistration();
 
-};
+    static void PlanLandmarks();
+    static void DigitizeLandmarks();
+    static void CompleteRegistration();
 
-class StateTool1 : public StateTool
-{
-public:
-    StateTool1(std::vector<StateTool*>& v, FlagMachineTool& f, OperationsTool& ops);
+    static void UnPlanLandmarks();
+    static void UnDigitizeLandmarks();
+    static void UnCompleteRegistration();
 
-    int ClearToolPosePlan() override;
-    int ToolPosePlanned() override;
-    int ReinitState() override;
+    static bool GetFlagLandmarkPlanned();
+    static bool GetFlagLandmarkDigitized();
+    static bool GetFlagRegistered();
+
+private:
+
+    static bool flag_landmark_planned_;
+    static bool flag_landmark_digitized_;
+    static bool flag_registration_completed_;
+
 };

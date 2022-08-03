@@ -24,19 +24,18 @@ SOFTWARE.
 
 #include "dispatcher_utility.hpp"
 #include "rotms_dispatcher.hpp"
-#include "state_machine.hpp"
-#include "state_machine_tms.hpp"
-#include "rotms_ros_msgs/PoseValid.h"
+#include "state_machine_toolplan.hpp"
+#include "state_machine_registration.hpp"
 #include "ros_print_color.hpp"
 
-#include <rotms_ros_msgs/GetJnts.h>
-#include <rotms_ros_msgs/GetEFF.h>
-
-#include <ros/ros.h>
-#include <ros/package.h>
 #include <yaml-cpp/yaml.h>
 #include <iostream>
+#include <ros/ros.h>
+#include <ros/package.h>
 #include <tf2/LinearMath/Transform.h>
+#include <rotms_ros_msgs/GetJnts.h>
+#include <rotms_ros_msgs/GetEFF.h>
+#include <rotms_ros_msgs/PoseValid.h>
 
 /*
 Dispatcher takes decoded messages from comm_decode and preprocesses
@@ -47,10 +46,10 @@ for state/flag/operation for postprocessing.
 On the other hand, state/flag/operation will postprocess any data 
 that have been preprocessed and cached.
 */
-Dispatcher::Dispatcher(ros::NodeHandle& n, const std::vector<StateTMS*>& states) 
-    : n_(n), states_(states)
+Dispatcher::Dispatcher(ros::NodeHandle& n, struct StateSet& states_set) 
+    : n_(n), states_set_(states_set)
 {
-    bool integ = CheckFlagIntegrityTMS(states_);
+    bool integ = CheckFlagIntegrityTMS(states_set_.state_registration);
     ROS_GREEN_STREAM("[ROTMS INFO] Flag integrity check: " + std::to_string(integ));
 }
 
@@ -77,8 +76,8 @@ void Dispatcher::LandmarkPlanMetaCallBack(const std_msgs::Int16::ConstPtr& msg)
 
         Dispatcher::ResetVolatileDataCacheLandmarks(); // reset
 
-        int new_state = states_[activated_state_]->LandmarksPlanned();
-        Dispatcher::StateTransitionCheck(new_state);
+        int new_state = states_set_.state_registration[activated_state_]->LandmarksPlanned();
+        Dispatcher::StateTransitionCheck(new_state, "REGISTRATION");
     }
     else
     {
@@ -109,17 +108,11 @@ void Dispatcher::SessionReinitCallBack(const std_msgs::String::ConstPtr& msg)
     if(!msg->data.compare("_reinit__")==0) return; 
 
     // Reset state
-    int new_state = states_[activated_state_]->ReinitState();
-    ROS_GREEN_STREAM("[ROTMS INFO] Old state: " + std::to_string(activated_state_));
-    ROS_GREEN_STREAM("[ROTMS INFO] Attempt new state: " + std::to_string(new_state));
-    if (new_state != 0b0000) 
-    {
-        ROS_YELLOW_STREAM("[ROTMS WARNING] Unable to reinit state.");
-        return;
-    }
-    activated_state_ = new_state;
-    ROS_GREEN_STREAM("[ROTMS INFO] Transitioned to new state: " + 
-        std::to_string(activated_state_));
+    int new_state_registration = states_set_.state_registration[activated_state_["REGISTRATION"]]->ReinitState();
+    int new_state_toolplan = states_set_.state_toolplan[activated_state_["TOOLPLAN"]]->ReinitState();
+
+    Dispatcher::StateTransitionCheck(new_state_registration, "REGISTRATION");
+    Dispatcher::StateTransitionCheck(new_state_toolplan, "TOOLPLAN");
 
     // Reinit calibration data
     std_msgs::String msg_out;
@@ -128,7 +121,6 @@ void Dispatcher::SessionReinitCallBack(const std_msgs::String::ConstPtr& msg)
 
     // Verbo
     ROS_GREEN_STREAM("[ROTMS INFO] Session reinited");
-
 }
 
 void Dispatcher::ResetVolatileDataCacheLandmarks()
@@ -141,36 +133,24 @@ void Dispatcher::AutodigitizationCallBack(const std_msgs::String::ConstPtr& msg)
 {
     if (!msg->data.compare("_autodigitize__")==0) return;
     
-    int new_state = states_[activated_state_]->LandmarksDigitized();
-    ROS_GREEN_STREAM("[ROTMS INFO] Old state: " + std::to_string(activated_state_));
-    ROS_GREEN_STREAM("[ROTMS INFO] Attempt new state: " + std::to_string(new_state));
-    if (new_state != -1)
-    {
-        activated_state_ = new_state;
-        ROS_GREEN_STREAM("[ROTMS INFO] Transitioned to new state: " + 
-            std::to_string(activated_state_));
-    }
-    else
-    {
-        // Failed operation
-        ROS_YELLOW_STREAM("[ROTMS WARNING] State transition not possible.");
-        ROS_YELLOW_STREAM("[ROTMS WARNING] Make sure the operation dependencies are met.");
-    }
-    
+    int new_state = states_set_.state_registration[activated_state_["REGISTRATION"]]->LandmarksDigitized();
+    Dispatcher::StateTransitionCheck(new_state_registration, "REGISTRATION");
 }
 
 void Dispatcher::RegistrationCallBack(const std_msgs::String::ConstPtr& msg)
 {
     if (msg->data.compare("_prevregister__")==0)
     {
-        int new_state = states_[activated_state_]->UsePrevRegister();
-        Dispatcher::StateTransitionCheck(new_state);
+        int new_state = 
+            states_set_.state_registration[activated_state_["REGISTRATION"]]->UsePrevRegister();
+        Dispatcher::StateTransitionCheck(new_state, "REGISTRATION");
         Dispatcher::RegistrationResidualCheck();
     }
     if (msg->data.compare("_register__")==0)
     {
-        int new_state = states_[activated_state_]->Registered();
-        Dispatcher::StateTransitionCheck(new_state);
+        int new_state = 
+            states_set_.state_registration[activated_state_["REGISTRATION"]]->Registered();
+        Dispatcher::StateTransitionCheck(new_state, "REGISTRATION");
         Dispatcher::RegistrationResidualCheck();
     }
     
@@ -197,9 +177,9 @@ void Dispatcher::RegistrationResidualCheck()
 void Dispatcher::TRECalculationCallBack(const std_msgs::String::ConstPtr& msg){
     if (msg->data.compare("_starttre__")==0)
     {
-        if(activated_state_ != 0b1101 && activated_state_!= 0b1111)
+        if(activated_state_["REGISTRATION"] != 0b111)
         {
-            ROS_YELLOW_STREAM("Current state: " + std::to_string(activated_state_));
+            ROS_YELLOW_STREAM("Current state: " + std::to_string(activated_state_["REGISTRATION"]));
             ROS_YELLOW_STREAM("[ROTMS WARNING] Prerequisite is not met!");
             return;
         }
@@ -242,8 +222,8 @@ void Dispatcher::ToolPoseOrientCallBack(const geometry_msgs::Quaternion::ConstPt
         ROS_GREEN_STREAM("[ROTMS INFO] Toolpose cached.");
         Dispatcher::ResetVolatileDataCacheToolPose();
 
-        int new_state = states_[activated_state_]->ToolPosePlanned();
-        Dispatcher::StateTransitionCheck(new_state);
+        int new_state = states_set_.state_toolplan[activated_state_["TOOLPLAN"]]->ToolPosePlanned();
+        Dispatcher::StateTransitionCheck(new_state, "TOOLPLAN");
     }
 }
 
@@ -263,8 +243,8 @@ void Dispatcher::ToolPoseTransCallBack(const geometry_msgs::Point::ConstPtr& msg
         ROS_GREEN_STREAM("[ROTMS INFO] Toolpose cached.");
         Dispatcher::ResetVolatileDataCacheToolPose();
 
-        int new_state = states_[activated_state_]->ToolPosePlanned();
-        Dispatcher::StateTransitionCheck(new_state);
+        int new_state = states_set_.state_toolplan[activated_state_["TOOLPLAN"]]->ToolPosePlanned();
+        Dispatcher::StateTransitionCheck(new_state, "TOOLPLAN");
     }
 }
 
@@ -580,15 +560,16 @@ void Dispatcher::TargetVizCallBack(const std_msgs::String::ConstPtr& msg)
 
 }
 
-void Dispatcher::StateTransitionCheck(int new_state)
+void Dispatcher::StateTransitionCheck(int new_state, std::string s)
 {
-    ROS_GREEN_STREAM("[ROTMS INFO] Old state: " + std::to_string(activated_state_));
+    ROS_GREEN_STREAM("[ROTMS INFO] State transition - " + s);
+    ROS_GREEN_STREAM("[ROTMS INFO] Old state: " + std::to_string(activated_state_[s]));
     ROS_GREEN_STREAM("[ROTMS INFO] Attempt new state: " + std::to_string(new_state));
     if (new_state != -1)
     {
-        activated_state_ = new_state;
+        activated_state_[s] = new_state;
         ROS_GREEN_STREAM("[ROTMS INFO] Transitioned to new state: " + 
-            std::to_string(activated_state_));
+            std::to_string(activated_state_[s]));
     }
     else
     {

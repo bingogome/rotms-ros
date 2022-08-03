@@ -23,31 +23,30 @@ SOFTWARE.
 ***/
 
 #pragma once
-#include "flag_machine.hpp"
+#include <ros/ros.h>
 
-class FlagMachineTMS : public FlagMachineBase
+#include "rotms_ros_msgs/PoseValid.h"
+#include "operations.hpp"
+
+class OperationsToolplan : public OperationsBase
 {
-
 public:
 
-    FlagMachineTMS();
+    OperationsToolplan(ros::NodeHandle& n);
 
-    static void PlanLandmarks();
-    static void DigitizeLandmarks();
-    static void CompleteRegistration();
+    // Cruicial operations
+    void OperationPlanToolPose();
 
-    static void UnPlanLandmarks();
-    static void UnDigitizeLandmarks();
-    static void UnCompleteRegistration();
+    void OperationResetToolPose();
 
-    static bool GetFlagLandmarkPlanned();
-    static bool GetFlagLandmarkDigitized();
-    static bool GetFlagRegistered();
+    // Secondary and intermediate operations
+    // void Operation();
+    // void Operation();
+    // void Operation();
 
 private:
 
-    static bool flag_landmark_planned_;
-    static bool flag_landmark_digitized_;
-    static bool flag_registration_completed_;
+    ros::Publisher pub_toolpose_ = 
+        n_.advertise<rotms_ros_msgs::PoseValid>("/Kinematics/TR_body_cntct", 1, true);
 
 };

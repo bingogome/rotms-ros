@@ -25,8 +25,8 @@ SOFTWARE.
 #include <ros/ros.h>
 #include "flag_machine.hpp"
 #include "state_machine.hpp"
-#include "state_machine_tms.hpp"
-#include "operations_tms.hpp"
+#include "state_machine_registration.hpp"
+#include "operations_registration.hpp"
 
 // This node not needed in the final system. 
 // The headers and definition files from this package will be 
@@ -36,8 +36,8 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "DummyNode");
     ros::NodeHandle nh;
     
-    FlagMachineTMS f = FlagMachineTMS();
-    OperationsTMS o(nh);
+    FlagMachineRegistration f = FlagMachineRegistration();
+    OperationsRegistration o(nh);
 
     ros::spin();
     return 0;

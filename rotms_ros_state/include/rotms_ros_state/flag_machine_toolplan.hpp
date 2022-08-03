@@ -25,12 +25,12 @@ SOFTWARE.
 #pragma once
 #include "flag_machine.hpp"
 
-class FlagMachineTool : public FlagMachineBase
+class FlagMachineToolplan : public FlagMachineBase
 {
 
 public:
 
-    FlagMachineTool();
+    FlagMachineToolplan();
 
     static void PlanToolPose();
     static void UnPlanToolPose();

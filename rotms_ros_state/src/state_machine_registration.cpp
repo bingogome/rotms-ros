@@ -22,19 +22,31 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
-#include "state_machine_tool.hpp"
+/***
+* Current design: 
+* StateRegistration should have the virtual functions of all possible state transition operations (edges).
+* These virtual functions are to be inhereted by the subclasses of StateRegistration. If they are not 
+* inhereted, the operation or transition is not possible from that state.
+*
+* NO LONGER USING THIS :
+* Old design: 
+* nested siwch-case.
+***/
+
+#include "state_machine_registration.hpp"
 #include "state_machine.hpp"
-#include "flag_machine_tool.hpp"
-#include "operations_tool.hpp"
+#include "flag_machine_registration.hpp"
+#include "operations_registration.hpp"
 
 #include <vector>
 #include <functional>
 
-StateTool::StateTool(int state_num, std::vector<StateTool*>& v, FlagMachineTool& f, OperationsTool& ops) 
+
+StateRegistration::StateRegistration(int state_num, std::vector<StateRegistration*>& v, FlagMachineRegistration& f, OperationsRegistration& ops) 
     : StateBase(state_num), states_(v), flags_(f), ops_(ops)
 {}
 
-StateTool::~StateTool()
+StateRegistration::~StateRegistration()
 {
     for (auto p : states_)
     {
@@ -42,13 +54,18 @@ StateTool::~StateTool()
     } 
 }
 
-int StateTool::ToolPosePlanned() { TransitionNotPossible(); return -1; }
+int StateRegistration::LandmarksPlanned() { TransitionNotPossible(); return -1; }
+int StateRegistration::LandmarksDigitized() { TransitionNotPossible(); return -1; }
+int StateRegistration::Registered() { TransitionNotPossible(); return -1; }
 
-int StateTool::ClearToolPosePlan() { TransitionNotPossible(); return -1; }
+int StateRegistration::ClearLandmarks() { TransitionNotPossible(); return -1; }
+int StateRegistration::ClearDigitization() { TransitionNotPossible(); return -1; }
+int StateRegistration::ClearRegistration() { TransitionNotPossible(); return -1; }
 
-int StateTool::ReinitState() { TransitionNotPossible(); return -1; }
+int StateRegistration::ReinitState() { TransitionNotPossible(); return -1; }
+int StateRegistration::UsePrevRegister() { TransitionNotPossible(); return -1; }
 
-bool StateTool::CheckIfUniqueActivation(const std::vector<StateTool*>& states)
+bool StateRegistration::CheckIfUniqueActivation(const std::vector<StateRegistration*>& states)
 {
     int s = 0;
     for(int i=0; i<states.size(); i++)
@@ -58,9 +75,9 @@ bool StateTool::CheckIfUniqueActivation(const std::vector<StateTool*>& states)
     return s<=1;
 }
 
-int StateTool::GetActivatedState(const std::vector<StateTool*>& states)
+int StateRegistration::GetActivatedState(const std::vector<StateRegistration*>& states)
 {
-    if ( ! StateTool::CheckIfUniqueActivation(states) )
+    if ( ! StateRegistration::CheckIfUniqueActivation(states) )
         throw std::runtime_error(
             "State machine error: not unique states are activated!");
     
@@ -73,7 +90,8 @@ int StateTool::GetActivatedState(const std::vector<StateTool*>& states)
     return -1;
 }
 
-void StateTool::Transition(int target_state, TransitionOps funcs)
+
+void StateRegistration::Transition(int target_state, TransitionOps funcs)
 {
     Deactivate();
 
@@ -83,7 +101,7 @@ void StateTool::Transition(int target_state, TransitionOps funcs)
     }
 
     states_[target_state]->Activate();
-    if ( ! StateTool::CheckIfUniqueActivation(states_) )
+    if ( ! StateRegistration::CheckIfUniqueActivation(states_) )
         throw std::runtime_error(
             "State machine error: not unique states are activated!");
 }

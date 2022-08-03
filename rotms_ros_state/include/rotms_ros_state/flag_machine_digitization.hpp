@@ -25,12 +25,12 @@ SOFTWARE.
 #pragma once
 #include "flag_machine.hpp"
 
-class FlagMachineDig : public FlagMachineBase
+class FlagMachineDigitization : public FlagMachineBase
 {
 
 public:
 
-    FlagMachineDig();
+    FlagMachineDigitization();
 
 private:
 

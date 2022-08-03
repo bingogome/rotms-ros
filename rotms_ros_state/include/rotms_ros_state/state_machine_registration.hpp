@@ -22,37 +22,52 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
+/***
+* Current design: 
+* StateRegistration should have the virtual functions of all possible state transition operations (edges).
+* These virtual functions are to be inhereted by the subclasses of StateRegistration. If they are not 
+* inhereted, the operation or transition is not possible from that state.
+*
+* NO LONGER USING THIS :
+* Old design: 
+* nested siwch-case.
+***/
+
 #pragma once
 #include "state_machine.hpp"
-#include "flag_machine_tool.hpp"
 
-class StateTool : public StateBase
+class StateRegistration : public StateBase
 {
 
 public:
 
-    StateTool(
+    StateRegistration(
         int state_num,
-        std::vector<StateTool*>& v,
-        FlagMachineTool& f,
-        OperationsTool& ops);
-    virtual ~StateTool();
+        std::vector<StateRegistration*>& v,
+        FlagMachineRegistration& f,
+        OperationsRegistration& ops);
+    virtual ~StateRegistration();
 
-    FlagMachineTool& flags_;
+    FlagMachineRegistration& flags_;
 
-    virtual int ToolPosePlanned();
+    virtual int LandmarksPlanned();
+    virtual int LandmarksDigitized();
+    virtual int Registered();
 
-    virtual int ClearToolPosePlan();
+    virtual int ClearLandmarks();
+    virtual int ClearDigitization();
+    virtual int ClearRegistration();
 
     virtual int ReinitState();
+    virtual int UsePrevRegister();
 
-    static bool CheckIfUniqueActivation(const std::vector<StateTool*>& states);
-    static int GetActivatedState(const std::vector<StateTool*>& states);
+    static bool CheckIfUniqueActivation(const std::vector<StateRegistration*>& states);
+    static int GetActivatedState(const std::vector<StateRegistration*>& states);
 
 protected:
 
-    OperationsTool& ops_;
-    const std::vector<StateTool*>& states_;
+    OperationsRegistration& ops_;
+    const std::vector<StateRegistration*>& states_;
     void Transition(int target_state, TransitionOps funcs);
 
 };

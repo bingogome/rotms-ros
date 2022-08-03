@@ -24,8 +24,8 @@ SOFTWARE.
 
 #include "rotms_dispatcher.hpp"
 #include "flag_machine.hpp"
-#include "state_machine_tms.hpp"
-#include "operations_tms.hpp"
+#include "state_machine_registration.hpp"
+#include "operations_registration.hpp"
 #include "ros_print_color.hpp"
 
 #include <ros/ros.h>
@@ -40,8 +40,8 @@ int main(int argc, char **argv)
     ROS_GREEN_STREAM("[ROTMS INFO] Dispatcher on.");
 
     // Initialize flags, states, operations and pass to dispatcher
-    FlagMachineTMS f = FlagMachineTMS();
-    OperationsTMS ops = OperationsTMS(nh);
+    FlagMachineRegistration f = FlagMachineRegistration();
+    OperationsRegistration ops = OperationsRegistration(nh);
 
     ROS_GREEN_STREAM("[ROTMS INFO] Flag Machine and Operations initialized.");
 
@@ -49,7 +49,7 @@ int main(int argc, char **argv)
     // Remember to release memory !!
     // In this node, the memory is released by Dispatcher when 
     // destroying the Dispatcher object
-    const std::vector<StateTMS*> states = GetStatesVectorTMS(f, ops);
+    const std::vector<StateRegistration*> states = GetStatesVectorTMS(f, ops);
 
     ROS_GREEN_STREAM("[ROTMS INFO] State Vector initialized.");
 

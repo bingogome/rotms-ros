@@ -22,52 +22,37 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
-/***
-* Current design: 
-* StateTMS should have the virtual functions of all possible state transition operations (edges).
-* These virtual functions are to be inhereted by the subclasses of StateTMS. If they are not 
-* inhereted, the operation or transition is not possible from that state.
-*
-* NO LONGER USING THIS :
-* Old design: 
-* nested siwch-case.
-***/
-
 #pragma once
 #include "state_machine.hpp"
+#include "flag_machine_toolplan.hpp"
 
-class StateTMS : public StateBase
+class StateToolplan : public StateBase
 {
 
 public:
 
-    StateTMS(
+    StateToolplan(
         int state_num,
-        std::vector<StateTMS*>& v,
-        FlagMachineTMS& f,
-        OperationsTMS& ops);
-    virtual ~StateTMS();
+        std::vector<StateToolplan*>& v,
+        FlagMachineToolplan& f,
+        OperationsToolplan& ops);
+    virtual ~StateToolplan();
 
-    FlagMachineTMS& flags_;
+    FlagMachineToolplan& flags_;
 
-    virtual int LandmarksPlanned();
-    virtual int LandmarksDigitized();
-    virtual int Registered();
+    virtual int ToolPosePlanned();
 
-    virtual int ClearLandmarks();
-    virtual int ClearDigitization();
-    virtual int ClearRegistration();
+    virtual int ClearToolPosePlan();
 
     virtual int ReinitState();
-    virtual int UsePrevRegister();
 
-    static bool CheckIfUniqueActivation(const std::vector<StateTMS*>& states);
-    static int GetActivatedState(const std::vector<StateTMS*>& states);
+    static bool CheckIfUniqueActivation(const std::vector<StateToolplan*>& states);
+    static int GetActivatedState(const std::vector<StateToolplan*>& states);
 
 protected:
 
-    OperationsTMS& ops_;
-    const std::vector<StateTMS*>& states_;
+    OperationsToolplan& ops_;
+    const std::vector<StateToolplan*>& states_;
     void Transition(int target_state, TransitionOps funcs);
 
 };

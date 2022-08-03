@@ -23,18 +23,18 @@ SOFTWARE.
 ***/
 
 #include "flag_machine.hpp"
-#include "flag_machine_tool.hpp"
+#include "flag_machine_toolplan.hpp"
 
 //
-FlagMachineTool::FlagMachineTool() : FlagMachineBase()
+FlagMachineToolplan::FlagMachineToolplan() : FlagMachineBase()
 {
     flag_toolpose_planned_ = false;
 }
 
 // Crucial operations status flags
-bool FlagMachineTool::flag_toolpose_planned_;
+bool FlagMachineToolplan::flag_toolpose_planned_;
 
 // Crucial operations status setters and getters
-void FlagMachineTMS::PlanToolPose(){flag_toolpose_planned_=true;}
-void FlagMachineTMS::UnPlanToolPose(){flag_toolpose_planned_=false;}
-bool FlagMachineTMS::GetFlagToolPosePlanned(){return flag_toolpose_planned_;}
+void FlagMachineRegistration::PlanToolPose(){flag_toolpose_planned_=true;}
+void FlagMachineRegistration::UnPlanToolPose(){flag_toolpose_planned_=false;}
+bool FlagMachineRegistration::GetFlagToolPosePlanned(){return flag_toolpose_planned_;}

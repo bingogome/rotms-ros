@@ -24,6 +24,8 @@ SOFTWARE.
 
 #pragma once
 
+#include <vector>
+#include <map>
 #include <ros/ros.h>
 #include <std_msgs/String.h>
 #include <std_msgs/Int16.h>
@@ -31,24 +33,31 @@ SOFTWARE.
 #include <std_msgs/Bool.h>
 #include <rotms_ros_msgs/GetJnts.h>
 #include <rotms_ros_msgs/GetEFF.h>
-#include <vector>
+#include <rotms_ros_msgs/PoseValid.h>
 
-#include "state_machine.hpp"
+#include "state_machine_registration.hpp"
+#include "state_machine_toolplan.hpp"
 #include "dispatcher_utility.hpp"
-#include "rotms_ros_msgs/PoseValid.h"
+
+struct StateSet
+{
+    const std::vector<StateRegistration*>& state_registration;
+    const std::vector<StateToolplan*>& state_toolplan;
+};
 
 class Dispatcher
 {
 
 public:
 
-    Dispatcher(ros::NodeHandle& n, const std::vector<StateTMS*>& states);
+    Dispatcher(ros::NodeHandle& n, struct StateSet& states_set);
 
 private:
 
     ros::NodeHandle& n_;
-    const std::vector<StateTMS*>& states_;
-    int activated_state_;
+    struct StateSet& states_set_;
+    std::map<std::string, int> activated_state_{ 
+        {"REGISTRATION", 0}, {"TOOLPLAN", 0} };
 
     // Dispatcher receiving query signals
     ros::Subscriber sub_medimg_landmarkplanmeta_ = n_.subscribe(
@@ -158,6 +167,6 @@ private:
     void ResetVolatileDataCacheToolPose();
 
     // Utility
-    void StateTransitionCheck(int new_state);
+    void StateTransitionCheck(int new_state, std::string s);
 
 };
