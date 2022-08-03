@@ -22,33 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
-#pragma once
+#include "state_machine_robot_states.hpp"
 
-#include "state_machine.hpp"
-#include "flag_machine_robot.hpp"
-#include "operations_robot.hpp"
 
-class StateRobot : public StateBase
-{
-
-public:
-
-    StateRobot(
-        int state_num,
-        std::vector<StateRobot*>& v,
-        FlagMachineRobot& f,
-        OperationsRobot& ops);
-    virtual ~StateRobot();
-
-    FlagMachineRobot& flags_;
-
-    static bool CheckIfUniqueActivation(const std::vector<StateRobot*>& states);
-    static int GetActivatedState(const std::vector<StateRobot*>& states);
-
-protected:
-
-    OperationsRobot& ops_;
-    const std::vector<StateRobot*>& states_;
-    void Transition(int target_state, TransitionOps funcs);
-
-};

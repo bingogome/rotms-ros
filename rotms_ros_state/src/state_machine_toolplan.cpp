@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
-#include "state_machine_toolplan.hpp"
 #include "state_machine.hpp"
+#include "state_machine_toolplan.hpp"
 #include "flag_machine_toolplan.hpp"
 #include "operations_toolplan.hpp"
 

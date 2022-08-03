@@ -24,31 +24,28 @@ SOFTWARE.
 
 #pragma once
 
-#include "state_machine.hpp"
-#include "flag_machine_robot.hpp"
-#include "operations_robot.hpp"
+#include "state_machine_robot.hpp"
+#include <vector>
 
-class StateRobot : public StateBase
+bool CheckFlagIntegrityRobot(const std::vector<StateRobot*>& states);
+
+std::vector<StateRobot*> GetStatesVectorRobot(
+    FlagMachineRobot& f, OperationsRobot& ops);
+
+class StateRobot0 : public StateRobot
 {
-
 public:
+    StateRobot0(std::vector<StateRobot*>& v, FlagMachineRobot& f, OperationsRobot& ops);
 
-    StateRobot(
-        int state_num,
-        std::vector<StateRobot*>& v,
-        FlagMachineRobot& f,
-        OperationsRobot& ops);
-    virtual ~StateRobot();
+    int ToolPosePlanned() override;
 
-    FlagMachineRobot& flags_;
+};
 
-    static bool CheckIfUniqueActivation(const std::vector<StateRobot*>& states);
-    static int GetActivatedState(const std::vector<StateRobot*>& states);
+class StateRobot1 : public StateRobot
+{
+public:
+    StateRobot1(std::vector<StateRobot*>& v, FlagMachineRobot& f, OperationsRobot& ops);
 
-protected:
-
-    OperationsRobot& ops_;
-    const std::vector<StateRobot*>& states_;
-    void Transition(int target_state, TransitionOps funcs);
+    int ClearToolPosePlan() override;
 
 };
