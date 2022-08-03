@@ -31,7 +31,7 @@ SOFTWARE.
 #include <stdexcept>
 #include <cmath>
 
-bool CheckFlagIntegrityTool(const std::vector<StateToolplan*>& states)
+bool CheckFlagIntegrityToolplan(const std::vector<StateToolplan*>& states)
 {
     int num_flag = 1;
     std::vector<int> masks {0B1};
@@ -54,7 +54,7 @@ bool CheckFlagIntegrityTool(const std::vector<StateToolplan*>& states)
     return true;
 }
 
-std::vector<StateToolplan*> GetStatesVectorTool(FlagMachineToolplan& f, OperationsToolplan& ops)
+std::vector<StateToolplan*> GetStatesVectorToolplan(FlagMachineToolplan& f, OperationsToolplan& ops)
 {   // ALWAYS CLEAN THE MEMORY AFTER FINISHED USING THE RETURNED VECTOR!!!
 
     int num_flag = 1;

@@ -22,41 +22,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
-#include "rotms_dispatcher.hpp"
 #include "flag_machine.hpp"
-#include "state_machine_registration.hpp"
-#include "operations_registration.hpp"
-#include "ros_print_color.hpp"
+#include "flag_machine_robot.hpp"
 
-#include <ros/ros.h>
-#include <tuple>
-
-int main(int argc, char **argv)
+//
+FlagMachineRobot::FlagMachineRobot() : FlagMachineBase()
 {
-
-    ros::init(argc, argv, "NodeDispatcher");
-    ros::NodeHandle nh;
-
-    ROS_GREEN_STREAM("[ROTMS INFO] Dispatcher on.");
-
-    // Initialize flags, states, operations and pass to dispatcher
-    FlagMachineRegistration f = FlagMachineRegistration();
-    OperationsRegistration ops = OperationsRegistration(nh);
-
-    ROS_GREEN_STREAM("[ROTMS INFO] Flag Machine and Operations initialized.");
-
-    // WARNING: this function will return a vector of pointers
-    // Remember to release memory !!
-    // In this node, the memory is released by Dispatcher when 
-    // destroying the Dispatcher object
-    const std::vector<StateRegistration*> states = GetStatesVectorRegistration(f, ops);
-
-    ROS_GREEN_STREAM("[ROTMS INFO] State Vector initialized.");
-
-    // Initialize dispatcher
-    Dispatcher d = Dispatcher(nh, states);
-
-    ros::spin();
-
-    return 0;
+    flag_robot_conn_status_ = false;
 }
+
+// Robot connection status flag
+bool FlagMachineRobot::flag_robot_conn_status_;
+
+// Robot connection status setters and getters
+void FlagMachineRobot::ConnectRobot(){flag_robot_conn_status_=true;}
+void FlagMachineRobot::DisconnectRobot(){flag_robot_conn_status_=false;}
+bool FlagMachineRobot::GetFlagRobotConnStatus(){return flag_robot_conn_status_;}

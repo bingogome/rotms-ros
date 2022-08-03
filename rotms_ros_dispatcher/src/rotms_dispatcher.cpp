@@ -49,7 +49,7 @@ that have been preprocessed and cached.
 Dispatcher::Dispatcher(ros::NodeHandle& n, struct StateSet& states_set) 
     : n_(n), states_set_(states_set)
 {
-    bool integ = CheckFlagIntegrityTMS(states_set_.state_registration);
+    bool integ = CheckFlagIntegrityRegistration(states_set_.state_registration);
     ROS_GREEN_STREAM("[ROTMS INFO] Flag integrity check: " + std::to_string(integ));
 }
 

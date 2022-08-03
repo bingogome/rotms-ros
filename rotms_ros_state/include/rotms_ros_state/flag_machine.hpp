@@ -34,20 +34,3 @@ public:
 private:
 
 };
-
-class FlagMachineRobot : public FlagMachineBase
-{
-
-public:
-
-    FlagMachineRobot();
-
-    static void ConnectRobot();
-    static void DisconnectRobot();
-    static bool GetFlagRobotConnStatus();
-
-private:
-
-    static bool flag_robot_conn_status_;
-
-};

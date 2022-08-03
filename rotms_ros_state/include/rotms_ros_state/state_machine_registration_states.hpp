@@ -29,9 +29,9 @@ SOFTWARE.
 
 #include <vector>
 
-bool CheckFlagIntegrityTMS(const std::vector<StateRegistration*>& states);
+bool CheckFlagIntegrityRegistration(const std::vector<StateRegistration*>& states);
 
-std::vector<StateRegistration*> GetStatesVectorTMS(
+std::vector<StateRegistration*> GetStatesVectorRegistration(
     FlagMachineRegistration& f, OperationsRegistration& ops);
 
 class StateRegistration000 : public StateRegistration

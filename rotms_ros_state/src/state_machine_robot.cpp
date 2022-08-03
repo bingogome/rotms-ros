@@ -21,32 +21,3 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
-
-#pragma once
-#include "state_machine_toolplan.hpp"
-#include <vector>
-
-bool CheckFlagIntegrityToolplan(const std::vector<StateToolplan*>& states);
-
-std::vector<StateToolplan*> GetStatesVectorToolplan(
-    FlagMachineToolplan& f, OperationsToolplan& ops);
-
-class StateToolplan0 : public StateToolplan
-{
-public:
-    StateToolplan0(std::vector<StateToolplan*>& v, FlagMachineToolplan& f, OperationsToolplan& ops);
-
-    int ToolPosePlanned() override;
-    int ReinitState() override;
-
-};
-
-class StateToolplan1 : public StateToolplan
-{
-public:
-    StateToolplan1(std::vector<StateToolplan*>& v, FlagMachineToolplan& f, OperationsToolplan& ops);
-
-    int ClearToolPosePlan() override;
-    int ToolPosePlanned() override;
-    int ReinitState() override;
-};

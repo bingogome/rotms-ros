@@ -22,41 +22,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
-#include "rotms_dispatcher.hpp"
+#pragma once
 #include "flag_machine.hpp"
-#include "state_machine_registration.hpp"
-#include "operations_registration.hpp"
-#include "ros_print_color.hpp"
 
-#include <ros/ros.h>
-#include <tuple>
-
-int main(int argc, char **argv)
+class FlagMachineRobot : public FlagMachineBase
 {
 
-    ros::init(argc, argv, "NodeDispatcher");
-    ros::NodeHandle nh;
+public:
 
-    ROS_GREEN_STREAM("[ROTMS INFO] Dispatcher on.");
+    FlagMachineRobot();
 
-    // Initialize flags, states, operations and pass to dispatcher
-    FlagMachineRegistration f = FlagMachineRegistration();
-    OperationsRegistration ops = OperationsRegistration(nh);
+    static void ConnectRobot();
+    static void DisconnectRobot();
+    static bool GetFlagRobotConnStatus();
 
-    ROS_GREEN_STREAM("[ROTMS INFO] Flag Machine and Operations initialized.");
+private:
 
-    // WARNING: this function will return a vector of pointers
-    // Remember to release memory !!
-    // In this node, the memory is released by Dispatcher when 
-    // destroying the Dispatcher object
-    const std::vector<StateRegistration*> states = GetStatesVectorRegistration(f, ops);
+    static bool flag_robot_conn_status_;
 
-    ROS_GREEN_STREAM("[ROTMS INFO] State Vector initialized.");
-
-    // Initialize dispatcher
-    Dispatcher d = Dispatcher(nh, states);
-
-    ros::spin();
-
-    return 0;
-}
+};
