@@ -24,6 +24,7 @@ SOFTWARE.
 
 #include <ros/ros.h>
 #include <ros/package.h>
+#include <yaml-cpp/yaml.h>
 
 #include "operations.hpp"
 #include "operations_toolplan.hpp"

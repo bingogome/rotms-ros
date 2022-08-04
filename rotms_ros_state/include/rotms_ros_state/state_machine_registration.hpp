@@ -35,6 +35,9 @@ SOFTWARE.
 
 #pragma once
 #include "state_machine.hpp"
+#include "state_machine_robot.hpp"
+#include "flag_machine_registration.hpp"
+#include "operations_registration.hpp"
 
 class StateRegistration : public StateBase
 {

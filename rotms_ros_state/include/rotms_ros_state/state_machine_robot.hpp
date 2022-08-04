@@ -42,6 +42,9 @@ public:
 
     FlagMachineRobot& flags_;
 
+    virtual int ConnectRobot();
+    virtual int DisconnectRobot();
+
     static bool CheckIfUniqueActivation(const std::vector<StateRobot*>& states);
     static int GetActivatedState(const std::vector<StateRobot*>& states);
 

@@ -22,38 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
-#pragma once
-#include "state_machine.hpp"
-#include "flag_machine_toolplan.hpp"
-#include "operations_toolplan.hpp"
+#include <ros/ros.h>
 
-class StateToolplan : public StateBase
-{
+#include "operations.hpp"
+#include "operations_robot.hpp"
 
-public:
-
-    StateToolplan(
-        int state_num,
-        std::vector<StateToolplan*>& v,
-        FlagMachineToolplan& f,
-        OperationsToolplan& ops);
-    virtual ~StateToolplan();
-
-    FlagMachineToolplan& flags_;
-
-    virtual int ToolPosePlanned();
-
-    virtual int ClearToolPosePlan();
-
-    virtual int ReinitState();
-
-    static bool CheckIfUniqueActivation(const std::vector<StateToolplan*>& states);
-    static int GetActivatedState(const std::vector<StateToolplan*>& states);
-
-protected:
-
-    OperationsToolplan& ops_;
-    const std::vector<StateToolplan*>& states_;
-    void Transition(int target_state, TransitionOps funcs);
-
-};
+OperationsRobot::OperationsRobot(ros::NodeHandle& n) : OperationsBase(n)
+{}

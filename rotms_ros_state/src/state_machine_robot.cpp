@@ -44,6 +44,7 @@ StateRobot::~StateRobot()
 }
 
 int StateRobot::ConnectRobot() { TransitionNotPossible(); return -1; }
+int StateRobot::DisconnectRobot() { TransitionNotPossible(); return -1; }
 
 bool StateRobot::CheckIfUniqueActivation(const std::vector<StateRobot*>& states)
 {

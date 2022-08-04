@@ -24,8 +24,10 @@ SOFTWARE.
 
 #include "rotms_dispatcher.hpp"
 #include "flag_machine.hpp"
-#include "state_machine_registration.hpp"
 #include "operations_registration.hpp"
+#include "state_machine_registration_states.hpp"
+#include "state_machine_robot_states.hpp"
+#include "state_machine_toolplan_states.hpp"
 #include "ros_print_color.hpp"
 
 #include <ros/ros.h>
@@ -40,8 +42,12 @@ int main(int argc, char **argv)
     ROS_GREEN_STREAM("[ROTMS INFO] Dispatcher on.");
 
     // Initialize flags, states, operations and pass to dispatcher
-    FlagMachineRegistration f = FlagMachineRegistration();
-    OperationsRegistration ops = OperationsRegistration(nh);
+    FlagMachineRegistration f_registration = FlagMachineRegistration();
+    OperationsRegistration ops_registration = OperationsRegistration(nh);
+    FlagMachineRobot f_robot = FlagMachineRobot();
+    OperationsRobot ops_robot = OperationsRobot(nh);
+    FlagMachineToolplan f_toolplan = FlagMachineToolplan();
+    OperationsToolplan ops_toolplan = OperationsToolplan(nh);
 
     ROS_GREEN_STREAM("[ROTMS INFO] Flag Machine and Operations initialized.");
 
@@ -49,9 +55,20 @@ int main(int argc, char **argv)
     // Remember to release memory !!
     // In this node, the memory is released by Dispatcher when 
     // destroying the Dispatcher object
-    const std::vector<StateRegistration*> states = GetStatesVectorRegistration(f, ops);
+    const std::vector<StateRegistration*> states_registration = 
+        GetStatesVectorRegistration(f_registration, ops_registration);
+    const std::vector<StateRobot*> states_robot = 
+        GetStatesVectorRobot(f_robot, ops_robot);
+    const std::vector<StateToolplan*> states_toolplan = 
+        GetStatesVectorToolplan(f_toolplan, ops_toolplan);
 
-    ROS_GREEN_STREAM("[ROTMS INFO] State Vector initialized.");
+    struct StateSet states = {
+        .state_registration = states_registration, 
+        .state_toolplan = states_toolplan, 
+        .state_robot = states_robot
+    };
+
+    ROS_GREEN_STREAM("[ROTMS INFO] State Vectors initialized.");
 
     // Initialize dispatcher
     Dispatcher d = Dispatcher(nh, states);

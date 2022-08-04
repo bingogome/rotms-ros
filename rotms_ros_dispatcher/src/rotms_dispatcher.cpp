@@ -24,8 +24,9 @@ SOFTWARE.
 
 #include "dispatcher_utility.hpp"
 #include "rotms_dispatcher.hpp"
-#include "state_machine_toolplan.hpp"
-#include "state_machine_registration.hpp"
+#include "state_machine_toolplan_states.hpp"
+#include "state_machine_registration_states.hpp"
+#include "state_machine_robot_states.hpp"
 #include "ros_print_color.hpp"
 
 #include <yaml-cpp/yaml.h>
@@ -49,8 +50,13 @@ that have been preprocessed and cached.
 Dispatcher::Dispatcher(ros::NodeHandle& n, struct StateSet& states_set) 
     : n_(n), states_set_(states_set)
 {
-    bool integ = CheckFlagIntegrityRegistration(states_set_.state_registration);
-    ROS_GREEN_STREAM("[ROTMS INFO] Flag integrity check: " + std::to_string(integ));
+    bool integ;
+    integ = CheckFlagIntegrityRegistration(states_set_.state_registration);
+    ROS_GREEN_STREAM("[ROTMS INFO] Flag integrity check (Registration): " + std::to_string(integ));
+    integ = CheckFlagIntegrityToolplan(states_set_.state_toolplan);
+    ROS_GREEN_STREAM("[ROTMS INFO] Flag integrity check (Tool plan): " + std::to_string(integ));
+    integ = CheckFlagIntegrityRobot(states_set_.state_robot);
+    ROS_GREEN_STREAM("[ROTMS INFO] Flag integrity check (Robot): " + std::to_string(integ));
 }
 
 void Dispatcher::LandmarkPlanMetaCallBack(const std_msgs::Int16::ConstPtr& msg)
@@ -76,7 +82,7 @@ void Dispatcher::LandmarkPlanMetaCallBack(const std_msgs::Int16::ConstPtr& msg)
 
         Dispatcher::ResetVolatileDataCacheLandmarks(); // reset
 
-        int new_state = states_set_.state_registration[activated_state_]->LandmarksPlanned();
+        int new_state = states_set_.state_registration[activated_state_["REGISTRATION"]]->LandmarksPlanned();
         Dispatcher::StateTransitionCheck(new_state, "REGISTRATION");
     }
     else
@@ -133,7 +139,7 @@ void Dispatcher::AutodigitizationCallBack(const std_msgs::String::ConstPtr& msg)
 {
     if (!msg->data.compare("_autodigitize__")==0) return;
     
-    int new_state = states_set_.state_registration[activated_state_["REGISTRATION"]]->LandmarksDigitized();
+    int new_state_registration = states_set_.state_registration[activated_state_["REGISTRATION"]]->LandmarksDigitized();
     Dispatcher::StateTransitionCheck(new_state_registration, "REGISTRATION");
 }
 
@@ -250,8 +256,8 @@ void Dispatcher::ToolPoseTransCallBack(const geometry_msgs::Point::ConstPtr& msg
 
 void Dispatcher::UpdateRobotConnFlagCallBack(const std_msgs::Bool::ConstPtr& msg)
 {
-    if(msg->data) states_[activated_state_]->flags_.ConnectRobot();
-    else states_[activated_state_]->flags_.DisconnectRobot();
+    if(msg->data) states_set_.state_robot[activated_state_["ROBOT"]]->flags_.ConnectRobot();
+    else states_set_.state_robot[activated_state_["ROBOT"]]->flags_.DisconnectRobot();
 }
 
 void Dispatcher::RobConnectCallBack(const std_msgs::String::ConstPtr& msg)
@@ -261,6 +267,8 @@ void Dispatcher::RobConnectCallBack(const std_msgs::String::ConstPtr& msg)
         std_msgs::String msg_test;
         msg_test.data = "_start_robot_connection_";
         pub_init_conn_.publish(msg_test);
+        int new_state = states_set_.state_robot[activated_state_["ROBOT"]]->ConnectRobot();
+        Dispatcher::StateTransitionCheck(new_state, "ROBOT");
     }
 }
 
@@ -271,6 +279,8 @@ void Dispatcher::RobDisconnectCallBack(const std_msgs::String::ConstPtr& msg)
         std_msgs::String msg_test;
         msg_test.data = "_end_robot_connection_";
         pub_init_conn_.publish(msg_test);
+        int new_state = states_set_.state_robot[activated_state_["ROBOT"]]->DisconnectRobot();
+        Dispatcher::StateTransitionCheck(new_state, "ROBOT");
     }
 }
 
@@ -281,7 +291,7 @@ void Dispatcher::GetJntsCallBack(const std_msgs::String::ConstPtr& msg)
         msg->data.compare("_initcur__")==0) ) return;
     
     std_msgs::String msg_out;
-    if(!states_[activated_state_]->flags_.GetFlagRobotConnStatus())
+    if(!states_set_.state_robot[activated_state_["ROBOT"]]->flags_.GetFlagRobotConnStatus())
     {
         ROS_YELLOW_STREAM("[ROTMS WARNING] Robot cabinet connection has not been established!");
         msg_out.data = "no_data_returned;";
@@ -315,7 +325,7 @@ void Dispatcher::GetEFFCallBack(const std_msgs::String::ConstPtr& msg)
 {
     if(!msg->data.compare("_eff__")==0) return;
     std_msgs::String msg_out;
-    if(!states_[activated_state_]->flags_.GetFlagRobotConnStatus())
+    if(!states_set_.state_robot[activated_state_["ROBOT"]]->flags_.GetFlagRobotConnStatus())
     {
         ROS_YELLOW_STREAM("[ROTMS WARNING] Robot cabinet connection has not been established!");
         msg_out.data = "no_data_returned;";
@@ -351,7 +361,10 @@ void Dispatcher::ExecuteMotionToOffsetCallBack(const std_msgs::String::ConstPtr&
 {
     // Status check
     if(!msg->data.compare("_execute__")==0) return;
-    if(activated_state_!=0b1111)
+    if(
+        activated_state_["TOOLPLAN"]!=0b1 || 
+        activated_state_["ROBOT"]!=0b1 ||
+        activated_state_["REGISTRATION"]!=0b111)
     {
         ROS_YELLOW_STREAM("[ROTMS WARNING] The prerequisites are not met. Check before robot motion. (code 1)");
         return;
@@ -367,7 +380,10 @@ void Dispatcher::ExecuteConfirmMotionCallBack(const std_msgs::String::ConstPtr& 
 {
     // Status check
     if(!msg->data.compare("_confirm__")==0) return;
-    if(activated_state_!=0b1111)
+    if(
+        activated_state_["TOOLPLAN"]!=0b1 || 
+        activated_state_["ROBOT"]!=0b1 ||
+        activated_state_["REGISTRATION"]!=0b111)
     {
         ROS_YELLOW_STREAM("[ROTMS WARNING] The prerequisites are not met. Check before robot motion. (code 2)");
         return;
@@ -383,7 +399,10 @@ void Dispatcher::ExecuteConfirmMotionCallBack(const std_msgs::String::ConstPtr& 
 
 void Dispatcher::ExecuteManualAdjust(const std_msgs::Float32MultiArray::ConstPtr& msg)
 {
-    if(activated_state_!=0b1111)
+    if(
+        activated_state_["TOOLPLAN"]!=0b1 || 
+        activated_state_["ROBOT"]!=0b1 ||
+        activated_state_["REGISTRATION"]!=0b111)
     {
         ROS_YELLOW_STREAM("[ROTMS WARNING] The prerequisites are not met. Check before robot motion. (code 2)");
         return;
@@ -416,15 +435,17 @@ void Dispatcher::ExecuteManualAdjust(const std_msgs::Float32MultiArray::ConstPtr
 
 void Dispatcher::ExecuteMotionToTargetEFFPose()
 {   
-
-    if(activated_state_!=0b1111)
-    {
-        ROS_YELLOW_STREAM("[ROTMS WARNING] The prerequisites are not met. Check before robot motion. (code 0)");
-        return;
-    }
-    if(!states_[activated_state_]->flags_.GetFlagRobotConnStatus())
+    if(!states_set_.state_robot[activated_state_["ROBOT"]]->flags_.GetFlagRobotConnStatus())
     {
         ROS_YELLOW_STREAM("[ROTMS WARNING] Robot cabinet connection has not been established!");
+        return;
+    }
+    if(
+        activated_state_["TOOLPLAN"]!=0b1 || 
+        activated_state_["ROBOT"]!=0b1 ||
+        activated_state_["REGISTRATION"]!=0b111)
+    {
+        ROS_YELLOW_STREAM("[ROTMS WARNING] The prerequisites are not met. Check before robot motion. (code 0)");
         return;
     }
 
@@ -488,7 +509,10 @@ void Dispatcher::ExecuteBackToCallBack(const std_msgs::String::ConstPtr& msg)
 {
     if(msg->data.compare("_backoffset__")==0)
     {
-        if(activated_state_!=0b1111)
+        if(
+            activated_state_["TOOLPLAN"]!=0b1 || 
+            activated_state_["ROBOT"]!=0b1 ||
+            activated_state_["REGISTRATION"]!=0b111)
         {
             ROS_YELLOW_STREAM("[ROTMS WARNING] The prerequisites are not met. Check before robot motion. (code 3)");
             return;
@@ -540,9 +564,9 @@ void Dispatcher::TargetVizCallBack(const std_msgs::String::ConstPtr& msg)
     std_msgs::String msg_out;
     if(msg->data.compare("_start__")==0) 
     {
-        if(activated_state_ != 0b1101 && activated_state_!= 0b1111)
+        if(activated_state_["REGISTRATION"]!=0b111)
         {
-            ROS_YELLOW_STREAM("Current state: " + std::to_string(activated_state_));
+            ROS_YELLOW_STREAM("Current state: " + std::to_string(activated_state_["REGISTRATION"]));
             ROS_YELLOW_STREAM("[ROTMS WARNING] Prerequisite is not met!");
             return;
         }

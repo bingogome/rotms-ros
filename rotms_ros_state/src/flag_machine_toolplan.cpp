@@ -35,6 +35,6 @@ FlagMachineToolplan::FlagMachineToolplan() : FlagMachineBase()
 bool FlagMachineToolplan::flag_toolpose_planned_;
 
 // Crucial operations status setters and getters
-void FlagMachineRegistration::PlanToolPose(){flag_toolpose_planned_=true;}
-void FlagMachineRegistration::UnPlanToolPose(){flag_toolpose_planned_=false;}
-bool FlagMachineRegistration::GetFlagToolPosePlanned(){return flag_toolpose_planned_;}
+void FlagMachineToolplan::PlanToolPose(){flag_toolpose_planned_=true;}
+void FlagMachineToolplan::UnPlanToolPose(){flag_toolpose_planned_=false;}
+bool FlagMachineToolplan::GetFlagToolPosePlanned(){return flag_toolpose_planned_;}

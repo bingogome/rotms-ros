@@ -37,12 +37,14 @@ SOFTWARE.
 
 #include "state_machine_registration.hpp"
 #include "state_machine_toolplan.hpp"
+#include "state_machine_robot.hpp"
 #include "dispatcher_utility.hpp"
 
 struct StateSet
 {
     const std::vector<StateRegistration*>& state_registration;
     const std::vector<StateToolplan*>& state_toolplan;
+    const std::vector<StateRobot*>& state_robot;
 };
 
 class Dispatcher
@@ -57,7 +59,10 @@ private:
     ros::NodeHandle& n_;
     struct StateSet& states_set_;
     std::map<std::string, int> activated_state_{ 
-        {"REGISTRATION", 0}, {"TOOLPLAN", 0} };
+        {"REGISTRATION", 0}, 
+        {"TOOLPLAN", 0},
+        {"ROBOT", 0}
+    };
 
     // Dispatcher receiving query signals
     ros::Subscriber sub_medimg_landmarkplanmeta_ = n_.subscribe(

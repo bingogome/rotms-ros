@@ -23,37 +23,22 @@ SOFTWARE.
 ***/
 
 #pragma once
-#include "state_machine.hpp"
-#include "flag_machine_toolplan.hpp"
-#include "operations_toolplan.hpp"
+#include <ros/ros.h>
+#include "operations.hpp"
 
-class StateToolplan : public StateBase
+class OperationsRobot : public OperationsBase
 {
-
 public:
 
-    StateToolplan(
-        int state_num,
-        std::vector<StateToolplan*>& v,
-        FlagMachineToolplan& f,
-        OperationsToolplan& ops);
-    virtual ~StateToolplan();
+    OperationsRobot(ros::NodeHandle& n);
 
-    FlagMachineToolplan& flags_;
+    // Cruicial operations
 
-    virtual int ToolPosePlanned();
+    // Secondary and intermediate operations
+    // void Operation();
+    // void Operation();
+    // void Operation();
 
-    virtual int ClearToolPosePlan();
-
-    virtual int ReinitState();
-
-    static bool CheckIfUniqueActivation(const std::vector<StateToolplan*>& states);
-    static int GetActivatedState(const std::vector<StateToolplan*>& states);
-
-protected:
-
-    OperationsToolplan& ops_;
-    const std::vector<StateToolplan*>& states_;
-    void Transition(int target_state, TransitionOps funcs);
+private:
 
 };

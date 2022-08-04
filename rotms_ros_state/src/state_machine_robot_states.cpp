@@ -24,4 +24,94 @@ SOFTWARE.
 
 #include "state_machine_robot_states.hpp"
 
+bool CheckFlagIntegrityRobot(const std::vector<StateRobot*>& states)
+{
+    int num_flag = 1;
+    std::vector<int> masks {0B1};
+    std::vector<std::function<bool()>> flags {
+        FlagMachineRobot::GetFlagRobotConnStatus
+    };
+    for(int i=0;i<states.size();i++)
+    {
+        if (states[i]->CheckActivated())
+        {
+            int state_num = states[i]->GetStateNum();
+            for (int idx=0;idx<num_flag;idx++)
+            {
+                bool temp = (bool)((state_num & masks[idx]) >> (num_flag-idx-1));
+                if (!(flags[idx]()==temp)) // detected inconsistence
+                    return false;
+            }
+        }
+    }
+    return true;
+}
 
+std::vector<StateRobot*> GetStatesVectorRobot(FlagMachineRobot& f, OperationsRobot& ops)
+{   // ALWAYS CLEAN THE MEMORY AFTER FINISHED USING THE RETURNED VECTOR!!!
+
+    int num_flag = 1;
+
+    std::vector<StateRobot*> vec;
+    
+    for(int i=0; i<std::pow(2.0,num_flag); i++)
+    {
+        switch (i)
+        {
+            case 0B0:
+            {
+                vec.push_back(new StateRobot0(vec,f,ops));
+                break;
+            }
+                
+            case 0B1:
+            {
+                vec.push_back(new StateRobot1(vec,f,ops));
+                break;
+            }
+                
+            default:
+            {
+                vec.push_back(new StateRobot(-1,vec,f,ops));
+                break;
+            }
+                
+        }
+    }
+
+    // check if state matches index
+    for(int i=0; i<std::pow(2.0,num_flag); i++)
+    {
+        if (i!=vec[i]->GetStateNum() && vec[i]->GetStateNum()!=-1) 
+            throw std::runtime_error(
+                "Wrong state number indexed!: \n" 
+                + std::to_string(i) + "\n" 
+                + "state num: " + std::to_string(vec[i]->GetStateNum()));
+    }
+
+    return vec;
+}
+
+// Initial state (default state)
+StateRobot0::StateRobot0(std::vector<StateRobot*>& v, FlagMachineRobot& f, OperationsRobot& ops) 
+    : StateRobot(0B0, v, f, ops) {Activate();} // default state
+
+int StateRobot0::ConnectRobot()
+{
+    TransitionOps funcs;
+    funcs.push_back(FlagMachineRobot::ConnectRobot);
+    Transition(0B1, funcs);
+    return 0B1;
+}
+
+//
+StateRobot1::StateRobot1(std::vector<StateRobot*>& v, FlagMachineRobot& f, OperationsRobot& ops) 
+    : StateRobot(0B1, v, f, ops) {} 
+
+int StateRobot1::DisconnectRobot()
+{
+    TransitionOps funcs;
+    funcs.push_back(FlagMachineRobot::DisconnectRobot);
+    Transition(0B0, funcs);
+    return 0B0;
+}

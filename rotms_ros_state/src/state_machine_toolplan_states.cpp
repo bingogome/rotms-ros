@@ -119,7 +119,7 @@ int StateToolplan0::ReinitState()
 
 //
 StateToolplan1::StateToolplan1(std::vector<StateToolplan*>& v, FlagMachineToolplan& f, OperationsToolplan& ops) 
-    : StateToolplan(0B0, v, f, ops) {Activate();} // default state
+    : StateToolplan(0B1, v, f, ops) {} 
 
 int StateToolplan1::ClearToolPosePlan()
 {

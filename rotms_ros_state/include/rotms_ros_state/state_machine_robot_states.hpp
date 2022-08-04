@@ -37,7 +37,7 @@ class StateRobot0 : public StateRobot
 public:
     StateRobot0(std::vector<StateRobot*>& v, FlagMachineRobot& f, OperationsRobot& ops);
 
-    int ToolPosePlanned() override;
+    int ConnectRobot() override;
 
 };
 
@@ -46,6 +46,6 @@ class StateRobot1 : public StateRobot
 public:
     StateRobot1(std::vector<StateRobot*>& v, FlagMachineRobot& f, OperationsRobot& ops);
 
-    int ClearToolPosePlan() override;
+    int DisconnectRobot() override;
 
 };
