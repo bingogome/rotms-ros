@@ -53,10 +53,15 @@ Dispatcher::Dispatcher(ros::NodeHandle& n, struct StateSet& states_set)
     bool integ;
     integ = CheckFlagIntegrityRegistration(states_set_.state_registration);
     ROS_GREEN_STREAM("[ROTMS INFO] Flag integrity check (Registration): " + std::to_string(integ));
+    if (!integ) ROS_RED_STREAM("[ROTMS ERROR] Flag integrity check (Registration) failed! ");
+
     integ = CheckFlagIntegrityToolplan(states_set_.state_toolplan);
     ROS_GREEN_STREAM("[ROTMS INFO] Flag integrity check (Tool plan): " + std::to_string(integ));
+    if (!integ) ROS_RED_STREAM("[ROTMS ERROR] Flag integrity check (Tool plan) failed! ");
+
     integ = CheckFlagIntegrityRobot(states_set_.state_robot);
     ROS_GREEN_STREAM("[ROTMS INFO] Flag integrity check (Robot): " + std::to_string(integ));
+    if (!integ) ROS_RED_STREAM("[ROTMS ERROR] Flag integrity check (Robot) failed! ");
 }
 
 void Dispatcher::LandmarkPlanMetaCallBack(const std_msgs::Int16::ConstPtr& msg)
@@ -258,6 +263,9 @@ void Dispatcher::UpdateRobotConnFlagCallBack(const std_msgs::Bool::ConstPtr& msg
 {
     if(msg->data) states_set_.state_robot[activated_state_["ROBOT"]]->flags_.ConnectRobot();
     else states_set_.state_robot[activated_state_["ROBOT"]]->flags_.DisconnectRobot();
+    bool integ = CheckFlagIntegrityRobot(states_set_.state_robot);
+    ROS_GREEN_STREAM("[ROTMS INFO] Flag integrity check (Robot): " + std::to_string(integ));
+    if (!integ) ROS_RED_STREAM("[ROTMS ERROR] Flag integrity check (Robot) failed! ");
 }
 
 void Dispatcher::RobConnectCallBack(const std_msgs::String::ConstPtr& msg)
