@@ -118,6 +118,7 @@ StateRegistration000::StateRegistration000(std::vector<StateRegistration*>& v, F
 int StateRegistration000::LandmarksPlanned()
 {
     TransitionOps funcs;
+    funcs.push_back(std::bind(&OperationsRegistration::OperationPlanLandmarks, ops_));
     funcs.push_back(FlagMachineRegistration::PlanLandmarks);
     Transition(0B100, funcs);
     return 0B100;
@@ -159,6 +160,7 @@ int StateRegistration100::ClearLandmarks()
 int StateRegistration100::LandmarksPlanned()
 {
     TransitionOps funcs;
+    funcs.push_back(std::bind(&OperationsRegistration::OperationPlanLandmarks, ops_));
     funcs.push_back(FlagMachineRegistration::PlanLandmarks);
     Transition(0B100, funcs);
     return 0B100;
@@ -187,6 +189,7 @@ StateRegistration110::StateRegistration110(std::vector<StateRegistration*>& v, F
 int StateRegistration110::LandmarksPlanned()
 {
     TransitionOps funcs;
+    funcs.push_back(std::bind(&OperationsRegistration::OperationPlanLandmarks, ops_));
     funcs.push_back(FlagMachineRegistration::PlanLandmarks);
     Transition(0B100, funcs);
     return 0B100;

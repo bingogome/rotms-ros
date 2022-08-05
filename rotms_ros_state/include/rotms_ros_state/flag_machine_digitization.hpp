@@ -24,6 +24,7 @@ SOFTWARE.
 
 #pragma once
 #include "flag_machine.hpp"
+#include <vector>
 
 class FlagMachineDigitization : public FlagMachineBase
 {
@@ -32,6 +33,25 @@ public:
 
     FlagMachineDigitization();
 
+    static void ComfirmAllDigitized();
+    static void UnconfirmAllDigitized();
+    static bool GetAllDigitized();
+
+    static void InitializeDigFlagArr();
+    static void ClearDigFlagArr();
+    static void ResetDigFlagArrAt(int idx);
+    static void SetDigFlagArrAt(int idx);
+    static void ResetDigFlagArrAt();
+    static void SetDigFlagArrAt();
+    static std::vector<bool> GetDigFlagArr();
+
+    static void SetTempDigitizationIdx(int idx);
+    static void ClearTempDigitizationIdx();
+
 private:
 
+    static bool flag_all_digitized_;
+    static std::vector<bool> temp_dig_flag_arr_;
+
+    static int temp_dig_idx_;
 };

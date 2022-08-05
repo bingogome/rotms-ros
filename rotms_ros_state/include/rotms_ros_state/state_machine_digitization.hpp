@@ -23,39 +23,38 @@ SOFTWARE.
 ***/
 
 #pragma once
-#include <ros/ros.h>
-#include <geometry_msgs/Pose.h>
-#include <std_msgs/String.h>
 
-#include "rotms_ros_msgs/PoseValid.h"
-#include "operations.hpp"
+#include "state_machine.hpp"
+#include "flag_machine_digitization.hpp"
+#include "operations_digitization.hpp"
 
-class OperationsRegistration : public OperationsBase
+class StateDigitization : public StateBase
 {
+
 public:
 
-    OperationsRegistration(ros::NodeHandle& n);
+    StateDigitization(
+        int state_num,
+        std::vector<StateDigitization*>& v,
+        FlagMachineDigitization& f,
+        OperationsDigitization& ops);
+    virtual ~StateDigitization();
 
-    // Cruicial operations
-    void OperationPlanLandmarks();
-    void OperationPlanToolPose();
-    void OperationRegistration();
+    FlagMachineDigitization& flags_;
 
-    void OperationResetRegistration();
-    void OperationResetToolPose();
-    void OperationUsePreRegistration();
+    virtual int RedigitizeOneLandmark();
+    virtual int ReinitState();
+    virtual int UsePrevDigAndRedigOneLandmark();
+    virtual int ConfirmAllDigitized();
+    virtual int DigitizeAllLandmarks();
 
-    // Secondary and intermediate operations
-    // void Operation();
-    // void Operation();
-    // void Operation();
+    static bool CheckIfUniqueActivation(const std::vector<StateDigitization*>& states);
+    static int GetActivatedState(const std::vector<StateDigitization*>& states);
 
-private:
+protected:
 
-    ros::Publisher pub_registration_ = 
-        n_.advertise<rotms_ros_msgs::PoseValid>("/Kinematics/TR_bodyref_body", 1, true);
-    ros::Publisher pub_toolpose_ = 
-        n_.advertise<rotms_ros_msgs::PoseValid>("/Kinematics/TR_body_cntct", 1, true);
+    OperationsDigitization& ops_;
+    const std::vector<StateDigitization*>& states_;
+    void Transition(int target_state, TransitionOps funcs);
 
 };
-

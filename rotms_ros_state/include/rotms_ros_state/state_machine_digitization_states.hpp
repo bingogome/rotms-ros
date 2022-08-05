@@ -23,39 +23,35 @@ SOFTWARE.
 ***/
 
 #pragma once
-#include <ros/ros.h>
-#include <geometry_msgs/Pose.h>
-#include <std_msgs/String.h>
 
-#include "rotms_ros_msgs/PoseValid.h"
-#include "operations.hpp"
+#include "state_machine_digitization.hpp"
+#include <vector>
 
-class OperationsRegistration : public OperationsBase
+bool CheckFlagIntegrityDigitization(const std::vector<StateDigitization*>& states);
+
+std::vector<StateDigitization*> GetStatesVectorDigitization(
+    FlagMachineDigitization& f, OperationsDigitization& ops);
+
+class StateDigitization0 : public StateDigitization
 {
 public:
+    StateDigitization0(std::vector<StateDigitization*>& v, FlagMachineDigitization& f, OperationsDigitization& ops);
 
-    OperationsRegistration(ros::NodeHandle& n);
-
-    // Cruicial operations
-    void OperationPlanLandmarks();
-    void OperationPlanToolPose();
-    void OperationRegistration();
-
-    void OperationResetRegistration();
-    void OperationResetToolPose();
-    void OperationUsePreRegistration();
-
-    // Secondary and intermediate operations
-    // void Operation();
-    // void Operation();
-    // void Operation();
-
-private:
-
-    ros::Publisher pub_registration_ = 
-        n_.advertise<rotms_ros_msgs::PoseValid>("/Kinematics/TR_bodyref_body", 1, true);
-    ros::Publisher pub_toolpose_ = 
-        n_.advertise<rotms_ros_msgs::PoseValid>("/Kinematics/TR_body_cntct", 1, true);
+    int RedigitizeOneLandmark(int idx) override;
+    int ReinitState() override;
+    int UsePrevDigAndRedigOneLandmark(int idx) override;
+    int ConfirmAllDigitized() override;
+    int DigitizeAllLandmarks() override;
 
 };
 
+class StateDigitization1 : public StateDigitization
+{
+public:
+    StateDigitization1(std::vector<StateDigitization*>& v, FlagMachineDigitization& f, OperationsDigitization& ops);
+
+    int RedigitizeOneLandmark(int idx) override;
+    int UsePrevDigAndRedigOneLandmark(int idx) override;
+    int ReinitState() override;
+
+};
