@@ -70,7 +70,7 @@ private:
     ros::Subscriber sub_medimg_landmarkplanfids_ = n_.subscribe(
         "/MedImg/LandmarkPlanFids", 10, &Dispatcher::LandmarkPlanFidsCallBack, this);
     ros::Subscriber sub_medimg_autodigitization_ = n_.subscribe(
-        "/MedImg/StartAct", 2, &Dispatcher::AutodigitizationCallBack, this);
+        "/MedImg/StartAct", 2, &Dispatcher::DigitizationCallBack, this);
     ros::Subscriber sub_medimg_registration_ = n_.subscribe(
         "/MedImg/StartAct", 2, &Dispatcher::RegistrationCallBack, this);
     ros::Subscriber sub_medimg_tre_ = n_.subscribe(
@@ -128,7 +128,7 @@ private:
         
     // Cruicial operations (operations that affect main user logic and its states/flags/operations)
     void LandmarkPlanMetaCallBack(const std_msgs::Int16::ConstPtr& msg);
-    void AutodigitizationCallBack(const std_msgs::String::ConstPtr& msg);
+    void DigitizationCallBack(const std_msgs::String::ConstPtr& msg);
     void RegistrationCallBack(const std_msgs::String::ConstPtr& msg);
     void ToolPoseOrientCallBack(const geometry_msgs::Quaternion::ConstPtr& msg);
     void ToolPoseTransCallBack(const geometry_msgs::Point::ConstPtr& msg);

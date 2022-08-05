@@ -81,6 +81,7 @@ FuncMap GetFuncMapMedImg()
     fm["START_USE_PREV_REGISTRATION"] = StartUsePrevRegistration;
     fm["START_TRE_CALCULATION_START"] = StartTRECalculation;
     fm["START_TRE_CALCULATION_STOP"] = StopTRECalculation;
+    fm["START_LANDMARK_DIG_NUM"] = LandmarkDigitizeIndividual;
 
     fm["LANDMARK_CURRENT_ON_IMG"] = LandmarkCurrentOnImg;
     fm["LANDMARK_NUM_OF_ON_IMG"] = LandmarkNumOnImg;
@@ -129,6 +130,14 @@ void StopTRECalculation(std::string& ss, PublisherVec& pubs)
     // pubs[0] is the publisher /MedImg/StartAct
     std_msgs::String msg;
     msg.data = "_stoptre__";
+    pubs[0].publish(msg);
+}
+
+void LandmarkDigitizeIndividual(std::string& ss, PublisherVec& pubs)
+{
+    // pubs[0] is the publisher /MedImg/StartAct
+    std_msgs::String msg;
+    msg.data = "digitize_" + ss;
     pubs[0].publish(msg);
 }
 

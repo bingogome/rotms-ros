@@ -140,12 +140,20 @@ void Dispatcher::ResetVolatileDataCacheLandmarks()
     datacache_.landmark_coords.clear();
 }
 
-void Dispatcher::AutodigitizationCallBack(const std_msgs::String::ConstPtr& msg)
+void Dispatcher::DigitizationCallBack(const std_msgs::String::ConstPtr& msg)
 {
-    if (!msg->data.compare("_autodigitize__")==0) return;
+    if (msg->data.compare("_autodigitize__")==0)
+    {
+        int new_state_registration = states_set_.state_registration[activated_state_["REGISTRATION"]]->LandmarksDigitized();
+        Dispatcher::StateTransitionCheck(new_state_registration, "REGISTRATION");
+    }
+    else
+    {
+        if(!msg->data.rfind("digitize_",0)==0) return;
+        int dig_idx = std::stoi(msg->data.substr(9));
+        ROS_GREEN_STREAM("[ROTMS INFO] Digitize individual landmark: " + std::to_string(dig_idx));
+    }
     
-    int new_state_registration = states_set_.state_registration[activated_state_["REGISTRATION"]]->LandmarksDigitized();
-    Dispatcher::StateTransitionCheck(new_state_registration, "REGISTRATION");
 }
 
 void Dispatcher::RegistrationCallBack(const std_msgs::String::ConstPtr& msg)

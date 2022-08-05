@@ -9,10 +9,11 @@
     "START_USE_PREV_REGISTRATION": "start_useprevreg",
     "START_TRE_CALCULATION_START": "tre_startcalcuxx",
     "START_TRE_CALCULATION_STOP": "tre_stopcalcuxxx",
+    "START_LANDMARK_DIG_NUM": "img_dig_digitize",
 
     "LANDMARK_CURRENT_ON_IMG": "img_fid_pntxxxxx",
     "LANDMARK_NUM_OF_ON_IMG": "img_fid_numxxxxx",
-    "LANDMARK_LAST_RECEIVED": "img_fig_lastrecv",
+    "LANDMARK_LAST_RECEIVED": "img_fid_lastrecv",
 
     "TARGET_POSE_ORIENTATION": "target_rotxxxxxx",
     "TARGET_POSE_TRANSLATION": "target_tslxxxxxx",
