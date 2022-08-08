@@ -60,6 +60,7 @@ private:
     struct StateSet& states_set_;
     std::map<std::string, int> activated_state_{ 
         {"REGISTRATION", 0}, 
+        {"DIGITIZATION", 0},
         {"TOOLPLAN", 0},
         {"ROBOT", 0}
     };
@@ -68,7 +69,7 @@ private:
     ros::Subscriber sub_medimg_landmarkplanmeta_ = n_.subscribe(
         "/MedImg/LandmarkPlanMeta", 2, &Dispatcher::LandmarkPlanMetaCallBack, this);
     ros::Subscriber sub_medimg_landmarkplanfids_ = n_.subscribe(
-        "/MedImg/LandmarkPlanFids", 10, &Dispatcher::LandmarkPlanFidsCallBack, this);
+        "/MedImg/LandmarkPlanFids", 10, &Dispatcher::LandmarkPlanLandmarksCallBack, this);
     ros::Subscriber sub_medimg_autodigitization_ = n_.subscribe(
         "/MedImg/StartAct", 2, &Dispatcher::DigitizationCallBack, this);
     ros::Subscriber sub_medimg_registration_ = n_.subscribe(
@@ -134,7 +135,7 @@ private:
     void ToolPoseTransCallBack(const geometry_msgs::Point::ConstPtr& msg);
 
     // Secondary and intermediate operations
-    void LandmarkPlanFidsCallBack(const std_msgs::Float32MultiArray::ConstPtr& msg);
+    void LandmarkPlanLandmarksCallBack(const std_msgs::Float32MultiArray::ConstPtr& msg);
     void SessionReinitCallBack(const std_msgs::String::ConstPtr& msg);
     void TargetVizCallBack(const std_msgs::String::ConstPtr& msg);
     void RegistrationResidualCheck();

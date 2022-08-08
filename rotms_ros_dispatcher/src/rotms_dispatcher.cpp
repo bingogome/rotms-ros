@@ -80,15 +80,18 @@ void Dispatcher::LandmarkPlanMetaCallBack(const std_msgs::Int16::ConstPtr& msg)
             return;
         }
 
-        SaveLandmarkPlanData(datacache_, packpath + "/share/cache/landmarkplan.yaml");
-        SaveLandmarkPlanData(datacache_, packpath + "/share/data/landmarkplan_" + GetTimeString() + ".yaml");
+        SaveLandmarkPlanData(datacache_, packpath + "/share/cache/landmarkplan.yaml", GetTimeString());
+        SaveLandmarkPlanData(datacache_, packpath + "/share/data/landmarkplan_" + GetTimeString() + ".yaml", GetTimeString());
 
         ROS_GREEN_STREAM("[ROTMS INFO] Landmarks cached.");
 
         Dispatcher::ResetVolatileDataCacheLandmarks(); // reset
 
-        int new_state = states_set_.state_registration[activated_state_["REGISTRATION"]]->LandmarksPlanned();
-        Dispatcher::StateTransitionCheck(new_state, "REGISTRATION");
+        // First plan landmarks, then init digitization state machine
+        int new_state_registration = states_set_.state_registration[activated_state_["REGISTRATION"]]->LandmarksPlanned();
+        Dispatcher::StateTransitionCheck(new_state_registration, "REGISTRATION");
+        int new_state_digitization = states_set_.state_digitization[activated_state_["DIGITIZATION"]]->ReinitState();
+        Dispatcher::StateTransitionCheck(new_state_digitization, "DIGITIZATION");
     }
     else
     {
@@ -96,7 +99,7 @@ void Dispatcher::LandmarkPlanMetaCallBack(const std_msgs::Int16::ConstPtr& msg)
     }
 }
 
-void Dispatcher::LandmarkPlanFidsCallBack(const std_msgs::Float32MultiArray::ConstPtr& msg)
+void Dispatcher::LandmarkPlanLandmarksCallBack(const std_msgs::Float32MultiArray::ConstPtr& msg)
 {
     if(msg->data[0]==datacache_.landmark_coords.size())
     {
@@ -120,10 +123,11 @@ void Dispatcher::SessionReinitCallBack(const std_msgs::String::ConstPtr& msg)
 
     // Reset state
     int new_state_registration = states_set_.state_registration[activated_state_["REGISTRATION"]]->ReinitState();
-    int new_state_toolplan = states_set_.state_toolplan[activated_state_["TOOLPLAN"]]->ReinitState();
-
     Dispatcher::StateTransitionCheck(new_state_registration, "REGISTRATION");
+    int new_state_toolplan = states_set_.state_toolplan[activated_state_["TOOLPLAN"]]->ReinitState();
     Dispatcher::StateTransitionCheck(new_state_toolplan, "TOOLPLAN");
+    int new_state_digitization = states_set_.state_digitization[activated_state_["DIGITIZATION"]]->ReinitState();
+    Dispatcher::StateTransitionCheck(new_state_digitization, "DIGITIZATION");
 
     // Reinit calibration data
     std_msgs::String msg_out;
@@ -144,14 +148,31 @@ void Dispatcher::DigitizationCallBack(const std_msgs::String::ConstPtr& msg)
 {
     if (msg->data.compare("_autodigitize__")==0)
     {
-        int new_state_registration = states_set_.state_registration[activated_state_["REGISTRATION"]]->LandmarksDigitized();
-        Dispatcher::StateTransitionCheck(new_state_registration, "REGISTRATION");
+        int new_state_digitization = states_set_.state_digitization[activated_state_["DIGITIZATION"]]->DigitizeAllLandmarks();
+        Dispatcher::StateTransitionCheck(new_state_digitization, "DIGITIZATION");
     }
     else
     {
-        if(!msg->data.rfind("digitize_",0)==0) return;
-        int dig_idx = std::stoi(msg->data.substr(9));
-        ROS_GREEN_STREAM("[ROTMS INFO] Digitize individual landmark: " + std::to_string(dig_idx));
+        if(msg->data.rfind("digitize_one_",0)==0)
+        {
+            int dig_idx = std::stoi(msg->data.substr(13));
+            ROS_GREEN_STREAM("[ROTMS INFO] Digitize individual landmark: " + std::to_string(dig_idx));
+            int new_state_digitization = states_set_.state_digitization[activated_state_["DIGITIZATION"]]->RedigitizeOneLandmark();
+            Dispatcher::StateTransitionCheck(new_state_digitization, "DIGITIZATION");
+        }
+        if(msg->data.rfind("use_prev_digitize_digitize_one_",0)==0)
+        {
+            int dig_idx = std::stoi(msg->data.substr(31));
+            ROS_GREEN_STREAM("[ROTMS INFO] Digitize individual landmark: " + std::to_string(dig_idx));
+            int new_state_digitization = states_set_.state_digitization[activated_state_["DIGITIZATION"]]->UsePrevDigAndRedigOneLandmark();
+            Dispatcher::StateTransitionCheck(new_state_digitization, "DIGITIZATION");
+        }
+        else if (msg->data.compare("use_prev_digitize")==0)
+        {
+            int new_state_digitization = states_set_.state_digitization[activated_state_["DIGITIZATION"]]->ConfirmAllDigitized();
+            Dispatcher::StateTransitionCheck(new_state_digitization, "DIGITIZATION");
+        }
+        
     }
     
 }
@@ -617,4 +638,11 @@ void Dispatcher::StateTransitionCheck(int new_state, std::string s)
         ROS_YELLOW_STREAM("[ROTMS WARNING] State transition not possible.");
         ROS_YELLOW_STREAM("[ROTMS WARNING] Make sure the operation dependencies are met.");
     }
+    ROS_GREEN_STREAM("[ROTMS INFO] Current states: Registration, Digitization, Toolplan, Robot");
+    ROS_GREEN_STREAM("[ROTMS INFO] " + 
+        std::to_string(activated_state_["REGISTRATION"]) + ", "+ 
+        std::to_string(activated_state_["DIGITIZATION"]) + ", "+ 
+        std::to_string(activated_state_["TOOLPLAN"]) + ", "+ 
+        std::to_string(activated_state_["ROBOT"])
+        );
 }

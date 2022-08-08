@@ -77,6 +77,7 @@ public:
 
     int ClearRegistration() override;
     int ClearLandmarks() override;
+    int ClearDigitization() override;
     int ReinitState() override;
     int UsePrevRegister() override;
 };

@@ -23,6 +23,7 @@ SOFTWARE.
 ***/
 
 #include "operations_digitization.hpp"
+#include <std_msgs/Int32.h>
 
 void OperationsDigitization::OperationDigitizationAll()
 {
@@ -93,7 +94,50 @@ void OperationsDigitization::ResetOpsVolatileDataCache()
 
 void OperationsDigitization::OperationDigitizeOne()
 {
+    if(temp_dig_idx_==-1)
+    {
+        ROS_RED_STREAM("[ROTMS ERROR] Temp digitization index is not set!");
+        return;
+    }
+
+    // Read YAML file in
+    std::string packpath = ros::package::getPath("rotms_ros_operations");
+    YAML::Node f2 = YAML::LoadFile(packpath + "/share/cache/landmarkdig.yaml");
+    YAML::Node ff2 = f2["DIGITIZED"];
+    std::vector<std::vector<double>> clouddig;
+
+    for(YAML::const_iterator it=ff2.begin(); it!=ff2.end(); ++it)
+    {
+        YAML::Node value = it->second;
+        std::vector<double> temppnt = {
+            value["x"].as<double>(),
+            value["y"].as<double>(),
+            value["z"].as<double>()
+        };
+        clouddig.push_back(temppnt);
+    }
+    ROS_GREEN_STREAM("[ROTMS INFO] Digitized landmark size: " + std::to_string(clouddig.size()));
     
+    // Digitize one from sensor
+    // Beep 2 times for each landmark
+    ros::Publisher pub_beep = n_.advertise<std_msgs::Int32>("/NDI/beep", 10);
+    std_msgs::Int32 beep_num; beep_num.data = 2;
+    pub_beep.publish(beep_num); ros::spinOnce();
+    // Wait for a 
+    geometry_msgs::PointConstPtr curdigPtr = ros::topic::waitForMessage<geometry_msgs::Point>("/Kinematics/T_bodyref_ptrtip");
+    std::vector<double> curlandmark{curdigPtr->x, curdigPtr->y, curdigPtr->z};
+    clouddig[temp_dig_idx_] = curlandmark;
+    ROS_GREEN_STREAM("[ROTMS INFO] User digitized one point " + std::to_string(temp_dig_idx_));
+
+    datacache_.landmark_total = clouddig.size();
+    datacache_.landmarkdig = clouddig;
+
+    // Cache
+    SaveLandmarkDigData(datacache_, packpath + "/share/cache/landmarkdig.yaml");
+
+    // Reset temp data
+    OperationsDigitization::ResetOpsVolatileDataCache();
+    OperationsDigitization::ClearTempDigitizationIdx();
 }
 
 void OperationsDigitization::SetTempDigitizationIdx(int idx)

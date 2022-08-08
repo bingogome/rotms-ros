@@ -53,6 +53,10 @@ void StopTRECalculation(std::string& ss, PublisherVec& pubs);
 
 void LandmarkDigitizeIndividual(std::string& ss, PublisherVec& pubs);
 
+void LandmarkUsePrevAndDigitizeIndividual(std::string& ss, PublisherVec& pubs);
+
+void LandmarkUsePrevDigitize(std::string& ss, PublisherVec& pubs);
+
 void LandmarkCurrentOnImg(std::string& ss, PublisherVec& pubs);
 
 void LandmarkNumOnImg(std::string& ss, PublisherVec& pubs);

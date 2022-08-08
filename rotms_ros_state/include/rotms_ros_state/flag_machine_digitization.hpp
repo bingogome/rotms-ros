@@ -33,7 +33,7 @@ public:
 
     FlagMachineDigitization();
 
-    static void ComfirmAllDigitized();
+    static void ConfirmAllDigitized();
     static void UnconfirmAllDigitized();
     static bool GetAllDigitized();
 
@@ -47,6 +47,8 @@ public:
 
     static void SetTempDigitizationIdx(int idx);
     static void ClearTempDigitizationIdx();
+    static void CheckAndUpdateFlag();
+    static void SetDigFlagArrAll();
 
 private:
 

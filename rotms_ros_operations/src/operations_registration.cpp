@@ -25,7 +25,6 @@ SOFTWARE.
 #include <ros/ros.h>
 #include <ros/package.h>
 #include <geometry_msgs/Pose.h>
-#include <std_msgs/Int32.h>
 #include <std_msgs/String.h>
 
 #include <tuple>
@@ -35,6 +34,7 @@ SOFTWARE.
 #include <iostream>
 #include <stdexcept>
 #include <yaml-cpp/yaml.h>
+#include <cmath>
 
 #include "registration_funcs.hpp"
 #include "operations_registration.hpp"
@@ -46,9 +46,57 @@ OperationsRegistration::OperationsRegistration(ros::NodeHandle& n) : OperationsB
 
 void OperationsRegistration::OperationPlanLandmarks()
 {
-    // The operation has been done by dispatcher and cached to /share/cache
-    // no need to call this anymore.
-    // Perhaps future change 
+    // The operation of caching planned landmarks has been done by dispatcher and cached to /share/cache/landmarkplan.yaml
+
+    // Only need to initialize /share/cache/landmarkdig.yaml
+    // Note: have to be called after the landmarkplan.yaml is cached!
+
+    std::string packpath = ros::package::getPath("rotms_ros_operations");
+    YAML::Node f = YAML::LoadFile(packpath + "/share/cache/landmarkplan.yaml");
+    std::string time_stamp = f["TIMESTAMP"].as<std::string>();
+    std::string now_time = GetTimeString();
+    double diff_t = GetTimeDiff(time_stamp, now_time);
+    if ( !(diff_t>0 && diff_t<1) )
+    {
+        ROS_YELLOW_STREAM("[ROTMS WARNING] Time stamp of planned landmarks is not recent! Failed to initialize landmarkdig!");
+        return;
+    }
+
+    // Init landmarkdig.yaml
+    int num_of_landmarks = f["NUM"].as<int>();
+
+    std::string packpath = ros::package::getPath("rotms_ros_operations");
+    YAML::Node f2 = YAML::LoadFile(packpath + "/share/cache/landmarkdig.yaml");
+    int num_of_landmarks2 = f2["NUM"].as<int>();
+
+    if (num_of_landmarks!=num_of_landmarks2)
+    {
+        std::ofstream filesave(packpath + "/share/cache/landmarkdig.yaml");
+        if(filesave.is_open())
+        {
+            filesave << "NUM: " << num_of_landmarks << "\n";
+            filesave << "\n";
+            filesave << "DIGITIZED: # in m\n";
+            filesave << "\n";
+            filesave << "  {\n";
+            for(int i=0;i<num_of_landmarks;i++)
+            {
+                filesave << "    p" << i << ": ";
+                filesave << "{";
+                filesave << "x: " << nan("1") << ", ";
+                filesave << "y: " << nan("1") << ", ";
+                filesave << "z: " << nan("1");
+                if (i==num_of_landmarks-1)
+                    filesave << "}\n";
+                else
+                    filesave << "},\n";
+            }
+            filesave << "  }\n";
+            filesave << " \n";
+            filesave << "TIMESTAMP: " << GetTimeString() << "\n";
+            filesave.close();
+        }
+    }
 }
 
 void OperationsRegistration::OperationRegistration()

@@ -47,7 +47,10 @@ bool CheckFlagIntegrityDigitization(const std::vector<StateDigitization*>& state
     return true;
 }
 
-std::vector<StateDigitization*> GetStatesVectorDigitization(FlagMachineDigitization& f, OperationsDigitization& ops)
+std::vector<StateDigitization*> GetStatesVectorDigitization(
+    FlagMachineDigitization& f, 
+    OperationsDigitization& ops, 
+    std::vector<StateRegistration*>& states_upper_registration)
 {   // ALWAYS CLEAN THE MEMORY AFTER FINISHED USING THE RETURNED VECTOR!!!
 
     int num_flag = 1;
@@ -60,19 +63,19 @@ std::vector<StateDigitization*> GetStatesVectorDigitization(FlagMachineDigitizat
         {
             case 0B0:
             {
-                vec.push_back(new StateDigitization0(vec,f,ops));
+                vec.push_back(new StateDigitization0(vec,states_upper_registration,f,ops));
                 break;
             }
                 
             case 0B1:
             {
-                vec.push_back(new StateDigitization1(vec,f,ops));
+                vec.push_back(new StateDigitization1(vec,states_upper_registration,f,ops));
                 break;
             }
                 
             default:
             {
-                vec.push_back(new StateDigitization(-1,vec,f,ops));
+                vec.push_back(new StateDigitization(-1,vec,states_upper_registration,f,ops));
                 break;
             }
                 
@@ -93,24 +96,177 @@ std::vector<StateDigitization*> GetStatesVectorDigitization(FlagMachineDigitizat
 }
 
 // Initial state (default state)
-StateDigitization0::StateDigitization0(std::vector<StateDigitization*>& v, FlagMachineDigitization& f, OperationsDigitization& ops) 
-    : StateDigitization(0B0, v, f, ops) {Activate();} // default state
+StateDigitization0::StateDigitization0(
+    std::vector<StateDigitization*>& v, 
+    std::vector<StateRegistration*>& states_upper_registration,
+    FlagMachineDigitization& f, 
+    OperationsDigitization& ops
+    ) 
+    : StateDigitization(0B0, v, states_upper_registration, f, ops) {Activate();} // default state
 
 int StateDigitization0::RedigitizeOneLandmark(int idx)
 {
     ops_.SetTempDigitizationIdx(idx);
+    flags_.SetTempDigitizationIdx(idx);
 
     TransitionOps funcs;
+    funcs.push_back(std::bind(&FlagMachineDigitization::ResetDigFlagArrAt, flags_));
+    funcs.push_back(FlagMachineDigitization::UnconfirmAllDigitized);
     funcs.push_back(std::bind(&OperationsDigitization::OperationDigitizeOne, ops_));
-    funcs.push_back(FlagMachineDigitization::);
+    funcs.push_back(std::bind(&FlagMachineDigitization::SetDigFlagArrAt, flags_));
+    funcs.push_back(std::bind(&FlagMachineDigitization::CheckAndUpdateFlag, flags_));
     Transition(0B0, funcs);
 
     ops_.ClearTempDigitizationIdx();
-    return 0B1;
+    flags_.ClearTempDigitizationIdx();
+
+    if(flags_.GetAllDigitized()) 
+        return ConfirmAllDigitized();
+    else
+        return 0B0;
+}
+
+int StateDigitization0::ReinitState()
+{
+    TransitionOps funcs;
+    funcs.push_back(std::bind(&FlagMachineDigitization::InitializeDigFlagArr, flags_));
+    funcs.push_back(std::bind(&FlagMachineDigitization::ClearTempDigitizationIdx, flags_));
+    Transition(0B0, funcs);
+    return 0B0;
+}
+
+int StateDigitization0::UsePrevDigAndRedigOneLandmark(int idx)
+{
+    ops_.SetTempDigitizationIdx(idx);
+    flags_.SetTempDigitizationIdx(idx);
+
+    TransitionOps funcs;
+    funcs.push_back(std::bind(&FlagMachineDigitization::ResetDigFlagArrAt, flags_));
+    funcs.push_back(FlagMachineDigitization::UnconfirmAllDigitized);
+    funcs.push_back(std::bind(&OperationsDigitization::OperationDigitizeOne, ops_));
+    funcs.push_back(std::bind(&FlagMachineDigitization::SetDigFlagArrAll, flags_));
+    funcs.push_back(std::bind(&FlagMachineDigitization::CheckAndUpdateFlag, flags_));
+
+    // Stay at current state first, wait until emit signal to upper state machine.
+    Transition(0B0, funcs);
+
+    ops_.ClearTempDigitizationIdx();
+    flags_.ClearTempDigitizationIdx();
+
+    return ConfirmAllDigitized();
+
+}
+
+int StateDigitization0::ConfirmAllDigitized()
+{
+    TransitionOps funcs;
+    funcs.push_back(std::bind(&FlagMachineDigitization::SetDigFlagArrAll, flags_));
+    funcs.push_back(std::bind(&FlagMachineDigitization::CheckAndUpdateFlag, flags_));
+    
+    // Stay at current state first, wait until emit signal to upper state machine.
+    Transition(0B0, funcs);
+
+    // Emit signal to upper state machine
+    int activated_state_registration = StateRegistration::GetActivatedState(states_upper_registration_);
+    activated_state_registration = states_upper_registration_[activated_state_registration]->LandmarksDigitized();
+    if (activated_state_registration!=-1)
+    {
+        funcs.clear();
+        Transition(0B1, funcs);
+        return 0B1;
+    }
+    else
+        return -1;
+}
+
+int StateDigitization0::DigitizeAllLandmarks()
+{
+    TransitionOps funcs;
+    funcs.push_back(FlagMachineDigitization::ClearDigFlagArr);
+    funcs.push_back(FlagMachineDigitization::UnconfirmAllDigitized);
+    funcs.push_back(std::bind(&OperationsDigitization::OperationDigitizationAll, ops_));
+    funcs.push_back(std::bind(&FlagMachineDigitization::SetDigFlagArrAll, flags_));
+    funcs.push_back(std::bind(&FlagMachineDigitization::CheckAndUpdateFlag, flags_));
+    // Stay at current state first, wait until emit signal to upper state machine.
+    Transition(0B0, funcs);
+    
+    // Emit signal to upper state machine
+    int activated_state_registration = StateRegistration::GetActivatedState(states_upper_registration_);
+    activated_state_registration = states_upper_registration_[activated_state_registration]->LandmarksDigitized();
+    if (activated_state_registration!=-1)
+    {
+        funcs.clear();
+        Transition(0B1, funcs);
+        return 0B1;
+    }
+    else
+        return -1;
 }
 
 //
-StateDigitization1::StateDigitization1(std::vector<StateDigitization*>& v, FlagMachineDigitization& f, OperationsDigitization& ops) 
-    : StateDigitization(0B1, v, f, ops) {} 
+StateDigitization1::StateDigitization1(
+    std::vector<StateDigitization*>& v, 
+    std::vector<StateRegistration*>& states_upper_registration,
+    FlagMachineDigitization& f, 
+    OperationsDigitization& ops
+    ) 
+    : StateDigitization(0B1, v, states_upper_registration, f, ops) {} 
 
-int StateDigitization1::
+int StateDigitization1::RedigitizeOneLandmark(int idx)
+{
+    ops_.SetTempDigitizationIdx(idx);
+    flags_.SetTempDigitizationIdx(idx);
+
+    TransitionOps funcs;
+    funcs.push_back(std::bind(&FlagMachineDigitization::ResetDigFlagArrAt, flags_));
+    funcs.push_back(FlagMachineDigitization::UnconfirmAllDigitized);
+    funcs.push_back(std::bind(&OperationsDigitization::OperationDigitizeOne, ops_));
+    funcs.push_back(std::bind(&FlagMachineDigitization::SetDigFlagArrAt, flags_));
+    funcs.push_back(std::bind(&FlagMachineDigitization::CheckAndUpdateFlag, flags_));
+    Transition(0B1, funcs);
+
+    ops_.ClearTempDigitizationIdx();
+    flags_.ClearTempDigitizationIdx();
+
+    return 0B1;
+}
+
+int StateDigitization1::UsePrevDigAndRedigOneLandmark(int idx)
+{
+    ops_.SetTempDigitizationIdx(idx);
+    flags_.SetTempDigitizationIdx(idx);
+
+    TransitionOps funcs;
+    funcs.push_back(std::bind(&FlagMachineDigitization::ResetDigFlagArrAt, flags_));
+    funcs.push_back(FlagMachineDigitization::UnconfirmAllDigitized);
+    funcs.push_back(std::bind(&OperationsDigitization::OperationDigitizeOne, ops_));
+    funcs.push_back(std::bind(&FlagMachineDigitization::SetDigFlagArrAll, flags_));
+    funcs.push_back(std::bind(&FlagMachineDigitization::CheckAndUpdateFlag, flags_));
+    Transition(0B1, funcs);
+
+    ops_.ClearTempDigitizationIdx();
+    flags_.ClearTempDigitizationIdx();
+
+    return 0B1;
+}
+
+int StateDigitization1::ReinitState()
+{
+    TransitionOps funcs;
+    funcs.push_back(std::bind(&FlagMachineDigitization::InitializeDigFlagArr, flags_));
+    funcs.push_back(std::bind(&FlagMachineDigitization::ClearTempDigitizationIdx, flags_));
+    // Stay at current state first, wait until emit signal to upper state machine.
+    Transition(0B1, funcs);
+    
+    // Emit signal to upper state machine
+    int activated_state_registration = StateRegistration::GetActivatedState(states_upper_registration_);
+    activated_state_registration = states_upper_registration_[activated_state_registration]->ClearDigitization();
+    if (activated_state_registration!=-1)
+    {
+        funcs.clear();
+        Transition(0B0, funcs);
+        return 0B0;
+    }
+    else
+        return -1;
+}

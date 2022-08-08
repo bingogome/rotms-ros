@@ -145,7 +145,6 @@ StateRegistration100::StateRegistration100(std::vector<StateRegistration*>& v, F
 int StateRegistration100::LandmarksDigitized()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&OperationsRegistration::OperationDigitization, ops_));
     funcs.push_back(FlagMachineRegistration::DigitizeLandmarks);
     Transition(0B110, funcs);
     return 0B110;
@@ -220,7 +219,6 @@ int StateRegistration110::ClearLandmarks()
 int StateRegistration110::LandmarksDigitized()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&OperationsRegistration::OperationDigitization, ops_));
     funcs.push_back(FlagMachineRegistration::DigitizeLandmarks);
     Transition(0B110, funcs);
     return 0B110;
@@ -262,6 +260,14 @@ int StateRegistration111::ClearLandmarks()
     funcs.push_back(FlagMachineRegistration::UnPlanLandmarks);
     Transition(0B000, funcs);
     return 0B000;
+}
+int StateRegistration111::ClearDigitization()
+{
+    TransitionOps funcs;
+    funcs.push_back(FlagMachineRegistration::UnCompleteRegistration);
+    funcs.push_back(FlagMachineRegistration::UnDigitizeLandmarks);
+    Transition(0B100, funcs);
+    return 0B100;
 }
 int StateRegistration111::ReinitState()
 {

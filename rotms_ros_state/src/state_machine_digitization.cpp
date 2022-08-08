@@ -31,8 +31,14 @@ SOFTWARE.
 #include <vector>
 #include <functional>
 
-StateDigitization::StateDigitization(int state_num, std::vector<StateDigitization*>& v, FlagMachineDigitization& f, OperationsDigitization& ops) 
-    : StateBase(state_num), states_(v), flags_(f), ops_(ops)
+StateDigitization::StateDigitization(
+    int state_num, 
+    std::vector<StateDigitization*>& v,
+    std::vector<StateRegistration*>& states_upper_registration,
+    FlagMachineDigitization& f, 
+    OperationsDigitization& ops
+    ) 
+    : StateBase(state_num), states_(v), states_upper_registration_(states_upper_registration), flags_(f), ops_(ops)
 {}
 
 StateDigitization::~StateDigitization()

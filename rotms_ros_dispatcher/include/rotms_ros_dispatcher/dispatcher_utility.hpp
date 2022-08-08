@@ -39,12 +39,13 @@ struct TempDataCache
     std::vector<double> toolpose_r;
 };
 
-void SaveLandmarkPlanData(struct TempDataCache datacache, std::string f);
+void SaveLandmarkPlanData(struct TempDataCache datacache, std::string f, std::string time_stamp);
 void SaveToolPoseData(struct TempDataCache datacache, std::string f);
 void SaveCurrentJntsAsInit(std_msgs::Float32MultiArray jnts, std::string f);
 std::vector<double> ReadJntsFromConfig(std::string f);
 std::string FormatDouble2String(double a, int dec);
 std::string GetTimeString();
+double GetTimeDiff(std::string start, std::string end);
 std::vector<tf2::Vector3> ReadPointCloudFromYAML(std::string f, std::string pnt);
 tf2::Transform ReadTransformFromYAML(std::string f);
 double GetPairPointResidual(

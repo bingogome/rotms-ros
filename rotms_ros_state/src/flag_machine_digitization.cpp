@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
+#include "dispatcher_utility.hpp"
 #include "flag_machine.hpp"
 #include "flag_machine_digitization.hpp"
 #include <vector>
@@ -30,21 +31,28 @@ SOFTWARE.
 FlagMachineDigitization::FlagMachineDigitization() : FlagMachineBase()
 {
     flag_all_digitized_ = false;
-    temp_dig_idx_ = -1
+    temp_dig_idx_ = -1;
 }
 
 bool FlagMachineDigitization::flag_all_digitized_;
 std::vector<bool> FlagMachineDigitization::temp_dig_flag_arr_;
 int temp_dig_idx_;
 
-void FlagMachineDigitization::ComfirmAllDigitized(){flag_all_digitized_=true;}
+void FlagMachineDigitization::ConfirmAllDigitized(){flag_all_digitized_=true;}
 void FlagMachineDigitization::UnconfirmAllDigitized(){flag_all_digitized_=false;}
 bool FlagMachineDigitization::GetAllDigitized(){return flag_all_digitized_;}
 
 void FlagMachineDigitization::InitializeDigFlagArr()
 {
     std::vector<bool> new_arr;
+
+    std::string packpath = ros::package::getPath("rotms_ros_operations");
+    YAML::Node f = YAML::LoadFile(packpath + "/share/cache/landmarkdig.yaml");
+    int num_of_landmarks = f["NUM"].as<int>();
+    for(int i=0;i<num_of_landmarks) new_arr.push_back(false);
+
     temp_dig_flag_arr_ = new_arr;
+    flag_all_digitized_ = false;
 }
 
 void FlagMachineDigitization::ClearDigFlagArr()
@@ -62,6 +70,11 @@ void FlagMachineDigitization::ResetDigFlagArrAt(int idx)
 
 void FlagMachineDigitization::ResetDigFlagArrAt()
 {
+    if(temp_dig_idx_==-1)
+    {
+        ROS_RED_STREAM("[ROTMS ERROR] Temp digitization index is not set!");
+        return;
+    }
     FlagMachineDigitization::ResetDigFlagArrAt(temp_dig_idx_);
 }
 
@@ -72,6 +85,11 @@ void FlagMachineDigitization::SetDigFlagArrAt(int idx)
 
 void FlagMachineDigitization::SetDigFlagArrAt()
 {
+    if(temp_dig_idx_==-1)
+    {
+        ROS_RED_STREAM("[ROTMS ERROR] Temp digitization index is not set!");
+        return;
+    }
     FlagMachineDigitization::SetDigFlagArrAt(temp_dig_idx_);
 }
 
@@ -88,4 +106,34 @@ void FlagMachineDigitization::SetTempDigitizationIdx(int idx)
 void FlagMachineDigitization::ClearTempDigitizationIdx()
 {
     temp_dig_idx_ = -1;
+}
+
+void FlagMachineDigitization::CheckAndUpdateFlag()
+{
+    if (temp_dig_flag_arr_.size()==0) 
+    {
+        ROS_WARNING_STREAM("[ROTMS WARNING] Temp digitization flag array is not initialized!");
+        return;
+    }
+    else
+    {
+        for(int i=0;i<temp_dig_flag_arr_.size();i++)
+        {
+            if (!temp_dig_flag_arr_[i]) return;
+        }
+        flag_all_digitized_ = true;
+    }
+}
+
+void FlagMachineDigitization::SetDigFlagArrAll()
+{
+    if (temp_dig_flag_arr_.size()==0) 
+    {
+        ROS_WARNING_STREAM("[ROTMS WARNING] Temp digitization flag array is not initialized!");
+        return;
+    }
+    else
+    {
+        for(int i=0;i<temp_dig_flag_arr_.size();i++) temp_dig_flag_arr_[i] = true;
+    }
 }

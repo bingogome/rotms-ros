@@ -10,6 +10,8 @@
     "START_TRE_CALCULATION_START": "tre_startcalcuxx",
     "START_TRE_CALCULATION_STOP": "tre_stopcalcuxxx",
     "START_LANDMARK_DIG_NUM": "img_dig_digitize",
+    "START_LANDMARK_DIG_PREV_DIG_HILIGHT": "img_dig_prevhilg",
+    "START_LANDMARK_DIG_PREV": "img_dig_prevxxxx",
 
     "LANDMARK_CURRENT_ON_IMG": "img_fid_pntxxxxx",
     "LANDMARK_NUM_OF_ON_IMG": "img_fid_numxxxxx",

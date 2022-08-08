@@ -36,6 +36,7 @@ public:
     StateDigitization(
         int state_num,
         std::vector<StateDigitization*>& v,
+        std::vector<StateRegistration*>& states_upper_registration,
         FlagMachineDigitization& f,
         OperationsDigitization& ops);
     virtual ~StateDigitization();
@@ -55,6 +56,7 @@ protected:
 
     OperationsDigitization& ops_;
     const std::vector<StateDigitization*>& states_;
+    const std::vector<StateRegistration*>& states_upper_registration_;
     void Transition(int target_state, TransitionOps funcs);
 
 };
