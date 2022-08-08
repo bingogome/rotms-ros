@@ -644,6 +644,14 @@ void Dispatcher::StateTransitionCheck(int new_state, std::string s)
         ROS_YELLOW_STREAM("[ROTMS WARNING] State transition not possible.");
         ROS_YELLOW_STREAM("[ROTMS WARNING] Make sure the operation dependencies are met.");
     }
+
+    // Low level state branch change will need to change dispatcher activated state record of the higher level branch.
+    if(s.compare("DIGITIZATION")==0)
+    {
+        int activated_state_registration = StateRegistration::GetActivatedState(states_set_.state_registration);
+        activated_state_["REGISTRATION"] = activated_state_registration;
+    }
+
     ROS_GREEN_STREAM("[ROTMS INFO] Current states: Registration, Digitization, Toolplan, Robot");
     ROS_GREEN_STREAM("[ROTMS INFO] " + 
         std::to_string(activated_state_["REGISTRATION"]) + ", "+ 

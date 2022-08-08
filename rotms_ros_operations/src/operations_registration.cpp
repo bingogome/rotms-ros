@@ -57,7 +57,7 @@ void OperationsRegistration::OperationPlanLandmarks()
     std::string time_stamp = f["TIMESTAMP"].as<std::string>();
     std::string now_time = GetTimeString();
     double diff_t = GetTimeDiff(time_stamp, now_time);
-    if ( !(diff_t>0 && diff_t<1) )
+    if ( !(diff_t>=0 && diff_t<1) )
     {
         ROS_YELLOW_STREAM("[ROTMS WARNING] Time stamp of planned landmarks is not recent! Failed to initialize landmarkdig!");
         return;
