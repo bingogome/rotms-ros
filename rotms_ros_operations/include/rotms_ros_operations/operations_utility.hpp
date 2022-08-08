@@ -23,38 +23,12 @@ SOFTWARE.
 ***/
 
 #pragma once
-#include "flag_machine.hpp"
-#include <vector>
 
-class FlagMachineDigitization : public FlagMachineBase
-{
+#include <string>
 
-public:
 
-    FlagMachineDigitization();
+std::string GetTimeString();
 
-    static void ConfirmAllDigitized();
-    static void UnconfirmAllDigitized();
-    static bool GetAllDigitized();
+double GetTimeDiff(std::string start, std::string end);
 
-    static void InitializeDigFlagArr();
-    static void ClearDigFlagArr();
-    static void ResetDigFlagArrAt();
-    static void SetDigFlagArrAt();
-    static void ResetDigFlagArrAt_(int idx);
-    static void SetDigFlagArrAt_(int idx);
-    
-    static std::vector<bool> GetDigFlagArr();
-
-    static void SetTempDigitizationIdx(int idx);
-    static void ClearTempDigitizationIdx();
-    static void CheckAndUpdateFlag();
-    static void SetDigFlagArrAll();
-
-private:
-
-    static bool flag_all_digitized_;
-    static std::vector<bool> temp_dig_flag_arr_;
-
-    static int temp_dig_idx_;
-};
+std::string FormatDouble2String(double a, int dec);

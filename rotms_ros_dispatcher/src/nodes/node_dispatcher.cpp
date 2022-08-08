@@ -26,6 +26,7 @@ SOFTWARE.
 #include "flag_machine.hpp"
 #include "operations_registration.hpp"
 #include "state_machine_registration_states.hpp"
+#include "state_machine_digitization_states.hpp"
 #include "state_machine_robot_states.hpp"
 #include "state_machine_toolplan_states.hpp"
 #include "ros_print_color.hpp"
@@ -44,6 +45,8 @@ int main(int argc, char **argv)
     // Initialize flags, states, operations and pass to dispatcher
     FlagMachineRegistration f_registration = FlagMachineRegistration();
     OperationsRegistration ops_registration = OperationsRegistration(nh);
+    FlagMachineDigitization f_digitization = FlagMachineDigitization();
+    OperationsDigitization ops_digitization = OperationsDigitization(nh);
     FlagMachineRobot f_robot = FlagMachineRobot();
     OperationsRobot ops_robot = OperationsRobot(nh);
     FlagMachineToolplan f_toolplan = FlagMachineToolplan();
@@ -57,6 +60,8 @@ int main(int argc, char **argv)
     // destroying the Dispatcher object
     const std::vector<StateRegistration*> states_registration = 
         GetStatesVectorRegistration(f_registration, ops_registration);
+    const std::vector<StateDigitization*> states_digitization = 
+        GetStatesVectorDigitization(f_digitization, ops_digitization, states_registration);
     const std::vector<StateRobot*> states_robot = 
         GetStatesVectorRobot(f_robot, ops_robot);
     const std::vector<StateToolplan*> states_toolplan = 
@@ -64,6 +69,7 @@ int main(int argc, char **argv)
 
     struct StateSet states = {
         .state_registration = states_registration, 
+        .state_digitization = states_digitization,
         .state_toolplan = states_toolplan, 
         .state_robot = states_robot
     };

@@ -26,6 +26,7 @@ SOFTWARE.
 #include "rotms_dispatcher.hpp"
 #include "state_machine_toolplan_states.hpp"
 #include "state_machine_registration_states.hpp"
+#include "state_machine_digitization_states.hpp"
 #include "state_machine_robot_states.hpp"
 #include "ros_print_color.hpp"
 
@@ -51,9 +52,14 @@ Dispatcher::Dispatcher(ros::NodeHandle& n, struct StateSet& states_set)
     : n_(n), states_set_(states_set)
 {
     bool integ;
+
     integ = CheckFlagIntegrityRegistration(states_set_.state_registration);
     ROS_GREEN_STREAM("[ROTMS INFO] Flag integrity check (Registration): " + std::to_string(integ));
     if (!integ) ROS_RED_STREAM("[ROTMS ERROR] Flag integrity check (Registration) failed! ");
+
+    integ = CheckFlagIntegrityDigitization(states_set_.state_digitization);
+    ROS_GREEN_STREAM("[ROTMS INFO] Flag integrity check (Digitization): " + std::to_string(integ));
+    if (!integ) ROS_RED_STREAM("[ROTMS ERROR] Flag integrity check (Digitization) failed! ");
 
     integ = CheckFlagIntegrityToolplan(states_set_.state_toolplan);
     ROS_GREEN_STREAM("[ROTMS INFO] Flag integrity check (Tool plan): " + std::to_string(integ));
@@ -157,14 +163,14 @@ void Dispatcher::DigitizationCallBack(const std_msgs::String::ConstPtr& msg)
         {
             int dig_idx = std::stoi(msg->data.substr(13));
             ROS_GREEN_STREAM("[ROTMS INFO] Digitize individual landmark: " + std::to_string(dig_idx));
-            int new_state_digitization = states_set_.state_digitization[activated_state_["DIGITIZATION"]]->RedigitizeOneLandmark();
+            int new_state_digitization = states_set_.state_digitization[activated_state_["DIGITIZATION"]]->RedigitizeOneLandmark(dig_idx);
             Dispatcher::StateTransitionCheck(new_state_digitization, "DIGITIZATION");
         }
         if(msg->data.rfind("use_prev_digitize_digitize_one_",0)==0)
         {
             int dig_idx = std::stoi(msg->data.substr(31));
             ROS_GREEN_STREAM("[ROTMS INFO] Digitize individual landmark: " + std::to_string(dig_idx));
-            int new_state_digitization = states_set_.state_digitization[activated_state_["DIGITIZATION"]]->UsePrevDigAndRedigOneLandmark();
+            int new_state_digitization = states_set_.state_digitization[activated_state_["DIGITIZATION"]]->UsePrevDigAndRedigOneLandmark(dig_idx);
             Dispatcher::StateTransitionCheck(new_state_digitization, "DIGITIZATION");
         }
         else if (msg->data.compare("use_prev_digitize")==0)

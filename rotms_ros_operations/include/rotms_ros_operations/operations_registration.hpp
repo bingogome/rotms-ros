@@ -30,6 +30,8 @@ SOFTWARE.
 #include "rotms_ros_msgs/PoseValid.h"
 #include "operations.hpp"
 
+double GetTimeDiff(std::string start, std::string end);
+
 class OperationsRegistration : public OperationsBase
 {
 public:

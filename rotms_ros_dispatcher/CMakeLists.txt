@@ -35,6 +35,11 @@ add_library(${PROJECT_NAME}
   ../rotms_ros_state/src/state_machine_registration.cpp
   ../rotms_ros_state/src/state_machine_registration_states.cpp
 
+  ../rotms_ros_operations/src/operations_digitization.cpp
+  ../rotms_ros_state/src/flag_machine_digitization.cpp
+  ../rotms_ros_state/src/state_machine_digitization.cpp
+  ../rotms_ros_state/src/state_machine_digitization_states.cpp
+
   ../rotms_ros_operations/src/operations_toolplan.cpp
   ../rotms_ros_state/src/state_machine_toolplan.cpp
   ../rotms_ros_state/src/flag_machine_toolplan.cpp

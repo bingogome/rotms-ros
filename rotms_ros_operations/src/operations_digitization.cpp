@@ -22,8 +22,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
+#include "operations_utility.hpp"
+#include "ros_print_color.hpp"
 #include "operations_digitization.hpp"
 #include <std_msgs/Int32.h>
+#include <std_msgs/String.h>
+#include <geometry_msgs/Point.h>
+#include <ros/ros.h>
+#include <yaml-cpp/yaml.h>
+#include <fstream>
+#include <iostream>
+
+OperationsDigitization::OperationsDigitization(ros::NodeHandle& n) : OperationsBase(n)
+{}
 
 void OperationsDigitization::OperationDigitizationAll()
 {

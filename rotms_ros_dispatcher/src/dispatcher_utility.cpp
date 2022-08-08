@@ -141,24 +141,6 @@ std::string GetTimeString()
 	return buffer;
 }
 
-double GetTimeDiff(std::string start, std::string end)
-{
-    struct std::tm tm1 = {0};
-    struct std::tm tm2 = {0};
-
-    std::istringstream ss1(start);
-    std::istringstream ss2(end);
-
-    ss1 >> std::get_time(&tm1, "%Y%m%d_%I%M%S%p");
-    std::time_t time1 = mktime(&tm1);
-
-    ss2 >> std::get_time(&tm2, "%Y%m%d_%I%M%S%p");
-    std::time_t time2 = mktime(&tm2);
-    
-    double seconds = difftime(time2,time1);
-    return seconds;
-}
-
 std::vector<tf2::Vector3> ReadPointCloudFromYAML(std::string f, std::string pnt)
 {
     std::vector<tf2::Vector3> cloud;

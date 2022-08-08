@@ -1,5 +1,6 @@
 #pragma once
 #include "ros_print_color_def.hpp"
+#include <ros/ros.h>
 
 #define ROS_BLACK_STREAM(x)   ROS_INFO_STREAM(print_color_ros::BLACK   << x << print_color_ros::ENDCOLOR)
 #define ROS_RED_STREAM(x)     ROS_INFO_STREAM(print_color_ros::RED     << x << print_color_ros::ENDCOLOR)

@@ -25,6 +25,7 @@ SOFTWARE.
 #pragma once
 
 #include "state_machine.hpp"
+#include "state_machine_registration.hpp"
 #include "flag_machine_digitization.hpp"
 #include "operations_digitization.hpp"
 
@@ -36,16 +37,16 @@ public:
     StateDigitization(
         int state_num,
         std::vector<StateDigitization*>& v,
-        std::vector<StateRegistration*>& states_upper_registration,
+        const std::vector<StateRegistration*>& states_upper_registration,
         FlagMachineDigitization& f,
         OperationsDigitization& ops);
     virtual ~StateDigitization();
 
     FlagMachineDigitization& flags_;
 
-    virtual int RedigitizeOneLandmark();
+    virtual int RedigitizeOneLandmark(int idx);
     virtual int ReinitState();
-    virtual int UsePrevDigAndRedigOneLandmark();
+    virtual int UsePrevDigAndRedigOneLandmark(int idx);
     virtual int ConfirmAllDigitized();
     virtual int DigitizeAllLandmarks();
 

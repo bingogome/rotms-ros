@@ -34,7 +34,7 @@ SOFTWARE.
 StateDigitization::StateDigitization(
     int state_num, 
     std::vector<StateDigitization*>& v,
-    std::vector<StateRegistration*>& states_upper_registration,
+    const std::vector<StateRegistration*>& states_upper_registration,
     FlagMachineDigitization& f, 
     OperationsDigitization& ops
     ) 
@@ -49,9 +49,9 @@ StateDigitization::~StateDigitization()
     } 
 }
 
-int StateDigitization::RedigitizeOneLandmark() { TransitionNotPossible(); return -1; }
+int StateDigitization::RedigitizeOneLandmark(int idx) { TransitionNotPossible(); return -1; }
 int StateDigitization::ReinitState() { TransitionNotPossible(); return -1; }
-int StateDigitization::UsePrevDigAndRedigOneLandmark() { TransitionNotPossible(); return -1; }
+int StateDigitization::UsePrevDigAndRedigOneLandmark(int idx) { TransitionNotPossible(); return -1; }
 int StateDigitization::ConfirmAllDigitized() { TransitionNotPossible(); return -1; }
 int StateDigitization::DigitizeAllLandmarks() { TransitionNotPossible(); return -1; }
 

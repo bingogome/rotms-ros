@@ -36,6 +36,7 @@ SOFTWARE.
 #include <rotms_ros_msgs/PoseValid.h>
 
 #include "state_machine_registration.hpp"
+#include "state_machine_digitization.hpp"
 #include "state_machine_toolplan.hpp"
 #include "state_machine_robot.hpp"
 #include "dispatcher_utility.hpp"
@@ -43,6 +44,7 @@ SOFTWARE.
 struct StateSet
 {
     const std::vector<StateRegistration*>& state_registration;
+    const std::vector<StateDigitization*>& state_digitization;
     const std::vector<StateToolplan*>& state_toolplan;
     const std::vector<StateRobot*>& state_robot;
 };

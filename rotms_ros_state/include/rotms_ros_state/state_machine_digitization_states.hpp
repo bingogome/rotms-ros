@@ -25,19 +25,22 @@ SOFTWARE.
 #pragma once
 
 #include "state_machine_digitization.hpp"
+#include "flag_machine_digitization.hpp"
+#include "operations_digitization.hpp"
+
 #include <vector>
 
 bool CheckFlagIntegrityDigitization(const std::vector<StateDigitization*>& states);
 
 std::vector<StateDigitization*> GetStatesVectorDigitization(
-    FlagMachineDigitization& f, OperationsDigitization& ops, std::vector<StateRegistration*>& states_upper_registration);
+    FlagMachineDigitization& f, OperationsDigitization& ops, const std::vector<StateRegistration*>& states_upper_registration);
 
 class StateDigitization0 : public StateDigitization
 {
 public:
     StateDigitization0(
         std::vector<StateDigitization*>& v, 
-        std::vector<StateRegistration*>& states_upper_registration,
+        const std::vector<StateRegistration*>& states_upper_registration,
         FlagMachineDigitization& f, 
         OperationsDigitization& ops);
 
@@ -54,7 +57,7 @@ class StateDigitization1 : public StateDigitization
 public:
     StateDigitization1(
         std::vector<StateDigitization*>& v, 
-        std::vector<StateRegistration*>& states_upper_registration,
+        const std::vector<StateRegistration*>& states_upper_registration,
         FlagMachineDigitization& f, 
         OperationsDigitization& ops);
 

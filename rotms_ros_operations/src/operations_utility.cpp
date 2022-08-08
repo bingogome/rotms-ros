@@ -22,39 +22,46 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
-#pragma once
-#include "flag_machine.hpp"
-#include <vector>
+#include <string>
+#include <time.h>
+#include <iomanip>
+#include <iostream>
 
-class FlagMachineDigitization : public FlagMachineBase
+std::string GetTimeString()
 {
+	time_t rawtime;
+	struct tm * timeinfo;
+	char buffer [80];
 
-public:
+	time(&rawtime);
+	timeinfo = localtime(&rawtime);
+	strftime (buffer,80,"%Y%m%d_%I%M%S%p",timeinfo);
 
-    FlagMachineDigitization();
+	return buffer;
+}
 
-    static void ConfirmAllDigitized();
-    static void UnconfirmAllDigitized();
-    static bool GetAllDigitized();
+double GetTimeDiff(std::string start, std::string end)
+{
+    struct std::tm tm1 = {0};
+    struct std::tm tm2 = {0};
 
-    static void InitializeDigFlagArr();
-    static void ClearDigFlagArr();
-    static void ResetDigFlagArrAt();
-    static void SetDigFlagArrAt();
-    static void ResetDigFlagArrAt_(int idx);
-    static void SetDigFlagArrAt_(int idx);
+    std::istringstream ss1(start);
+    std::istringstream ss2(end);
+
+    ss1 >> std::get_time(&tm1, "%Y%m%d_%I%M%S%p");
+    std::time_t time1 = mktime(&tm1);
+
+    ss2 >> std::get_time(&tm2, "%Y%m%d_%I%M%S%p");
+    std::time_t time2 = mktime(&tm2);
     
-    static std::vector<bool> GetDigFlagArr();
+    double seconds = difftime(time2,time1);
+    return seconds;
+}
 
-    static void SetTempDigitizationIdx(int idx);
-    static void ClearTempDigitizationIdx();
-    static void CheckAndUpdateFlag();
-    static void SetDigFlagArrAll();
-
-private:
-
-    static bool flag_all_digitized_;
-    static std::vector<bool> temp_dig_flag_arr_;
-
-    static int temp_dig_idx_;
-};
+std::string FormatDouble2String(double a, int dec)
+{
+	std::stringstream stream;
+    stream << std::fixed << std::setprecision(dec) << a;
+    std::string s = stream.str();
+    return s;
+}

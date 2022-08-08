@@ -50,7 +50,7 @@ bool CheckFlagIntegrityDigitization(const std::vector<StateDigitization*>& state
 std::vector<StateDigitization*> GetStatesVectorDigitization(
     FlagMachineDigitization& f, 
     OperationsDigitization& ops, 
-    std::vector<StateRegistration*>& states_upper_registration)
+    const std::vector<StateRegistration*>& states_upper_registration)
 {   // ALWAYS CLEAN THE MEMORY AFTER FINISHED USING THE RETURNED VECTOR!!!
 
     int num_flag = 1;
@@ -98,7 +98,7 @@ std::vector<StateDigitization*> GetStatesVectorDigitization(
 // Initial state (default state)
 StateDigitization0::StateDigitization0(
     std::vector<StateDigitization*>& v, 
-    std::vector<StateRegistration*>& states_upper_registration,
+    const std::vector<StateRegistration*>& states_upper_registration,
     FlagMachineDigitization& f, 
     OperationsDigitization& ops
     ) 
@@ -110,11 +110,11 @@ int StateDigitization0::RedigitizeOneLandmark(int idx)
     flags_.SetTempDigitizationIdx(idx);
 
     TransitionOps funcs;
-    funcs.push_back(std::bind(&FlagMachineDigitization::ResetDigFlagArrAt, flags_));
+    funcs.push_back(FlagMachineDigitization::ResetDigFlagArrAt);
     funcs.push_back(FlagMachineDigitization::UnconfirmAllDigitized);
     funcs.push_back(std::bind(&OperationsDigitization::OperationDigitizeOne, ops_));
-    funcs.push_back(std::bind(&FlagMachineDigitization::SetDigFlagArrAt, flags_));
-    funcs.push_back(std::bind(&FlagMachineDigitization::CheckAndUpdateFlag, flags_));
+    funcs.push_back(FlagMachineDigitization::SetDigFlagArrAt);
+    funcs.push_back(FlagMachineDigitization::CheckAndUpdateFlag);
     Transition(0B0, funcs);
 
     ops_.ClearTempDigitizationIdx();
@@ -129,8 +129,8 @@ int StateDigitization0::RedigitizeOneLandmark(int idx)
 int StateDigitization0::ReinitState()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&FlagMachineDigitization::InitializeDigFlagArr, flags_));
-    funcs.push_back(std::bind(&FlagMachineDigitization::ClearTempDigitizationIdx, flags_));
+    funcs.push_back(FlagMachineDigitization::InitializeDigFlagArr);
+    funcs.push_back(FlagMachineDigitization::ClearTempDigitizationIdx);
     Transition(0B0, funcs);
     return 0B0;
 }
@@ -141,11 +141,11 @@ int StateDigitization0::UsePrevDigAndRedigOneLandmark(int idx)
     flags_.SetTempDigitizationIdx(idx);
 
     TransitionOps funcs;
-    funcs.push_back(std::bind(&FlagMachineDigitization::ResetDigFlagArrAt, flags_));
+    funcs.push_back(FlagMachineDigitization::ResetDigFlagArrAt);
     funcs.push_back(FlagMachineDigitization::UnconfirmAllDigitized);
     funcs.push_back(std::bind(&OperationsDigitization::OperationDigitizeOne, ops_));
-    funcs.push_back(std::bind(&FlagMachineDigitization::SetDigFlagArrAll, flags_));
-    funcs.push_back(std::bind(&FlagMachineDigitization::CheckAndUpdateFlag, flags_));
+    funcs.push_back(FlagMachineDigitization::SetDigFlagArrAll);
+    funcs.push_back(FlagMachineDigitization::CheckAndUpdateFlag);
 
     // Stay at current state first, wait until emit signal to upper state machine.
     Transition(0B0, funcs);
@@ -160,8 +160,8 @@ int StateDigitization0::UsePrevDigAndRedigOneLandmark(int idx)
 int StateDigitization0::ConfirmAllDigitized()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&FlagMachineDigitization::SetDigFlagArrAll, flags_));
-    funcs.push_back(std::bind(&FlagMachineDigitization::CheckAndUpdateFlag, flags_));
+    funcs.push_back(FlagMachineDigitization::SetDigFlagArrAll);
+    funcs.push_back(FlagMachineDigitization::CheckAndUpdateFlag);
     
     // Stay at current state first, wait until emit signal to upper state machine.
     Transition(0B0, funcs);
@@ -185,8 +185,8 @@ int StateDigitization0::DigitizeAllLandmarks()
     funcs.push_back(FlagMachineDigitization::ClearDigFlagArr);
     funcs.push_back(FlagMachineDigitization::UnconfirmAllDigitized);
     funcs.push_back(std::bind(&OperationsDigitization::OperationDigitizationAll, ops_));
-    funcs.push_back(std::bind(&FlagMachineDigitization::SetDigFlagArrAll, flags_));
-    funcs.push_back(std::bind(&FlagMachineDigitization::CheckAndUpdateFlag, flags_));
+    funcs.push_back(FlagMachineDigitization::SetDigFlagArrAll);
+    funcs.push_back(FlagMachineDigitization::CheckAndUpdateFlag);
     // Stay at current state first, wait until emit signal to upper state machine.
     Transition(0B0, funcs);
     
@@ -206,7 +206,7 @@ int StateDigitization0::DigitizeAllLandmarks()
 //
 StateDigitization1::StateDigitization1(
     std::vector<StateDigitization*>& v, 
-    std::vector<StateRegistration*>& states_upper_registration,
+    const std::vector<StateRegistration*>& states_upper_registration,
     FlagMachineDigitization& f, 
     OperationsDigitization& ops
     ) 
@@ -218,11 +218,11 @@ int StateDigitization1::RedigitizeOneLandmark(int idx)
     flags_.SetTempDigitizationIdx(idx);
 
     TransitionOps funcs;
-    funcs.push_back(std::bind(&FlagMachineDigitization::ResetDigFlagArrAt, flags_));
+    funcs.push_back(FlagMachineDigitization::ResetDigFlagArrAt);
     funcs.push_back(FlagMachineDigitization::UnconfirmAllDigitized);
     funcs.push_back(std::bind(&OperationsDigitization::OperationDigitizeOne, ops_));
-    funcs.push_back(std::bind(&FlagMachineDigitization::SetDigFlagArrAt, flags_));
-    funcs.push_back(std::bind(&FlagMachineDigitization::CheckAndUpdateFlag, flags_));
+    funcs.push_back(FlagMachineDigitization::SetDigFlagArrAt);
+    funcs.push_back(FlagMachineDigitization::CheckAndUpdateFlag);
     Transition(0B1, funcs);
 
     ops_.ClearTempDigitizationIdx();
@@ -237,11 +237,11 @@ int StateDigitization1::UsePrevDigAndRedigOneLandmark(int idx)
     flags_.SetTempDigitizationIdx(idx);
 
     TransitionOps funcs;
-    funcs.push_back(std::bind(&FlagMachineDigitization::ResetDigFlagArrAt, flags_));
+    funcs.push_back(FlagMachineDigitization::ResetDigFlagArrAt);
     funcs.push_back(FlagMachineDigitization::UnconfirmAllDigitized);
     funcs.push_back(std::bind(&OperationsDigitization::OperationDigitizeOne, ops_));
-    funcs.push_back(std::bind(&FlagMachineDigitization::SetDigFlagArrAll, flags_));
-    funcs.push_back(std::bind(&FlagMachineDigitization::CheckAndUpdateFlag, flags_));
+    funcs.push_back(FlagMachineDigitization::SetDigFlagArrAll);
+    funcs.push_back(FlagMachineDigitization::CheckAndUpdateFlag);
     Transition(0B1, funcs);
 
     ops_.ClearTempDigitizationIdx();
@@ -253,8 +253,8 @@ int StateDigitization1::UsePrevDigAndRedigOneLandmark(int idx)
 int StateDigitization1::ReinitState()
 {
     TransitionOps funcs;
-    funcs.push_back(std::bind(&FlagMachineDigitization::InitializeDigFlagArr, flags_));
-    funcs.push_back(std::bind(&FlagMachineDigitization::ClearTempDigitizationIdx, flags_));
+    funcs.push_back(FlagMachineDigitization::InitializeDigFlagArr);
+    funcs.push_back(FlagMachineDigitization::ClearTempDigitizationIdx);
     // Stay at current state first, wait until emit signal to upper state machine.
     Transition(0B1, funcs);
     

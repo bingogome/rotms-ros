@@ -36,6 +36,7 @@ SOFTWARE.
 #include <yaml-cpp/yaml.h>
 #include <cmath>
 
+#include "operations_utility.hpp"
 #include "registration_funcs.hpp"
 #include "operations_registration.hpp"
 #include "rotms_ros_msgs/PoseValid.h"
@@ -65,7 +66,6 @@ void OperationsRegistration::OperationPlanLandmarks()
     // Init landmarkdig.yaml
     int num_of_landmarks = f["NUM"].as<int>();
 
-    std::string packpath = ros::package::getPath("rotms_ros_operations");
     YAML::Node f2 = YAML::LoadFile(packpath + "/share/cache/landmarkdig.yaml");
     int num_of_landmarks2 = f2["NUM"].as<int>();
 
@@ -192,4 +192,3 @@ void OperationsRegistration::OperationUsePreRegistration()
     pv.pose.orientation.w = fr["w"].as<double>();
     pub_registration_.publish(pv);
 }
-

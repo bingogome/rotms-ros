@@ -24,6 +24,8 @@ SOFTWARE.
 
 #pragma once
 #include <ros/ros.h>
+#include <std_msgs/String.h>
+#include <ros/package.h>
 
 #include "operations.hpp"
 
