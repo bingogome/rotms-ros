@@ -52,11 +52,10 @@ void OperationsDigitization::OperationDigitizationAll()
     pub_run_opttracker_tr_bodyref_ptrtip_.publish(flag_start);
 
     // Beep the Opttracker 3 times to indicate get prepared for digitization
-    ros::Publisher pub_beep = n_.advertise<std_msgs::Int32>("/NDI/beep", 10);
     ros::Duration(3).sleep();
     std_msgs::Int32 beep_num;
     beep_num.data = 3;
-    pub_beep.publish(beep_num); 
+    pub_beep_.publish(beep_num); 
     ros::spinOnce();
 
     // Wait 7 seconds to get prepared
@@ -68,7 +67,7 @@ void OperationsDigitization::OperationDigitizationAll()
         // Beep 2 times for each landmark
         beep_num.data = 2;
         ros::Duration(7).sleep();
-        pub_beep.publish(beep_num); ros::spinOnce();
+        pub_beep_.publish(beep_num); ros::spinOnce();
         // Wait for a 
         geometry_msgs::PointConstPtr curdigPtr = ros::topic::waitForMessage<geometry_msgs::Point>("/Kinematics/T_bodyref_ptrtip");
         std::vector<double> curlandmark{curdigPtr->x, curdigPtr->y, curdigPtr->z};
@@ -129,11 +128,21 @@ void OperationsDigitization::OperationDigitizeOne()
     }
     ROS_GREEN_STREAM("[ROTMS INFO] Digitized landmark size: " + std::to_string(clouddig.size()));
     
+    // Poke opttracker_tr_bodyref_ptrtip node /Kinematics/Flag_bodyref_ptrtip
+    std_msgs::String flag_start;
+    flag_start.data = "_start__";
+    pub_run_opttracker_tr_bodyref_ptrtip_.publish(flag_start);
+    ros::spinOnce();
+
+    ros::Duration(1).sleep();
+    ros::spinOnce();
+
     // Digitize one from sensor
     // Beep 2 times for each landmark
-    ros::Publisher pub_beep = n_.advertise<std_msgs::Int32>("/NDI/beep", 10);
     std_msgs::Int32 beep_num; beep_num.data = 2;
-    pub_beep.publish(beep_num); ros::spinOnce();
+    pub_beep_.publish(beep_num); 
+    ros::spinOnce();
+
     // Wait for a 
     geometry_msgs::PointConstPtr curdigPtr = ros::topic::waitForMessage<geometry_msgs::Point>("/Kinematics/T_bodyref_ptrtip");
     std::vector<double> curlandmark{curdigPtr->x, curdigPtr->y, curdigPtr->z};
@@ -142,6 +151,14 @@ void OperationsDigitization::OperationDigitizeOne()
 
     datacache_.landmark_total = clouddig.size();
     datacache_.landmarkdig = clouddig;
+
+    ros::spinOnce();
+    ros::Duration(0.5).sleep();
+
+    // Poke opttracker_tr_bodyref_ptrtip node /Kinematics/Flag_bodyref_ptrtip
+    flag_start.data = "_end__";
+    pub_run_opttracker_tr_bodyref_ptrtip_.publish(flag_start);
+    ros::spinOnce();
 
     // Cache
     SaveLandmarkDigData(datacache_, packpath + "/share/cache/landmarkdig.yaml");

@@ -26,6 +26,7 @@ SOFTWARE.
 #include <ros/ros.h>
 #include <std_msgs/String.h>
 #include <ros/package.h>
+#include <std_msgs/Int32.h>
 
 #include "operations.hpp"
 
@@ -55,6 +56,8 @@ private:
     void ResetOpsVolatileDataCache();
     ros::Publisher pub_run_opttracker_tr_bodyref_ptrtip_ = 
         n_.advertise<std_msgs::String>("/Kinematics/Flag_bodyref_ptrtip", 2);
+    ros::Publisher pub_beep_ = 
+        n_.advertise<std_msgs::Int32>("/NDI/beep", 2);
 
     int temp_dig_idx_ = -1;
 
