@@ -81,6 +81,9 @@ FuncMap GetFuncMapMedImg()
     fm["START_USE_PREV_REGISTRATION"] = StartUsePrevRegistration;
     fm["START_TRE_CALCULATION_START"] = StartTRECalculation;
     fm["START_TRE_CALCULATION_STOP"] = StopTRECalculation;
+    fm["START_LANDMARK_DIG_NUM"] = LandmarkDigitizeIndividual;
+    fm["START_LANDMARK_DIG_PREV_DIG_HILIGHT"] = LandmarkUsePrevAndDigitizeIndividual;
+    fm["START_LANDMARK_DIG_PREV"] = LandmarkUsePrevDigitize;
 
     fm["LANDMARK_CURRENT_ON_IMG"] = LandmarkCurrentOnImg;
     fm["LANDMARK_NUM_OF_ON_IMG"] = LandmarkNumOnImg;
@@ -132,10 +135,34 @@ void StopTRECalculation(std::string& ss, PublisherVec& pubs)
     pubs[0].publish(msg);
 }
 
+void LandmarkDigitizeIndividual(std::string& ss, PublisherVec& pubs)
+{
+    // pubs[0] is the publisher /MedImg/StartAct
+    std_msgs::String msg;
+    msg.data = "digitize_one_" + ss;
+    pubs[0].publish(msg);
+}
+
+void LandmarkUsePrevAndDigitizeIndividual(std::string& ss, PublisherVec& pubs)
+{
+    // pubs[0] is the publisher /MedImg/StartAct
+    std_msgs::String msg;
+    msg.data = "use_prev_digitize_digitize_one_" + ss;
+    pubs[0].publish(msg);
+}
+
+void LandmarkUsePrevDigitize(std::string& ss, PublisherVec& pubs)
+{
+    // pubs[0] is the publisher /MedImg/StartAct
+    std_msgs::String msg;
+    msg.data = "use_prev_digitize";
+    pubs[0].publish(msg);
+}
+
 /* Landmark related functions:
 The decoder receives 3 commands
 1. Get the total number of landmarks
-2. Get each landmark cooredinate
+2. Get each landmark coordinate
 3. Notice the last landmark has been received
 */
 

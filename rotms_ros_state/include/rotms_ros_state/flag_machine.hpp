@@ -24,39 +24,13 @@ SOFTWARE.
 
 #pragma once
 
-class FlagMachine
+class FlagMachineBase
 {
 
 public:
 
-    FlagMachine();
-
-    static void PlanLandmarks();
-    static void DigitizeLandmarks();
-    static void PlanToolPose();
-    static void CompleteRegistration();
-
-    static void UnPlanLandmarks();
-    static void UnDigitizeLandmarks();
-    static void UnPlanToolPose();
-    static void UnCompleteRegistration();
-
-    static bool GetFlagLandmarkPlanned();
-    static bool GetFlagLandmarkDigitized();
-    static bool GetFlagToolPosePlanned();
-    static bool GetFlagRegistered();
-
-    static void ConnectRobot();
-    static void DisconnectRobot();
-    static bool GetFlagRobotConnStatus();
+    FlagMachineBase();
 
 private:
-
-    static bool flag_robot_conn_status_;
-
-    static bool flag_landmark_planned_;
-    static bool flag_landmark_digitized_;
-    static bool flag_toolpose_planned_;
-    static bool flag_registration_completed_;
 
 };

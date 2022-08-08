@@ -22,23 +22,39 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
-#include <ros/ros.h>
+#pragma once
 #include "flag_machine.hpp"
-#include "state_machine.hpp"
-#include "state_machine_registration.hpp"
-#include "operations_registration.hpp"
+#include <vector>
 
-// This node not needed in the final system. 
-// The headers and definition files from this package will be 
-// called by rotms_ros_dispatcher package
-int main(int argc, char **argv)
+class FlagMachineDigitization : public FlagMachineBase
 {
-    ros::init(argc, argv, "DummyNode");
-    ros::NodeHandle nh;
-    
-    FlagMachineRegistration f = FlagMachineRegistration();
-    OperationsRegistration o(nh);
 
-    ros::spin();
-    return 0;
-}
+public:
+
+    FlagMachineDigitization();
+
+    static void ConfirmAllDigitized();
+    static void UnconfirmAllDigitized();
+    static bool GetAllDigitized();
+
+    static void InitializeDigFlagArr();
+    static void ClearDigFlagArr();
+    static void ResetDigFlagArrAt();
+    static void SetDigFlagArrAt();
+    static void ResetDigFlagArrAt_(int idx);
+    static void SetDigFlagArrAt_(int idx);
+    
+    static std::vector<bool> GetDigFlagArr();
+
+    static void SetTempDigitizationIdx(int idx);
+    static void ClearTempDigitizationIdx();
+    static void CheckAndUpdateFlag();
+    static void SetDigFlagArrAll();
+
+private:
+
+    static bool flag_all_digitized_;
+    static std::vector<bool> temp_dig_flag_arr_;
+
+    static int temp_dig_idx_;
+};

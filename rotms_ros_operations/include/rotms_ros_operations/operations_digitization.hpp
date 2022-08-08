@@ -22,23 +22,45 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
+#pragma once
 #include <ros/ros.h>
-#include "flag_machine.hpp"
-#include "state_machine.hpp"
-#include "state_machine_registration.hpp"
-#include "operations_registration.hpp"
+#include <std_msgs/String.h>
+#include <ros/package.h>
+#include <std_msgs/Int32.h>
 
-// This node not needed in the final system. 
-// The headers and definition files from this package will be 
-// called by rotms_ros_dispatcher package
-int main(int argc, char **argv)
+#include "operations.hpp"
+
+struct TempDataCacheOps 
 {
-    ros::init(argc, argv, "DummyNode");
-    ros::NodeHandle nh;
-    
-    FlagMachineRegistration f = FlagMachineRegistration();
-    OperationsRegistration o(nh);
+    int landmark_total = -1;
+    std::vector<std::vector<double>> landmarkdig;
+};
 
-    ros::spin();
-    return 0;
-}
+class OperationsDigitization : public OperationsBase
+{
+public:
+
+    OperationsDigitization(ros::NodeHandle& n);
+
+    // Cruicial operations
+    void OperationDigitizationAll();
+    void OperationDigitizeOne();
+
+    // Secondary and intermediate operations
+    void SetTempDigitizationIdx(int idx);
+    void ClearTempDigitizationIdx();
+
+private:
+
+    struct TempDataCacheOps datacache_;
+    void ResetOpsVolatileDataCache();
+    ros::Publisher pub_run_opttracker_tr_bodyref_ptrtip_ = 
+        n_.advertise<std_msgs::String>("/Kinematics/Flag_bodyref_ptrtip", 2);
+    ros::Publisher pub_beep_ = 
+        n_.advertise<std_msgs::Int32>("/NDI/beep", 2);
+
+    int temp_dig_idx_ = -1;
+
+};
+
+void SaveLandmarkDigData(struct TempDataCacheOps datacache, std::string f);

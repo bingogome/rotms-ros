@@ -26,10 +26,8 @@ SOFTWARE.
 
 #include <vector>
 #include <tuple>
-#include <time.h>
 
 #include <iostream>
-#include <iomanip>
 #include <fstream>
 #include <math.h>
 #include <limits>
@@ -106,27 +104,6 @@ void SaveRegistrationData(
         filesave << "  }\n";
 		filesave.close();
 	}
-}
-
-std::string FormatDouble2String(double a, int dec)
-{
-	std::stringstream stream;
-    stream << std::fixed << std::setprecision(dec) << a;
-    std::string s = stream.str();
-    return s;
-}
-
-std::string GetTimeString()
-{
-	time_t rawtime;
-	struct tm * timeinfo;
-	char buffer [80];
-
-	time(&rawtime);
-	timeinfo = localtime(&rawtime);
-	strftime (buffer,80,"%Y%m%d_%I%M%p",timeinfo);
-
-	return buffer;
 }
 
 std::tuple<Matrixnbym, std::vector<double>> getRegistrationResult(

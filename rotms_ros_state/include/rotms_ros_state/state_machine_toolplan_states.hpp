@@ -22,23 +22,31 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
-#include <ros/ros.h>
-#include "flag_machine.hpp"
-#include "state_machine.hpp"
-#include "state_machine_registration.hpp"
-#include "operations_registration.hpp"
+#pragma once
+#include "state_machine_toolplan.hpp"
+#include <vector>
 
-// This node not needed in the final system. 
-// The headers and definition files from this package will be 
-// called by rotms_ros_dispatcher package
-int main(int argc, char **argv)
+bool CheckFlagIntegrityToolplan(const std::vector<StateToolplan*>& states);
+
+std::vector<StateToolplan*> GetStatesVectorToolplan(
+    FlagMachineToolplan& f, OperationsToolplan& ops);
+
+class StateToolplan0 : public StateToolplan
 {
-    ros::init(argc, argv, "DummyNode");
-    ros::NodeHandle nh;
-    
-    FlagMachineRegistration f = FlagMachineRegistration();
-    OperationsRegistration o(nh);
+public:
+    StateToolplan0(std::vector<StateToolplan*>& v, FlagMachineToolplan& f, OperationsToolplan& ops);
 
-    ros::spin();
-    return 0;
-}
+    int ToolPosePlanned() override;
+    int ReinitState() override;
+
+};
+
+class StateToolplan1 : public StateToolplan
+{
+public:
+    StateToolplan1(std::vector<StateToolplan*>& v, FlagMachineToolplan& f, OperationsToolplan& ops);
+
+    int ClearToolPosePlan() override;
+    int ToolPosePlanned() override;
+    int ReinitState() override;
+};

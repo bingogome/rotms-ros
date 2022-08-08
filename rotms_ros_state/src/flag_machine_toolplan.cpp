@@ -22,23 +22,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
-#include <ros/ros.h>
 #include "flag_machine.hpp"
-#include "state_machine.hpp"
-#include "state_machine_registration.hpp"
-#include "operations_registration.hpp"
+#include "flag_machine_toolplan.hpp"
 
-// This node not needed in the final system. 
-// The headers and definition files from this package will be 
-// called by rotms_ros_dispatcher package
-int main(int argc, char **argv)
+//
+FlagMachineToolplan::FlagMachineToolplan() : FlagMachineBase()
 {
-    ros::init(argc, argv, "DummyNode");
-    ros::NodeHandle nh;
-    
-    FlagMachineRegistration f = FlagMachineRegistration();
-    OperationsRegistration o(nh);
-
-    ros::spin();
-    return 0;
+    flag_toolpose_planned_ = false;
 }
+
+// Crucial operations status flags
+bool FlagMachineToolplan::flag_toolpose_planned_;
+
+// Crucial operations status setters and getters
+void FlagMachineToolplan::PlanToolPose(){flag_toolpose_planned_=true;}
+void FlagMachineToolplan::UnPlanToolPose(){flag_toolpose_planned_=false;}
+bool FlagMachineToolplan::GetFlagToolPosePlanned(){return flag_toolpose_planned_;}

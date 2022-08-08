@@ -39,7 +39,7 @@ struct TempDataCache
     std::vector<double> toolpose_r;
 };
 
-void SaveLandmarkPlanData(struct TempDataCache datacache, std::string f);
+void SaveLandmarkPlanData(struct TempDataCache datacache, std::string f, std::string time_stamp);
 void SaveToolPoseData(struct TempDataCache datacache, std::string f);
 void SaveCurrentJntsAsInit(std_msgs::Float32MultiArray jnts, std::string f);
 std::vector<double> ReadJntsFromConfig(std::string f);

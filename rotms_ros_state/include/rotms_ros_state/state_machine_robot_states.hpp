@@ -22,23 +22,30 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
-#include <ros/ros.h>
-#include "flag_machine.hpp"
-#include "state_machine.hpp"
-#include "state_machine_registration.hpp"
-#include "operations_registration.hpp"
+#pragma once
 
-// This node not needed in the final system. 
-// The headers and definition files from this package will be 
-// called by rotms_ros_dispatcher package
-int main(int argc, char **argv)
+#include "state_machine_robot.hpp"
+#include <vector>
+
+bool CheckFlagIntegrityRobot(const std::vector<StateRobot*>& states);
+
+std::vector<StateRobot*> GetStatesVectorRobot(
+    FlagMachineRobot& f, OperationsRobot& ops);
+
+class StateRobot0 : public StateRobot
 {
-    ros::init(argc, argv, "DummyNode");
-    ros::NodeHandle nh;
-    
-    FlagMachineRegistration f = FlagMachineRegistration();
-    OperationsRegistration o(nh);
+public:
+    StateRobot0(std::vector<StateRobot*>& v, FlagMachineRobot& f, OperationsRobot& ops);
 
-    ros::spin();
-    return 0;
-}
+    int ConnectRobot() override;
+
+};
+
+class StateRobot1 : public StateRobot
+{
+public:
+    StateRobot1(std::vector<StateRobot*>& v, FlagMachineRobot& f, OperationsRobot& ops);
+
+    int DisconnectRobot() override;
+
+};

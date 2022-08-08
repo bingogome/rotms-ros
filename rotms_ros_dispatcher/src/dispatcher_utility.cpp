@@ -25,10 +25,12 @@ SOFTWARE.
 #include "dispatcher_utility.hpp"
 
 #include <string>
+#include <sstream>
 #include <vector>
 #include <fstream>
 #include <iostream>
 #include <iomanip>
+#include <ctime>
 #include <time.h>
 #include <math.h> 
 #include <yaml-cpp/yaml.h>
@@ -36,7 +38,7 @@ SOFTWARE.
 #include <tf2/LinearMath/Transform.h>
 
 
-void SaveLandmarkPlanData(struct TempDataCache datacache, std::string f)
+void SaveLandmarkPlanData(struct TempDataCache datacache, std::string f, std::string time_stamp)
 {
     std::ofstream filesave(f);
     if(filesave.is_open())
@@ -60,6 +62,8 @@ void SaveLandmarkPlanData(struct TempDataCache datacache, std::string f)
                 filesave << "},\n";
         }
         filesave << "  }\n";
+        filesave << " \n";
+        filesave << "TIMESTAMP: " << time_stamp << "\n";
         filesave.close();
     }
 }
@@ -132,7 +136,7 @@ std::string GetTimeString()
 
 	time(&rawtime);
 	timeinfo = localtime(&rawtime);
-	strftime (buffer,80,"%Y%m%d_%I%M%p",timeinfo);
+	strftime (buffer,80,"%Y%m%d_%I%M%S%p",timeinfo);
 
 	return buffer;
 }

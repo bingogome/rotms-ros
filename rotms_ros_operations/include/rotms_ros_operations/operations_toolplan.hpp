@@ -22,23 +22,31 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
+#pragma once
 #include <ros/ros.h>
-#include "flag_machine.hpp"
-#include "state_machine.hpp"
-#include "state_machine_registration.hpp"
-#include "operations_registration.hpp"
 
-// This node not needed in the final system. 
-// The headers and definition files from this package will be 
-// called by rotms_ros_dispatcher package
-int main(int argc, char **argv)
+#include "rotms_ros_msgs/PoseValid.h"
+#include "operations.hpp"
+
+class OperationsToolplan : public OperationsBase
 {
-    ros::init(argc, argv, "DummyNode");
-    ros::NodeHandle nh;
-    
-    FlagMachineRegistration f = FlagMachineRegistration();
-    OperationsRegistration o(nh);
+public:
 
-    ros::spin();
-    return 0;
-}
+    OperationsToolplan(ros::NodeHandle& n);
+
+    // Cruicial operations
+    void OperationPlanToolPose();
+
+    void OperationResetToolPose();
+
+    // Secondary and intermediate operations
+    // void Operation();
+    // void Operation();
+    // void Operation();
+
+private:
+
+    ros::Publisher pub_toolpose_ = 
+        n_.advertise<rotms_ros_msgs::PoseValid>("/Kinematics/TR_body_cntct", 1, true);
+
+};

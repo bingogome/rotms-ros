@@ -22,23 +22,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
-#include <ros/ros.h>
+#pragma once
 #include "flag_machine.hpp"
-#include "state_machine.hpp"
-#include "state_machine_registration.hpp"
-#include "operations_registration.hpp"
 
-// This node not needed in the final system. 
-// The headers and definition files from this package will be 
-// called by rotms_ros_dispatcher package
-int main(int argc, char **argv)
+class FlagMachineRobot : public FlagMachineBase
 {
-    ros::init(argc, argv, "DummyNode");
-    ros::NodeHandle nh;
-    
-    FlagMachineRegistration f = FlagMachineRegistration();
-    OperationsRegistration o(nh);
 
-    ros::spin();
-    return 0;
-}
+public:
+
+    FlagMachineRobot();
+
+    static void ConnectRobot();
+    static void DisconnectRobot();
+    static bool GetFlagRobotConnStatus();
+
+private:
+
+    static bool flag_robot_conn_status_;
+
+};

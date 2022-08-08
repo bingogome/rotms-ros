@@ -22,23 +22,46 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
-#include <ros/ros.h>
-#include "flag_machine.hpp"
-#include "state_machine.hpp"
-#include "state_machine_registration.hpp"
-#include "operations_registration.hpp"
+#include <string>
+#include <time.h>
+#include <iomanip>
+#include <iostream>
 
-// This node not needed in the final system. 
-// The headers and definition files from this package will be 
-// called by rotms_ros_dispatcher package
-int main(int argc, char **argv)
+std::string GetTimeString()
 {
-    ros::init(argc, argv, "DummyNode");
-    ros::NodeHandle nh;
-    
-    FlagMachineRegistration f = FlagMachineRegistration();
-    OperationsRegistration o(nh);
+	time_t rawtime;
+	struct tm * timeinfo;
+	char buffer [80];
 
-    ros::spin();
-    return 0;
+	time(&rawtime);
+	timeinfo = localtime(&rawtime);
+	strftime (buffer,80,"%Y%m%d_%I%M%S%p",timeinfo);
+
+	return buffer;
+}
+
+double GetTimeDiff(std::string start, std::string end)
+{
+    struct std::tm tm1 = {0};
+    struct std::tm tm2 = {0};
+
+    std::istringstream ss1(start);
+    std::istringstream ss2(end);
+
+    ss1 >> std::get_time(&tm1, "%Y%m%d_%I%M%S%p");
+    std::time_t time1 = mktime(&tm1);
+
+    ss2 >> std::get_time(&tm2, "%Y%m%d_%I%M%S%p");
+    std::time_t time2 = mktime(&tm2);
+    
+    double seconds = difftime(time2,time1);
+    return seconds;
+}
+
+std::string FormatDouble2String(double a, int dec)
+{
+	std::stringstream stream;
+    stream << std::fixed << std::setprecision(dec) << a;
+    std::string s = stream.str();
+    return s;
 }

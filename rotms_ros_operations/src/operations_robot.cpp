@@ -23,22 +23,9 @@ SOFTWARE.
 ***/
 
 #include <ros/ros.h>
-#include "flag_machine.hpp"
-#include "state_machine.hpp"
-#include "state_machine_registration.hpp"
-#include "operations_registration.hpp"
 
-// This node not needed in the final system. 
-// The headers and definition files from this package will be 
-// called by rotms_ros_dispatcher package
-int main(int argc, char **argv)
-{
-    ros::init(argc, argv, "DummyNode");
-    ros::NodeHandle nh;
-    
-    FlagMachineRegistration f = FlagMachineRegistration();
-    OperationsRegistration o(nh);
+#include "operations.hpp"
+#include "operations_robot.hpp"
 
-    ros::spin();
-    return 0;
-}
+OperationsRobot::OperationsRobot(ros::NodeHandle& n) : OperationsBase(n)
+{}

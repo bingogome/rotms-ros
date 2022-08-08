@@ -22,23 +22,36 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
-#include <ros/ros.h>
-#include "flag_machine.hpp"
+#pragma once
+
 #include "state_machine.hpp"
-#include "state_machine_registration.hpp"
-#include "operations_registration.hpp"
+#include "flag_machine_robot.hpp"
+#include "operations_robot.hpp"
 
-// This node not needed in the final system. 
-// The headers and definition files from this package will be 
-// called by rotms_ros_dispatcher package
-int main(int argc, char **argv)
+class StateRobot : public StateBase
 {
-    ros::init(argc, argv, "DummyNode");
-    ros::NodeHandle nh;
-    
-    FlagMachineRegistration f = FlagMachineRegistration();
-    OperationsRegistration o(nh);
 
-    ros::spin();
-    return 0;
-}
+public:
+
+    StateRobot(
+        int state_num,
+        std::vector<StateRobot*>& v,
+        FlagMachineRobot& f,
+        OperationsRobot& ops);
+    virtual ~StateRobot();
+
+    FlagMachineRobot& flags_;
+
+    virtual int ConnectRobot();
+    virtual int DisconnectRobot();
+
+    static bool CheckIfUniqueActivation(const std::vector<StateRobot*>& states);
+    static int GetActivatedState(const std::vector<StateRobot*>& states);
+
+protected:
+
+    OperationsRobot& ops_;
+    const std::vector<StateRobot*>& states_;
+    void Transition(int target_state, TransitionOps funcs);
+
+};

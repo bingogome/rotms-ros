@@ -22,23 +22,42 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
+#pragma once
 #include <ros/ros.h>
-#include "flag_machine.hpp"
-#include "state_machine.hpp"
-#include "state_machine_registration.hpp"
-#include "operations_registration.hpp"
+#include <geometry_msgs/Pose.h>
+#include <std_msgs/String.h>
 
-// This node not needed in the final system. 
-// The headers and definition files from this package will be 
-// called by rotms_ros_dispatcher package
-int main(int argc, char **argv)
+#include "rotms_ros_msgs/PoseValid.h"
+#include "operations.hpp"
+
+double GetTimeDiff(std::string start, std::string end);
+
+class OperationsRegistration : public OperationsBase
 {
-    ros::init(argc, argv, "DummyNode");
-    ros::NodeHandle nh;
-    
-    FlagMachineRegistration f = FlagMachineRegistration();
-    OperationsRegistration o(nh);
+public:
 
-    ros::spin();
-    return 0;
-}
+    OperationsRegistration(ros::NodeHandle& n);
+
+    // Cruicial operations
+    void OperationPlanLandmarks();
+    void OperationPlanToolPose();
+    void OperationRegistration();
+
+    void OperationResetRegistration();
+    void OperationResetToolPose();
+    void OperationUsePreRegistration();
+
+    // Secondary and intermediate operations
+    // void Operation();
+    // void Operation();
+    // void Operation();
+
+private:
+
+    ros::Publisher pub_registration_ = 
+        n_.advertise<rotms_ros_msgs::PoseValid>("/Kinematics/TR_bodyref_body", 1, true);
+    ros::Publisher pub_toolpose_ = 
+        n_.advertise<rotms_ros_msgs::PoseValid>("/Kinematics/TR_body_cntct", 1, true);
+
+};
+

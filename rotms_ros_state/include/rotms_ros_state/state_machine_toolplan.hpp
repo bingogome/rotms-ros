@@ -22,23 +22,38 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
-#include <ros/ros.h>
-#include "flag_machine.hpp"
+#pragma once
 #include "state_machine.hpp"
-#include "state_machine_registration.hpp"
-#include "operations_registration.hpp"
+#include "flag_machine_toolplan.hpp"
+#include "operations_toolplan.hpp"
 
-// This node not needed in the final system. 
-// The headers and definition files from this package will be 
-// called by rotms_ros_dispatcher package
-int main(int argc, char **argv)
+class StateToolplan : public StateBase
 {
-    ros::init(argc, argv, "DummyNode");
-    ros::NodeHandle nh;
-    
-    FlagMachineRegistration f = FlagMachineRegistration();
-    OperationsRegistration o(nh);
 
-    ros::spin();
-    return 0;
-}
+public:
+
+    StateToolplan(
+        int state_num,
+        std::vector<StateToolplan*>& v,
+        FlagMachineToolplan& f,
+        OperationsToolplan& ops);
+    virtual ~StateToolplan();
+
+    FlagMachineToolplan& flags_;
+
+    virtual int ToolPosePlanned();
+
+    virtual int ClearToolPosePlan();
+
+    virtual int ReinitState();
+
+    static bool CheckIfUniqueActivation(const std::vector<StateToolplan*>& states);
+    static int GetActivatedState(const std::vector<StateToolplan*>& states);
+
+protected:
+
+    OperationsToolplan& ops_;
+    const std::vector<StateToolplan*>& states_;
+    void Transition(int target_state, TransitionOps funcs);
+
+};
