@@ -26,64 +26,28 @@ SOFTWARE.
 #include <vector>
 #include <functional>
 
-#include "flag_machine.hpp"
-#include "rotms_operations.hpp"
-
 typedef std::vector<std::function<void()>> TransitionOps;
 
-/***
-* Current design: 
-* WorkState should have the virtual functions of all possible state transition operations (edges).
-* These virtual functions are to be inhereted by the subclasses of WorkState. If they are not 
-* inhereted, the operation or transition is not possible from that state.
-*
-* NO LONGER USING THIS :
-* Old design: 
-* nested siwch-case.
-***/
-
-class WorkState
+class StateBase
 {
 
 public:
 
-    WorkState(
-        int state_num,
-        std::vector<WorkState*>& v,
-        FlagMachine& f,
-        TMSOperations& ops);
-    virtual ~WorkState();
+    StateBase(
+        int state_num
+        );
+    virtual ~StateBase();
 
-    FlagMachine& flags_;
-    
     bool CheckActivated();
     void Activate();
     void Deactivate();
     int GetStateNum();
-    static bool CheckIfUniqueActivation(const std::vector<WorkState*>& states);
-    static int GetActivatedState(const std::vector<WorkState*>& states);
-
-    virtual int LandmarksPlanned();
-    virtual int LandmarksDigitized();
-    virtual int ToolPosePlanned();
-    virtual int Registered();
-
-    virtual int ClearLandmarks();
-    virtual int ClearDigitization();
-    virtual int ClearRegistration();
-    virtual int ClearToolPosePlan();
-
-    virtual int ReinitState();
-    virtual int UsePrevRegister();
 
 protected:
-    
+
     const int state_num_;
-    const std::vector<WorkState*>& states_;
-    TMSOperations& ops_;
     bool activated_;
     
     virtual void TransitionNotPossible();
-    void Transition(int target_state, TransitionOps funcs);
 
 };

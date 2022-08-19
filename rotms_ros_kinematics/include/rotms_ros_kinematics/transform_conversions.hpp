@@ -34,4 +34,6 @@ tf2::Transform ConvertToTf2Transform(const rotms_ros_msgs::PoseValidConstPtr tr)
 
 tf2::Transform ConvertToTf2Transform(const geometry_msgs::TransformStampedConstPtr tr);
 
+tf2::Vector3 ConvertToTf2Vector3(const geometry_msgs::PointConstPtr t);
+
 geometry_msgs::Pose ConvertToGeometryPose(const tf2::Transform tr);

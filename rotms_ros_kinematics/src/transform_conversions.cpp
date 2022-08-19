@@ -68,6 +68,12 @@ tf2::Transform ConvertToTf2Transform(const geometry_msgs::TransformStampedConstP
     return tr_;
 }
 
+tf2::Vector3 ConvertToTf2Vector3(const geometry_msgs::PointConstPtr t)
+{
+    tf2::Vector3 t_(t->x, t->y, t->z);
+    return t_;
+}
+
 geometry_msgs::Pose ConvertToGeometryPose(const tf2::Transform tr)
 {
     geometry_msgs::Pose tr_;

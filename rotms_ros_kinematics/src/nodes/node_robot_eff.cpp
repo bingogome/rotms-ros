@@ -30,17 +30,17 @@ SOFTWARE.
 #include "transform_conversions.hpp"
 #include "rotms_ros_msgs/PoseValid.h"
 
-class RobotEffMngr
+class MngrTrRobotEff
 {
 public:
-    RobotEffMngr(ros::NodeHandle& n) : n_(n) {}
+    MngrTrRobotEff(ros::NodeHandle& n) : n_(n) {}
 private:
     ros::NodeHandle& n_;
     ros::Publisher pub_eff = n_.advertise<rotms_ros_msgs::PoseValid>(
         "/Kinematics/TR_derivedeff", 1, true);
     ros::Subscriber sub = n_.subscribe(
         "/Kinematics/Query_GetTargetEff", 
-        10, &RobotEffMngr::GetTargetEffCallback, this);
+        10, &MngrTrRobotEff::GetTargetEffCallback, this);
     void GetTargetEffCallback(const std_msgs::String::ConstPtr& msg)
     {
         if(!msg->data.compare("_gettargeteff__")==0) return;
@@ -126,7 +126,7 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "NodeRobotEff");
     ros::NodeHandle nh;
 
-    RobotEffMngr mngr(nh);
+    MngrTrRobotEff mngr(nh);
 
     ros::spin();
     return 0;

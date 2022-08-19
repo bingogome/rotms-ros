@@ -26,10 +26,29 @@ catkin_package(
 add_library(${PROJECT_NAME} 
   src/rotms_dispatcher.cpp
   src/dispatcher_utility.cpp
+
   ../rotms_ros_state/src/flag_machine.cpp
   ../rotms_ros_state/src/state_machine.cpp
-  ../rotms_ros_state/src/state_machine_states.cpp
-  ../rotms_ros_operations/src/rotms_operations.cpp
+
+  ../rotms_ros_operations/src/operations_registration.cpp
+  ../rotms_ros_state/src/flag_machine_registration.cpp
+  ../rotms_ros_state/src/state_machine_registration.cpp
+  ../rotms_ros_state/src/state_machine_registration_states.cpp
+
+  ../rotms_ros_operations/src/operations_digitization.cpp
+  ../rotms_ros_state/src/flag_machine_digitization.cpp
+  ../rotms_ros_state/src/state_machine_digitization.cpp
+  ../rotms_ros_state/src/state_machine_digitization_states.cpp
+
+  ../rotms_ros_operations/src/operations_toolplan.cpp
+  ../rotms_ros_state/src/state_machine_toolplan.cpp
+  ../rotms_ros_state/src/flag_machine_toolplan.cpp
+  ../rotms_ros_state/src/state_machine_toolplan_states.cpp
+
+  ../rotms_ros_operations/src/operations_robot.cpp
+  ../rotms_ros_state/src/state_machine_robot.cpp
+  ../rotms_ros_state/src/flag_machine_robot.cpp
+  ../rotms_ros_state/src/state_machine_robot_states.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC

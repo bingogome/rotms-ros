@@ -28,7 +28,7 @@ SOFTWARE.
 #include <std_msgs/Float32MultiArray.h>
 #include <tf2/LinearMath/Transform.h>
 
-struct VolatileTempDataCache 
+struct TempDataCache 
 {
     int landmark_total = -1;
     std::vector<std::vector<double>> landmark_coords;
@@ -39,8 +39,8 @@ struct VolatileTempDataCache
     std::vector<double> toolpose_r;
 };
 
-void SaveLandmarkPlanData(struct VolatileTempDataCache datacache, std::string f);
-void SaveToolPoseData(struct VolatileTempDataCache datacache, std::string f);
+void SaveLandmarkPlanData(struct TempDataCache datacache, std::string f, std::string time_stamp);
+void SaveToolPoseData(struct TempDataCache datacache, std::string f);
 void SaveCurrentJntsAsInit(std_msgs::Float32MultiArray jnts, std::string f);
 std::vector<double> ReadJntsFromConfig(std::string f);
 std::string FormatDouble2String(double a, int dec);

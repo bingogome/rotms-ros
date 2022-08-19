@@ -57,17 +57,17 @@ public:
     void PTPLineEFF(std::vector<double> epos, double vel); // vel: mm/sec
     // epos: x y z rz ry rx
 
-    // Smart and direct servo methods
-    void ServoDirectCartesianStart();
-    void ServoDirectJointStart();
-    void ServoSmartCartesianStart();
-    void ServoSmartJointStart();
-    void ServoStop();
+    // // Smart and direct servo methods
+    // void ServoDirectCartesianStart();
+    // void ServoDirectJointStart();
+    // void ServoSmartCartesianStart();
+    // void ServoSmartJointStart();
+    // void ServoStop();
 
-    void ServoSendJoints(std::vector<double> jp);
-    std::vector<double> ServoSendJointsGetFeedback(std::vector<double> jp);
-    void ServoSendEFF(std::vector<double> eff); // x y z rz ry rx
-    std::vector<double> ServoSendEFFGetFeedback(std::vector<double> eff); // x y z rz ry rx
+    // void ServoSendJoints(std::vector<double> jp);
+    // std::vector<double> ServoSendJointsGetFeedback(std::vector<double> jp);
+    // void ServoSendEFF(std::vector<double> eff); // x y z rz ry rx
+    // std::vector<double> ServoSendEFFGetFeedback(std::vector<double> eff); // x y z rz ry rx
 
     // getters
     std::vector<double> GetJointPosition();

@@ -25,7 +25,6 @@ SOFTWARE.
 #include <ros/ros.h>
 #include <ros/package.h>
 #include <geometry_msgs/Pose.h>
-#include <std_msgs/Int32.h>
 #include <std_msgs/String.h>
 
 #include <tuple>
@@ -35,107 +34,72 @@ SOFTWARE.
 #include <iostream>
 #include <stdexcept>
 #include <yaml-cpp/yaml.h>
+#include <cmath>
 
+#include "operations_utility.hpp"
 #include "registration_funcs.hpp"
-#include "rotms_operations.hpp"
+#include "operations_registration.hpp"
 #include "rotms_ros_msgs/PoseValid.h"
 #include "ros_print_color.hpp"
 
-TMSOperations::TMSOperations(ros::NodeHandle& n)
-    : n_(n)
+OperationsRegistration::OperationsRegistration(ros::NodeHandle& n) : OperationsBase(n)
 {}
 
-void TMSOperations::OperationPlanLandmarks()
+void OperationsRegistration::OperationPlanLandmarks()
 {
-    // The operation has been done by dispatcher and cached to /share/cache
-    // no need to call this anymore.
-    // Perhaps future change 
-}
+    // The operation of caching planned landmarks has been done by dispatcher and cached to /share/cache/landmarkplan.yaml
 
-void TMSOperations::OperationDigitization()
-{
-    // Get meta data of planned landmarks
+    // Only need to initialize /share/cache/landmarkdig.yaml
+    // Note: have to be called after the landmarkplan.yaml is cached!
+
     std::string packpath = ros::package::getPath("rotms_ros_operations");
     YAML::Node f = YAML::LoadFile(packpath + "/share/cache/landmarkplan.yaml");
+    std::string time_stamp = f["TIMESTAMP"].as<std::string>();
+    std::string now_time = GetTimeString();
+    double diff_t = GetTimeDiff(time_stamp, now_time);
+    if ( !(diff_t>=0 && diff_t<1) )
+    {
+        ROS_YELLOW_STREAM("[ROTMS WARNING] Time stamp of planned landmarks is not recent! Failed to initialize landmarkdig!");
+        return;
+    }
+
+    // Init landmarkdig.yaml
     int num_of_landmarks = f["NUM"].as<int>();
 
-    ROS_INFO_STREAM(num_of_landmarks);
-    datacache_.landmark_total = num_of_landmarks;
+    YAML::Node f2 = YAML::LoadFile(packpath + "/share/cache/landmarkdig.yaml");
+    int num_of_landmarks2 = f2["NUM"].as<int>();
 
-    // Poke polaris_tr_bodyref_ptrtip node /Kinematics/Flag_bodyref_ptrtip
-    std_msgs::String flag_start;
-    flag_start.data = "_start__";
-    pub_run_polaris_tr_bodyref_ptrtip_.publish(flag_start);
-
-    // Beep the Polaris 3 times to indicate get prepared for digitization
-    ros::Publisher pub_beep = n_.advertise<std_msgs::Int32>("/NDI/beep", 10);
-    ros::Duration(3).sleep();
-    std_msgs::Int32 beep_num;
-    beep_num.data = 3;
-    pub_beep.publish(beep_num); 
-    ros::spinOnce();
-
-    // Wait 7 seconds to get prepared
-    ros::Duration(7).sleep();
-
-    // Start digitization
-    for(int i=0;i<num_of_landmarks;i++)
+    if (num_of_landmarks!=num_of_landmarks2)
     {
-        // Beep 2 times for each landmark
-        beep_num.data = 2;
-        ros::Duration(7).sleep();
-        pub_beep.publish(beep_num); ros::spinOnce();
-        // Wait for a 
-        geometry_msgs::PointConstPtr curdigPtr = ros::topic::waitForMessage<geometry_msgs::Point>("/Kinematics/T_bodyref_ptrtip");
-        std::vector<double> curlandmark{curdigPtr->x, curdigPtr->y, curdigPtr->z};
-        datacache_.landmarkdig.push_back(curlandmark);
-        ROS_GREEN_STREAM("[ROTMS INFO] User digitized one point " + std::to_string(i));
+        std::ofstream filesave(packpath + "/share/cache/landmarkdig.yaml");
+        if(filesave.is_open())
+        {
+            filesave << "NUM: " << num_of_landmarks << "\n";
+            filesave << "\n";
+            filesave << "DIGITIZED: # in m\n";
+            filesave << "\n";
+            filesave << "  {\n";
+            for(int i=0;i<num_of_landmarks;i++)
+            {
+                filesave << "    p" << i << ": ";
+                filesave << "{";
+                filesave << "x: " << nan("1") << ", ";
+                filesave << "y: " << nan("1") << ", ";
+                filesave << "z: " << nan("1");
+                if (i==num_of_landmarks-1)
+                    filesave << "}\n";
+                else
+                    filesave << "},\n";
+            }
+            filesave << "  }\n";
+            filesave << " \n";
+            filesave << "TIMESTAMP: " << GetTimeString() << "\n";
+            filesave.close();
+        }
     }
-
-    // Poke polaris_tr_bodyref_ptrtip node /Kinematics/Flag_bodyref_ptrtip
-    flag_start.data = "_end__";
-    pub_run_polaris_tr_bodyref_ptrtip_.publish(flag_start);
-
-    // Check validity and save
-    if (datacache_.landmarkdig.size()!=num_of_landmarks)
-    {
-        ResetOpsVolatileDataCache();
-        throw std::runtime_error(
-            "Number of the digitized landmarks does not match!");
-    }
-    else
-    {
-        SaveLandmarkDigData(datacache_, 
-            packpath + "/share/data/landmarkdig_"+ GetTimeString() + ".yaml");
-        SaveLandmarkDigData(datacache_, 
-            packpath + "/share/cache/landmarkdig" + ".yaml");
-    }
-
 }
 
-void TMSOperations::OperationPlanToolPose()
-{
-    // The operation has been done by dispatcher and cached to /share/config
-    // Only need to publish
-    std::string packpath = ros::package::getPath("rotms_ros_operations");
-    YAML::Node f = YAML::LoadFile(packpath + "/share/config/toolpose.yaml");
-    YAML::Node ff1 = f["TRANSLATION"];
-    YAML::Node ff2 = f["ROTATION"];
-    geometry_msgs::Pose tr;
-    tr.position.x = ff1["x"].as<double>();
-    tr.position.y = ff1["y"].as<double>();
-    tr.position.z = ff1["z"].as<double>();
-    tr.orientation.x = ff2["x"].as<double>();
-    tr.orientation.y = ff2["y"].as<double>();
-    tr.orientation.z = ff2["z"].as<double>();
-    tr.orientation.w = ff2["w"].as<double>();
-    rotms_ros_msgs::PoseValid pv;
-    pv.valid = true;
-    pv.pose = tr;
-    pub_toolpose_.publish(pv);
-}
-
-void TMSOperations::OperationRegistration()
+void OperationsRegistration::OperationRegistration()
 {
     std::string packpath = ros::package::getPath("rotms_ros_operations");
         
@@ -201,21 +165,14 @@ void TMSOperations::OperationRegistration()
 
 }
 
-void TMSOperations::OperationResetRegistration()
+void OperationsRegistration::OperationResetRegistration()
 {
     rotms_ros_msgs::PoseValid pv;
     pv.valid = false;
     pub_registration_.publish(pv);
 }
 
-void TMSOperations::OperationResetToolPose()
-{
-    rotms_ros_msgs::PoseValid pv;
-    pv.valid = false;
-    pub_toolpose_.publish(pv);
-}
-
-void TMSOperations::OperationUsePreRegistration()
+void OperationsRegistration::OperationUsePreRegistration()
 {
     std::string packpath = ros::package::getPath("rotms_ros_operations");
         
@@ -234,38 +191,4 @@ void TMSOperations::OperationUsePreRegistration()
     pv.pose.orientation.z = fr["z"].as<double>();
     pv.pose.orientation.w = fr["w"].as<double>();
     pub_registration_.publish(pv);
-}
-
-void TMSOperations::ResetOpsVolatileDataCache()
-{
-    datacache_.landmark_total = -1;
-    datacache_.landmarkdig.clear();
-}
-
-void SaveLandmarkDigData(struct OpsVolatileTempDataCache datacache, std::string f)
-{
-    std::ofstream filesave(f);
-    if(filesave.is_open())
-    {
-        filesave << "NUM: " << datacache.landmark_total << "\n";
-        filesave << "\n";
-        filesave << "DIGITIZED: # in m\n";
-        filesave << "\n";
-        filesave << "  {\n";
-        for(int i=0;i<datacache.landmark_total;i++)
-        {
-            std::vector<std::vector<double>> c = datacache.landmarkdig;
-            filesave << "    d" << i << ": ";
-            filesave << "{";
-            filesave << "x: " << FormatDouble2String(c[i][0], 16) << ", ";
-            filesave << "y: " << FormatDouble2String(c[i][1], 16) << ", ";
-            filesave << "z: " << FormatDouble2String(c[i][2], 16);
-            if (i==datacache.landmark_total-1)
-                filesave << "}\n";
-            else
-                filesave << "},\n";
-        }
-        filesave << "  }\n";
-        filesave.close();
-    }
 }

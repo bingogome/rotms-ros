@@ -33,12 +33,12 @@ SOFTWARE.
 #include "transform_conversions.hpp"
 #include "rotms_ros_msgs/PoseValid.h"
 
-class TransformMngrBodyTool
+class MngrTrBodyTool
 {
 // Manages the flag of running the calculation of the transform
 public:
     
-    TransformMngrBodyTool(ros::NodeHandle& n) : n_(n){}
+    MngrTrBodyTool(ros::NodeHandle& n) : n_(n){}
     bool run_flag = false;
 
     tf2::Transform tr_pol_bodyref_;
@@ -48,11 +48,11 @@ private:
 
     ros::NodeHandle& n_;
     ros::Subscriber sub_run_ = n_.subscribe(
-        "/Kinematics/Flag_body_tool", 2, &TransformMngrBodyTool::FlagCallBack, this);
+        "/Kinematics/Flag_body_tool", 2, &MngrTrBodyTool::FlagCallBack, this);
     ros::Subscriber sub_tr_pol_bodyref_ = n_.subscribe(
-        "/NDI/HeadRef/local/measured_cp", 2, &TransformMngrBodyTool::PolBodyRefCallBack, this);
+        "/NDI/HeadRef/local/measured_cp", 2, &MngrTrBodyTool::PolBodyRefCallBack, this);
     ros::Subscriber sub_tr_pol_toolref_ = n_.subscribe(
-        "/NDI/CoilRef/local/measured_cp", 2, &TransformMngrBodyTool::PolToolRefCallBack, this);
+        "/NDI/CoilRef/local/measured_cp", 2, &MngrTrBodyTool::PolToolRefCallBack, this);
 
     void FlagCallBack(const std_msgs::String::ConstPtr& msg)
     {
@@ -87,7 +87,7 @@ int main(int argc, char **argv)
     ros::Rate rate(60.0);
 
     // Instantiate the flag manager
-    TransformMngrBodyTool mngr(nh);
+    MngrTrBodyTool mngr(nh);
 
     // Initialize the requred transforms
     rotms_ros_msgs::PoseValidConstPtr tr_bodyref_body = ros::topic::waitForMessage<rotms_ros_msgs::PoseValid>(
