@@ -24,19 +24,20 @@ SOFTWARE.
 
 #include "dispatcher_utility.hpp"
 #include "rotms_dispatcher.hpp"
-#include "state_machine.hpp"
-#include "state_machine_states.hpp"
-#include "rotms_ros_msgs/PoseValid.h"
+#include "state_machine_toolplan_states.hpp"
+#include "state_machine_registration_states.hpp"
+#include "state_machine_digitization_states.hpp"
+#include "state_machine_robot_states.hpp"
 #include "ros_print_color.hpp"
 
-#include <rotms_ros_msgs/GetJnts.h>
-#include <rotms_ros_msgs/GetEFF.h>
-
-#include <ros/ros.h>
-#include <ros/package.h>
 #include <yaml-cpp/yaml.h>
 #include <iostream>
+#include <ros/ros.h>
+#include <ros/package.h>
 #include <tf2/LinearMath/Transform.h>
+#include <rotms_ros_msgs/GetJnts.h>
+#include <rotms_ros_msgs/GetEFF.h>
+#include <rotms_ros_msgs/PoseValid.h>
 
 /*
 Dispatcher takes decoded messages from comm_decode and preprocesses
@@ -47,11 +48,26 @@ for state/flag/operation for postprocessing.
 On the other hand, state/flag/operation will postprocess any data 
 that have been preprocessed and cached.
 */
-Dispatcher::Dispatcher(ros::NodeHandle& n, const std::vector<WorkState*>& states) 
-    : n_(n), states_(states)
+Dispatcher::Dispatcher(ros::NodeHandle& n, struct StateSet& states_set) 
+    : n_(n), states_set_(states_set)
 {
-    bool integ = CheckFlagIntegrity(states_);
-    ROS_GREEN_STREAM("[ROTMS INFO] Flag integrity check: " + std::to_string(integ));
+    bool integ;
+
+    integ = CheckFlagIntegrityRegistration(states_set_.state_registration);
+    ROS_GREEN_STREAM("[ROTMS INFO] Flag integrity check (Registration): " + std::to_string(integ));
+    if (!integ) ROS_RED_STREAM("[ROTMS ERROR] Flag integrity check (Registration) failed! ");
+
+    integ = CheckFlagIntegrityDigitization(states_set_.state_digitization);
+    ROS_GREEN_STREAM("[ROTMS INFO] Flag integrity check (Digitization): " + std::to_string(integ));
+    if (!integ) ROS_RED_STREAM("[ROTMS ERROR] Flag integrity check (Digitization) failed! ");
+
+    integ = CheckFlagIntegrityToolplan(states_set_.state_toolplan);
+    ROS_GREEN_STREAM("[ROTMS INFO] Flag integrity check (Tool plan): " + std::to_string(integ));
+    if (!integ) ROS_RED_STREAM("[ROTMS ERROR] Flag integrity check (Tool plan) failed! ");
+
+    integ = CheckFlagIntegrityRobot(states_set_.state_robot);
+    ROS_GREEN_STREAM("[ROTMS INFO] Flag integrity check (Robot): " + std::to_string(integ));
+    if (!integ) ROS_RED_STREAM("[ROTMS ERROR] Flag integrity check (Robot) failed! ");
 }
 
 void Dispatcher::LandmarkPlanMetaCallBack(const std_msgs::Int16::ConstPtr& msg)
@@ -70,15 +86,18 @@ void Dispatcher::LandmarkPlanMetaCallBack(const std_msgs::Int16::ConstPtr& msg)
             return;
         }
 
-        SaveLandmarkPlanData(datacache_, packpath + "/share/cache/landmarkplan.yaml");
-        SaveLandmarkPlanData(datacache_, packpath + "/share/data/landmarkplan_" + GetTimeString() + ".yaml");
+        SaveLandmarkPlanData(datacache_, packpath + "/share/cache/landmarkplan.yaml", GetTimeString());
+        SaveLandmarkPlanData(datacache_, packpath + "/share/data/landmarkplan_" + GetTimeString() + ".yaml", GetTimeString());
 
         ROS_GREEN_STREAM("[ROTMS INFO] Landmarks cached.");
 
         Dispatcher::ResetVolatileDataCacheLandmarks(); // reset
 
-        int new_state = states_[activated_state_]->LandmarksPlanned();
-        Dispatcher::StateTransitionCheck(new_state);
+        // First plan landmarks, then init digitization state machine
+        int new_state_registration = states_set_.state_registration[activated_state_["REGISTRATION"]]->LandmarksPlanned();
+        Dispatcher::StateTransitionCheck(new_state_registration, "REGISTRATION");
+        int new_state_digitization = states_set_.state_digitization[activated_state_["DIGITIZATION"]]->ReinitState();
+        Dispatcher::StateTransitionCheck(new_state_digitization, "DIGITIZATION");
     }
     else
     {
@@ -86,7 +105,7 @@ void Dispatcher::LandmarkPlanMetaCallBack(const std_msgs::Int16::ConstPtr& msg)
     }
 }
 
-void Dispatcher::LandmarkPlanFidsCallBack(const std_msgs::Float32MultiArray::ConstPtr& msg)
+void Dispatcher::LandmarkPlanLandmarksCallBack(const std_msgs::Float32MultiArray::ConstPtr& msg)
 {
     if(msg->data[0]==datacache_.landmark_coords.size())
     {
@@ -109,17 +128,12 @@ void Dispatcher::SessionReinitCallBack(const std_msgs::String::ConstPtr& msg)
     if(!msg->data.compare("_reinit__")==0) return; 
 
     // Reset state
-    int new_state = states_[activated_state_]->ReinitState();
-    ROS_GREEN_STREAM("[ROTMS INFO] Old state: " + std::to_string(activated_state_));
-    ROS_GREEN_STREAM("[ROTMS INFO] Attempt new state: " + std::to_string(new_state));
-    if (new_state != 0b0000) 
-    {
-        ROS_YELLOW_STREAM("[ROTMS WARNING] Unable to reinit state.");
-        return;
-    }
-    activated_state_ = new_state;
-    ROS_GREEN_STREAM("[ROTMS INFO] Transitioned to new state: " + 
-        std::to_string(activated_state_));
+    int new_state_registration = states_set_.state_registration[activated_state_["REGISTRATION"]]->ReinitState();
+    Dispatcher::StateTransitionCheck(new_state_registration, "REGISTRATION");
+    int new_state_toolplan = states_set_.state_toolplan[activated_state_["TOOLPLAN"]]->ReinitState();
+    Dispatcher::StateTransitionCheck(new_state_toolplan, "TOOLPLAN");
+    int new_state_digitization = states_set_.state_digitization[activated_state_["DIGITIZATION"]]->ReinitState();
+    Dispatcher::StateTransitionCheck(new_state_digitization, "DIGITIZATION");
 
     // Reinit calibration data
     std_msgs::String msg_out;
@@ -128,7 +142,6 @@ void Dispatcher::SessionReinitCallBack(const std_msgs::String::ConstPtr& msg)
 
     // Verbo
     ROS_GREEN_STREAM("[ROTMS INFO] Session reinited");
-
 }
 
 void Dispatcher::ResetVolatileDataCacheLandmarks()
@@ -137,24 +150,35 @@ void Dispatcher::ResetVolatileDataCacheLandmarks()
     datacache_.landmark_coords.clear();
 }
 
-void Dispatcher::AutodigitizationCallBack(const std_msgs::String::ConstPtr& msg)
+void Dispatcher::DigitizationCallBack(const std_msgs::String::ConstPtr& msg)
 {
-    if (!msg->data.compare("_autodigitize__")==0) return;
-    
-    int new_state = states_[activated_state_]->LandmarksDigitized();
-    ROS_GREEN_STREAM("[ROTMS INFO] Old state: " + std::to_string(activated_state_));
-    ROS_GREEN_STREAM("[ROTMS INFO] Attempt new state: " + std::to_string(new_state));
-    if (new_state != -1)
+    if (msg->data.compare("_autodigitize__")==0)
     {
-        activated_state_ = new_state;
-        ROS_GREEN_STREAM("[ROTMS INFO] Transitioned to new state: " + 
-            std::to_string(activated_state_));
+        int new_state_digitization = states_set_.state_digitization[activated_state_["DIGITIZATION"]]->DigitizeAllLandmarks();
+        Dispatcher::StateTransitionCheck(new_state_digitization, "DIGITIZATION");
     }
     else
     {
-        // Failed operation
-        ROS_YELLOW_STREAM("[ROTMS WARNING] State transition not possible.");
-        ROS_YELLOW_STREAM("[ROTMS WARNING] Make sure the operation dependencies are met.");
+        if(msg->data.rfind("digitize_one_",0)==0)
+        {
+            int dig_idx = std::stoi(msg->data.substr(13));
+            ROS_GREEN_STREAM("[ROTMS INFO] Digitize individual landmark: " + std::to_string(dig_idx));
+            int new_state_digitization = states_set_.state_digitization[activated_state_["DIGITIZATION"]]->RedigitizeOneLandmark(dig_idx);
+            Dispatcher::StateTransitionCheck(new_state_digitization, "DIGITIZATION");
+        }
+        if(msg->data.rfind("use_prev_digitize_digitize_one_",0)==0)
+        {
+            int dig_idx = std::stoi(msg->data.substr(31));
+            ROS_GREEN_STREAM("[ROTMS INFO] Digitize individual landmark: " + std::to_string(dig_idx));
+            int new_state_digitization = states_set_.state_digitization[activated_state_["DIGITIZATION"]]->UsePrevDigAndRedigOneLandmark(dig_idx);
+            Dispatcher::StateTransitionCheck(new_state_digitization, "DIGITIZATION");
+        }
+        else if (msg->data.compare("use_prev_digitize")==0)
+        {
+            int new_state_digitization = states_set_.state_digitization[activated_state_["DIGITIZATION"]]->ConfirmAllDigitized();
+            Dispatcher::StateTransitionCheck(new_state_digitization, "DIGITIZATION");
+        }
+        
     }
     
 }
@@ -163,14 +187,16 @@ void Dispatcher::RegistrationCallBack(const std_msgs::String::ConstPtr& msg)
 {
     if (msg->data.compare("_prevregister__")==0)
     {
-        int new_state = states_[activated_state_]->UsePrevRegister();
-        Dispatcher::StateTransitionCheck(new_state);
+        int new_state = 
+            states_set_.state_registration[activated_state_["REGISTRATION"]]->UsePrevRegister();
+        Dispatcher::StateTransitionCheck(new_state, "REGISTRATION");
         Dispatcher::RegistrationResidualCheck();
     }
     if (msg->data.compare("_register__")==0)
     {
-        int new_state = states_[activated_state_]->Registered();
-        Dispatcher::StateTransitionCheck(new_state);
+        int new_state = 
+            states_set_.state_registration[activated_state_["REGISTRATION"]]->Registered();
+        Dispatcher::StateTransitionCheck(new_state, "REGISTRATION");
         Dispatcher::RegistrationResidualCheck();
     }
     
@@ -194,6 +220,37 @@ void Dispatcher::RegistrationResidualCheck()
     pub_medplancomm_.publish(resid_msg);
 }
 
+void Dispatcher::TRECalculationCallBack(const std_msgs::String::ConstPtr& msg){
+    if (msg->data.compare("_starttre__")==0)
+    {
+        if(activated_state_["REGISTRATION"] != 0b111)
+        {
+            ROS_YELLOW_STREAM("Current state: " + std::to_string(activated_state_["REGISTRATION"]));
+            ROS_YELLOW_STREAM("[ROTMS WARNING] Prerequisite is not met!");
+            return;
+        }
+        // Poke opttracker_tr_bodyref_ptrtip node /Kinematics/Flag_bodyref_ptrtip
+        std_msgs::String flag_opttracker;
+        flag_opttracker.data = "_start__";
+        pub_run_opttracker_tr_bodyref_ptrtip_.publish(flag_opttracker);
+        // Poke node_TRE_t_body_ptrtip
+        std_msgs::String msg_out;
+        msg_out.data = "_start__";
+        pub_flag_t_body_ptrtip_.publish(msg_out);
+    }
+    if (msg->data.compare("_stoptre__")==0)
+    {
+        // Poke node_TRE_t_body_ptrtip
+        std_msgs::String msg_out;
+        msg_out.data = "_end__";
+        pub_flag_t_body_ptrtip_.publish(msg_out);
+        // Poke opttracker_tr_bodyref_ptrtip node /Kinematics/Flag_bodyref_ptrtip
+        std_msgs::String flag_opttracker;
+        flag_opttracker.data = "_end__";
+        pub_run_opttracker_tr_bodyref_ptrtip_.publish(flag_opttracker);
+    }
+}
+
 void Dispatcher::ToolPoseOrientCallBack(const geometry_msgs::Quaternion::ConstPtr& msg)
 {
     std::vector<double> toolpose_r{
@@ -211,8 +268,8 @@ void Dispatcher::ToolPoseOrientCallBack(const geometry_msgs::Quaternion::ConstPt
         ROS_GREEN_STREAM("[ROTMS INFO] Toolpose cached.");
         Dispatcher::ResetVolatileDataCacheToolPose();
 
-        int new_state = states_[activated_state_]->ToolPosePlanned();
-        Dispatcher::StateTransitionCheck(new_state);
+        int new_state = states_set_.state_toolplan[activated_state_["TOOLPLAN"]]->ToolPosePlanned();
+        Dispatcher::StateTransitionCheck(new_state, "TOOLPLAN");
     }
 }
 
@@ -232,15 +289,18 @@ void Dispatcher::ToolPoseTransCallBack(const geometry_msgs::Point::ConstPtr& msg
         ROS_GREEN_STREAM("[ROTMS INFO] Toolpose cached.");
         Dispatcher::ResetVolatileDataCacheToolPose();
 
-        int new_state = states_[activated_state_]->ToolPosePlanned();
-        Dispatcher::StateTransitionCheck(new_state);
+        int new_state = states_set_.state_toolplan[activated_state_["TOOLPLAN"]]->ToolPosePlanned();
+        Dispatcher::StateTransitionCheck(new_state, "TOOLPLAN");
     }
 }
 
 void Dispatcher::UpdateRobotConnFlagCallBack(const std_msgs::Bool::ConstPtr& msg)
 {
-    if(msg->data) states_[activated_state_]->flags_.ConnectRobot();
-    else states_[activated_state_]->flags_.DisconnectRobot();
+    if(msg->data) states_set_.state_robot[activated_state_["ROBOT"]]->flags_.ConnectRobot();
+    else states_set_.state_robot[activated_state_["ROBOT"]]->flags_.DisconnectRobot();
+    bool integ = CheckFlagIntegrityRobot(states_set_.state_robot);
+    ROS_GREEN_STREAM("[ROTMS INFO] Flag integrity check (Robot): " + std::to_string(integ));
+    if (!integ) ROS_RED_STREAM("[ROTMS ERROR] Flag integrity check (Robot) failed! ");
 }
 
 void Dispatcher::RobConnectCallBack(const std_msgs::String::ConstPtr& msg)
@@ -250,6 +310,8 @@ void Dispatcher::RobConnectCallBack(const std_msgs::String::ConstPtr& msg)
         std_msgs::String msg_test;
         msg_test.data = "_start_robot_connection_";
         pub_init_conn_.publish(msg_test);
+        int new_state = states_set_.state_robot[activated_state_["ROBOT"]]->ConnectRobot();
+        Dispatcher::StateTransitionCheck(new_state, "ROBOT");
     }
 }
 
@@ -260,6 +322,8 @@ void Dispatcher::RobDisconnectCallBack(const std_msgs::String::ConstPtr& msg)
         std_msgs::String msg_test;
         msg_test.data = "_end_robot_connection_";
         pub_init_conn_.publish(msg_test);
+        int new_state = states_set_.state_robot[activated_state_["ROBOT"]]->DisconnectRobot();
+        Dispatcher::StateTransitionCheck(new_state, "ROBOT");
     }
 }
 
@@ -270,7 +334,7 @@ void Dispatcher::GetJntsCallBack(const std_msgs::String::ConstPtr& msg)
         msg->data.compare("_initcur__")==0) ) return;
     
     std_msgs::String msg_out;
-    if(!states_[activated_state_]->flags_.GetFlagRobotConnStatus())
+    if(!states_set_.state_robot[activated_state_["ROBOT"]]->flags_.GetFlagRobotConnStatus())
     {
         ROS_YELLOW_STREAM("[ROTMS WARNING] Robot cabinet connection has not been established!");
         msg_out.data = "no_data_returned;";
@@ -304,7 +368,7 @@ void Dispatcher::GetEFFCallBack(const std_msgs::String::ConstPtr& msg)
 {
     if(!msg->data.compare("_eff__")==0) return;
     std_msgs::String msg_out;
-    if(!states_[activated_state_]->flags_.GetFlagRobotConnStatus())
+    if(!states_set_.state_robot[activated_state_["ROBOT"]]->flags_.GetFlagRobotConnStatus())
     {
         ROS_YELLOW_STREAM("[ROTMS WARNING] Robot cabinet connection has not been established!");
         msg_out.data = "no_data_returned;";
@@ -340,7 +404,10 @@ void Dispatcher::ExecuteMotionToOffsetCallBack(const std_msgs::String::ConstPtr&
 {
     // Status check
     if(!msg->data.compare("_execute__")==0) return;
-    if(activated_state_!=0b1111)
+    if(
+        activated_state_["TOOLPLAN"]!=0b1 || 
+        activated_state_["ROBOT"]!=0b1 ||
+        activated_state_["REGISTRATION"]!=0b111)
     {
         ROS_YELLOW_STREAM("[ROTMS WARNING] The prerequisites are not met. Check before robot motion. (code 1)");
         return;
@@ -356,7 +423,10 @@ void Dispatcher::ExecuteConfirmMotionCallBack(const std_msgs::String::ConstPtr& 
 {
     // Status check
     if(!msg->data.compare("_confirm__")==0) return;
-    if(activated_state_!=0b1111)
+    if(
+        activated_state_["TOOLPLAN"]!=0b1 || 
+        activated_state_["ROBOT"]!=0b1 ||
+        activated_state_["REGISTRATION"]!=0b111)
     {
         ROS_YELLOW_STREAM("[ROTMS WARNING] The prerequisites are not met. Check before robot motion. (code 2)");
         return;
@@ -372,7 +442,10 @@ void Dispatcher::ExecuteConfirmMotionCallBack(const std_msgs::String::ConstPtr& 
 
 void Dispatcher::ExecuteManualAdjust(const std_msgs::Float32MultiArray::ConstPtr& msg)
 {
-    if(activated_state_!=0b1111)
+    if(
+        activated_state_["TOOLPLAN"]!=0b1 || 
+        activated_state_["ROBOT"]!=0b1 ||
+        activated_state_["REGISTRATION"]!=0b111)
     {
         ROS_YELLOW_STREAM("[ROTMS WARNING] The prerequisites are not met. Check before robot motion. (code 2)");
         return;
@@ -405,15 +478,17 @@ void Dispatcher::ExecuteManualAdjust(const std_msgs::Float32MultiArray::ConstPtr
 
 void Dispatcher::ExecuteMotionToTargetEFFPose()
 {   
-
-    if(activated_state_!=0b1111)
-    {
-        ROS_YELLOW_STREAM("[ROTMS WARNING] The prerequisites are not met. Check before robot motion. (code 0)");
-        return;
-    }
-    if(!states_[activated_state_]->flags_.GetFlagRobotConnStatus())
+    if(!states_set_.state_robot[activated_state_["ROBOT"]]->flags_.GetFlagRobotConnStatus())
     {
         ROS_YELLOW_STREAM("[ROTMS WARNING] Robot cabinet connection has not been established!");
+        return;
+    }
+    if(
+        activated_state_["TOOLPLAN"]!=0b1 || 
+        activated_state_["ROBOT"]!=0b1 ||
+        activated_state_["REGISTRATION"]!=0b111)
+    {
+        ROS_YELLOW_STREAM("[ROTMS WARNING] The prerequisites are not met. Check before robot motion. (code 0)");
         return;
     }
 
@@ -473,46 +548,58 @@ void Dispatcher::ExecuteMotionToTargetEFFPose()
     ROS_GREEN_STREAM("[ROTMS INFO] End of robot motion call. ");
 }
 
-void Dispatcher::ExecuteBackOffsetCallBack(const std_msgs::String::ConstPtr& msg)
+void Dispatcher::ExecuteBackToCallBack(const std_msgs::String::ConstPtr& msg)
 {
-    if(!msg->data.compare("_backoffset__")==0) return;
-    if(activated_state_!=0b1111)
+    if(msg->data.compare("_backoffset__")==0)
     {
-        ROS_YELLOW_STREAM("[ROTMS WARNING] The prerequisites are not met. Check before robot motion. (code 3)");
-        return;
+        if(
+            activated_state_["TOOLPLAN"]!=0b1 || 
+            activated_state_["ROBOT"]!=0b1 ||
+            activated_state_["REGISTRATION"]!=0b111)
+        {
+            ROS_YELLOW_STREAM("[ROTMS WARNING] The prerequisites are not met. Check before robot motion. (code 3)");
+            return;
+        }
+        geometry_msgs::Pose changeoffset;
+        std::string packpath = ros::package::getPath("rotms_ros_kinematics");
+        YAML::Node f = YAML::LoadFile(packpath + "/share/cntct_offset.yaml");
+        changeoffset.position.x = f["x"].as<double>();
+        changeoffset.position.y = f["y"].as<double>();
+        changeoffset.position.z = f["z"].as<double>();
+        changeoffset.orientation.x = f["rx"].as<double>();
+        changeoffset.orientation.y = f["ry"].as<double>();
+        changeoffset.orientation.z = f["rz"].as<double>();
+        changeoffset.orientation.w = f["rw"].as<double>();
+        pub_changeoffset_.publish(changeoffset);
+        Dispatcher::ExecuteMotionToTargetEFFPose();
     }
-    geometry_msgs::Pose changeoffset;
-    std::string packpath = ros::package::getPath("rotms_ros_kinematics");
-	YAML::Node f = YAML::LoadFile(packpath + "/share/cntct_offset.yaml");
-    changeoffset.position.x = f["x"].as<double>();
-    changeoffset.position.y = f["y"].as<double>();
-    changeoffset.position.z = f["z"].as<double>();
-    changeoffset.orientation.x = f["rx"].as<double>();
-    changeoffset.orientation.y = f["ry"].as<double>();
-    changeoffset.orientation.z = f["rz"].as<double>();
-    changeoffset.orientation.w = f["rw"].as<double>();
-    pub_changeoffset_.publish(changeoffset);
-    Dispatcher::ExecuteMotionToTargetEFFPose();
-}
-
-void Dispatcher::ExecuteBackInitCallBack(const std_msgs::String::ConstPtr& msg)
-{
-    if(!msg->data.compare("_backinit__")==0) return;
-    if(activated_state_!=0b1111)
+    if(msg->data.compare("_backinit__")==0)
     {
-        ROS_YELLOW_STREAM("[ROTMS WARNING] The prerequisites are not met. Check before robot motion. (code 3)");
-        return;
+        std::string packpath = ros::package::getPath("rotms_ros_operations");
+        std::vector<double> vec = ReadJntsFromConfig(packpath + "/share/config/initjnts.yaml");
+        std_msgs::Float32MultiArray msg_out;
+        msg_out.layout.dim.push_back(std_msgs::MultiArrayDimension());
+        msg_out.layout.dim[0].size = vec.size(); 
+        msg_out.layout.dim[0].stride = 1;
+        msg_out.layout.dim[0].label = "format__a1_a2_a3_a4_a5_a6_a7_";
+        msg_out.data.clear();
+        msg_out.data.insert(msg_out.data.end(), vec.begin(), vec.end());
+        pub_robjntmove_.publish(msg_out);
     }
-    std::string packpath = ros::package::getPath("rotms_ros_operations");
-    std::vector<double> vec = ReadJntsFromConfig(packpath + "/share/config/initjnts.yaml");
-    std_msgs::Float32MultiArray msg_out;
-    msg_out.layout.dim.push_back(std_msgs::MultiArrayDimension());
-    msg_out.layout.dim[0].size = vec.size(); 
-    msg_out.layout.dim[0].stride = 1;
-    msg_out.layout.dim[0].label = "format__";
-    msg_out.data.clear();
-    msg_out.data.insert(msg_out.data.end(), vec.begin(), vec.end());
-    pub_robjntmove_.publish(msg_out);
+    if(msg->data.compare("_robothoming__")==0) 
+    {
+        std::vector<double> vec{
+            0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+        std_msgs::Float32MultiArray msg_out;
+        msg_out.layout.dim.push_back(std_msgs::MultiArrayDimension());
+        msg_out.layout.dim[0].size = vec.size(); 
+        msg_out.layout.dim[0].stride = 1;
+        msg_out.layout.dim[0].label = "format__a1_a2_a3_a4_a5_a6_a7_";
+        msg_out.data.clear();
+        msg_out.data.insert(msg_out.data.end(), vec.begin(), vec.end());
+        pub_robjntmove_.publish(msg_out);
+    }
+    
 }
 
 void Dispatcher::TargetVizCallBack(const std_msgs::String::ConstPtr& msg)
@@ -520,9 +607,9 @@ void Dispatcher::TargetVizCallBack(const std_msgs::String::ConstPtr& msg)
     std_msgs::String msg_out;
     if(msg->data.compare("_start__")==0) 
     {
-        if(activated_state_ != 0b1101 && activated_state_!= 0b1111)
+        if(activated_state_["REGISTRATION"]!=0b111)
         {
-            ROS_YELLOW_STREAM("Current state: " + std::to_string(activated_state_));
+            ROS_YELLOW_STREAM("Current state: " + std::to_string(activated_state_["REGISTRATION"]));
             ROS_YELLOW_STREAM("[ROTMS WARNING] Prerequisite is not met!");
             return;
         }
@@ -540,15 +627,16 @@ void Dispatcher::TargetVizCallBack(const std_msgs::String::ConstPtr& msg)
 
 }
 
-void Dispatcher::StateTransitionCheck(int new_state)
+void Dispatcher::StateTransitionCheck(int new_state, std::string s)
 {
-    ROS_GREEN_STREAM("[ROTMS INFO] Old state: " + std::to_string(activated_state_));
+    ROS_GREEN_STREAM("[ROTMS INFO] State transition - " + s);
+    ROS_GREEN_STREAM("[ROTMS INFO] Old state: " + std::to_string(activated_state_[s]));
     ROS_GREEN_STREAM("[ROTMS INFO] Attempt new state: " + std::to_string(new_state));
     if (new_state != -1)
     {
-        activated_state_ = new_state;
+        activated_state_[s] = new_state;
         ROS_GREEN_STREAM("[ROTMS INFO] Transitioned to new state: " + 
-            std::to_string(activated_state_));
+            std::to_string(activated_state_[s]));
     }
     else
     {
@@ -556,4 +644,19 @@ void Dispatcher::StateTransitionCheck(int new_state)
         ROS_YELLOW_STREAM("[ROTMS WARNING] State transition not possible.");
         ROS_YELLOW_STREAM("[ROTMS WARNING] Make sure the operation dependencies are met.");
     }
+
+    // Low level state branch change will need to change dispatcher activated state record of the higher level branch.
+    if(s.compare("DIGITIZATION")==0)
+    {
+        int activated_state_registration = StateRegistration::GetActivatedState(states_set_.state_registration);
+        activated_state_["REGISTRATION"] = activated_state_registration;
+    }
+
+    ROS_GREEN_STREAM("[ROTMS INFO] Current states: Registration, Digitization, Toolplan, Robot");
+    ROS_GREEN_STREAM("[ROTMS INFO] " + 
+        std::to_string(activated_state_["REGISTRATION"]) + ", "+ 
+        std::to_string(activated_state_["DIGITIZATION"]) + ", "+ 
+        std::to_string(activated_state_["TOOLPLAN"]) + ", "+ 
+        std::to_string(activated_state_["ROBOT"])
+        );
 }

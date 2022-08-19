@@ -7,11 +7,14 @@ CONNECT: 1 # ROS1 connection flag
 
 PORT_OUT_MEDIMG: 8059 # Port number for data stream out from ROS
 PORT_IN_MEDIMG: 8057 # Port number for data stream into ROS
+PORT_OUT_NNBLC_MEDIMG: 8083 # Port number for data stream out from ROS in high frequency
 MSG_END_MEDIMG: "_msg_end__" # communication messege starts with this means end the port
 MSG_SIZE_MEDIMG: 256 # change the ros_side_in.hpp and ros_side_out.hpp {boost::array<char, ...> recv_buffer_} field when chaning this number
 PUBLISHER_NAME_MEDIMG: "/MedImgComm/msg_received" # Messege ROS publisher name (ROSSideIn received)
 SUBSCRIBER_NAME_MEDIMG: "/MedImgComm/msg_to_send" # Messege ROS subscriber name (ROSSideOut to send)
+SUBSCRIBER_HIF_NAME_MEDIMG: "/MedImgComm/msg_to_send_hi_f" # Messege ROS subscriber name (ROSSideOut to send at high frequency)
 VERBOSE_MEDIMG: 1
+VERBOSE_HIF_MEDIMG: 0
 
 # Robot Control module communication configs
 
@@ -27,12 +30,11 @@ VERBOSE_ROBCTRL: 1
 
 PORT_OUT_TARGETVIZ: 8069 # Port number for data stream out from ROS
 PORT_IN_TARGETVIZ: 8077 # Port number for data stream into ROS
-PORT_OUT_NNBLC_TARGETVIZ: 8079 # Port number for data stream out from ROS in soft real time
+PORT_OUT_NNBLC_TARGETVIZ: 8079 # Port number for data stream out from ROS in high frequency
 MSG_END_TARGETVIZ: "_msg_end__" # communication messege starts with this means end the port
 MSG_SIZE_TARGETVIZ: 256 # change the ros_side_in.hpp and ros_side_out.hpp {boost::array<char, ...> recv_buffer_} field when chaning this number
 PUBLISHER_NAME_TARGETVIZ: "/TargetVizComm/msg_received" # Messege ROS publisher name (ROSSideIn received)
 SUBSCRIBER_NAME_TARGETVIZ: "/TargetVizComm/msg_to_send" # Messege ROS subscriber name (ROSSideOut to send)
-PUBLISHER_HIF_NAME_TARGETVIZ: "/TargetVizComm/msg_received_hi_f" # TODO: reconfigure for high frequency ROSSideOut. ROSSideOut has both pub and sub. pub was originally for ack, but not applicable for HI F since there is no Hi F ROSSideIn 
 SUBSCRIBER_HIF_NAME_TARGETVIZ: "/TargetVizComm/msg_to_send_hi_f" # Messege ROS subscriber name (ROSSideOut to send at high frequency)
 VERBOSE_TARGETVIZ: 1
 VERBOSE_HIF_TARGETVIZ: 0

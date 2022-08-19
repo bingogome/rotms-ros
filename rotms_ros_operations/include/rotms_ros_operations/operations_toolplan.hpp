@@ -24,32 +24,20 @@ SOFTWARE.
 
 #pragma once
 #include <ros/ros.h>
-#include <geometry_msgs/Pose.h>
-#include <std_msgs/String.h>
+
 #include "rotms_ros_msgs/PoseValid.h"
+#include "operations.hpp"
 
-
-struct OpsVolatileTempDataCache 
-{
-    int landmark_total = -1;
-    std::vector<std::vector<double>> landmarkdig;
-};
-
-class TMSOperations
+class OperationsToolplan : public OperationsBase
 {
 public:
 
-    TMSOperations(ros::NodeHandle& n);
+    OperationsToolplan(ros::NodeHandle& n);
 
     // Cruicial operations
-    void OperationPlanLandmarks();
-    void OperationDigitization();
     void OperationPlanToolPose();
-    void OperationRegistration();
 
-    void OperationResetRegistration();
     void OperationResetToolPose();
-    void OperationUsePreRegistration();
 
     // Secondary and intermediate operations
     // void Operation();
@@ -58,17 +46,7 @@ public:
 
 private:
 
-    ros::NodeHandle& n_;
-    ros::Publisher pub_registration_ = 
-        n_.advertise<rotms_ros_msgs::PoseValid>("/Kinematics/TR_bodyref_body", 1, true);
     ros::Publisher pub_toolpose_ = 
         n_.advertise<rotms_ros_msgs::PoseValid>("/Kinematics/TR_body_cntct", 1, true);
-    ros::Publisher pub_run_polaris_tr_bodyref_ptrtip_ = 
-        n_.advertise<std_msgs::String>("/Kinematics/Flag_bodyref_ptrtip", 2);
-
-    struct OpsVolatileTempDataCache datacache_;
-    void ResetOpsVolatileDataCache();
 
 };
-
-void SaveLandmarkDigData(struct OpsVolatileTempDataCache datacache, std::string f);

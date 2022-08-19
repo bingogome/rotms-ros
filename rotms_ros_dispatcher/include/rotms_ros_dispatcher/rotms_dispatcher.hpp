@@ -24,6 +24,8 @@ SOFTWARE.
 
 #pragma once
 
+#include <vector>
+#include <map>
 #include <ros/ros.h>
 #include <std_msgs/String.h>
 #include <std_msgs/Int16.h>
@@ -31,34 +33,51 @@ SOFTWARE.
 #include <std_msgs/Bool.h>
 #include <rotms_ros_msgs/GetJnts.h>
 #include <rotms_ros_msgs/GetEFF.h>
-#include <vector>
+#include <rotms_ros_msgs/PoseValid.h>
 
-#include "state_machine.hpp"
+#include "state_machine_registration.hpp"
+#include "state_machine_digitization.hpp"
+#include "state_machine_toolplan.hpp"
+#include "state_machine_robot.hpp"
 #include "dispatcher_utility.hpp"
-#include "rotms_ros_msgs/PoseValid.h"
+
+struct StateSet
+{
+    const std::vector<StateRegistration*>& state_registration;
+    const std::vector<StateDigitization*>& state_digitization;
+    const std::vector<StateToolplan*>& state_toolplan;
+    const std::vector<StateRobot*>& state_robot;
+};
 
 class Dispatcher
 {
 
 public:
 
-    Dispatcher(ros::NodeHandle& n, const std::vector<WorkState*>& states);
+    Dispatcher(ros::NodeHandle& n, struct StateSet& states_set);
 
 private:
 
     ros::NodeHandle& n_;
-    const std::vector<WorkState*>& states_;
-    int activated_state_;
+    struct StateSet& states_set_;
+    std::map<std::string, int> activated_state_{ 
+        {"REGISTRATION", 0}, 
+        {"DIGITIZATION", 0},
+        {"TOOLPLAN", 0},
+        {"ROBOT", 0}
+    };
 
     // Dispatcher receiving query signals
     ros::Subscriber sub_medimg_landmarkplanmeta_ = n_.subscribe(
         "/MedImg/LandmarkPlanMeta", 2, &Dispatcher::LandmarkPlanMetaCallBack, this);
     ros::Subscriber sub_medimg_landmarkplanfids_ = n_.subscribe(
-        "/MedImg/LandmarkPlanFids", 10, &Dispatcher::LandmarkPlanFidsCallBack, this);
+        "/MedImg/LandmarkPlanFids", 10, &Dispatcher::LandmarkPlanLandmarksCallBack, this);
     ros::Subscriber sub_medimg_autodigitization_ = n_.subscribe(
-        "/MedImg/StartAct", 2, &Dispatcher::AutodigitizationCallBack, this);
+        "/MedImg/StartAct", 2, &Dispatcher::DigitizationCallBack, this);
     ros::Subscriber sub_medimg_registration_ = n_.subscribe(
         "/MedImg/StartAct", 2, &Dispatcher::RegistrationCallBack, this);
+    ros::Subscriber sub_medimg_tre_ = n_.subscribe(
+        "/MedImg/StartAct", 2, &Dispatcher::TRECalculationCallBack, this);
     ros::Subscriber sub_medimg_toolposeorient_ = n_.subscribe(
         "/MedImg/ToolPoseOrient", 2, &Dispatcher::ToolPoseOrientCallBack, this);
     ros::Subscriber sub_medimg_toolposetrans_ = n_.subscribe(
@@ -77,10 +96,8 @@ private:
         "/RobCtrl/Motion", 2, &Dispatcher::ExecuteMotionToOffsetCallBack, this);
     ros::Subscriber sub_robctrl_executeconfirm_ = n_.subscribe(
         "/RobCtrl/Motion", 2, &Dispatcher::ExecuteConfirmMotionCallBack, this);
-    ros::Subscriber sub_robctrl_executebackoffset_ = n_.subscribe(
-        "/RobCtrl/Motion", 2, &Dispatcher::ExecuteBackOffsetCallBack, this);
-    ros::Subscriber sub_robctrl_executebackinit_ = n_.subscribe(
-        "/RobCtrl/Motion", 2, &Dispatcher::ExecuteBackInitCallBack, this);
+    ros::Subscriber sub_robctrl_executebackto_ = n_.subscribe(
+        "/RobCtrl/Motion", 2, &Dispatcher::ExecuteBackToCallBack, this);
     ros::Subscriber sub_robctrl_executemanadjust_ = n_.subscribe(
         "/RobCtrl/MotionAdjust", 2, &Dispatcher::ExecuteManualAdjust, this);
     ros::Subscriber sub_robctrl_sessionreinit_ = n_.subscribe(
@@ -107,19 +124,24 @@ private:
         "/Kinematics/Query_ReInit", 2);
     ros::Publisher pub_flag_bodytoolviz_ = n_.advertise<std_msgs::String>(
         "/Kinematics/Flag_body_tool", 2);
-
+    ros::Publisher pub_flag_t_body_ptrtip_ = n_.advertise<std_msgs::String>(
+        "/Kinematics/Flag_t_body_ptrtip", 2);
+    ros::Publisher pub_run_opttracker_tr_bodyref_ptrtip_ = n_.advertise<std_msgs::String>(
+        "/Kinematics/Flag_bodyref_ptrtip", 2);
+        
     // Cruicial operations (operations that affect main user logic and its states/flags/operations)
     void LandmarkPlanMetaCallBack(const std_msgs::Int16::ConstPtr& msg);
-    void AutodigitizationCallBack(const std_msgs::String::ConstPtr& msg);
+    void DigitizationCallBack(const std_msgs::String::ConstPtr& msg);
     void RegistrationCallBack(const std_msgs::String::ConstPtr& msg);
     void ToolPoseOrientCallBack(const geometry_msgs::Quaternion::ConstPtr& msg);
     void ToolPoseTransCallBack(const geometry_msgs::Point::ConstPtr& msg);
 
     // Secondary and intermediate operations
-    void LandmarkPlanFidsCallBack(const std_msgs::Float32MultiArray::ConstPtr& msg);
+    void LandmarkPlanLandmarksCallBack(const std_msgs::Float32MultiArray::ConstPtr& msg);
     void SessionReinitCallBack(const std_msgs::String::ConstPtr& msg);
     void TargetVizCallBack(const std_msgs::String::ConstPtr& msg);
     void RegistrationResidualCheck();
+    void TRECalculationCallBack(const std_msgs::String::ConstPtr& msg);
 
     // Robot operations
     void UpdateRobotConnFlagCallBack(const std_msgs::Bool::ConstPtr& msg);
@@ -130,8 +152,7 @@ private:
     void ExecuteMotionToOffsetCallBack(const std_msgs::String::ConstPtr& msg);
     void ExecuteConfirmMotionCallBack(const std_msgs::String::ConstPtr& msg);
     void ExecuteMotionToTargetEFFPose();
-    void ExecuteBackOffsetCallBack(const std_msgs::String::ConstPtr& msg);
-    void ExecuteBackInitCallBack(const std_msgs::String::ConstPtr& msg);
+    void ExecuteBackToCallBack(const std_msgs::String::ConstPtr& msg);
     void ExecuteManualAdjust(const std_msgs::Float32MultiArray::ConstPtr& msg);
 
     // Robot interface
@@ -149,11 +170,11 @@ private:
         "/RobInterface/MoveJnt", 2);
 
     // Temp data cache (volatile)
-    struct VolatileTempDataCache datacache_;
+    struct TempDataCache datacache_;
     void ResetVolatileDataCacheLandmarks();
     void ResetVolatileDataCacheToolPose();
 
     // Utility
-    void StateTransitionCheck(int new_state);
+    void StateTransitionCheck(int new_state, std::string s);
 
 };

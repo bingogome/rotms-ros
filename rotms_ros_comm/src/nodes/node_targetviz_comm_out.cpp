@@ -31,7 +31,7 @@ int main(int argc, char **argv)
 	ros::init(argc, argv, "CommOutTargetViz");
     ros::NodeHandle n;
 
-	ROSSideOut server = CommNodeOutIniter(n, "TARGETVIZ");
+	ROSSideOutAndAck server = CommNodeOutAndAckIniter(n, "TARGETVIZ");
 
 	ros::spin();
 	return 0;

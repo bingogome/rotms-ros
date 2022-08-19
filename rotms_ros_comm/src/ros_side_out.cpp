@@ -44,8 +44,6 @@ ROSSideOut::ROSSideOut(ros::NodeHandle& n, boost::asio::io_context& io_context,
 	socket_.open(udp::v4());
 	// msg to send
 	sub_ = n_.subscribe(cfg_.subscriber_name, 10, &ROSSideOut::SubCallBack, this);
-	// acknowledge when receive from ros_side_in
-	sub_ack_ = n_.subscribe(cfg_.publisher_name, 10, &ROSSideOut::AckCallBack, this);
 }
 
 void ROSSideOut::SubCallBack(const std_msgs::String::ConstPtr& msg)
@@ -59,7 +57,15 @@ void ROSSideOut::SubCallBack(const std_msgs::String::ConstPtr& msg)
 	}
 }
 
-void ROSSideOut::AckCallBack(const std_msgs::String::ConstPtr& msg)
+ROSSideOutAndAck::ROSSideOutAndAck(ros::NodeHandle& n, boost::asio::io_context& io_context, 
+	struct ROSSideOutAndAckConfig cfg)
+	: ROSSideOut(n, io_context, cfg)
+{
+	// acknowledge when receive from ros_side_in
+	sub_ack_ = n_.subscribe(cfg.publisher_name, 10, &ROSSideOutAndAck::AckCallBack, this);
+}
+
+void ROSSideOutAndAck::AckCallBack(const std_msgs::String::ConstPtr& msg)
 {
 	socket_.send_to(boost::asio::buffer("ack"),remote_endpoint_);
 	if (cfg_.verbose == 1)
