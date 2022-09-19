@@ -270,6 +270,8 @@ void Dispatcher::ToolPoseOrientCallBack(const geometry_msgs::Quaternion::ConstPt
 
         int new_state = states_set_.state_toolplan[activated_state_["TOOLPLAN"]]->ToolPosePlanned();
         Dispatcher::StateTransitionCheck(new_state, "TOOLPLAN");
+
+        Dispatcher::ToolPoseTargetToXR();
     }
 }
 
@@ -291,7 +293,30 @@ void Dispatcher::ToolPoseTransCallBack(const geometry_msgs::Point::ConstPtr& msg
 
         int new_state = states_set_.state_toolplan[activated_state_["TOOLPLAN"]]->ToolPosePlanned();
         Dispatcher::StateTransitionCheck(new_state, "TOOLPLAN");
+
+        Dispatcher::ToolPoseTargetToXR();
     }
+}
+
+void Dispatcher::ToolPoseTargetToXR()
+{
+    std::string packpath = ros::package::getPath("rotms_ros_operations");
+    YAML::Node f = YAML::LoadFile(packpath + "/share/config/toolpose.yaml");
+    YAML::Node ff1 = f["TRANSLATION"];
+    YAML::Node ff2 = f["ROTATION"];
+
+    std_msgs::string msg;
+
+    msg.data = "trgt_" + // left handed
+        FormatDouble2String(-ff1["x"].as<double>(), 7) + "_" +
+        FormatDouble2String(ff1["y"].as<double>(), 7) + "_" +
+        FormatDouble2String(ff1["z"].as<double>(), 7) + "_" + 
+        FormatDouble2String(ff2["x"].as<double>(), 7) + "_" + 
+        FormatDouble2String(ff2["y"].as<double>(), 7) + "_" + 
+        FormatDouble2String(ff2["z"].as<double>(), 7) + "_" +
+        FormatDouble2String(ff2["w"].as<double>(), 7);
+    
+    pub_xr_.publish(msg);
 }
 
 void Dispatcher::UpdateRobotConnFlagCallBack(const std_msgs::Bool::ConstPtr& msg)

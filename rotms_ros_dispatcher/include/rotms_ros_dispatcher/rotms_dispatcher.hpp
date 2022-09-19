@@ -176,5 +176,9 @@ private:
 
     // Utility
     void StateTransitionCheck(int new_state, std::string s);
+    void ToolPoseTargetToXR();
+
+    ros::Publisher pub_xr_ = n_.advertise<std_msgs::String>(
+        "/XRComm/msg_to_send_hi_f", 2);
 
 };
