@@ -305,7 +305,7 @@ void Dispatcher::ToolPoseTargetToXR()
     YAML::Node ff1 = f["TRANSLATION"];
     YAML::Node ff2 = f["ROTATION"];
 
-    std_msgs::string msg;
+    std_msgs::String msg;
 
     msg.data = "trgt_" + // left handed
         FormatDouble2String(-ff1["x"].as<double>(), 7) + "_" +
