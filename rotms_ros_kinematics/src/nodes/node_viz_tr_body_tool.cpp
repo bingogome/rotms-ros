@@ -148,15 +148,15 @@ int main(int argc, char **argv)
                 FormatDouble2String(tr_body_tool_.getRotation().w(), 5);
             pub_encode_body_tool.publish(msg_out);
 
-            msg_out_xr.data = "crnt_" + // left-handed
-                FormatDouble2String(-tr_body_tool_.getOrigin().x(), 7) + "_" +
+            msg_out_xr.data = "crnt_" + 
+                FormatDouble2String(tr_body_tool_.getOrigin().x(), 7) + "_" +
                 FormatDouble2String(tr_body_tool_.getOrigin().y(), 7) + "_" +
                 FormatDouble2String(tr_body_tool_.getOrigin().z(), 7) + "_" + 
                 FormatDouble2String(tr_body_tool_.getRotation().x(), 7) + "_" + 
                 FormatDouble2String(tr_body_tool_.getRotation().y(), 7) + "_" + 
                 FormatDouble2String(tr_body_tool_.getRotation().z(), 7) + "_" +
                 FormatDouble2String(tr_body_tool_.getRotation().w(), 7);
-            pub_encode_body_tool.publish(msg_out_xr);
+            pub_xr_body_tool.publish(msg_out_xr);
         }
         ros::spinOnce();
         rate.sleep();

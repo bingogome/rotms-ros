@@ -307,8 +307,8 @@ void Dispatcher::ToolPoseTargetToXR()
 
     std_msgs::String msg;
 
-    msg.data = "trgt_" + // left handed
-        FormatDouble2String(-ff1["x"].as<double>(), 7) + "_" +
+    msg.data = "trgt_" +
+        FormatDouble2String(ff1["x"].as<double>(), 7) + "_" +
         FormatDouble2String(ff1["y"].as<double>(), 7) + "_" +
         FormatDouble2String(ff1["z"].as<double>(), 7) + "_" + 
         FormatDouble2String(ff2["x"].as<double>(), 7) + "_" + 
