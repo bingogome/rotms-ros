@@ -36,6 +36,7 @@ ROSSideOut CommNodeHiFOutIniter(ros::NodeHandle& n, std::string modulesuffix)
 	YAML::Node f = YAML::LoadFile(packpath + "/config_comm.yaml");
 
     struct ROSSideOutConfig cfg;
+	cfg.ip_out = f["IP_OUT_NNBLC_"+modulesuffix].as<std::string>();
 	cfg.port_out = f["PORT_OUT_NNBLC_"+modulesuffix].as<int>();
 	cfg.msg_size = f["MSG_SIZE_"+modulesuffix].as<int>();
 	cfg.subscriber_name = f["SUBSCRIBER_HIF_NAME_"+modulesuffix].as<std::string>();

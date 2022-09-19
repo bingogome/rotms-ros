@@ -36,12 +36,13 @@ SOFTWARE.
 #include "ros_print_color.hpp"
 
 using boost::asio::ip::udp;
+using boost::asio::ip::address;
 
 ROSSideIn::ROSSideIn(ros::NodeHandle& n, boost::asio::io_context& io_context, 
 	struct ROSSideInConfig cfg) :
 	cfg_(cfg),
 	n_(n), 
-	socket_(io_context, udp::endpoint(udp::v4(), cfg.port_in))
+	socket_(io_context, udp::endpoint(address::from_string(cfg.ip_in), cfg.port_in))
 {
 	eom_ = cfg.eom;
 	pub_test_ = n_.advertise<std_msgs::String>(cfg_.publisher_name, 50);

@@ -67,3 +67,6 @@ target_link_libraries(node_targetviz_comm_hif_out ${PROJECT_NAME})
 
 add_executable(node_medimg_comm_hif_out src/nodes/node_medimg_comm_hif_out.cpp)
 target_link_libraries(node_medimg_comm_hif_out ${PROJECT_NAME})
+
+add_executable(node_xr_comm_hif_out src/nodes/node_xr_comm_hif_out.cpp)
+target_link_libraries(node_xr_comm_hif_out ${PROJECT_NAME})

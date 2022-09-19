@@ -36,10 +36,11 @@ SOFTWARE.
 #include "ros_print_color.hpp"
 
 using boost::asio::ip::udp;
+using boost::asio::ip::address;
 
 ROSSideOut::ROSSideOut(ros::NodeHandle& n, boost::asio::io_context& io_context, 
 	struct ROSSideOutConfig cfg)
-	: cfg_(cfg), n_(n), socket_(io_context), remote_endpoint_(udp::v4(), cfg.port_out)
+	: cfg_(cfg), n_(n), socket_(io_context), remote_endpoint_(address::from_string(cfg.ip_out), cfg.port_out)
 {
 	socket_.open(udp::v4());
 	// msg to send

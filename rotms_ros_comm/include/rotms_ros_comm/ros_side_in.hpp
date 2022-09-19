@@ -37,6 +37,7 @@ using boost::asio::ip::udp;
 // data from config_ros.yaml
 struct ROSSideInConfig
 {
+	std::string ip_in;
 	int port_in;
 	std::string end_msg;
 	std::string publisher_name;
