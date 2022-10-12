@@ -624,7 +624,6 @@ void Dispatcher::ExecuteBackToCallBack(const std_msgs::String::ConstPtr& msg)
         msg_out.data.insert(msg_out.data.end(), vec.begin(), vec.end());
         pub_robjntmove_.publish(msg_out);
     }
-    
 }
 
 void Dispatcher::TargetVizCallBack(const std_msgs::String::ConstPtr& msg)
@@ -648,8 +647,17 @@ void Dispatcher::TargetVizCallBack(const std_msgs::String::ConstPtr& msg)
         msg_out.data = "_end__";
         pub_flag_bodytoolviz_.publish(msg_out);
     }
-    
+}
 
+void Dispatcher::TargetVizSavePlanAndRealPoseCallBack(const std_msgs::String::ConstPtr& msg)
+{
+    if(msg->data.compare("_save_plan_real__")==0)
+    {
+        ROS_GREEN_STREAM("[ROTMS INFO] Saving the planned pose and the real pose. ");
+
+
+        ROS_GREEN_STREAM("[ROTMS INFO] Saved the planned pose and the real pose. ");
+    }
 }
 
 void Dispatcher::StateTransitionCheck(int new_state, std::string s)

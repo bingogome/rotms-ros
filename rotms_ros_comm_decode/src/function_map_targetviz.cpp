@@ -40,7 +40,9 @@ CommDecoderTargetViz::CommDecoderTargetViz(
     CommDecoder(n, modulesuffix, opsdict) 
 {
     pubs_.push_back(
-        n_.advertise<std_msgs::String>("/TargetViz/Visualize", 5));
+        n_.advertise<std_msgs::String>("/TargetViz/Visualize", 2));
+    pubs_.push_back(
+        n_.advertise<std_msgs::String>("/TargetViz/DataRecord", 2));
 }
 
 FuncMap GetFuncMapTargetViz()
@@ -49,6 +51,7 @@ FuncMap GetFuncMapTargetViz()
 
     fm["VISUALIZE_START"] = VisualizeStart;
     fm["VISUALIZE_STOP"] = VisualizeStop;
+    fm["VISUALIZE_SAVE_PLANANDREAL_POSE"] = VisualizeSavePlanAndRealPose;
 
     return fm;
 }
@@ -67,4 +70,12 @@ void VisualizeStop(std::string& ss, PublisherVec& pubs)
     msg_test.data = "_end__";
     // pubs[0] is the publisher /TargetViz/Visualize
     pubs[0].publish(msg_test);
+}
+
+void VisualizeSavePlanAndRealPose(std::string& ss, PublisherVec& pubs)
+{
+    std_msgs::String msg_test;
+    msg_test.data = "_save_plan_real__";
+    // pubs[1] is the publisher /TargetViz/DataRecord
+    pubs[1].publish(msg_test);
 }
