@@ -25,6 +25,7 @@ SOFTWARE.
 #pragma once
 #include <string>
 #include <vector>
+#include <geometry_msgs/Pose.h>
 #include <std_msgs/Float32MultiArray.h>
 #include <tf2/LinearMath/Transform.h>
 
@@ -39,9 +40,11 @@ struct TempDataCache
     std::vector<double> toolpose_r;
 };
 
+std::vector<double> SubStringTokenize2Double(std::string s, std::string del = "_");
 void SaveLandmarkPlanData(struct TempDataCache datacache, std::string f, std::string time_stamp);
 void SaveToolPoseData(struct TempDataCache datacache, std::string f);
 void SaveCurrentJntsAsInit(std_msgs::Float32MultiArray jnts, std::string f);
+void SaveToolPosePlannedAndMeasured(std::string filename, geometry_msgs::Pose tr);
 std::vector<double> ReadJntsFromConfig(std::string f);
 std::string FormatDouble2String(double a, int dec);
 std::string GetTimeString();

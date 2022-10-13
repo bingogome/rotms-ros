@@ -34,9 +34,27 @@ SOFTWARE.
 #include <time.h>
 #include <math.h> 
 #include <yaml-cpp/yaml.h>
+
+#include <ros/package.h>
+#include <geometry_msgs/Pose.h>
 #include <std_msgs/Float32MultiArray.h>
 #include <tf2/LinearMath/Transform.h>
 
+std::vector<double> SubStringTokenize2Double(std::string s, std::string del)
+{   
+    std::vector<double> ans;
+    int start = 0;
+    int end = s.find(del);
+    while (end != -1) {
+        ans.push_back(
+            std::stod(s.substr(start, end - start)));
+        start = end + del.size();
+        end = s.find(del, start);
+    }
+    ans.push_back(
+        std::stod(s.substr(start, end - start)));
+    return ans;
+}
 
 void SaveLandmarkPlanData(struct TempDataCache datacache, std::string f, std::string time_stamp)
 {
@@ -105,6 +123,52 @@ void SaveCurrentJntsAsInit(std_msgs::Float32MultiArray jnts, std::string f)
         filesave.close();
     }
     
+}
+
+void SaveToolPosePlannedAndMeasured(std::string filename, geometry_msgs::Pose tr)
+{
+    std::string packpath = ros::package::getPath("rotms_ros_operations");
+    YAML::Node f = YAML::LoadFile(packpath + "/share/config/toolpose.yaml");
+    YAML::Node ff1 = f["TRANSLATION"];
+    YAML::Node ff2 = f["ROTATION"];
+
+    std::ofstream filesave(filename);
+    if(filesave.is_open())
+    {
+        filesave << "PLANNED_POSE:\n";
+        filesave << "{\n";
+        filesave << "  TRANSLATION: # translation: x,y,z\n";
+        filesave << "  {\n";
+		filesave << "    x: " << FormatDouble2String(ff1["x"].as<double>(), 16) << ",\n";
+		filesave << "    y: " << FormatDouble2String(ff1["y"].as<double>(), 16) << ",\n";
+		filesave << "    z: " << FormatDouble2String(ff1["z"].as<double>(), 16) << "\n";
+		filesave << "  }\n";
+		filesave << "  ROTATION: # quat: x,y,z,w\n";
+        filesave << "  {\n";
+		filesave << "    x: " << FormatDouble2String(ff2["x"].as<double>(), 16) << ",\n";
+		filesave << "    y: " << FormatDouble2String(ff2["y"].as<double>(), 16) << ",\n";
+		filesave << "    z: " << FormatDouble2String(ff2["z"].as<double>(), 16) << ",\n";
+        filesave << "    w: " << FormatDouble2String(ff2["w"].as<double>(), 16) << "\n";
+        filesave << "  }\n";
+        filesave << "}\n";
+        filesave << "MEASURED_POSE:\n";
+        filesave << "{\n";
+        filesave << "  TRANSLATION: # translation: x,y,z\n";
+        filesave << "  {\n";
+		filesave << "    x: " << FormatDouble2String(tr.position.x, 16) << ",\n";
+		filesave << "    y: " << FormatDouble2String(tr.position.y, 16) << ",\n";
+		filesave << "    z: " << FormatDouble2String(tr.position.z, 16) << "\n";
+		filesave << "  }\n";
+		filesave << "  ROTATION: # quat: x,y,z,w\n";
+        filesave << "  {\n";
+		filesave << "    x: " << FormatDouble2String(tr.orientation.x, 16) << ",\n";
+		filesave << "    y: " << FormatDouble2String(tr.orientation.y, 16) << ",\n";
+		filesave << "    z: " << FormatDouble2String(tr.orientation.z, 16) << ",\n";
+        filesave << "    w: " << FormatDouble2String(tr.orientation.w, 16) << "\n";
+        filesave << "  }\n";
+        filesave << "}\n";
+		filesave.close();
+    }
 }
 
 std::vector<double> ReadJntsFromConfig(std::string f)
