@@ -104,6 +104,8 @@ private:
         "/RobCtrl/Session", 2, &Dispatcher::SessionReinitCallBack, this);
     ros::Subscriber sub_targetviz_ = n_.subscribe(
         "/TargetViz/Visualize", 2, &Dispatcher::TargetVizCallBack, this);
+    ros::Subscriber sub_savetargetplanandreal_ = n_.subscribe(
+        "/TargetViz/DataRecord", 2, &Dispatcher::TargetVizSavePlanAndRealPoseCallBack, this);
 
     // Dispatcher sending query response signals
     ros::Publisher pub_robctrlcomm_ = n_.advertise<std_msgs::String>(
@@ -140,6 +142,7 @@ private:
     void LandmarkPlanLandmarksCallBack(const std_msgs::Float32MultiArray::ConstPtr& msg);
     void SessionReinitCallBack(const std_msgs::String::ConstPtr& msg);
     void TargetVizCallBack(const std_msgs::String::ConstPtr& msg);
+    void TargetVizSavePlanAndRealPoseCallBack(const std_msgs::String::ConstPtr& msg);
     void RegistrationResidualCheck();
     void TRECalculationCallBack(const std_msgs::String::ConstPtr& msg);
 
@@ -176,5 +179,9 @@ private:
 
     // Utility
     void StateTransitionCheck(int new_state, std::string s);
+    void ToolPoseTargetToXR();
+
+    ros::Publisher pub_xr_ = n_.advertise<std_msgs::String>(
+        "/XRComm/msg_to_send_hi_f", 2);
 
 };

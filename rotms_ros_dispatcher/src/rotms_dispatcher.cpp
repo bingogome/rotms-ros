@@ -270,6 +270,8 @@ void Dispatcher::ToolPoseOrientCallBack(const geometry_msgs::Quaternion::ConstPt
 
         int new_state = states_set_.state_toolplan[activated_state_["TOOLPLAN"]]->ToolPosePlanned();
         Dispatcher::StateTransitionCheck(new_state, "TOOLPLAN");
+
+        Dispatcher::ToolPoseTargetToXR();
     }
 }
 
@@ -291,7 +293,30 @@ void Dispatcher::ToolPoseTransCallBack(const geometry_msgs::Point::ConstPtr& msg
 
         int new_state = states_set_.state_toolplan[activated_state_["TOOLPLAN"]]->ToolPosePlanned();
         Dispatcher::StateTransitionCheck(new_state, "TOOLPLAN");
+
+        Dispatcher::ToolPoseTargetToXR();
     }
+}
+
+void Dispatcher::ToolPoseTargetToXR()
+{
+    std::string packpath = ros::package::getPath("rotms_ros_operations");
+    YAML::Node f = YAML::LoadFile(packpath + "/share/config/toolpose.yaml");
+    YAML::Node ff1 = f["TRANSLATION"];
+    YAML::Node ff2 = f["ROTATION"];
+
+    std_msgs::String msg;
+
+    msg.data = "trgt_" +
+        FormatDouble2String(ff1["x"].as<double>(), 7) + "_" +
+        FormatDouble2String(ff1["y"].as<double>(), 7) + "_" +
+        FormatDouble2String(ff1["z"].as<double>(), 7) + "_" + 
+        FormatDouble2String(ff2["x"].as<double>(), 7) + "_" + 
+        FormatDouble2String(ff2["y"].as<double>(), 7) + "_" + 
+        FormatDouble2String(ff2["z"].as<double>(), 7) + "_" +
+        FormatDouble2String(ff2["w"].as<double>(), 7);
+    
+    pub_xr_.publish(msg);
 }
 
 void Dispatcher::UpdateRobotConnFlagCallBack(const std_msgs::Bool::ConstPtr& msg)
@@ -599,7 +624,6 @@ void Dispatcher::ExecuteBackToCallBack(const std_msgs::String::ConstPtr& msg)
         msg_out.data.insert(msg_out.data.end(), vec.begin(), vec.end());
         pub_robjntmove_.publish(msg_out);
     }
-    
 }
 
 void Dispatcher::TargetVizCallBack(const std_msgs::String::ConstPtr& msg)
@@ -623,8 +647,34 @@ void Dispatcher::TargetVizCallBack(const std_msgs::String::ConstPtr& msg)
         msg_out.data = "_end__";
         pub_flag_bodytoolviz_.publish(msg_out);
     }
-    
+}
 
+void Dispatcher::TargetVizSavePlanAndRealPoseCallBack(const std_msgs::String::ConstPtr& msg)
+{
+    if(msg->data.compare("_save_plan_real__")==0)
+    {
+        ROS_GREEN_STREAM("[ROTMS INFO] Saving the planned pose and the real pose. ");
+
+        // Get the current pose from the visualization module interface
+        std_msgs::StringConstPtr tr_measure = ros::topic::waitForMessage<std_msgs::String>(
+            "/TargetVizComm/msg_to_send_hi_f"); 
+        std::string str_ = tr_measure->data.substr(11);
+        std::vector<double> str_arr = SubStringTokenize2Double(str_);
+
+        geometry_msgs::Pose tr_measure_;
+        tr_measure_.position.x = str_arr[0] / 1000.0;
+        tr_measure_.position.y = str_arr[1] / 1000.0;
+        tr_measure_.position.z = str_arr[2] / 1000.0;
+        tr_measure_.orientation.x = str_arr[3] ;
+        tr_measure_.orientation.y = str_arr[4] ;
+        tr_measure_.orientation.z = str_arr[5] ;
+        tr_measure_.orientation.w = str_arr[6] ;
+
+        std::string packpath = ros::package::getPath("rotms_ros");
+        SaveToolPosePlannedAndMeasured(packpath + "/saveddata/toolpose_" + GetTimeString() + ".yaml", tr_measure_);
+
+        ROS_GREEN_STREAM("[ROTMS INFO] Saved the planned pose and the real pose. ");
+    }
 }
 
 void Dispatcher::StateTransitionCheck(int new_state, std::string s)

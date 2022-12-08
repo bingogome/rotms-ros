@@ -39,6 +39,7 @@ void CommNodeInIniter(ros::NodeHandle& n, std::string modulesuffix)
 	YAML::Node f = YAML::LoadFile(packpath + "/config_comm.yaml");
 
 	struct ROSSideInConfig cfg;
+	cfg.ip_in = f["IP_IN_"+modulesuffix].as<std::string>();
 	cfg.port_in = f["PORT_IN_"+modulesuffix].as<int>();
 	cfg.msg_size = f["MSG_SIZE_"+modulesuffix].as<int>();
 	cfg.end_msg = f["MSG_END_"+modulesuffix].as<std::string>();

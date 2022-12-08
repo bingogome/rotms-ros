@@ -50,5 +50,6 @@
   # Target Visualization module commands
   {
     "VISUALIZE_START": "start_visualizex",
-    "VISUALIZE_STOP": "stop_visualizexx"
+    "VISUALIZE_STOP": "stop_visualizexx",
+    "VISUALIZE_SAVE_PLANANDREAL_POSE": "save_planandreal"
   }

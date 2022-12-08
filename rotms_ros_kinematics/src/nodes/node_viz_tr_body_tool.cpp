@@ -120,6 +120,14 @@ int main(int argc, char **argv)
         "/TargetVizComm/msg_to_send_hi_f", 5);
     std_msgs::String msg_out;
 
+    // Initialize the result variable and its publisher
+    // Format:
+    // crnt_0000.0000000_0000.0000000_0000.0000000_0000.0000000_0000.0000000_0000.0000000_0000.0000000
+    // x, y, z, qx, qy, qz, qw in m
+    ros::Publisher pub_xr_body_tool = nh.advertise<std_msgs::String>(
+        "/XRComm/msg_to_send_hi_f", 5);
+    std_msgs::String msg_out_xr;
+
     // Go in the loop, with the flag indicating wether do the calculation or not
     while (nh.ok())
     {
@@ -139,6 +147,16 @@ int main(int argc, char **argv)
                 FormatDouble2String(tr_body_tool_.getRotation().z(), 5) + "_" +
                 FormatDouble2String(tr_body_tool_.getRotation().w(), 5);
             pub_encode_body_tool.publish(msg_out);
+
+            msg_out_xr.data = "crnt_" + 
+                FormatDouble2String(tr_body_tool_.getOrigin().x(), 7) + "_" +
+                FormatDouble2String(tr_body_tool_.getOrigin().y(), 7) + "_" +
+                FormatDouble2String(tr_body_tool_.getOrigin().z(), 7) + "_" + 
+                FormatDouble2String(tr_body_tool_.getRotation().x(), 7) + "_" + 
+                FormatDouble2String(tr_body_tool_.getRotation().y(), 7) + "_" + 
+                FormatDouble2String(tr_body_tool_.getRotation().z(), 7) + "_" +
+                FormatDouble2String(tr_body_tool_.getRotation().w(), 7);
+            pub_xr_body_tool.publish(msg_out_xr);
         }
         ros::spinOnce();
         rate.sleep();
