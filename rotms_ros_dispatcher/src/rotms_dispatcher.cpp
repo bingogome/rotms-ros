@@ -432,7 +432,7 @@ void Dispatcher::ExecuteConfirmMotionCallBack(const std_msgs::String::ConstPtr& 
         return;
     }
     geometry_msgs::Pose changeoffset;
-    changeoffset.position.x = 0.0; changeoffset.position.y = 0.0; changeoffset.position.z = 0.0;
+    changeoffset.position.x = 0.0; changeoffset.position.y = 0.0; changeoffset.position.z = 0.010; // 1cm offset to make sure safety 
     changeoffset.orientation.x = 0.0; changeoffset.orientation.y = 0.0; changeoffset.orientation.z = 0.0;
     changeoffset.orientation.w = 1.0;
     pub_changeoffset_.publish(changeoffset);
