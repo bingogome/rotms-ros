@@ -42,6 +42,7 @@ def callback(data):
     rospy.loginfo("[ROTMS INFO] " + "Starting ICP ...")
     initmat, dig = initICP()
     rospy.loginfo("[ROTMS INFO] " + "ICP initialized.")
+    rospy.loginfo("[ROTMS INFO] " + "ICP Started.")
     # matrix, transformed, cost = icp(dig, data.data, initmat)
     # matrix = numpy.linalg.inv(matrix) 
     # rospy.loginfo("[ROTMS INFO]" + "ICP completed. Cost: %s", str(cost))
