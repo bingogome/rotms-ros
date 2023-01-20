@@ -19,6 +19,6 @@ ln -s ${directory}/rotms_ros_state ${directory}/../ws_rotms/src/rotms_ros_state
 echo [rotms-ros INFO] Wrote rotms_ros_state 8/10
 ln -s ${directory}/rotms_ros_msgs ${directory}/../ws_rotms/src/rotms_ros_msgs
 echo [rotms-ros INFO] Wrote rotms_ros_msgs 9/10
-ln -s ${directory}/rotms_ros_universal_utility ${directory}/../ws_rotms/src/rotms_ros_universal_utility
-echo [rotms-ros INFO] Wrote rotms_ros_universal_utility 10/10
+ln -s ${directory}/rotms_ros_utility ${directory}/../ws_rotms/src/rotms_ros_utility
+echo [rotms-ros INFO] Wrote rotms_ros_utility 10/10
 echo Complete.

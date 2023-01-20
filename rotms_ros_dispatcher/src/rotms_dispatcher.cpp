@@ -254,7 +254,22 @@ void Dispatcher::TRECalculationCallBack(const std_msgs::String::ConstPtr& msg)
 
 void Dispatcher::ICPCallBack(const std_msgs::String::ConstPtr& msg)
 {
+    if (msg->data.compare("icp_digitize")==0)
+    {
+        
+    }
+    if (msg->data.compare("icp_clear_prev")==0)
+    {
 
+    }
+    if (msg->data.compare("icp_clear_all")==0)
+    {
+
+    }
+    if (msg->data.compare("icp_register")==0)
+    {
+
+    }
 }
 
 void Dispatcher::ToolPoseOrientCallBack(const geometry_msgs::Quaternion::ConstPtr& msg)

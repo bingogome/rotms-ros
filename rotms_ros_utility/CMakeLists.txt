@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(rotms_ros_universal_utility)
+project(rotms_ros_utility)
 
 find_package(catkin REQUIRED COMPONENTS 
   roscpp
@@ -23,7 +23,7 @@ add_library(${PROJECT_NAME}
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
-  include/rotms_ros_universal_utility
+  include/rotms_ros_utility
   ${catkin_INCLUDE_DIRS} 
   )
 
