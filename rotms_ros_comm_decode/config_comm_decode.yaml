@@ -4,52 +4,57 @@
 
   # Medical Image Plan module commands
   {
-    "START_AUTO_DIGITIZE": "start_autodigitz",
-    "START_REGISTRATION": "start_registrati",
-    "START_USE_PREV_REGISTRATION": "start_useprevreg",
-    "START_TRE_CALCULATION_START": "tre_startcalcuxx",
-    "START_TRE_CALCULATION_STOP": "tre_stopcalcuxxx",
-    "START_LANDMARK_DIG_NUM": "img_dig_digitize",
-    "START_LANDMARK_DIG_PREV_DIG_HILIGHT": "img_dig_prevhilg",
-    "START_LANDMARK_DIG_PREV": "img_dig_prevxxxx",
+    "START_AUTO_DIGITIZE":                  "start_autodigitz",
+    "START_REGISTRATION":                   "start_registrati",
+    "START_USE_PREV_REGISTRATION":          "start_useprevreg",
+    "START_TRE_CALCULATION_START":          "tre_startcalcuxx",
+    "START_TRE_CALCULATION_STOP":           "tre_stopcalcuxxx",
+    "START_LANDMARK_DIG_NUM":               "img_dig_digitize",
+    "START_LANDMARK_DIG_PREV_DIG_HILIGHT":  "img_dig_prevhilg",
+    "START_LANDMARK_DIG_PREV":              "img_dig_prevxxxx",
 
-    "LANDMARK_CURRENT_ON_IMG": "img_fid_pntxxxxx",
-    "LANDMARK_NUM_OF_ON_IMG": "img_fid_numxxxxx",
-    "LANDMARK_LAST_RECEIVED": "img_fid_lastrecv",
+    "LANDMARK_CURRENT_ON_IMG":              "img_fid_pntxxxxx",
+    "LANDMARK_NUM_OF_ON_IMG":               "img_fid_numxxxxx",
+    "LANDMARK_LAST_RECEIVED":               "img_fid_lastrecv",
 
-    "TARGET_POSE_ORIENTATION": "target_rotxxxxxx",
-    "TARGET_POSE_TRANSLATION": "target_tslxxxxxx",
+    "TARGET_POSE_ORIENTATION":              "target_rotxxxxxx",
+    "TARGET_POSE_TRANSLATION":              "target_tslxxxxxx",
+
+    "ICP_DIGITIZE":                         "icp_digitizexxxx",
+    "ICP_CLEAR_PREV":                       "icp_clear_prevxx",
+    "ICP_CLEAR_ALL":                        "icp_clear_allxxx",
+    "ICP_REGISTER":                         "icp_registerxxxx"
   }
 
 "ROBCTRL_CMDS":
 
   # Robot Control module commands
   {
-    "GET_JNT_ANGS": "get_jnt_angsxxxx",
-    "GET_EFF_POSE": "get_eff_posexxxx",
-    "GET_JNT_ANGS_TOINIT": "get_jnt_setinitx",
+    "GET_JNT_ANGS":                         "get_jnt_angsxxxx",
+    "GET_EFF_POSE":                         "get_eff_posexxxx",
+    "GET_JNT_ANGS_TOINIT":                  "get_jnt_setinitx",
 
-    "EXECUTE_MOTION": "execute_motionxx",
-    "EXECUTE_MOVE_CONFIRM": "execute_confirmx",
-    "EXECUTE_ENDBACK": "end_session_back",
-    "EXECUTE_BACKINIT": "execute_backinit",
-    "EXECUTE_BACKOFFSET": "execute_bkoffset",
-    "EXECUTE_ROB_HOMING": "execute_homexxxx",
+    "EXECUTE_MOTION":                       "execute_motionxx",
+    "EXECUTE_MOVE_CONFIRM":                 "execute_confirmx",
+    "EXECUTE_ENDBACK":                      "end_session_back",
+    "EXECUTE_BACKINIT":                     "execute_backinit",
+    "EXECUTE_BACKOFFSET":                   "execute_bkoffset",
+    "EXECUTE_ROB_HOMING":                   "execute_homexxxx",
 
-    "SESSION_REINIT": "session_reinitxx",
+    "SESSION_REINIT":                       "session_reinitxx",
     
-    "MAN_ADJUST_T": "adjust_tranxxxxx",
-    "MAN_ADJUST_R": "adjust_oriexxxxx",
+    "MAN_ADJUST_T":                         "adjust_tranxxxxx",
+    "MAN_ADJUST_R":                         "adjust_oriexxxxx",
 
-    "ROB_CONN_ON": "rob_conn_onxxxxx",
-    "ROB_CONN_OFF": "rob_conn_offxxxx"
+    "ROB_CONN_ON":                          "rob_conn_onxxxxx",
+    "ROB_CONN_OFF":                         "rob_conn_offxxxx"
   }
 
 "TARGETVIZ_CMDS":
 
   # Target Visualization module commands
   {
-    "VISUALIZE_START": "start_visualizex",
-    "VISUALIZE_STOP": "stop_visualizexx",
-    "VISUALIZE_SAVE_PLANANDREAL_POSE": "save_planandreal"
+    "VISUALIZE_START":                      "start_visualizex",
+    "VISUALIZE_STOP":                       "stop_visualizexx",
+    "VISUALIZE_SAVE_PLANANDREAL_POSE":      "save_planandreal"
   }

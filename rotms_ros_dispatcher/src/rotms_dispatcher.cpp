@@ -220,7 +220,8 @@ void Dispatcher::RegistrationResidualCheck()
     pub_medplancomm_.publish(resid_msg);
 }
 
-void Dispatcher::TRECalculationCallBack(const std_msgs::String::ConstPtr& msg){
+void Dispatcher::TRECalculationCallBack(const std_msgs::String::ConstPtr& msg)
+{
     if (msg->data.compare("_starttre__")==0)
     {
         if(activated_state_["REGISTRATION"] != 0b111)
@@ -249,6 +250,11 @@ void Dispatcher::TRECalculationCallBack(const std_msgs::String::ConstPtr& msg){
         flag_opttracker.data = "_end__";
         pub_run_opttracker_tr_bodyref_ptrtip_.publish(flag_opttracker);
     }
+}
+
+void Dispatcher::ICPCallBack(const std_msgs::String::ConstPtr& msg)
+{
+
 }
 
 void Dispatcher::ToolPoseOrientCallBack(const geometry_msgs::Quaternion::ConstPtr& msg)
@@ -300,10 +306,10 @@ void Dispatcher::ToolPoseTransCallBack(const geometry_msgs::Point::ConstPtr& msg
 
 void Dispatcher::ToolPoseTargetToXR()
 {
-    std::string packpath = ros::package::getPath("rotms_ros_operations");
-    YAML::Node f = YAML::LoadFile(packpath + "/share/config/toolpose.yaml");
-    YAML::Node ff1 = f["TRANSLATION"];
-    YAML::Node ff2 = f["ROTATION"];
+    std::string packpath    = ros::package::getPath("rotms_ros_operations");
+    YAML::Node f            = YAML::LoadFile(packpath + "/share/config/toolpose.yaml");
+    YAML::Node ff1          = f["TRANSLATION"];
+    YAML::Node ff2          = f["ROTATION"];
 
     std_msgs::String msg;
 

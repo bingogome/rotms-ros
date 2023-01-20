@@ -66,3 +66,11 @@ void LandmarkLastReceived(std::string& ss, PublisherVec& pubs);
 void TargetPoseOrientation(std::string& ss, PublisherVec& pubs);
 
 void TargetPoseTranslation(std::string& ss, PublisherVec& pubs);
+
+void ICPDigitize(std::string& ss, PublisherVec& pubs);
+
+void ICPClearPrevPointCloud(std::string& ss, PublisherVec& pubs);
+
+void ICPClearAllPointClouds(std::string& ss, PublisherVec& pubs);
+
+void ICPRegister(std::string& ss, PublisherVec& pubs);
