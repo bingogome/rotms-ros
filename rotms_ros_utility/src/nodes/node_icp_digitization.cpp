@@ -22,7 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***/
 
+#include <yaml-cpp/yaml.h>
 #include <ros/ros.h>
+#include <ros/package.h>
 #include <std_msgs/String.h>
 #include <geometry_msgs/Point.h>
 #include <vector>
@@ -32,12 +34,17 @@ class Mngr
 {
 public:
 
-    Mngr(ros::NodeHandle& n) : n_(n){}
+    Mngr(ros::NodeHandle& n) : n_(n)
+    {
+        std::string packpath = ros::package::getPath("rotms_ros_utility");
+        YAML::Node f = YAML::LoadFile(packpath + "/icp_config.yaml");
+        num_pnts_acloud = f["NUM_PNTS_IN_ACLOUD"].as<int>();
+    }
     bool run_flag = false;
     std::vector<std::vector<double>> current_cloud;
     geometry_msgs::Point current_bodyref_ptrtip;
 
-    static int num_pnts_acloud = 100;
+    static int num_pnts_acloud;
     static float dig_freq = 10;
 
 private:
@@ -106,18 +113,24 @@ int main(int argc, char **argv)
                 ros::spinOnce();
 
                 // Save the cloud and clear the vector
-                std::ofstream f;
                 std::string packpath = ros::package::getPath("rotms_ros_operations");
-                std::string filename = packpath + "/share/config/icpdig.csv";
-                f.open(filename, std::ios_base::app);
+                std::string filename = packpath + "/share/config/icpdig.yaml";
+                YAML::Node f2 = YAML::LoadFile(filename);
+
+                int cloudctr = 0;
+                for(YAML::const_iterator it=f2.begin(); it!=f2.end(); ++it) cloudctr++;
+
+                std::ofstream f;
+                f.open(filename, std::ios_base::app); // appending
+                f << "points" + std::to_string(cloudctr) + ": \"";
                 for (int i=0; i<mngr1.current_cloud.size(); i++)
                 {
                     f << 
                         std::to_string(mngr1.current_cloud[i][0]) << "," << 
                         std::to_string(mngr1.current_cloud[i][1]) << "," << 
-                        std::to_string(mngr1.current_cloud[i][2])
-                        << "\n";
+                        std::to_string(mngr1.current_cloud[i][2]) << ",";
                 }
+                f << "\"\n";
                 f.close();
                 mngr1.current_cloud.clear();
             }

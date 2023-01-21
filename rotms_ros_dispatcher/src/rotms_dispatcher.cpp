@@ -262,11 +262,36 @@ void Dispatcher::ICPCallBack(const std_msgs::String::ConstPtr& msg)
     }
     if (msg->data.compare("icp_clear_prev")==0)
     {
+        std::ofstream ff;
+        std::string packpath = ros::package::getPath("rotms_ros_utility");
+        YAML::Node ff = YAML::LoadFile(packpath + "/icp_config.yaml");
+        int num_pnts_acloud = ff["NUM_PNTS_IN_ACLOUD"].as<int>();
 
+        packpath = ros::package::getPath("rotms_ros_operations");
+        filename = packpath + "/share/config/icpdig.yaml";
+
+        YAML::Node f2 = YAML::LoadFile(filename);
+
+        int cloudctr = 0;
+        for(YAML::const_iterator it=f2.begin(); it!=f2.end(); ++it) cloudctr++;
+        
+        std::ofstream f;
+        f.open(filename);
+        for(int i = 1; i<cloudctr; i++)
+        {
+            f << "points" + std::to_string(i) + ": \"";
+            f << f2["points"+std::to_string(i)].as<std::string>();
+            f << "\"\n";
+        }
+        f.close();
     }
     if (msg->data.compare("icp_clear_all")==0)
     {
-
+        std::ofstream f;
+        std::string packpath = ros::package::getPath("rotms_ros_operations");
+        std::string filename = packpath + "/share/config/icpdig.yaml";
+        f.open(filename);
+        f.close();
     }
     if (msg->data.compare("icp_register")==0)
     {

@@ -8,9 +8,11 @@ find_package(catkin REQUIRED COMPONENTS
   )
 
 find_package(PythonLibs REQUIRED)
+pkg_check_modules(YAML_CPP REQUIRED yaml-cpp)
 
 catkin_package(
   CATKIN_DEPENDS roscpp rospy
+  DEPENDS YAML_CPP
 )
 
 include_directories(
@@ -19,15 +21,18 @@ include_directories(
 )
 
 add_library(${PROJECT_NAME} 
-  src/dummy.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   include/rotms_ros_utility
   ${catkin_INCLUDE_DIRS} 
+  ${YAML_CPP_INCLUDEDIR} 
   )
 
-target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} yaml-cpp)
+
+add_executable(node_icp_digitization src/nodes/node_icp_digitization.cpp)
+target_link_libraries(node_icp_digitization ${PROJECT_NAME})
 
 catkin_install_python(PROGRAMS
   src/nodes/node_icp.py
