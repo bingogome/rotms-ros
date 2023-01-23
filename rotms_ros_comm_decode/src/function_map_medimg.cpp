@@ -267,6 +267,6 @@ void ICPRegister(std::string& ss, PublisherVec& pubs)
 {
     // /MedImg/ICPAct
     std_msgs::String p;
-    p.data = "icp_register";
+    p.data = "icp_register_" + ss;
     pubs[5].publish(p);
 }

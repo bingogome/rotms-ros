@@ -38,7 +38,8 @@ class MngrICPDigitization
 {
 public:
 
-    MngrICPDigitization(ros::NodeHandle& n, int num_pnts_acloud) : n_(n), num_pnts_acloud(num_pnts_acloud) {}
+    MngrICPDigitization(ros::NodeHandle& n, int num_pnts_acloud) : 
+        n_(n), num_pnts_acloud(num_pnts_acloud) {}
     bool run_flag = false;
     std::vector<std::vector<double>> current_cloud;
     geometry_msgs::Point current_bodyref_ptrtip;

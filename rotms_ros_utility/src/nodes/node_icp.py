@@ -71,10 +71,15 @@ def initICP():
     digpath = datapath + "/share/config/icpdig.yaml"
     with open(digpath.strip(), "r") as stream:
         try:
-            dig = yaml.safe_load(stream)
+            dig_dict = yaml.safe_load(stream)
         except yaml.YAMLError as exc:
             print(exc)
-    dig = numpy.array([float(i) for i in dig["points"].strip().split(',')]).reshape((-1,3))
+
+    dig = []
+    for k in dig_dict.keys():
+        dig.extend([float(i) for i in dig_dict[k].strip().split(',')])
+        
+    dig = numpy.array(dig).reshape((-1,3))
 
     return initmat, dig
 

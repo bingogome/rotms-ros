@@ -298,12 +298,11 @@ void Dispatcher::ICPCallBack(const std_msgs::String::ConstPtr& msg)
         f.open(filename);
         f.close();
     }
-    if (msg->data.rfind("icp_register",0)==0)
+    if (msg->data.rfind("icp_register_",0)==0)
     {
-        std::string command_msgdata = "icp_register";
+        std::string command_msgdata = "icp_register_";
         std::string meshpath = msg->data.substr(command_msgdata.length());
         ROS_GREEN_STREAM("[ROTMS INFO] Received meshpath: " + meshpath);
-        
     }
 }
 
