@@ -32,7 +32,7 @@ def app():
     Node content
     """
     rospy.init_node('NodeICP')
-    rospy.Subscriber("/ICP/MeshPath", String, callback)
+    rospy.Subscriber("/ICP/DoICP", String, callback)
     rospy.spin()
 
 def callback(data):
@@ -43,9 +43,9 @@ def callback(data):
     initmat, dig = initICP()
     rospy.loginfo("[ROTMS INFO] " + "ICP initialized.")
     rospy.loginfo("[ROTMS INFO] " + "ICP Started.")
-    # matrix, transformed, cost = icp(dig, data.data, initmat)
-    # matrix = numpy.linalg.inv(matrix) 
-    # rospy.loginfo("[ROTMS INFO]" + "ICP completed. Cost: %s", str(cost))
+    matrix, transformed, cost = icp(dig, data.data, initmat)
+    matrix = numpy.linalg.inv(matrix) 
+    rospy.loginfo("[ROTMS INFO]" + "ICP completed. Cost: %s", str(cost))
     
 def initICP():
     """

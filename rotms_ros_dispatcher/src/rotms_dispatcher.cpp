@@ -168,7 +168,8 @@ void Dispatcher::DigitizationCallBack(const std_msgs::String::ConstPtr& msg)
         }
         if(msg->data.rfind("use_prev_digitize_digitize_one_",0)==0)
         {
-            int dig_idx = std::stoi(msg->data.substr(31));
+            std::string command_msgdata = "use_prev_digitize_digitize_one_";
+            int dig_idx = std::stoi(msg->data.substr(command_msgdata.length()));
             ROS_GREEN_STREAM("[ROTMS INFO] Digitize individual landmark: " + std::to_string(dig_idx));
             int new_state_digitization = states_set_.state_digitization[activated_state_["DIGITIZATION"]]->UsePrevDigAndRedigOneLandmark(dig_idx);
             Dispatcher::StateTransitionCheck(new_state_digitization, "DIGITIZATION");
@@ -293,9 +294,12 @@ void Dispatcher::ICPCallBack(const std_msgs::String::ConstPtr& msg)
         f.open(filename);
         f.close();
     }
-    if (msg->data.compare("icp_register")==0)
+    if (msg->data.rfind("icp_register",0)==0)
     {
-
+        std::string command_msgdata = "icp_register";
+        std::string meshpath = msg->data.substr(command_msgdata.length());
+        ROS_GREEN_STREAM("[ROTMS INFO] Received meshpath: " + meshpath);
+        
     }
 }
 
