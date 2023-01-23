@@ -260,7 +260,7 @@ void Dispatcher::ICPCallBack(const std_msgs::String::ConstPtr& msg)
     {
         std_msgs::String msg_out;
         msg_out.data = "_start__";
-        pub_flag_t_body_ptrtip_.publish(msg_out);
+        pub_icp_dig_.publish(msg_out);
     }
     if (msg->data.compare("icp_clear_prev")==0)
     {

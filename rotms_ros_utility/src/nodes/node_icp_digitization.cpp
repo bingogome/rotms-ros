@@ -52,6 +52,15 @@ public:
         pub_run_opttracker_tr_bodyref_ptrtip_.publish(flag);
     }
 
+    void Beep(int n)
+    {
+        // Beep n times
+        std_msgs::Int32 beep_num; beep_num.data = n;
+        pub_beep_.publish(beep_num); 
+        ros::spinOnce();
+        ros::Duration(0.5).sleep();
+    }
+
 private:
 
     ros::NodeHandle& n_;
@@ -68,6 +77,9 @@ private:
     {
         if(msg->data.compare("_start__")==0)
         {
+
+            ROS_GREEN_STREAM("[ROTMS INFO] Starting digitization ...");
+
             // Poke opttracker_tr_bodyref_ptrtip node /Kinematics/Flag_bodyref_ptrtip
             std_msgs::String flag_start;
             flag_start.data = "_start__";
@@ -126,6 +138,9 @@ int main(int argc, char **argv)
                 mngr1.PokeOpttrackerTrBodyRefPtrTip(flag_start);
                 ros::spinOnce();
 
+                // Beep
+                mngr1.Beep(5);
+
                 // Save the cloud and clear the vector
                 std::string packpath = ros::package::getPath("rotms_ros_operations");
                 std::string filename = packpath + "/share/config/icpdig.yaml";
@@ -147,6 +162,9 @@ int main(int argc, char **argv)
                 f << "\"\n";
                 f.close();
                 mngr1.current_cloud.clear();
+
+                // Digitization completed and point cloud saved
+                ROS_GREEN_STREAM("[ROTMS INFO] Digitization completed and point cloud saved.");
             }
             else
             {
