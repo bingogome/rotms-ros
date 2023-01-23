@@ -32,6 +32,7 @@ SOFTWARE.
 
 #include <yaml-cpp/yaml.h>
 #include <iostream>
+#include <fstream>
 #include <ros/ros.h>
 #include <ros/package.h>
 #include <tf2/LinearMath/Transform.h>
@@ -263,28 +264,31 @@ void Dispatcher::ICPCallBack(const std_msgs::String::ConstPtr& msg)
     }
     if (msg->data.compare("icp_clear_prev")==0)
     {
-        std::ofstream ff;
-        std::string packpath = ros::package::getPath("rotms_ros_utility");
-        YAML::Node ff = YAML::LoadFile(packpath + "/icp_config.yaml");
-        int num_pnts_acloud = ff["NUM_PNTS_IN_ACLOUD"].as<int>();
+        // Get the number of poins in a cloud
+        std::string packpath_utility    = ros::package::getPath("rotms_ros_utility");
+        YAML::Node node_icpconfig       = YAML::LoadFile(packpath_utility + "/icp_config.yaml");
+        int num_pnts_acloud             = node_icpconfig["NUM_PNTS_IN_ACLOUD"].as<int>();
 
-        packpath = ros::package::getPath("rotms_ros_operations");
-        filename = packpath + "/share/config/icpdig.yaml";
-
-        YAML::Node f2 = YAML::LoadFile(filename);
-
+        // Get the number of clouds
+        std::string packpath_operations = ros::package::getPath("rotms_ros_operations");
+        YAML::Node node_icpdig          = YAML::LoadFile(packpath_operations + "/share/config/icpdig.yaml");
         int cloudctr = 0;
-        for(YAML::const_iterator it=f2.begin(); it!=f2.end(); ++it) cloudctr++;
+        for(YAML::const_iterator it=node_icpdig.begin(); it!=node_icpdig.end(); ++it) 
+        {
+            cloudctr++;
+        }
         
-        std::ofstream f;
-        f.open(filename);
+        // Overwrite the file with only the clouds except for the last one 
+        // (effectively "clear the previously digitized cloud")
+        std::ofstream fstream;
+        fstream.open(packpath_operations + "/share/config/icpdig.yaml");
         for(int i = 1; i<cloudctr; i++)
         {
-            f << "points" + std::to_string(i) + ": \"";
-            f << f2["points"+std::to_string(i)].as<std::string>();
-            f << "\"\n";
+            fstream << "points" + std::to_string(i) + ": \"";
+            fstream << node_icpdig["points"+std::to_string(i)].as<std::string>();
+            fstream << "\"\n";
         }
-        f.close();
+        fstream.close();
     }
     if (msg->data.compare("icp_clear_all")==0)
     {

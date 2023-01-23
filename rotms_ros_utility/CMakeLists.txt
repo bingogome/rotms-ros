@@ -7,7 +7,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   )
 
-find_package(PythonLibs REQUIRED)
+find_package(PkgConfig REQUIRED)
 pkg_check_modules(YAML_CPP REQUIRED yaml-cpp)
 
 catkin_package(
@@ -21,6 +21,7 @@ include_directories(
 )
 
 add_library(${PROJECT_NAME} 
+  src/dummy.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC

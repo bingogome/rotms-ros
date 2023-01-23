@@ -26,38 +26,42 @@ SOFTWARE.
 #include <ros/ros.h>
 #include <ros/package.h>
 #include <std_msgs/String.h>
+#include <std_msgs/Int32.h>
 #include <geometry_msgs/Point.h>
 #include <vector>
 #include <fstream>
 
-class Mngr
+#include "ros_print_color.hpp"
+
+
+class MngrICPDigitization
 {
 public:
 
-    Mngr(ros::NodeHandle& n) : n_(n)
-    {
-        std::string packpath = ros::package::getPath("rotms_ros_utility");
-        YAML::Node f = YAML::LoadFile(packpath + "/icp_config.yaml");
-        num_pnts_acloud = f["NUM_PNTS_IN_ACLOUD"].as<int>();
-    }
+    MngrICPDigitization(ros::NodeHandle& n, int num_pnts_acloud) : n_(n), num_pnts_acloud(num_pnts_acloud) {}
     bool run_flag = false;
     std::vector<std::vector<double>> current_cloud;
     geometry_msgs::Point current_bodyref_ptrtip;
 
-    static int num_pnts_acloud;
-    static float dig_freq = 10;
+    const int num_pnts_acloud;
+    const float dig_freq = 10;
+
+    void PokeOpttrackerTrBodyRefPtrTip(std_msgs::String flag)
+    {
+        pub_run_opttracker_tr_bodyref_ptrtip_.publish(flag);
+    }
 
 private:
 
     ros::NodeHandle& n_;
     ros::Subscriber sub_run_ = n_.subscribe(
-        "/ICP/digitization", 2, &Mngr::FlagCallBack, this);
+        "/ICP/digitization", 2, &MngrICPDigitization::FlagCallBack, this);
     ros::Subscriber sub_bodyref_ptrtip_ = n_.subscribe(
-        "/Kinematics/T_bodyref_ptrtip", 2, &Mngr::BodyrefPtrtipCallBack, this);
-    ros::Publisher pub_run_opttracker_tr_bodyref_ptrtip_ = 
-        n_.advertise<std_msgs::String>("/Kinematics/Flag_bodyref_ptrtip", 2);
+        "/Kinematics/T_bodyref_ptrtip", 2, &MngrICPDigitization::BodyrefPtrtipCallBack, this);
     ros::Publisher pub_beep_ = 
         n_.advertise<std_msgs::Int32>("/NDI/beep", 2);
+    ros::Publisher pub_run_opttracker_tr_bodyref_ptrtip_ = 
+        n_.advertise<std_msgs::String>("/Kinematics/Flag_bodyref_ptrtip", 2);
 
     void FlagCallBack(const std_msgs::String::ConstPtr& msg)
     {
@@ -89,27 +93,36 @@ private:
         current_bodyref_ptrtip.y = msg->y;
         current_bodyref_ptrtip.z = msg->z;
     }
-}
+
+};
 
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "NodeICPDigitization");
     ros::NodeHandle nh;
-    ros::Rate rate(dig_freq);
-    Mngr mngr1(nh);
+    
+    std::string configpackpath = ros::package::getPath("rotms_ros_utility");
+
+    YAML::Node fconfig = YAML::LoadFile(configpackpath + "/icp_config.yaml");
+    ROS_GREEN_STREAM("[ROTMS INFO] Starting digitization manager ...");
+
+    MngrICPDigitization mngr1(nh, fconfig["NUM_PNTS_IN_ACLOUD"].as<int>());
+
+    ROS_GREEN_STREAM("[ROTMS INFO] Digitization manager initialized");
+    ros::Rate rate(mngr1.dig_freq);
 
     while (nh.ok())
     {
         if (mngr1.run_flag)
         {
-            if (mngr1.current_cloud.size() >= num_pnts_acloud)
+            if (mngr1.current_cloud.size() >= mngr1.num_pnts_acloud)
             {
                 mngr1.run_flag = false;
                 
                 // Poke opttracker_tr_bodyref_ptrtip node /Kinematics/Flag_bodyref_ptrtip
                 std_msgs::String flag_start;
                 flag_start.data = "_end__";
-                mngr1.pub_run_opttracker_tr_bodyref_ptrtip_.publish(flag_start);
+                mngr1.PokeOpttrackerTrBodyRefPtrTip(flag_start);
                 ros::spinOnce();
 
                 // Save the cloud and clear the vector
@@ -136,7 +149,7 @@ int main(int argc, char **argv)
             }
             else
             {
-                vector<int> vect{ 
+                std::vector<double> vect{ 
                     mngr1.current_bodyref_ptrtip.x, 
                     mngr1.current_bodyref_ptrtip.y, 
                     mngr1.current_bodyref_ptrtip.z 
