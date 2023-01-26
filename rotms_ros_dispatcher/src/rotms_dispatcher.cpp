@@ -282,7 +282,7 @@ void Dispatcher::ICPCallBack(const std_msgs::String::ConstPtr& msg)
         // (effectively "clear the previously digitized cloud")
         std::ofstream fstream;
         fstream.open(packpath_operations + "/share/config/icpdig.yaml");
-        for(int i = 1; i<cloudctr; i++)
+        for(int i = 0; i<cloudctr-1; i++)
         {
             fstream << "points" + std::to_string(i) + ": \"";
             fstream << node_icpdig["points"+std::to_string(i)].as<std::string>();
