@@ -134,6 +134,8 @@ private:
         "/Kinematics/Flag_bodyref_ptrtip", 2);
     ros::Publisher pub_icp_dig_                     = n_.advertise<std_msgs::String>(
         "/ICP/digitization", 2);
+    ros::Publisher pub_icp_doicp_                   = n_.advertise<std_msgs::String>(
+        "/ICP/DoICP", 2);
         
     // Cruicial operations (operations that affect main user logic and its states/flags/operations)
     void LandmarkPlanMetaCallBack(const std_msgs::Int16::ConstPtr& msg);

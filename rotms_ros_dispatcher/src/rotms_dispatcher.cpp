@@ -303,6 +303,9 @@ void Dispatcher::ICPCallBack(const std_msgs::String::ConstPtr& msg)
         std::string command_msgdata = "icp_register_";
         std::string meshpath = msg->data.substr(command_msgdata.length());
         ROS_GREEN_STREAM("[ROTMS INFO] Received meshpath: " + meshpath);
+        std_msgs::String msg_out;
+        msg_out.data = meshpath;
+        pub_icp_doicp_.publish(msg_out);
     }
 }
 

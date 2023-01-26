@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-import rospy, rospkg
+import rospy, rospkg, math
 from std_msgs.msg import String
 
 import trimesh, numpy, yaml
@@ -45,6 +45,12 @@ def callback(data):
     rospy.loginfo("[ROTMS INFO] " + "ICP Started.")
     matrix, transformed, cost = icp(dig, data.data, initmat)
     matrix = numpy.linalg.inv(matrix) 
+    rospy.loginfo("[ROTMS INFO]" + "Result quaternion: ")
+    resrot = mat2quat(matrix[0:3,0:3])
+    print(resrot)
+    rospy.loginfo("[ROTMS INFO]" + "Result translation: ")
+    respos = matrix[0:3,3] / 1000.0
+    print(respos)
     rospy.loginfo("[ROTMS INFO]" + "ICP completed. Cost: %s", str(cost))
     
 def initICP():
@@ -62,7 +68,8 @@ def initICP():
             print(exc)
     rot = [reg["ROTATION"]["x"],reg["ROTATION"]["y"],reg["ROTATION"]["z"],reg["ROTATION"]["w"]]
     rot = quat2mat(rot)
-    p = [reg["TRANSLATION"]["x"],reg["TRANSLATION"]["y"],reg["TRANSLATION"]["z"]]
+    # convert ROS m unit to mm
+    p = [reg["TRANSLATION"]["x"] * 1000.0,reg["TRANSLATION"]["y"] * 1000.0,reg["TRANSLATION"]["z"] * 1000.0]
     rot_ = numpy.array(rot).transpose()
     p_ = -numpy.matmul(rot_, numpy.array(p).reshape((3,1)))
     initmat = numpy.concatenate((rot_,p_), axis=1)
@@ -77,7 +84,8 @@ def initICP():
 
     dig = []
     for k in dig_dict.keys():
-        dig.extend([float(i) for i in dig_dict[k].strip().split(',')])
+        # convert ROS m unit to mm
+        dig.extend([float(i) * 1000.0 for i in dig_dict[k].strip().split(',')[:-1]])
         
     dig = numpy.array(dig).reshape((-1,3))
 
@@ -89,7 +97,7 @@ def icp(dig, meshpath, initmat):
     """
     mesh = trimesh.load_mesh(meshpath)
     matrix, transformed, cost = trimesh.registration.icp(dig, mesh, initial=initmat, max_iterations=200)
-    return matrix, transformed
+    return matrix, transformed, cost
 
 def quat2mat(q):
     qx, qy, qz, qw = q[0], q[1], q[2], q[3]
@@ -98,6 +106,38 @@ def quat2mat(q):
         [2*qx*qy+2*qz*qw, 1-2*qx*qx-2*qz*qz, 2*qy*qz-2*qx*qw], \
         [2*qx*qz-2*qy*qw, 2*qy*qz+2*qx*qw, 1-2*qx*qx-2*qy*qy]]
     return mat
+
+def mat2quat(R):
+    if R[0][0]+R[1][1]+R[2][2] > 0:
+        qw = math.sqrt(1.0 + R[0][0] + R[1][1] + R[2][2]) / 2.0 * 4.0
+        x = (R[2][1] - R[1][2]) / qw
+        y = (R[0][2] - R[2][0]) / qw
+        z = (R[1][0] - R[0][1]) / qw
+        # print(x,y,z,qw)
+        return [x,y,z,qw/4]
+    elif (R[0][0] > R[1][1]) and (R[0][0] > R[2][2]):
+        s = math.sqrt(1.0 + R[0][0] - R[1][1] - R[2][2]) * 2.0
+        qw = (R[2][1] - R[1][2]) / s
+        qx = 0.25 * s
+        qy = (R[0][1] + R[1][0]) / s
+        qz = (R[0][2] + R[2][0]) / s
+        return [qx, qy, qz, qw]
+    elif R[1][1] > R[2][2]:
+        s = math.sqrt(1.0 + R[1][1] - R[0][0] - R[2][2]) * 2.0
+        qw = (R[0][2] - R[2][0]) / s
+        qx = (R[0][1] + R[1][0]) / s
+        qy = 0.25 * s
+        qz = (R[1][2] + R[2][1]) / s
+        return [qx, qy, qz, qw]
+    else:
+        s = math.sqrt(1.0 + R[2][2] - R[0][0] - R[1][1]) * 2.0
+        qw = (R[1][0] - R[0][1]) / s
+        qx = (R[0][2] + R[2][0]) / s
+        qy = (R[1][2] + R[2][1]) / s
+        qz = 0.25 * s
+        return [qx, qy, qz, qw]
+
+
 
 """
 Start the node
