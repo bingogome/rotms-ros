@@ -32,6 +32,7 @@ SOFTWARE.
 
 #include <yaml-cpp/yaml.h>
 #include <iostream>
+#include <fstream>
 #include <ros/ros.h>
 #include <ros/package.h>
 #include <tf2/LinearMath/Transform.h>
@@ -168,7 +169,8 @@ void Dispatcher::DigitizationCallBack(const std_msgs::String::ConstPtr& msg)
         }
         if(msg->data.rfind("use_prev_digitize_digitize_one_",0)==0)
         {
-            int dig_idx = std::stoi(msg->data.substr(31));
+            std::string command_msgdata = "use_prev_digitize_digitize_one_";
+            int dig_idx = std::stoi(msg->data.substr(command_msgdata.length()));
             ROS_GREEN_STREAM("[ROTMS INFO] Digitize individual landmark: " + std::to_string(dig_idx));
             int new_state_digitization = states_set_.state_digitization[activated_state_["DIGITIZATION"]]->UsePrevDigAndRedigOneLandmark(dig_idx);
             Dispatcher::StateTransitionCheck(new_state_digitization, "DIGITIZATION");
@@ -220,7 +222,8 @@ void Dispatcher::RegistrationResidualCheck()
     pub_medplancomm_.publish(resid_msg);
 }
 
-void Dispatcher::TRECalculationCallBack(const std_msgs::String::ConstPtr& msg){
+void Dispatcher::TRECalculationCallBack(const std_msgs::String::ConstPtr& msg)
+{
     if (msg->data.compare("_starttre__")==0)
     {
         if(activated_state_["REGISTRATION"] != 0b111)
@@ -248,6 +251,61 @@ void Dispatcher::TRECalculationCallBack(const std_msgs::String::ConstPtr& msg){
         std_msgs::String flag_opttracker;
         flag_opttracker.data = "_end__";
         pub_run_opttracker_tr_bodyref_ptrtip_.publish(flag_opttracker);
+    }
+}
+
+void Dispatcher::ICPCallBack(const std_msgs::String::ConstPtr& msg)
+{
+    if (msg->data.compare("icp_digitize")==0)
+    {
+        std_msgs::String msg_out;
+        msg_out.data = "_start__";
+        pub_icp_dig_.publish(msg_out);
+    }
+    if (msg->data.compare("icp_clear_prev")==0)
+    {
+        // Get the number of poins in a cloud
+        std::string packpath_utility    = ros::package::getPath("rotms_ros_utility");
+        YAML::Node node_icpconfig       = YAML::LoadFile(packpath_utility + "/icp_config.yaml");
+        int num_pnts_acloud             = node_icpconfig["NUM_PNTS_IN_ACLOUD"].as<int>();
+
+        // Get the number of clouds
+        std::string packpath_operations = ros::package::getPath("rotms_ros_operations");
+        YAML::Node node_icpdig          = YAML::LoadFile(packpath_operations + "/share/config/icpdig.yaml");
+        int cloudctr = 0;
+        for(YAML::const_iterator it=node_icpdig.begin(); it!=node_icpdig.end(); ++it) 
+        {
+            cloudctr++;
+        }
+        
+        // Overwrite the file with only the clouds except for the last one 
+        // (effectively "clear the previously digitized cloud")
+        std::ofstream fstream;
+        fstream.open(packpath_operations + "/share/config/icpdig.yaml");
+        for(int i = 0; i<cloudctr-1; i++)
+        {
+            fstream << "points" + std::to_string(i) + ": \"";
+            fstream << node_icpdig["points"+std::to_string(i)].as<std::string>();
+            fstream << "\"\n";
+        }
+        fstream.close();
+    }
+    if (msg->data.compare("icp_clear_all")==0)
+    {
+        std::ofstream f;
+        std::string packpath = ros::package::getPath("rotms_ros_operations");
+        std::string filename = packpath + "/share/config/icpdig.yaml";
+        f.open(filename);
+        f.close();
+    }
+    if (msg->data.rfind("icp_register_",0)==0)
+    {
+        std::string command_msgdata = "icp_register_";
+        std::string meshpath = msg->data.substr(command_msgdata.length());
+        ROS_GREEN_STREAM("[ROTMS INFO] Received meshpath: " + meshpath);
+        std_msgs::String msg_out;
+        msg_out.data = meshpath;
+        pub_icp_doicp_.publish(msg_out);
     }
 }
 
@@ -300,10 +358,10 @@ void Dispatcher::ToolPoseTransCallBack(const geometry_msgs::Point::ConstPtr& msg
 
 void Dispatcher::ToolPoseTargetToXR()
 {
-    std::string packpath = ros::package::getPath("rotms_ros_operations");
-    YAML::Node f = YAML::LoadFile(packpath + "/share/config/toolpose.yaml");
-    YAML::Node ff1 = f["TRANSLATION"];
-    YAML::Node ff2 = f["ROTATION"];
+    std::string packpath    = ros::package::getPath("rotms_ros_operations");
+    YAML::Node f            = YAML::LoadFile(packpath + "/share/config/toolpose.yaml");
+    YAML::Node ff1          = f["TRANSLATION"];
+    YAML::Node ff2          = f["ROTATION"];
 
     std_msgs::String msg;
 

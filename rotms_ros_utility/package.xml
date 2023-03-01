@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>rotms_ros_universal_utility</name>
+  <name>rotms_ros_utility</name>
   <version>0.0.0</version>
-  <description>The rotms_ros_universal_utility package</description>
+  <description>The rotms_ros_utility package</description>
   <maintainer email="yliu333@jhu.edu">yl</maintainer>
 
   <!-- One license tag required, multiple allowed, one license per tag -->
@@ -12,5 +12,6 @@
   <buildtool_depend>catkin</buildtool_depend>
 
   <depend>roscpp</depend>
+  <depend>rospy</depend>
 
 </package>
