@@ -83,9 +83,9 @@ void OperationsRegistration::OperationPlanLandmarks()
             {
                 filesave << "    p" << i << ": ";
                 filesave << "{";
-                filesave << "x: " << nan("1") << ", ";
-                filesave << "y: " << nan("1") << ", ";
-                filesave << "z: " << nan("1");
+                filesave << "x: " << "null" << ", ";
+                filesave << "y: " << "null" << ", ";
+                filesave << "z: " << "null";
                 if (i==num_of_landmarks-1)
                     filesave << "}\n";
                 else
