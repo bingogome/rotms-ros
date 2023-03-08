@@ -125,7 +125,7 @@ def icp(dig, meshpath, initmat):
     Call ICP from trimesh package
     """
     mesh = trimesh.load_mesh(meshpath)
-    matrix, transformed, cost = trimesh.registration.icp(dig, mesh, initial=initmat, max_iterations=200)
+    matrix, transformed, cost = trimesh.registration.icp(dig, mesh, threshold=0.5, scale=False, reflection=False, initial=initmat, max_iterations=300)
     return matrix, transformed, cost
 
 def quat2mat(q):
