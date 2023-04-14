@@ -142,7 +142,7 @@ void SaveToolPosePlannedAndMeasured(std::string filename, geometry_msgs::Pose tr
 		filesave << "    x: " << FormatDouble2String(ff1["x"].as<double>(), 16) << ",\n";
 		filesave << "    y: " << FormatDouble2String(ff1["y"].as<double>(), 16) << ",\n";
 		filesave << "    z: " << FormatDouble2String(ff1["z"].as<double>(), 16) << "\n";
-		filesave << "  }\n";
+		filesave << "  },\n";
 		filesave << "  ROTATION: # quat: x,y,z,w\n";
         filesave << "  {\n";
 		filesave << "    x: " << FormatDouble2String(ff2["x"].as<double>(), 16) << ",\n";
@@ -150,7 +150,7 @@ void SaveToolPosePlannedAndMeasured(std::string filename, geometry_msgs::Pose tr
 		filesave << "    z: " << FormatDouble2String(ff2["z"].as<double>(), 16) << ",\n";
         filesave << "    w: " << FormatDouble2String(ff2["w"].as<double>(), 16) << "\n";
         filesave << "  }\n";
-        filesave << "}\n";
+        filesave << "},\n";
         filesave << "MEASURED_POSE:\n";
         filesave << "{\n";
         filesave << "  TRANSLATION: # translation: x,y,z\n";
@@ -158,7 +158,7 @@ void SaveToolPosePlannedAndMeasured(std::string filename, geometry_msgs::Pose tr
 		filesave << "    x: " << FormatDouble2String(tr.position.x, 16) << ",\n";
 		filesave << "    y: " << FormatDouble2String(tr.position.y, 16) << ",\n";
 		filesave << "    z: " << FormatDouble2String(tr.position.z, 16) << "\n";
-		filesave << "  }\n";
+		filesave << "  },\n";
 		filesave << "  ROTATION: # quat: x,y,z,w\n";
         filesave << "  {\n";
 		filesave << "    x: " << FormatDouble2String(tr.orientation.x, 16) << ",\n";
