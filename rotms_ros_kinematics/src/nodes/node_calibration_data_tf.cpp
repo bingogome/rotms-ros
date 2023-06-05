@@ -78,13 +78,19 @@ private:
     ros::Subscriber sub_reinitoffset = n_.subscribe(
         "/Kinematics/Reinit_TR_cntct_offset", 2, &MngrCalibrationData::ReinitOffsetCallBack, this);
 
+    // Operational data
+    ros::Subscriber sub_reg = n_.subscribe(
+        "/Kinematics/TR_bodyref_body", 2, &MngrCalibrationData::RegistrationCallBack, this);
+    ros::Subscriber sub_body_cntct = n_.subscribe(
+        "/Kinematics/TR_body_cntct", 2, &MngrCalibrationData::BodyCntctCallBack, this);
+
     void ReInitCallback(const std_msgs::String::ConstPtr& msg)
     {
         if(!msg->data.compare("_reinit__")==0) return;
         ReadAndBroadcastCalibrations("cntct_offset", stb_, "cntct", "offset");
         ReadAndBroadcastCalibrations("offset_tool", stb_, "offset", "tool");
         ReadAndBroadcastCalibrations("tool_toolref", stb_, "tool", "toolref");
-        ReadAndBroadcastCalibrations("toolref_eff", stb_, "toolref", "eff");
+        ReadAndBroadcastCalibrations("toolref_eff", stb_, "toolref", "effold");
         ReadAndBroadcastCalibrations("ptr_ptrtip", stb_, "ptr", "ptrtip");
     }
     
@@ -112,6 +118,44 @@ private:
         if(!msg->data.compare("_reinitoffset__")==0) return;
         ReadAndBroadcastCalibrations("cntct_offset", stb_, "cntct", "offset");
     }
+
+    void RegistrationCallBack(const rotms_ros_msgs::PoseValid::ConstPtr& msg)
+    {
+        geometry_msgs::TransformStamped tr;
+
+        tr.transform.translation.x = msg->pose.position.x;
+        tr.transform.translation.y = msg->pose.position.y;
+        tr.transform.translation.z = msg->pose.position.z;
+        tr.transform.rotation.x = msg->pose.orientation.x;
+        tr.transform.rotation.y = msg->pose.orientation.y;
+        tr.transform.rotation.z = msg->pose.orientation.z;
+        tr.transform.rotation.w = msg->pose.orientation.w;
+
+        tr.header.frame_id = "bodyref";
+        tr.child_frame_id = "body";
+
+        stb_.sendTransform(tr);
+        ros::spinOnce();
+    }
+
+    void BodyCntctCallBack(const rotms_ros_msgs::PoseValid::ConstPtr& msg)
+    {
+        geometry_msgs::TransformStamped tr;
+
+        tr.transform.translation.x = msg->pose.position.x;
+        tr.transform.translation.y = msg->pose.position.y;
+        tr.transform.translation.z = msg->pose.position.z;
+        tr.transform.rotation.x = msg->pose.orientation.x;
+        tr.transform.rotation.y = msg->pose.orientation.y;
+        tr.transform.rotation.z = msg->pose.orientation.z;
+        tr.transform.rotation.w = msg->pose.orientation.w;
+
+        tr.header.frame_id = "body";
+        tr.child_frame_id = "cntct";
+
+        stb_.sendTransform(tr);
+        ros::spinOnce();
+    }
 };
 
 int main(int argc, char **argv)
@@ -125,7 +169,7 @@ int main(int argc, char **argv)
     ReadAndBroadcastCalibrations("cntct_offset", stb, "cntct", "offset");
     ReadAndBroadcastCalibrations("offset_tool", stb, "offset", "tool");
     ReadAndBroadcastCalibrations("tool_toolref", stb, "tool", "toolref");
-    ReadAndBroadcastCalibrations("toolref_eff", stb, "toolref", "eff");
+    ReadAndBroadcastCalibrations("toolref_eff", stb, "toolref", "effold");
     ReadAndBroadcastCalibrations("ptr_ptrtip", stb, "ptr", "ptrtip");
     
     ros::spin();
