@@ -7,6 +7,7 @@ find_package(catkin REQUIRED COMPONENTS
   roslaunch
   roslib
   tf2
+  tf2_ros
   rotms_ros_msgs
   rotms_ros_utility
   )
@@ -50,3 +51,9 @@ target_link_libraries(node_viz_tr_body_tool ${PROJECT_NAME})
 
 add_executable(node_TRE_t_body_ptrtip src/nodes/node_TRE_t_body_ptrtip.cpp)
 target_link_libraries(node_TRE_t_body_ptrtip ${PROJECT_NAME})
+
+add_executable(node_calibration_data_tf src/nodes/node_calibration_data_tf.cpp)
+target_link_libraries(node_calibration_data_tf ${PROJECT_NAME})
+
+add_executable(node_sensor_data_tf src/nodes/node_sensor_data_tf.cpp)
+target_link_libraries(node_sensor_data_tf ${PROJECT_NAME})
