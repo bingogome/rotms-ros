@@ -43,21 +43,21 @@ private:
     tf2_ros::StaticTransformBroadcaster& stb_;
     
     ros::Subscriber sub_expiredEFFOld = n_.subscribe(
-        "/Kinematics/ExpiredEFFOld", 2, &MngrCalibrationData::UpdateEFF, this);
+        "/Kinematics/ExpiredEFFOld", 2, &MngrSensorData::UpdateEFFOld, this);
     ros::Subscriber sub_derivedeff = n_.subscribe(
-        "/Kinematics/TR_derivedeff", 2, &MngrCalibrationData::UpdateEFFTargeted, this);
+        "/Kinematics/TR_derivedeff", 2, &MngrSensorData::UpdateEFFTargeted, this);
 
-    void UpdateEFF(const geometry_msgs::Pose::ConstPtr& msg)
+    void UpdateEFFOld(const geometry_msgs::Pose::ConstPtr& msg)
     {
         geometry_msgs::TransformStamped tr;
 
-        tr.translation.x = msg->position.x;
-        tr.translation.y = msg->position.y;
-        tr.translation.z = msg->position.z;
-        tr.rotation.x = msg->orientation.x;
-        tr.rotation.y = msg->orientation.y;
-        tr.rotation.z = msg->orientation.z;
-        tr.rotation.w = msg->orientation.w;
+        tr.transform.translation.x = msg->position.x;
+        tr.transform.translation.y = msg->position.y;
+        tr.transform.translation.z = msg->position.z;
+        tr.transform.rotation.x = msg->orientation.x;
+        tr.transform.rotation.y = msg->orientation.y;
+        tr.transform.rotation.z = msg->orientation.z;
+        tr.transform.rotation.w = msg->orientation.w;
 
         tr.header.frame_id = "robbase";
         tr.child_frame_id = "effold";
@@ -70,13 +70,13 @@ private:
     {
         geometry_msgs::TransformStamped tr;
 
-        tr.translation.x = msg->pose.position.x;
-        tr.translation.y = msg->pose.position.y;
-        tr.translation.z = msg->pose.position.z;
-        tr.rotation.x = msg->pose.orientation.x;
-        tr.rotation.y = msg->pose.orientation.y;
-        tr.rotation.z = msg->pose.orientation.z;
-        tr.rotation.w = msg->pose.orientation.w;
+        tr.transform.translation.x = msg->pose.position.x;
+        tr.transform.translation.y = msg->pose.position.y;
+        tr.transform.translation.z = msg->pose.position.z;
+        tr.transform.rotation.x = msg->pose.orientation.x;
+        tr.transform.rotation.y = msg->pose.orientation.y;
+        tr.transform.rotation.z = msg->pose.orientation.z;
+        tr.transform.rotation.w = msg->pose.orientation.w;
 
         tr.header.frame_id = "robbase";
         tr.child_frame_id = "efftargeted";
@@ -93,12 +93,6 @@ int main(int argc, char **argv)
 
     tf2_ros::StaticTransformBroadcaster stb;
     MngrSensorData mngr(nh, stb);
-
-    ReadAndBroadcastCalibrations("cntct_offset", stb, "cntct", "offset");
-    ReadAndBroadcastCalibrations("offset_tool", stb, "offset", "tool");
-    ReadAndBroadcastCalibrations("tool_toolref", stb, "tool", "toolref");
-    ReadAndBroadcastCalibrations("toolref_eff", stb, "toolref", "eff");
-    ReadAndBroadcastCalibrations("ptr_ptrtip", stb, "ptr", "ptrtip");
     
     ros::spin();
     return 0;

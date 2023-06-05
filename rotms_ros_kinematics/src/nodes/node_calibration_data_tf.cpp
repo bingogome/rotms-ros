@@ -42,13 +42,13 @@ void ReadAndBroadcastCalibrations(
 
     geometry_msgs::TransformStamped tr;
 
-    tr.translation.x = f["x"].as<double>();
-    tr.translation.y = f["y"].as<double>();
-    tr.translation.z = f["z"].as<double>();
-    tr.rotation.x = f["rx"].as<double>();
-    tr.rotation.y = f["ry"].as<double>();
-    tr.rotation.z = f["rz"].as<double>();
-    tr.rotation.w = f["rw"].as<double>();
+    tr.transform.translation.x = f["x"].as<double>();
+    tr.transform.translation.y = f["y"].as<double>();
+    tr.transform.translation.z = f["z"].as<double>();
+    tr.transform.rotation.x = f["rx"].as<double>();
+    tr.transform.rotation.y = f["ry"].as<double>();
+    tr.transform.rotation.z = f["rz"].as<double>();
+    tr.transform.rotation.w = f["rw"].as<double>();
 
     tr.header.frame_id = frame_id;
 	tr.child_frame_id = child_frame_id;
@@ -92,13 +92,13 @@ private:
     {
         geometry_msgs::TransformStamped tr;
 
-        tr.translation.x = msg->position.x;
-        tr.translation.y = msg->position.y;
-        tr.translation.z = msg->position.z;
-        tr.rotation.x = msg->orientation.x;
-        tr.rotation.y = msg->orientation.y;
-        tr.rotation.z = msg->orientation.z;
-        tr.rotation.w = msg->orientation.w;
+        tr.transform.translation.x = msg->position.x;
+        tr.transform.translation.y = msg->position.y;
+        tr.transform.translation.z = msg->position.z;
+        tr.transform.rotation.x = msg->orientation.x;
+        tr.transform.rotation.y = msg->orientation.y;
+        tr.transform.rotation.z = msg->orientation.z;
+        tr.transform.rotation.w = msg->orientation.w;
 
         tr.header.frame_id = "cntct";
         tr.child_frame_id = "offset";
