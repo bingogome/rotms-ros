@@ -92,6 +92,7 @@ private:
         ReadAndBroadcastCalibrations("tool_toolref", stb_, "tool", "toolref");
         ReadAndBroadcastCalibrations("toolref_eff", stb_, "toolref", "effold");
         ReadAndBroadcastCalibrations("ptr_ptrtip", stb_, "ptr", "ptrtip");
+        // TODO: need to added reinit bodyref_body (registration) and body_cntct
     }
     
     void ChangeOffsetCallBack(const geometry_msgs::Pose::ConstPtr& msg)
