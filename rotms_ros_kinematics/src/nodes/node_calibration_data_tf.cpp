@@ -133,7 +133,8 @@ private:
         tr.transform.rotation.z = msg->pose.orientation.z;
         tr.transform.rotation.w = msg->pose.orientation.w;
 
-        tr.header.frame_id = "bodyref";
+        tr.header.frame_id = "HeadRef";
+        // tr.header.frame_id = "bodyref";
         tr.child_frame_id = "body";
 
         stb_.sendTransform(tr);
