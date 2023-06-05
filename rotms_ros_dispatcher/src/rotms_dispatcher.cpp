@@ -472,6 +472,7 @@ void Dispatcher::GetEFFCallBack(const std_msgs::String::ConstPtr& msg)
         str << std::to_string(eff.orientation.w) << "_";
         msg_out.data = str.str();
         pub_robctrlcomm_.publish(msg_out);
+        pub_expiredeffold_.publish(eff);
     }
 }
 

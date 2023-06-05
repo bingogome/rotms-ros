@@ -116,6 +116,8 @@ private:
         "/MedImgComm/msg_to_send", 2);
     ros::Publisher pub_effold_                      = n_.advertise<rotms_ros_msgs::PoseValid>( 
         "/Kinematics/TR_robbase_effold", 1, true); // should only be called by ExecuteMotionToTargetEFFPose
+    ros::Publisher pub_expiredeffold_               = n_.advertise<geometry_msgs::Pose>( 
+        "/Kinematics/ExpiredEFFOld", 1); // just to show
     
     // Dispatcher sending query
     ros::Publisher pub_gettargeteff_                = n_.advertise<std_msgs::String>(
