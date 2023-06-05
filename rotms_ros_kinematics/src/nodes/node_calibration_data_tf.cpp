@@ -173,7 +173,7 @@ int main(int argc, char **argv)
 
     ReadAndBroadcastCalibrations("cntct_offset", stb, "cntct", "offset");
     ReadAndBroadcastCalibrations("offset_tool", stb, "offset", "tool");
-    ReadAndBroadcastCalibrations("tool_toolref", stb_, "tool", "CoilRef");
+    ReadAndBroadcastCalibrations("tool_toolref", stb, "tool", "CoilRef");
     // ReadAndBroadcastCalibrations("tool_toolref", stb, "tool", "toolref");
     ReadAndBroadcastCalibrations("toolref_eff", stb, "CoilRef", "effold");
     // ReadAndBroadcastCalibrations("toolref_eff", stb, "toolref", "effold");
