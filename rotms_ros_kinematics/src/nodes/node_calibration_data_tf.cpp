@@ -29,6 +29,7 @@ SOFTWARE.
 #include <geometry_msgs/TransformStamped.h>
 #include <std_msgs/String.h>
 #include <tf2_ros/static_transform_broadcaster.h>
+#include "rotms_ros_msgs/PoseValid.h"
 
 void ReadAndBroadcastCalibrations(
     std::string tr_str, 
