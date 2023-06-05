@@ -90,8 +90,10 @@ private:
         if(!msg->data.compare("_reinit__")==0) return;
         ReadAndBroadcastCalibrations("cntct_offset", stb_, "cntct", "offset");
         ReadAndBroadcastCalibrations("offset_tool", stb_, "offset", "tool");
-        ReadAndBroadcastCalibrations("tool_toolref", stb_, "tool", "toolref");
-        ReadAndBroadcastCalibrations("toolref_eff", stb_, "toolref", "effold");
+        ReadAndBroadcastCalibrations("tool_toolref", stb_, "tool", "CoilRef");
+        // ReadAndBroadcastCalibrations("tool_toolref", stb_, "tool", "toolref");
+        ReadAndBroadcastCalibrations("toolref_eff", stb_, "CoilRef", "effold");
+        // ReadAndBroadcastCalibrations("toolref_eff", stb_, "toolref", "effold");
         ReadAndBroadcastCalibrations("ptr_ptrtip", stb_, "ptr", "ptrtip");
         // TODO: need to added reinit bodyref_body (registration) and body_cntct
     }
@@ -171,8 +173,10 @@ int main(int argc, char **argv)
 
     ReadAndBroadcastCalibrations("cntct_offset", stb, "cntct", "offset");
     ReadAndBroadcastCalibrations("offset_tool", stb, "offset", "tool");
-    ReadAndBroadcastCalibrations("tool_toolref", stb, "tool", "toolref");
-    ReadAndBroadcastCalibrations("toolref_eff", stb, "toolref", "effold");
+    ReadAndBroadcastCalibrations("tool_toolref", stb_, "tool", "CoilRef");
+    // ReadAndBroadcastCalibrations("tool_toolref", stb, "tool", "toolref");
+    ReadAndBroadcastCalibrations("toolref_eff", stb, "CoilRef", "effold");
+    // ReadAndBroadcastCalibrations("toolref_eff", stb, "toolref", "effold");
     ReadAndBroadcastCalibrations("ptr_ptrtip", stb, "ptr", "ptrtip");
     
     ros::spin();
