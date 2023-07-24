@@ -25,6 +25,7 @@ add_library(${PROJECT_NAME}
   src/function_map_robctrl.cpp
   src/function_map_medimg.cpp
   src/function_map_targetviz.cpp
+  src/function_map_mep.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
@@ -42,3 +43,5 @@ add_executable(node_decode_robctrl src/nodes/node_decode_robctrl.cpp)
 target_link_libraries(node_decode_robctrl ${PROJECT_NAME})
 add_executable(node_decode_targetviz src/nodes/node_decode_targetviz.cpp)
 target_link_libraries(node_decode_targetviz ${PROJECT_NAME})
+add_executable(node_decode_mep src/nodes/node_decode_mep.cpp)
+target_link_libraries(node_decode_mep ${PROJECT_NAME})

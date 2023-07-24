@@ -58,3 +58,10 @@
     "VISUALIZE_STOP":                       "stop_visualizexx",
     "VISUALIZE_SAVE_PLANANDREAL_POSE":      "save_planandreal"
   }
+
+"MEP_CMDS":
+
+  # MEP module commands
+  {
+    "MEP_SAVE_PLANANDREAL_POSE":      "save_planandreal"
+  }
