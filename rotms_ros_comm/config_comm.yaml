@@ -58,7 +58,7 @@ VERBOSE_HIF_XR: 0
 # MEP module communication configs
 
 PORT_IN_MEP: 8085 # Port number for data stream into ROS
-IP_IN_MEP: "127.0.0.1"
+IP_IN_MEP: "0.0.0.0"
 MSG_END_MEP: "_msg_end__" # communication messege starts with this means end the port
 MSG_SIZE_MEP: 256 # change the ros_side_in.hpp and ros_side_out.hpp {boost::array<char, ...> recv_buffer_} field when chaning this number
 PUBLISHER_NAME_MEP: "/Mep/msg_received" # Messege ROS publisher name (ROSSideIn received)

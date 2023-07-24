@@ -1,7 +1,7 @@
 /***
 MIT License
 
-Copyright (c) 2022 Yihao Liu, Johns Hopkins University
+Copyright (c) 2023 Yihao Liu, Johns Hopkins University
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -128,6 +128,18 @@ int main(int argc, char **argv)
         "/XRComm/msg_to_send_hi_f", 5);
     std_msgs::String msg_out_xr;
 
+    // Initialize the result variable and its publisher
+    // Format: geometry_msgs::Pose
+    ros::Publisher pub_misc_body_tool = nh.advertise<geometry_msgs::Pose>(
+        "/Misc/body_tool", 5);
+    ros::Publisher pub_misc_pol_body = nh.advertise<geometry_msgs::Pose>(
+        "/Misc/pol_body", 5);
+    ros::Publisher pub_misc_pol_tool = nh.advertise<geometry_msgs::Pose>(
+        "/Misc/pol_tool", 5);
+    geometry_msgs::Pose msg_out_pose;
+    geometry_msgs::Pose msg_out_pose_body;
+    geometry_msgs::Pose msg_out_pose_tool;
+
     // Go in the loop, with the flag indicating wether do the calculation or not
     while (nh.ok())
     {
@@ -157,6 +169,13 @@ int main(int argc, char **argv)
                 FormatDouble2String(tr_body_tool_.getRotation().z(), 7) + "_" +
                 FormatDouble2String(tr_body_tool_.getRotation().w(), 7);
             pub_xr_body_tool.publish(msg_out_xr);
+
+            msg_out_pose = ConvertToGeometryPose(tr_body_tool_);
+            pub_misc_body_tool.publish(msg_out_pose);
+            msg_out_pose_body = ConvertToGeometryPose(tr_pol_bodyref_ * tr_bodyref_body_);
+            pub_misc_pol_body.publish(msg_out_pose_body);
+            msg_out_pose_tool = ConvertToGeometryPose(tr_pol_toolref_ * tr_tool_toolref_.inverse());
+            pub_misc_pol_tool.publish(msg_out_pose_tool);
         }
         ros::spinOnce();
         rate.sleep();

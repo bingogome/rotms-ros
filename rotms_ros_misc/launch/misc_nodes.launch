@@ -1,0 +1,3 @@
+<launch>
+    <node name="node_mep_request_save_poses" pkg="rotms_ros_misc" type="node_mep_request_save_poses" output="screen"/>
+</launch>
