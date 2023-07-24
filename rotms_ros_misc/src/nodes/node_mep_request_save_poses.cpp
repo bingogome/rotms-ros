@@ -156,6 +156,7 @@ int main(int argc, char **argv)
             mngr1.v_pose.push_back(mngr1.msg_out_pose);
             mngr1.v_pose_body.push_back(mngr1.msg_out_pose_body);
             mngr1.v_pose_tool.push_back(mngr1.msg_out_pose_tool);
+            counter+=1;
         }
         else if (mngr1.run_flag && counter>(2*rateFreq))
         {
