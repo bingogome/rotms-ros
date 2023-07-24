@@ -108,6 +108,8 @@ private:
         "/TargetViz/Visualize", 2, &Dispatcher::TargetVizCallBack, this);
     ros::Subscriber sub_savetargetplanandreal_      = n_.subscribe(
         "/TargetViz/DataRecord", 2, &Dispatcher::TargetVizSavePlanAndRealPoseCallBack, this);
+    ros::Subscriber sub_mep_savetargetplanandreal_  = n_.subscribe(
+        "/Mep/DataRecord", 2, &Dispatcher::MepSavePlanAndRealPoseCallBack, this);
 
     // Dispatcher sending query response signals
     ros::Publisher pub_robctrlcomm_                 = n_.advertise<std_msgs::String>(
@@ -138,6 +140,8 @@ private:
         "/ICP/digitization", 2);
     ros::Publisher pub_icp_doicp_                   = n_.advertise<std_msgs::String>(
         "/ICP/DoICP", 2);
+    ros::Publisher pub_mep_savetargetplanandreal_   = n_.advertise<std_msgs::String>(
+        "/Misc/Mep/DataRecord", 2);
         
     // Cruicial operations (operations that affect main user logic and its states/flags/operations)
     void LandmarkPlanMetaCallBack(const std_msgs::Int16::ConstPtr& msg);
@@ -154,6 +158,7 @@ private:
     void RegistrationResidualCheck();
     void TRECalculationCallBack(const std_msgs::String::ConstPtr& msg);
     void ICPCallBack(const std_msgs::String::ConstPtr& msg);
+    void MepSavePlanAndRealPoseCallBack(const std_msgs::String::ConstPtr& msg);
 
     // Robot operations
     void UpdateRobotConnFlagCallBack(const std_msgs::Bool::ConstPtr& msg);

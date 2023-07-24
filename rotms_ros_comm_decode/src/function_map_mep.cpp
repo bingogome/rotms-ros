@@ -40,8 +40,6 @@ CommDecoderMep::CommDecoderMep(
     CommDecoder(n, modulesuffix, opsdict) 
 {
     pubs_.push_back(
-        n_.advertise<std_msgs::String>("/Mep/Visualize", 2));
-    pubs_.push_back(
         n_.advertise<std_msgs::String>("/Mep/DataRecord", 2));
 }
 

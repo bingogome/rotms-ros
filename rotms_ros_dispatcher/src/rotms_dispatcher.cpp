@@ -736,6 +736,17 @@ void Dispatcher::TargetVizSavePlanAndRealPoseCallBack(const std_msgs::String::Co
     }
 }
 
+void Dispatcher::MepSavePlanAndRealPoseCallBack(const std_msgs::String::ConstPtr& msg)
+{
+    if(msg->data.compare("_save_plan_real__")==0)
+    {
+        ROS_GREEN_STREAM("[ROTMS INFO] Sent request saving the planned pose and the real pose. ");
+        std_msgs::String msg_out;
+        msg_out.data = "_start__";
+        pub_mep_savetargetplanandreal_.publish(msg_out);
+    }
+}
+
 void Dispatcher::StateTransitionCheck(int new_state, std::string s)
 {
     ROS_GREEN_STREAM("[ROTMS INFO] State transition - " + s);
