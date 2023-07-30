@@ -142,6 +142,7 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "NodePoseDataLogRequestSavePose");
     ros::NodeHandle nh;
     double rateFreq = 20.0;
+    double recordingTime = 5.0;
     ros::Rate rate(rateFreq);
 
     // Instantiate the flag manager
@@ -151,14 +152,14 @@ int main(int argc, char **argv)
     int counter = 0;
     while (nh.ok())
     {
-        if (mngr1.run_flag && counter<=(2*rateFreq))
+        if (mngr1.run_flag && counter<=(recordingTime*rateFreq))
         {
             mngr1.v_pose.push_back(mngr1.msg_out_pose);
             mngr1.v_pose_body.push_back(mngr1.msg_out_pose_body);
             mngr1.v_pose_tool.push_back(mngr1.msg_out_pose_tool);
             counter+=1;
         }
-        else if (mngr1.run_flag && counter>(2*rateFreq))
+        else if (mngr1.run_flag && counter>(recordingTime*rateFreq))
         {
             // save
             mngr1.SaveAcquiredData();
