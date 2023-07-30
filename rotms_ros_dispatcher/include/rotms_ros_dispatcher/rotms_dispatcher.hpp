@@ -140,8 +140,8 @@ private:
         "/ICP/digitization", 2);
     ros::Publisher pub_icp_doicp_                   = n_.advertise<std_msgs::String>(
         "/ICP/DoICP", 2);
-    ros::Publisher pub_mep_savetargetplanandreal_   = n_.advertise<std_msgs::String>(
-        "/Misc/Mep/DataRecord", 2);
+    ros::Publisher pub_save_continuous_pose_   = n_.advertise<std_msgs::String>(
+        "/PoseDataLog/DataRecord", 2);
         
     // Cruicial operations (operations that affect main user logic and its states/flags/operations)
     void LandmarkPlanMetaCallBack(const std_msgs::Int16::ConstPtr& msg);

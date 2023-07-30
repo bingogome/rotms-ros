@@ -36,5 +36,5 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} yaml-cpp)
 
-add_executable(node_mep_request_save_poses src/nodes/node_mep_request_save_poses.cpp)
-target_link_libraries(node_mep_request_save_poses ${PROJECT_NAME})
+add_executable(node_posedatalog_request_save_poses src/nodes/node_posedatalog_request_save_poses.cpp)
+target_link_libraries(node_posedatalog_request_save_poses ${PROJECT_NAME})

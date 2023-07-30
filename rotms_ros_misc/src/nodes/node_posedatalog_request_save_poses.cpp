@@ -103,13 +103,13 @@ private:
 
     ros::NodeHandle& n_;
     ros::Subscriber sub_run_ = n_.subscribe(
-        "/Misc/Mep/DataRecord", 2, &Mngr::FlagCallBack, this);
+        "/PoseDataLog/DataRecord", 2, &Mngr::FlagCallBack, this);
     ros::Subscriber sub_tr_body_tool_ = n_.subscribe(
-        "/Misc/body_tool", 2, &Mngr::BodyToolCallBack, this);
+        "/PoseDataLog/body_tool", 2, &Mngr::BodyToolCallBack, this);
     ros::Subscriber sub_tr_pol_body_ = n_.subscribe(
-        "/Misc/pol_body", 2, &Mngr::PolBodyCallBack, this);
+        "/PoseDataLog/pol_body", 2, &Mngr::PolBodyCallBack, this);
     ros::Subscriber sub_tr_pol_tool_ = n_.subscribe(
-        "/Misc/pol_tool", 2, &Mngr::PolToolCallBack, this);
+        "/PoseDataLog/pol_tool", 2, &Mngr::PolToolCallBack, this);
 
     void FlagCallBack(const std_msgs::String::ConstPtr& msg)
     {
@@ -139,7 +139,7 @@ private:
 int main(int argc, char **argv)
 {
     // ROS stuff
-    ros::init(argc, argv, "NodeMepRequestSavePose");
+    ros::init(argc, argv, "NodePoseDataLogRequestSavePose");
     ros::NodeHandle nh;
     double rateFreq = 20.0;
     ros::Rate rate(rateFreq);

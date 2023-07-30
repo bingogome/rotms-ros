@@ -734,6 +734,14 @@ void Dispatcher::TargetVizSavePlanAndRealPoseCallBack(const std_msgs::String::Co
 
         ROS_GREEN_STREAM("[ROTMS INFO] Saved the planned pose and the real pose. ");
     }
+    else if(msg->data.compare("_save_continuous_pose__")==0)
+    {
+        ROS_GREEN_STREAM("[ROTMS INFO] Sent request saving the planned pose and the real pose. ");
+        ROS_GREEN_STREAM("[ROTMS INFO] Saving the planned pose and the real pose, in continuous time. ");
+        std_msgs::String msg_out;
+        msg_out.data = "_start__";
+        pub_save_continuous_pose_.publish(msg_out);
+    }
 }
 
 void Dispatcher::MepSavePlanAndRealPoseCallBack(const std_msgs::String::ConstPtr& msg)
@@ -741,9 +749,10 @@ void Dispatcher::MepSavePlanAndRealPoseCallBack(const std_msgs::String::ConstPtr
     if(msg->data.compare("_save_plan_real__")==0)
     {
         ROS_GREEN_STREAM("[ROTMS INFO] Sent request saving the planned pose and the real pose. ");
+        ROS_GREEN_STREAM("[ROTMS INFO] Saving the planned pose and the real pose, in continuous time. ");
         std_msgs::String msg_out;
         msg_out.data = "_start__";
-        pub_mep_savetargetplanandreal_.publish(msg_out);
+        pub_save_continuous_pose_.publish(msg_out);
     }
 }
 

@@ -79,3 +79,11 @@ void VisualizeSavePlanAndRealPose(std::string& ss, PublisherVec& pubs)
     // pubs[1] is the publisher /TargetViz/DataRecord
     pubs[1].publish(msg_test);
 }
+
+void VisualizeSaveContinuousPose(std::string& ss, PublisherVec& pubs)
+{
+    std_msgs::String msg_test;
+    msg_test.data = "_save_continuous_pose__";
+    // pubs[1] is the publisher /TargetViz/DataRecord
+    pubs[1].publish(msg_test);
+}
