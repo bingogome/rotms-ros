@@ -52,6 +52,7 @@ FuncMap GetFuncMapTargetViz()
     fm["VISUALIZE_START"] = VisualizeStart;
     fm["VISUALIZE_STOP"] = VisualizeStop;
     fm["VISUALIZE_SAVE_PLANANDREAL_POSE"] = VisualizeSavePlanAndRealPose;
+    fm["VISUALIZE_SAVE_CONTINUOUS_POSE"] = VisualizeSaveContinuousPose;
 
     return fm;
 }
