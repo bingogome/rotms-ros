@@ -388,13 +388,13 @@ void Dispatcher::RegistrationToXR()
 
     std_msgs::String msg;
 
-    msg.data = "regi_" +
+    msg.data = "regi_" + // convert to Unity convention (x,z,y,-rx,-rz,-ry,rw)
         FormatDouble2String(ff1["x"].as<double>(), 7) + "_" +
-        FormatDouble2String(ff1["y"].as<double>(), 7) + "_" +
-        FormatDouble2String(ff1["z"].as<double>(), 7) + "_" + 
-        FormatDouble2String(ff2["x"].as<double>(), 7) + "_" + 
-        FormatDouble2String(ff2["y"].as<double>(), 7) + "_" + 
-        FormatDouble2String(ff2["z"].as<double>(), 7) + "_" +
+        FormatDouble2String(ff1["z"].as<double>(), 7) + "_" +
+        FormatDouble2String(ff1["y"].as<double>(), 7) + "_" + 
+        FormatDouble2String(-ff2["x"].as<double>(), 7) + "_" + 
+        FormatDouble2String(-ff2["z"].as<double>(), 7) + "_" + 
+        FormatDouble2String(-ff2["y"].as<double>(), 7) + "_" +
         FormatDouble2String(ff2["w"].as<double>(), 7);
     
     pub_xr_.publish(msg);
