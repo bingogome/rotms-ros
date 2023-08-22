@@ -28,10 +28,10 @@ SOFTWARE.
 
 int main(int argc, char **argv)
 {
-	ros::init(argc, argv, "CommOutTargetViz");
+	ros::init(argc, argv, "CommOutXR");
     ros::NodeHandle n;
 
-	ROSSideOutAndAck server = CommNodeOutAndAckIniter(n, "TARGETVIZ");
+	ROSSideOutAndAck server = CommNodeOutAndAckIniter(n, "XR");
 
 	ros::spin();
 	return 0;

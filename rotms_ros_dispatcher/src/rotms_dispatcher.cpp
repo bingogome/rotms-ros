@@ -193,6 +193,7 @@ void Dispatcher::RegistrationCallBack(const std_msgs::String::ConstPtr& msg)
             states_set_.state_registration[activated_state_["REGISTRATION"]]->UsePrevRegister();
         Dispatcher::StateTransitionCheck(new_state, "REGISTRATION");
         Dispatcher::RegistrationResidualCheck();
+        Dispatcher::RegistrationToXR();
     }
     if (msg->data.compare("_register__")==0)
     {
@@ -200,6 +201,7 @@ void Dispatcher::RegistrationCallBack(const std_msgs::String::ConstPtr& msg)
             states_set_.state_registration[activated_state_["REGISTRATION"]]->Registered();
         Dispatcher::StateTransitionCheck(new_state, "REGISTRATION");
         Dispatcher::RegistrationResidualCheck();
+        Dispatcher::RegistrationToXR();
     }
     
 }
@@ -366,6 +368,27 @@ void Dispatcher::ToolPoseTargetToXR()
     std_msgs::String msg;
 
     msg.data = "trgt_" +
+        FormatDouble2String(ff1["x"].as<double>(), 7) + "_" +
+        FormatDouble2String(ff1["y"].as<double>(), 7) + "_" +
+        FormatDouble2String(ff1["z"].as<double>(), 7) + "_" + 
+        FormatDouble2String(ff2["x"].as<double>(), 7) + "_" + 
+        FormatDouble2String(ff2["y"].as<double>(), 7) + "_" + 
+        FormatDouble2String(ff2["z"].as<double>(), 7) + "_" +
+        FormatDouble2String(ff2["w"].as<double>(), 7);
+    
+    pub_xr_.publish(msg);
+}
+
+void Dispatcher::RegistrationToXR()
+{
+    std::string packpath    = ros::package::getPath("rotms_ros_operations");
+    YAML::Node f            = YAML::LoadFile(packpath + "/share/config/reg.yaml");
+    YAML::Node ff1          = f["TRANSLATION"];
+    YAML::Node ff2          = f["ROTATION"];
+
+    std_msgs::String msg;
+
+    msg.data = "regi_" +
         FormatDouble2String(ff1["x"].as<double>(), 7) + "_" +
         FormatDouble2String(ff1["y"].as<double>(), 7) + "_" +
         FormatDouble2String(ff1["z"].as<double>(), 7) + "_" + 
