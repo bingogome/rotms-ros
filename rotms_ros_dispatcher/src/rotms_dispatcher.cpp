@@ -744,7 +744,7 @@ void Dispatcher::TargetVizSavePlanAndRealPoseCallBack(const std_msgs::String::Co
     }
 }
 
-void Dispatcher::MepSavePlanAndRealPoseCallBack(const std_msgs::String::ConstPtr& msg)
+void Dispatcher::MepDataRecordCallBack(const std_msgs::String::ConstPtr& msg)
 {
     if(msg->data.compare("_save_plan_real__")==0)
     {

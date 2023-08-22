@@ -109,7 +109,7 @@ private:
     ros::Subscriber sub_savetargetplanandreal_      = n_.subscribe(
         "/TargetViz/DataRecord", 2, &Dispatcher::TargetVizSavePlanAndRealPoseCallBack, this);
     ros::Subscriber sub_mep_savetargetplanandreal_  = n_.subscribe(
-        "/Mep/DataRecord", 2, &Dispatcher::MepSavePlanAndRealPoseCallBack, this);
+        "/Mep/DataRecord", 2, &Dispatcher::MepDataRecordCallBack, this);
 
     // Dispatcher sending query response signals
     ros::Publisher pub_robctrlcomm_                 = n_.advertise<std_msgs::String>(
@@ -158,7 +158,7 @@ private:
     void RegistrationResidualCheck();
     void TRECalculationCallBack(const std_msgs::String::ConstPtr& msg);
     void ICPCallBack(const std_msgs::String::ConstPtr& msg);
-    void MepSavePlanAndRealPoseCallBack(const std_msgs::String::ConstPtr& msg);
+    void MepDataRecordCallBack(const std_msgs::String::ConstPtr& msg);
 
     // Robot operations
     void UpdateRobotConnFlagCallBack(const std_msgs::Bool::ConstPtr& msg);

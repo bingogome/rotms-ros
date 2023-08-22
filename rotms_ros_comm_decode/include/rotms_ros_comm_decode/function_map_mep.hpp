@@ -45,3 +45,4 @@ FuncMap GetFuncMapMep();
 
 void MepSavePlanAndRealPose(std::string& ss, PublisherVec& pubs);
 
+void MepSaveMep(std::string& ss, PublisherVec& pubs);

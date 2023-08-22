@@ -48,6 +48,7 @@ FuncMap GetFuncMapMep()
     FuncMap fm;
 
     fm["MEP_SAVE_PLANANDREAL_POSE"] = MepSavePlanAndRealPose;
+    fm["MEP_SAVE_MEP"] = MepSaveMep;
 
     return fm;
 }
@@ -56,6 +57,14 @@ void MepSavePlanAndRealPose(std::string& ss, PublisherVec& pubs)
 {
     std_msgs::String msg_test;
     msg_test.data = "_save_plan_real__";
+    // pubs[0] is the publisher /Mep/DataRecord
+    pubs[0].publish(msg_test);
+}
+
+void MepSaveMep(std::string& ss, PublisherVec& pubs)
+{
+    std_msgs::String msg_test;
+    msg_test.data = "_save_mep__";
     // pubs[0] is the publisher /Mep/DataRecord
     pubs[0].publish(msg_test);
 }
