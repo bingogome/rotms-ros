@@ -1,0 +1,3 @@
+<launch>
+    <node name="node_comm_relay" pkg="rotms_ros_comm_relay" type="node_comm_relay" output="screen"/>
+</launch>
