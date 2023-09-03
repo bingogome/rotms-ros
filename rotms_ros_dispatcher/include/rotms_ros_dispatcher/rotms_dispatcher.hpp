@@ -110,6 +110,8 @@ private:
         "/TargetViz/DataRecord", 2, &Dispatcher::TargetVizSavePlanAndRealPoseCallBack, this);
     ros::Subscriber sub_mep_savetargetplanandreal_  = n_.subscribe(
         "/Mep/DataRecord", 2, &Dispatcher::MepDataRecordCallBack, this);
+    ros::Subscriber sub_extern_requesteff_  = n_.subscribe(
+        "/External/RequestEFFCalc", 2, &Dispatcher::ExternalRequestEFFCalc, this);
 
     // Dispatcher sending query response signals
     ros::Publisher pub_robctrlcomm_                 = n_.advertise<std_msgs::String>(
@@ -120,6 +122,8 @@ private:
         "/Kinematics/TR_robbase_effold", 1, true); // should only be called by ExecuteMotionToTargetEFFPose
     ros::Publisher pub_expiredeffold_               = n_.advertise<geometry_msgs::Pose>( 
         "/Kinematics/ExpiredEFFOld", 1); // just to show
+    ros::Publisher pub_extern_requesteff_           = n_.advertise<geometry_msgs::Pose>( 
+        "/External/ResponseEFFCalc", 1);
     
     // Dispatcher sending query
     ros::Publisher pub_gettargeteff_                = n_.advertise<std_msgs::String>(
@@ -159,6 +163,8 @@ private:
     void TRECalculationCallBack(const std_msgs::String::ConstPtr& msg);
     void ICPCallBack(const std_msgs::String::ConstPtr& msg);
     void MepDataRecordCallBack(const std_msgs::String::ConstPtr& msg);
+    void ExternalRequestEFFCalc(const std_msgs::String::ConstPtr& msg);
+    geometry_msgs::Pose RequestEFFPose();
 
     // Robot operations
     void UpdateRobotConnFlagCallBack(const std_msgs::Bool::ConstPtr& msg);

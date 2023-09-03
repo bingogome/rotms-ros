@@ -599,6 +599,37 @@ void Dispatcher::ExecuteMotionToTargetEFFPose()
         return;
     }
 
+    geometry_msgs::Pose tr_targeteff_ = Dispatcher::RequestEFFPose();
+
+    // Send to robot interface and move
+    pub_robeffmove_.publish(tr_targeteff_);
+
+    ROS_GREEN_STREAM("[ROTMS INFO] Send to robot interface. ");
+
+    // Stop old EFF pose publisher latch
+    rotms_ros_msgs::PoseValid pv;
+    pv.valid = false;
+    pub_effold_.publish(pv);
+
+    ROS_GREEN_STREAM("[ROTMS INFO] End of robot motion call. ");
+}
+
+geometry_msgs::Pose Dispatcher::RequestEFFPose()
+{
+    if(!states_set_.state_robot[activated_state_["ROBOT"]]->flags_.GetFlagRobotConnStatus())
+    {
+        ROS_YELLOW_STREAM("[ROTMS WARNING] Robot cabinet connection has not been established!");
+        return;
+    }
+    if(
+        activated_state_["TOOLPLAN"]!=0b1 || 
+        activated_state_["ROBOT"]!=0b1 ||
+        activated_state_["REGISTRATION"]!=0b111)
+    {
+        ROS_YELLOW_STREAM("[ROTMS WARNING] The prerequisites are not met. Check before robot motion. (code 0)");
+        return;
+    }
+
     // Query for current EFF pose and publish (latch)
     rotms_ros_msgs::GetEFF srv;
     if(!clt_eff_.call(srv))
@@ -642,17 +673,7 @@ void Dispatcher::ExecuteMotionToTargetEFFPose()
     tr_targeteff_.orientation.z = tr_targeteff->pose.orientation.z;
     tr_targeteff_.orientation.w = tr_targeteff->pose.orientation.w;
 
-    // Send to robot interface and move
-    pub_robeffmove_.publish(tr_targeteff_);
-
-    ROS_GREEN_STREAM("[ROTMS INFO] Send to robot interface. ");
-
-    // Stop old EFF pose publisher latch
-    rotms_ros_msgs::PoseValid pv;
-    pv.valid = false;
-    pub_effold_.publish(pv);
-
-    ROS_GREEN_STREAM("[ROTMS INFO] End of robot motion call. ");
+    return tr_targeteff_;
 }
 
 void Dispatcher::ExecuteBackToCallBack(const std_msgs::String::ConstPtr& msg)
@@ -776,6 +797,15 @@ void Dispatcher::MepDataRecordCallBack(const std_msgs::String::ConstPtr& msg)
         std_msgs::String msg_out;
         msg_out.data = "_start__";
         pub_save_continuous_pose_.publish(msg_out);
+    }
+}
+
+void Dispatcher::ExternalRequestEFFCalc(const std_msgs::String::ConstPtr& msg)
+{
+    if(msg->data.compare("_eff_calc__")==0)
+    {
+        geometry_msgs::Pose tr_targeteff_ = Dispatcher::RequestEFFPose();
+        pub_extern_requesteff_.publish(tr_targeteff_);
     }
 }
 
