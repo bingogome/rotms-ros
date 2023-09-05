@@ -24,6 +24,7 @@ SOFTWARE.
 
 #include <ros/ros.h>
 #include <geometry_msgs/PoseArray.h>
+#include <std_msgs/String.h>
 
 std::string FormatDouble2String(double a, int dec)
 {
@@ -45,7 +46,7 @@ private:
     ros::NodeHandle& n_;
     ros::Subscriber sub_xr2slicer_planmsg = n_.subscribe(
         "/Relay/XR2Slicer/PlanMsg", 2, &MngrCommRelay::XR2SlicerPlanMsgCallBack, this);
-    ros::Publiser pub_xr2slicer_planmsg = n_.advertise<std_msgs::String>(
+    ros::Publisher pub_xr2slicer_planmsg = n_.advertise<std_msgs::String>(
         "/MedImgComm/msg_to_send_hi_f", 2);
 
     void XR2SlicerPlanMsgCallBack(const geometry_msgs::PoseArray::ConstPtr& msg)
@@ -54,12 +55,12 @@ private:
         // send to slicer unit convert to mm
         std_msgs::String msg_out;
         msg_out.data = "__msg_toolpose_" + // convert m to mm
-            FormatDouble2String(msg.poses[0].position.x * 1000.0, 5) + "_" +
-            FormatDouble2String(msg.poses[0].position.y * 1000.0, 5) + "_" +
-            FormatDouble2String(msg.poses[0].position.z * 1000.0, 5) + "_" +
-            FormatDouble2String(msg.poses[1].position.x * 1000.0, 5) + "_" +
-            FormatDouble2String(msg.poses[1].position.y * 1000.0, 5) + "_" +
-            FormatDouble2String(msg.poses[1].position.z * 1000.0, 5);
+            FormatDouble2String(msg->poses[0].position.x * 1000.0, 5) + "_" +
+            FormatDouble2String(msg->poses[0].position.y * 1000.0, 5) + "_" +
+            FormatDouble2String(msg->poses[0].position.z * 1000.0, 5) + "_" +
+            FormatDouble2String(msg->poses[1].position.x * 1000.0, 5) + "_" +
+            FormatDouble2String(msg->poses[1].position.y * 1000.0, 5) + "_" +
+            FormatDouble2String(msg->poses[1].position.z * 1000.0, 5);
         pub_xr2slicer_planmsg.publish(msg_out);
     }
 };

@@ -616,10 +616,12 @@ void Dispatcher::ExecuteMotionToTargetEFFPose()
 
 geometry_msgs::Pose Dispatcher::RequestEFFPose()
 {
+    geometry_msgs::Pose tr_targeteff_;
+
     if(!states_set_.state_robot[activated_state_["ROBOT"]]->flags_.GetFlagRobotConnStatus())
     {
-        ROS_YELLOW_STREAM("[ROTMS WARNING] Robot cabinet connection has not been established!");
-        return;
+        ROS_RED_STREAM("[ROTMS WARNING] Robot cabinet connection has not been established!");
+        return tr_targeteff_; 
     }
     if(
         activated_state_["TOOLPLAN"]!=0b1 || 
@@ -627,15 +629,14 @@ geometry_msgs::Pose Dispatcher::RequestEFFPose()
         activated_state_["REGISTRATION"]!=0b111)
     {
         ROS_YELLOW_STREAM("[ROTMS WARNING] The prerequisites are not met. Check before robot motion. (code 0)");
-        return;
+        return tr_targeteff_;
     }
-
     // Query for current EFF pose and publish (latch)
     rotms_ros_msgs::GetEFF srv;
     if(!clt_eff_.call(srv))
     {
-        ROS_YELLOW_STREAM("[ROTMS WARNING] Could not request current EFF from robot cabinet!");
-        return;
+        ROS_RED_STREAM("[ROTMS WARNING] Could not request current EFF from robot cabinet!");
+        return tr_targeteff_;
     }
     geometry_msgs::Pose effold = srv.response.eff;
     rotms_ros_msgs::PoseValid pv_old;
@@ -664,7 +665,6 @@ geometry_msgs::Pose Dispatcher::RequestEFFPose()
     
     ROS_GREEN_STREAM("[ROTMS INFO] Target pose valid. ");
 
-    geometry_msgs::Pose tr_targeteff_;
     tr_targeteff_.position.x = tr_targeteff->pose.position.x;
     tr_targeteff_.position.y = tr_targeteff->pose.position.y;
     tr_targeteff_.position.z = tr_targeteff->pose.position.z;
