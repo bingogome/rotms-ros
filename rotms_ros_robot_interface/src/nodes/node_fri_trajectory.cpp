@@ -10,8 +10,6 @@ void setWaypoint(const geometry_msgs::Pose& waypoint);
 void getOTSHeadRefCallback(const geometry_msgs::PoseStamped& msg);
 void getOTSCoilRefCallback(const geometry_msgs::PoseStamped& msg);
 void getConstantHandEye(const std_msgs::Float64MultiArray& msg);
-void update();
-void reset();
 
 ros::Publisher pub_waypoint;
 ros::Subscriber sub_ots_headref;
@@ -124,7 +122,6 @@ int main(int argc, char** argv){
 
     ros::Rate rate(50);
     while(ros::ok()){
-        update();
         rate.sleep();
         ros::spinOnce();
     }
