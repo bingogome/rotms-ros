@@ -9,6 +9,8 @@ find_package(catkin REQUIRED COMPONENTS
   rotms_ros_utility
   )
 
+find_package(Eigen3 REQUIRED)
+
 find_package(Boost REQUIRED COMPONENTS system)
 
 find_package(PkgConfig REQUIRED)
@@ -43,3 +45,5 @@ add_executable(node_robot src/nodes/node_robot.cpp)
 target_link_libraries(node_robot ${PROJECT_NAME})
 add_executable(node_robot_end src/nodes/node_robot_end.cpp)
 target_link_libraries(node_robot_end ${PROJECT_NAME})
+add_executable(node_fri_trajectory src/nodes/node_fri_trajectory.cpp)
+target_link_libraries(node_fri_trajectory ${PROJECT_NAME})
