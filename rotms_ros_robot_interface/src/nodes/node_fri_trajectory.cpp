@@ -32,17 +32,19 @@ SOFTWARE.
 #include <std_msgs/Float64MultiArray.h>
 #include <yaml-cpp/yaml.h>
 
+void validateResult(Eigen::Matrix4d ots2base_mtx);
 void setWaypoint(const geometry_msgs::Pose &waypoint);
 void getOTSHeadRefCallback(const geometry_msgs::TransformStamped &msg);
 void getOTSCoilRefCallback(const geometry_msgs::TransformStamped &msg);
 void getOTSPointerCallback(const geometry_msgs::TransformStamped &msg);
 void getConstantHandEye(const std_msgs::Float64MultiArray &msg);
+Eigen::Matrix4d getConstantHandEye();
+Eigen::Matrix4d getKUKABase2EEF(float x, float y, float z, float alpha, float beta, float gamma);
 
 ros::Publisher pub_waypoint;
 ros::Subscriber sub_ots_headref;
 ros::Subscriber sub_ots_coilref;
 ros::Subscriber sub_ots_pointer;
-ros::Subscriber sub_constant_hand_eye;
 
 Eigen::Matrix4d ots2headref_mtx = Eigen::Matrix4d::Identity();
 Eigen::Matrix4d ots2coilref_mtx = Eigen::Matrix4d::Identity();
@@ -50,7 +52,6 @@ Eigen::Matrix4d ots2pointer_mtx = Eigen::Matrix4d::Identity();
 Eigen::Matrix4d base2eef = Eigen::Matrix4d::Identity();
 Eigen::Matrix4d base2ots = Eigen::Matrix4d::Identity();
 
-void validateResult(Eigen::Matrix4d ots2base_mtx);
 
 void setWaypoint(const geometry_msgs::Pose &msg)
 {
@@ -116,12 +117,20 @@ Eigen::Matrix4d getKUKABase2EEF(float x, float y, float z, float alpha, float be
     double cb = cos(b), sb = sin(b);
     double cg = cos(g), sg = sin(g);
 
-    // Compute rotation matrix R = R_y(γ) * R_x(β) * R_z(α)
-    Eigen::Matrix3d rotation_matrix;
-    rotation_matrix << ca * cg - sa * sb * sg, -sa * cb, ca * sg + sa * sb * cg,
-        sa * cg + ca * sb * sg, ca * cb, sa * sg - ca * sb * cg,
-        -cb * sg, sb, cb * cg;
-
+    // Compute rotation matrix R = R_z(a) * R_y(b) * R_x(g)
+    Eigen::Matrix3d rotation_matrix_z;
+    rotation_matrix_z << ca, -sa, 0,
+        sa, ca, 0,
+        0, 0, 1;
+    Eigen::Matrix3d rotation_matrix_y;
+    rotation_matrix_y << cb, 0, sb,
+        0, 1, 0,
+        -sb, 0, cb;
+    Eigen::Matrix3d rotation_matrix_x;
+    rotation_matrix_x << 1, 0, 0,
+        0, cg, -sg,
+        0, sg, cg;
+    Eigen::Matrix3d rotation_matrix = rotation_matrix_z * rotation_matrix_y * rotation_matrix_x;
     // Construct the homogeneous transformation matrix
     base2eef.block<3, 3>(0, 0) = rotation_matrix;
     base2eef(0, 3) = x;
@@ -165,7 +174,10 @@ int main(int argc, char **argv)
     Eigen::Matrix4d base2eef = getKUKABase2EEF(x, y, z, alpha, beta, gamma);
     // print base2eef rotation as quaternion
     Eigen::Quaterniond quat(base2eef.block<3, 3>(0, 0));
-    std::cout << "base2eef rotation as quaternion (w, x, y, z): " << quat.w() << " " << quat.x() << " " << quat.y() << " " << quat.z() << std::endl;
+    std::cout << "====================================\n"
+              << "base2eef rotation as quaternion (w, x, y, z)\n "
+              << quat.w() << " " << quat.x() << " " << quat.y() << " " << quat.z() 
+              << "\n====================================\n";
 
     Eigen::Matrix4d toolref2eef = getConstantHandEye();
 
