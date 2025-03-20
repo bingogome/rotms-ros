@@ -50,6 +50,8 @@ Eigen::Matrix4d ots2pointer_mtx = Eigen::Matrix4d::Identity();
 Eigen::Matrix4d base2eef = Eigen::Matrix4d::Identity();
 Eigen::Matrix4d base2ots = Eigen::Matrix4d::Identity();
 
+void validateResult(Eigen::Matrix4d ots2base_mtx);
+
 void setWaypoint(const geometry_msgs::Pose &msg)
 {
     int x = 0;
