@@ -86,6 +86,7 @@ Eigen::Matrix4d getConstantHandEye()
 
     Eigen::Quaterniond handeye_quat(f["rw"].as<double>(), f["rx"].as<double>(), f["ry"].as<double>(), f["rz"].as<double>());
     toolref2eef_mtx.block<3, 3>(0, 0) = handeye_quat.toRotationMatrix();
+    return toolref2eef_mtx;
 }
 
 Eigen::Matrix4d getKUKAEEF2BASE(float x, float y, float z, float alpha, float beta, float gamma)
