@@ -46,7 +46,7 @@
        base2ots_(Eigen::Matrix4d::Identity()),
        base2headref_(Eigen::Matrix4d::Identity())
      {
-         pub_waypoint_ = nh.advertise<geometry_msgs::Pose>("/waypoint", 1);
+         pub_waypoint_ = nh.advertise<geometry_msgs::Pose>("/command/headRef_pose", 1);
          sub_ots_headref_ = nh.subscribe("/NDI/HeadRef/measured_cp", 1, &TrajectoryNode::getOTSHeadRefCallback, this);
          sub_ots_coilref_ = nh.subscribe("/NDI/CoilRef/measured_cp", 1, &TrajectoryNode::getOTSCoilRefCallback, this);
          sub_ots_pointer_ = nh.subscribe("/NDI/PointerNew/measured_cp", 1, &TrajectoryNode::getOTSPointerCallback, this);
