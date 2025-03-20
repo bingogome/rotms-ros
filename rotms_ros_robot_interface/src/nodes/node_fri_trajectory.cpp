@@ -35,19 +35,20 @@ SOFTWARE.
 void setWaypoint(const geometry_msgs::Pose &waypoint);
 void getOTSHeadRefCallback(const geometry_msgs::TransformStamped &msg);
 void getOTSCoilRefCallback(const geometry_msgs::TransformStamped &msg);
+void getOTSPointerCallback(const geometry_msgs::TransformStamped &msg);
 void getConstantHandEye(const std_msgs::Float64MultiArray &msg);
 
 ros::Publisher pub_waypoint;
 ros::Subscriber sub_ots_headref;
 ros::Subscriber sub_ots_coilref;
+ros::Subscriber sub_ots_pointer;
 ros::Subscriber sub_constant_hand_eye;
-
-
 
 Eigen::Matrix4d ots2headref_mtx = Eigen::Matrix4d::Identity();
 Eigen::Matrix4d ots2coilref_mtx = Eigen::Matrix4d::Identity();
+Eigen::Matrix4d ots2pointer_mtx = Eigen::Matrix4d::Identity();
 Eigen::Matrix4d base2eef = Eigen::Matrix4d::Identity();
-
+Eigen::Matrix4d base2ots = Eigen::Matrix4d::Identity();
 
 void setWaypoint(const geometry_msgs::Pose &msg)
 {
@@ -56,20 +57,31 @@ void setWaypoint(const geometry_msgs::Pose &msg)
 
 void getOTSHeadRefCallback(const geometry_msgs::TransformStamped &msg)
 {
-    ots2headref_mtx(0,3) = msg.transform.translation.x;
-    ots2headref_mtx(1,3) = msg.transform.translation.y;
-    ots2headref_mtx(2,3) = msg.transform.translation.z;
+    ots2headref_mtx(0, 3) = msg.transform.translation.x;
+    ots2headref_mtx(1, 3) = msg.transform.translation.y;
+    ots2headref_mtx(2, 3) = msg.transform.translation.z;
     Eigen::Quaterniond quat(msg.transform.rotation.w, msg.transform.rotation.x, msg.transform.rotation.y, msg.transform.rotation.z);
     ots2headref_mtx.block<3, 3>(0, 0) = quat.toRotationMatrix();
 }
 
 void getOTSCoilRefCallback(const geometry_msgs::TransformStamped &msg)
 {
-    ots2coilref_mtx(0,3) = msg.transform.translation.x;
-    ots2coilref_mtx(1,3) = msg.transform.translation.y;
-    ots2coilref_mtx(2,3) = msg.transform.translation.z;
+    ots2coilref_mtx(0, 3) = msg.transform.translation.x;
+    ots2coilref_mtx(1, 3) = msg.transform.translation.y;
+    ots2coilref_mtx(2, 3) = msg.transform.translation.z;
     Eigen::Quaterniond quat(msg.transform.rotation.w, msg.transform.rotation.x, msg.transform.rotation.y, msg.transform.rotation.z);
     ots2coilref_mtx.block<3, 3>(0, 0) = quat.toRotationMatrix();
+}
+
+void getOTSPointerCallback(const geometry_msgs::TransformStamped &msg)
+{
+    ots2pointer_mtx(0, 3) = msg.transform.translation.x;
+    ots2pointer_mtx(1, 3) = msg.transform.translation.y;
+    ots2pointer_mtx(2, 3) = msg.transform.translation.z;
+    Eigen::Quaterniond quat(msg.transform.rotation.w, msg.transform.rotation.x, msg.transform.rotation.y, msg.transform.rotation.z);
+    ots2pointer_mtx.block<3, 3>(0, 0) = quat.toRotationMatrix();
+
+    validateResult(base2ots.inverse());
 }
 
 Eigen::Matrix4d getConstantHandEye()
@@ -89,7 +101,7 @@ Eigen::Matrix4d getConstantHandEye()
     return toolref2eef_mtx;
 }
 
-Eigen::Matrix4d getKUKAEEF2BASE(float x, float y, float z, float alpha, float beta, float gamma)
+Eigen::Matrix4d getKUKABase2EEF(float x, float y, float z, float alpha, float beta, float gamma)
 {
 
     // Convert angles to radians
@@ -117,6 +129,22 @@ Eigen::Matrix4d getKUKAEEF2BASE(float x, float y, float z, float alpha, float be
     return base2eef;
 }
 
+void validateResult(Eigen::Matrix4d ots2base_mtx)
+{
+    Eigen::Matrix4d base2ots = ots2base_mtx.inverse();
+    std::cout << "base2ots: " << std::endl
+              << base2ots << std::endl;
+
+    std::cout << "====================================" << std::endl;
+    std::cout << "ots2base: " << std::endl
+              << ots2base_mtx << std::endl;
+
+    std::cout << "====================================" << std::endl;
+    Eigen::Matrix4d pointer2base = ots2pointer_mtx.inverse() * ots2base_mtx;
+    std::cout << "pointer2base: " << std::endl
+              << pointer2base << std::endl;
+}
+
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "fri_trajectory_node");
@@ -124,7 +152,7 @@ int main(int argc, char **argv)
     pub_waypoint = nh.advertise<geometry_msgs::Pose>("/waypoint", 1);
     sub_ots_headref = nh.subscribe("/NDI/HeadRef/measured_cp", 1, getOTSHeadRefCallback);
     sub_ots_coilref = nh.subscribe("/NDI/CoilRef/measured_cp", 1, getOTSCoilRefCallback);
-    
+    sub_ots_pointer = nh.subscribe("/NDI/PointerNew/measured_cp", 1, getOTSPointerCallback);
 
     float x, y, z, alpha, beta, gamma;
 
@@ -132,15 +160,18 @@ int main(int argc, char **argv)
     std::cout << "Enter x, y, z (translation in mm) and alpha, beta, gamma (rotation in degrees): ";
     std::cin >> x >> y >> z >> alpha >> beta >> gamma;
 
-    Eigen::Matrix4d base2eef = getKUKAEEF2BASE(x, y, z, alpha, beta, gamma);
-    Eigen::Matrix4d toolref2eef= getConstantHandEye();
+    Eigen::Matrix4d base2eef = getKUKABase2EEF(x, y, z, alpha, beta, gamma);
+    // print base2eef rotation as quaternion
+    Eigen::Quaterniond quat(base2eef.block<3, 3>(0, 0));
+    std::cout << "base2eef rotation as quaternion (w, x, y, z): " << quat.w() << " " << quat.x() << " " << quat.y() << " " << quat.z() << std::endl;
+
+    Eigen::Matrix4d toolref2eef = getConstantHandEye();
 
     ros::spinOnce(); // Call the callback functions once to get the initial values
 
-    Eigen::Matrix4d base2ots = base2eef * toolref2eef * ots2coilref_mtx.inverse();
+    base2ots = base2eef * toolref2eef * ots2coilref_mtx.inverse();
 
-    std::cout << "base2ots: " << std::endl
-              << base2ots << std::endl;
+    validateResult(base2ots.inverse());
 
     ros::Rate rate(50);
     while (ros::ok())
