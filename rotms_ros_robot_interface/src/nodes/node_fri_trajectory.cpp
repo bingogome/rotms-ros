@@ -1,83 +1,96 @@
+/***
+MIT License
+
+Copyright (c) 2022 Yihao Liu, Johns Hopkins University
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+***/
+
+#include <ros/package.h>
 #include <ros/ros.h>
 #include <eigen3/Eigen/Eigen>
 #include <eigen3/Eigen/Dense>
 #include <eigen3/Eigen/Core>
 #include <geometry_msgs/Pose.h>
-#include <geometry_msgs/PoseStamped.h>
+#include <geometry_msgs/TransformStamped.h>
 #include <std_msgs/Float64MultiArray.h>
+#include <yaml-cpp/yaml.h>
 
-void setWaypoint(const geometry_msgs::Pose& waypoint);
-void getOTSHeadRefCallback(const geometry_msgs::PoseStamped& msg);
-void getOTSCoilRefCallback(const geometry_msgs::PoseStamped& msg);
-void getConstantHandEye(const std_msgs::Float64MultiArray& msg);
+void setWaypoint(const geometry_msgs::Pose &waypoint);
+void getOTSHeadRefCallback(const geometry_msgs::TransformStamped &msg);
+void getOTSCoilRefCallback(const geometry_msgs::TransformStamped &msg);
+void getConstantHandEye(const std_msgs::Float64MultiArray &msg);
 
 ros::Publisher pub_waypoint;
 ros::Subscriber sub_ots_headref;
 ros::Subscriber sub_ots_coilref;
 ros::Subscriber sub_constant_hand_eye;
 
-geometry_msgs::Pose headref_pose;
-geometry_msgs::Pose coilref_pose;
-geometry_msgs::Pose handeye_pose;
 
+
+Eigen::Matrix4d ots2headref_mtx = Eigen::Matrix4d::Identity();
 Eigen::Matrix4d ots2coilref_mtx = Eigen::Matrix4d::Identity();
-Eigen::Matrix4d eef2base = Eigen::Matrix4d::Identity();
+Eigen::Matrix4d base2eef = Eigen::Matrix4d::Identity();
 
-void setWaypoint(const geometry_msgs::Pose& msg){
-    geometry_msgs::PoseStamped waypoint;
-    waypoint.header.frame_id = "world";
-    waypoint.header.stamp = ros::Time::now();
-    waypoint.pose = msg;
-    pub_waypoint.publish(waypoint);
+
+void setWaypoint(const geometry_msgs::Pose &msg)
+{
+    int x = 0;
 }
 
-void getOTSHeadRefCallback(const geometry_msgs::PoseStamped& msg){
-    geometry_msgs::Pose headref_pose = msg.pose;
+void getOTSHeadRefCallback(const geometry_msgs::TransformStamped &msg)
+{
+    ots2headref_mtx(0,3) = msg.transform.translation.x;
+    ots2headref_mtx(1,3) = msg.transform.translation.y;
+    ots2headref_mtx(2,3) = msg.transform.translation.z;
+    Eigen::Quaterniond quat(msg.transform.rotation.w, msg.transform.rotation.x, msg.transform.rotation.y, msg.transform.rotation.z);
+    ots2headref_mtx.block<3, 3>(0, 0) = quat.toRotationMatrix();
 }
 
-void getOTSCoilRefCallback(const geometry_msgs::PoseStamped& msg){
-    geometry_msgs::Pose coilref_pose = msg.pose;
+void getOTSCoilRefCallback(const geometry_msgs::TransformStamped &msg)
+{
+    ots2coilref_mtx(0,3) = msg.transform.translation.x;
+    ots2coilref_mtx(1,3) = msg.transform.translation.y;
+    ots2coilref_mtx(2,3) = msg.transform.translation.z;
+    Eigen::Quaterniond quat(msg.transform.rotation.w, msg.transform.rotation.x, msg.transform.rotation.y, msg.transform.rotation.z);
+    ots2coilref_mtx.block<3, 3>(0, 0) = quat.toRotationMatrix();
 }
 
-void getConstantHandEye(const std_msgs::Float64MultiArray& msg){
-    if(msg.data.size() != 7){
-        ROS_ERROR("Invalid hand-eye calibration data received");
-        return;
-    }
-    handeye_pose.position.x = msg.data[0];
-    handeye_pose.position.y = msg.data[1];
-    handeye_pose.position.z = msg.data[2];
-    handeye_pose.orientation.x = msg.data[3];
-    handeye_pose.orientation.y = msg.data[4];
-    handeye_pose.orientation.z = msg.data[5];
-    handeye_pose.orientation.w = msg.data[6];
+Eigen::Matrix4d getConstantHandEye()
+{
 
-    // calculate the robot end-effector to coil reference transformation
+    std::string packpath = ros::package::getPath("rotms_ros_kinematics");
+    YAML::Node f = YAML::LoadFile(packpath + "/share/toolref_eff.yaml");
+
     Eigen::Matrix4d toolref2eef_mtx;
-    toolref2eef_mtx << 1, 0, 0, handeye_pose.position.x,
-                      0, 1, 0, handeye_pose.position.y,
-                      0, 0, 1, handeye_pose.position.z,
-                      0, 0, 0, 1;
-    Eigen::Quaterniond handeye_quat(handeye_pose.orientation.w, handeye_pose.orientation.x, handeye_pose.orientation.y, handeye_pose.orientation.z);
-    toolref2eef_mtx.block<3,3>(0,0) = handeye_quat.toRotationMatrix();
+    toolref2eef_mtx << 1, 0, 0, f["x"].as<double>(),
+        0, 1, 0, f["y"].as<double>(),
+        0, 0, 1, f["z"].as<double>(),
+        0, 0, 0, 1;
 
-    // retrieve the coil reference to ots transformation
-    ots2coilref_mtx(0, 3) = coilref_pose.position.x;
-    ots2coilref_mtx(1, 3) = coilref_pose.position.y;
-    ots2coilref_mtx(2, 3) = coilref_pose.position.z;
-
-    Eigen::Quaterniond coilref_quat(coilref_pose.orientation.w, coilref_pose.orientation.x, coilref_pose.orientation.y, coilref_pose.orientation.z);
-    ots2coilref_mtx.block<3,3>(0,0) = coilref_quat.toRotationMatrix();
-
-    // calculate the ots to robot base transformation
-    Eigen::Matrix4d ots2base_mtx = ots2coilref_mtx * toolref2eef_mtx.inverse();
-    ots2base_mtx = ots2base_mtx * eef2base;
-    
+    Eigen::Quaterniond handeye_quat(f["rw"].as<double>(), f["rx"].as<double>(), f["ry"].as<double>(), f["rz"].as<double>());
+    toolref2eef_mtx.block<3, 3>(0, 0) = handeye_quat.toRotationMatrix();
 }
 
-Eigen::Matrix4d getKUKAEEF2BASE(float x, float y, float z, float alpha, float beta, float gamma) {
-    
-    
+Eigen::Matrix4d getKUKAEEF2BASE(float x, float y, float z, float alpha, float beta, float gamma)
+{
+
     // Convert angles to radians
     double a = M_PI * alpha / 180.0;
     double b = M_PI * beta / 180.0;
@@ -90,27 +103,27 @@ Eigen::Matrix4d getKUKAEEF2BASE(float x, float y, float z, float alpha, float be
 
     // Compute rotation matrix R = R_y(γ) * R_x(β) * R_z(α)
     Eigen::Matrix3d rotation_matrix;
-    rotation_matrix << 
-        ca * cg - sa * sb * sg, -sa * cb, ca * sg + sa * sb * cg,
-        sa * cg + ca * sb * sg,  ca * cb, sa * sg - ca * sb * cg,
-        -cb * sg,                 sb,     cb * cg;
+    rotation_matrix << ca * cg - sa * sb * sg, -sa * cb, ca * sg + sa * sb * cg,
+        sa * cg + ca * sb * sg, ca * cb, sa * sg - ca * sb * cg,
+        -cb * sg, sb, cb * cg;
 
     // Construct the homogeneous transformation matrix
-    eef2base.block<3,3>(0,0) = rotation_matrix;
-    eef2base(0,3) = x;
-    eef2base(1,3) = y;
-    eef2base(2,3) = z;
+    base2eef.block<3, 3>(0, 0) = rotation_matrix;
+    base2eef(0, 3) = x;
+    base2eef(1, 3) = y;
+    base2eef(2, 3) = z;
 
-    return eef2base;
+    return base2eef;
 }
 
-int main(int argc, char** argv){
+int main(int argc, char **argv)
+{
     ros::init(argc, argv, "fri_trajectory_node");
     ros::NodeHandle nh;
     pub_waypoint = nh.advertise<geometry_msgs::Pose>("/waypoint", 1);
     sub_ots_headref = nh.subscribe("/NDI/HeadRef/measured_cp", 1, getOTSHeadRefCallback);
     sub_ots_coilref = nh.subscribe("/NDI/CoilRef/measured_cp", 1, getOTSCoilRefCallback);
-    sub_constant_hand_eye = nh.subscribe("/Kinematics/TR_toolref_eff", 1, getConstantHandEye);
+    
 
     float x, y, z, alpha, beta, gamma;
 
@@ -118,13 +131,22 @@ int main(int argc, char** argv){
     std::cout << "Enter x, y, z (translation in mm) and alpha, beta, gamma (rotation in degrees): ";
     std::cin >> x >> y >> z >> alpha >> beta >> gamma;
 
-    Eigen::Matrix4d eef2base = getKUKAEEF2BASE(x, y, z, alpha, beta, gamma);
+    Eigen::Matrix4d base2eef = getKUKAEEF2BASE(x, y, z, alpha, beta, gamma);
+    Eigen::Matrix4d toolref2eef= getConstantHandEye();
+
+    ros::spinOnce(); // Call the callback functions once to get the initial values
+
+    Eigen::Matrix4d base2ots = base2eef * toolref2eef * ots2coilref_mtx.inverse();
+
+    std::cout << "base2ots: " << std::endl
+              << base2ots << std::endl;
 
     ros::Rate rate(50);
-    while(ros::ok()){
+    while (ros::ok())
+    {
         rate.sleep();
         ros::spinOnce();
     }
-    
+
     return 0;
 }
