@@ -37,8 +37,8 @@ void setWaypoint(const geometry_msgs::Pose &waypoint);
 void getOTSHeadRefCallback(const geometry_msgs::TransformStamped &msg);
 void getOTSCoilRefCallback(const geometry_msgs::TransformStamped &msg);
 void getOTSPointerCallback(const geometry_msgs::TransformStamped &msg);
-void getConstantHandEye(const std_msgs::Float64MultiArray &msg);
-Eigen::Matrix4d getConstantHandEye();
+void loadConstantHandEye(const std_msgs::Float64MultiArray &msg);
+Eigen::Matrix4d loadConstantHandEye();
 Eigen::Matrix4d getKUKABase2EEF(float x, float y, float z, float alpha, float beta, float gamma);
 
 ros::Publisher pub_waypoint;
@@ -49,6 +49,9 @@ ros::Subscriber sub_ots_pointer;
 Eigen::Matrix4d ots2headref_mtx = Eigen::Matrix4d::Identity();
 Eigen::Matrix4d ots2coilref_mtx = Eigen::Matrix4d::Identity();
 Eigen::Matrix4d ots2pointer_mtx = Eigen::Matrix4d::Identity();
+Eigen::Matrix4d ots2ptrtip_mtx = Eigen::Matrix4d::Identity();
+
+Eigen::Matrix4d pointer2tip_mtx = Eigen::Matrix4d::Identity();
 Eigen::Matrix4d base2eef = Eigen::Matrix4d::Identity();
 Eigen::Matrix4d base2ots = Eigen::Matrix4d::Identity();
 
@@ -84,10 +87,12 @@ void getOTSPointerCallback(const geometry_msgs::TransformStamped &msg)
     Eigen::Quaterniond quat(msg.transform.rotation.w, msg.transform.rotation.x, msg.transform.rotation.y, msg.transform.rotation.z);
     ots2pointer_mtx.block<3, 3>(0, 0) = quat.toRotationMatrix();
 
-    validateResult(base2ots.inverse());
+    ots2ptrtip_mtx = ots2pointer_mtx * pointer2tip_mtx;
+
+    validateResult(base2ots);
 }
 
-Eigen::Matrix4d getConstantHandEye()
+Eigen::Matrix4d loadConstantHandEye()
 {
 
     std::string packpath = ros::package::getPath("rotms_ros_kinematics");
@@ -101,7 +106,7 @@ Eigen::Matrix4d getConstantHandEye()
 
     Eigen::Quaterniond handeye_quat(f["rw"].as<double>(), f["rx"].as<double>(), f["ry"].as<double>(), f["rz"].as<double>());
     toolref2eef_mtx.block<3, 3>(0, 0) = handeye_quat.toRotationMatrix();
-    return toolref2eef_mtx;
+    return toolref2eef_mtx.inverse();
 }
 
 Eigen::Matrix4d getKUKABase2EEF(float x, float y, float z, float alpha, float beta, float gamma)
@@ -137,23 +142,38 @@ Eigen::Matrix4d getKUKABase2EEF(float x, float y, float z, float alpha, float be
     base2eef(1, 3) = y;
     base2eef(2, 3) = z;
 
+    Eigen::Quaterniond quat(base2eef.block<3, 3>(0, 0));
+    std::cout << "====================================\n"
+              << "base2eef rotation as quaternion (w, x, y, z)\n "
+              << quat.w() << " " << quat.x() << " " << quat.y() << " " << quat.z() 
+              << "\n====================================\n";
+
     return base2eef;
 }
 
-void validateResult(Eigen::Matrix4d ots2base_mtx)
-{
-    Eigen::Matrix4d base2ots = ots2base_mtx.inverse();
+void loadPointer2Tip(){
+    std::string packpath = ros::package::getPath("rotms_ros_kinematics");
+    YAML::Node f = YAML::LoadFile(packpath + "/share/ptr_ptrtip.yaml");
+
+    pointer2tip_mtx << 1, 0, 0, f["x"].as<double>(),
+        0, 1, 0, f["y"].as<double>(),
+        0, 0, 1, f["z"].as<double>(),
+        0, 0, 0, 1;
+}
+
+void validateResult(Eigen::Matrix4d base_to_ots)
+{ 
     std::cout << "base2ots: " << std::endl
-              << base2ots << std::endl;
+              << base_to_ots << std::endl;
 
     std::cout << "====================================" << std::endl;
     std::cout << "ots2base: " << std::endl
-              << ots2base_mtx << std::endl;
+              << base_to_ots.inverse() << std::endl;
 
     std::cout << "====================================" << std::endl;
-    Eigen::Matrix4d pointer2base = ots2pointer_mtx.inverse() * ots2base_mtx;
-    std::cout << "pointer2base: " << std::endl
-              << pointer2base << std::endl;
+    Eigen::Matrix4d base2pointer = base_to_ots * ots2ptrtip_mtx;
+    std::cout << "base2pointer: " << std::endl
+              << base2pointer << std::endl;
 }
 
 int main(int argc, char **argv)
@@ -173,23 +193,21 @@ int main(int argc, char **argv)
 
     Eigen::Matrix4d base2eef = getKUKABase2EEF(x, y, z, alpha, beta, gamma);
     // print base2eef rotation as quaternion
-    Eigen::Quaterniond quat(base2eef.block<3, 3>(0, 0));
-    std::cout << "====================================\n"
-              << "base2eef rotation as quaternion (w, x, y, z)\n "
-              << quat.w() << " " << quat.x() << " " << quat.y() << " " << quat.z() 
-              << "\n====================================\n";
 
-    Eigen::Matrix4d toolref2eef = getConstantHandEye();
+
+    Eigen::Matrix4d eef2toolref = loadConstantHandEye();
+    loadPointer2Tip();
 
     ros::spinOnce(); // Call the callback functions once to get the initial values
 
-    base2ots = base2eef * toolref2eef * ots2coilref_mtx.inverse();
+    base2ots = base2eef * eef2toolref * ots2coilref_mtx.inverse();
 
-    validateResult(base2ots.inverse());
+    validateResult(base2ots);
 
     ros::Rate rate(50);
     while (ros::ok())
     {
+        base2ots = base2eef * eef2toolref * ots2coilref_mtx.inverse();
         rate.sleep();
         ros::spinOnce();
     }
