@@ -14,7 +14,8 @@
   <depend>roslaunch</depend>
   <depend>roscpp</depend>
   <depend>tf2</depend>
+  <depend>tf2_ros</depend>
   <depend>rotms_ros_msgs</depend>
-  <depend>rotms_ros_universal_utility</depend>
+  <depend>rotms_ros_utility</depend>
 
 </package>

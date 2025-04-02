@@ -6,7 +6,7 @@ find_package(catkin REQUIRED COMPONENTS
   cmake_modules
   roslaunch
   roslib
-  rotms_ros_universal_utility
+  rotms_ros_utility
   )
 
 find_package(Boost REQUIRED COMPONENTS system)
@@ -19,7 +19,7 @@ roslaunch_add_file_check(launch)
 catkin_package(
   INCLUDE_DIRS include 
   LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS roscpp rotms_ros_universal_utility
+  CATKIN_DEPENDS roscpp rotms_ros_utility
   DEPENDS YAML_CPP
   )
 
@@ -33,7 +33,7 @@ add_library(${PROJECT_NAME}
 
 target_include_directories(${PROJECT_NAME} PUBLIC 
   include/rotms_ros_comm
-  ../rotms_ros_universal_utility/include/rotms_ros_universal_utility
+  ../rotms_ros_utility/include/rotms_ros_utility
   ${catkin_INCLUDE_DIRS} 
   ${YAML_CPP_INCLUDEDIR} 
   ${Boost_INCLUDE_DIRS}
@@ -67,3 +67,12 @@ target_link_libraries(node_targetviz_comm_hif_out ${PROJECT_NAME})
 
 add_executable(node_medimg_comm_hif_out src/nodes/node_medimg_comm_hif_out.cpp)
 target_link_libraries(node_medimg_comm_hif_out ${PROJECT_NAME})
+
+add_executable(node_xr_comm_hif_out src/nodes/node_xr_comm_hif_out.cpp)
+target_link_libraries(node_xr_comm_hif_out ${PROJECT_NAME})
+
+add_executable(node_xr_comm_out src/nodes/node_xr_comm_out.cpp)
+target_link_libraries(node_xr_comm_out ${PROJECT_NAME})
+
+add_executable(node_mep_comm_in src/nodes/node_mep_comm_in.cpp)
+target_link_libraries(node_mep_comm_in ${PROJECT_NAME})

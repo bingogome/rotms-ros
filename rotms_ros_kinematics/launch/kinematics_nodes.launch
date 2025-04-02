@@ -4,4 +4,6 @@
     <node name="node_opttracker_tr_bodyref_ptrtip" pkg="rotms_ros_kinematics" type="node_opttracker_tr_bodyref_ptrtip" output="screen"/>
     <node name="node_viz_tr_body_tool" pkg="rotms_ros_kinematics" type="node_viz_tr_body_tool" output="screen"/>
     <node name="node_TRE_t_body_ptrtip" pkg="rotms_ros_kinematics" type="node_TRE_t_body_ptrtip" output="screen"/>
+    <node name="node_calibration_data_tf" pkg="rotms_ros_kinematics" type="node_calibration_data_tf" output="screen"/>
+    <node name="node_sensor_data_tf" pkg="rotms_ros_kinematics" type="node_sensor_data_tf" output="screen"/>
 </launch>

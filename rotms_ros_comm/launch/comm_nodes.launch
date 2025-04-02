@@ -8,4 +8,7 @@
     <node name="node_robctrl_comm_out" pkg="rotms_ros_comm" type="node_robctrl_comm_out" output="screen"/>
     <node name="node_targetviz_comm_out" pkg="rotms_ros_comm" type="node_targetviz_comm_out" output="screen"/>
     <node name="node_targetviz_comm_hif_out" pkg="rotms_ros_comm" type="node_targetviz_comm_hif_out" output="screen"/>
+    <node name="node_xr_comm_hif_out" pkg="rotms_ros_comm" type="node_xr_comm_hif_out" output="screen"/>
+    <node name="node_xr_comm_out" pkg="rotms_ros_comm" type="node_xr_comm_out" output="screen"/>
+    <node name="node_mep_comm_in" pkg="rotms_ros_comm" type="node_mep_comm_in" output="screen"/>
 </launch>

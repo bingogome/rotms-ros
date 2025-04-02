@@ -70,27 +70,34 @@ CommDecoderMedImg::CommDecoderMedImg(
         n_.advertise<geometry_msgs::Quaternion>("/MedImg/ToolPoseOrient", 2));
     pubs_.push_back(
         n_.advertise<geometry_msgs::Point>("/MedImg/ToolPoseTrans", 2));
+    pubs_.push_back(
+        n_.advertise<std_msgs::String>("/MedImg/ICPAct", 2));
 }
 
 FuncMap GetFuncMapMedImg()
 {
     FuncMap fm;
 
-    fm["START_AUTO_DIGITIZE"] = StartAutoDigitize;
-    fm["START_REGISTRATION"] = StartRegistration;
-    fm["START_USE_PREV_REGISTRATION"] = StartUsePrevRegistration;
-    fm["START_TRE_CALCULATION_START"] = StartTRECalculation;
-    fm["START_TRE_CALCULATION_STOP"] = StopTRECalculation;
-    fm["START_LANDMARK_DIG_NUM"] = LandmarkDigitizeIndividual;
-    fm["START_LANDMARK_DIG_PREV_DIG_HILIGHT"] = LandmarkUsePrevAndDigitizeIndividual;
-    fm["START_LANDMARK_DIG_PREV"] = LandmarkUsePrevDigitize;
+    fm["START_AUTO_DIGITIZE"]                   = StartAutoDigitize;
+    fm["START_REGISTRATION"]                    = StartRegistration;
+    fm["START_USE_PREV_REGISTRATION"]           = StartUsePrevRegistration;
+    fm["START_TRE_CALCULATION_START"]           = StartTRECalculation;
+    fm["START_TRE_CALCULATION_STOP"]            = StopTRECalculation;
+    fm["START_LANDMARK_DIG_NUM"]                = LandmarkDigitizeIndividual;
+    fm["START_LANDMARK_DIG_PREV_DIG_HILIGHT"]   = LandmarkUsePrevAndDigitizeIndividual;
+    fm["START_LANDMARK_DIG_PREV"]               = LandmarkUsePrevDigitize;
 
-    fm["LANDMARK_CURRENT_ON_IMG"] = LandmarkCurrentOnImg;
-    fm["LANDMARK_NUM_OF_ON_IMG"] = LandmarkNumOnImg;
-    fm["LANDMARK_LAST_RECEIVED"] = LandmarkLastReceived;
+    fm["LANDMARK_CURRENT_ON_IMG"]               = LandmarkCurrentOnImg;
+    fm["LANDMARK_NUM_OF_ON_IMG"]                = LandmarkNumOnImg;
+    fm["LANDMARK_LAST_RECEIVED"]                = LandmarkLastReceived;
 
-    fm["TARGET_POSE_ORIENTATION"] = TargetPoseOrientation;
-    fm["TARGET_POSE_TRANSLATION"] = TargetPoseTranslation;
+    fm["TARGET_POSE_ORIENTATION"]               = TargetPoseOrientation;
+    fm["TARGET_POSE_TRANSLATION"]               = TargetPoseTranslation;
+
+    fm["ICP_DIGITIZE"]                          = ICPDigitize;
+    fm["ICP_CLEAR_PREV"]                        = ICPClearPrevPointCloud;
+    fm["ICP_CLEAR_ALL"]                         = ICPClearAllPointClouds;
+    fm["ICP_REGISTER"]                          = ICPRegister;
 
     return fm;
 }
@@ -230,4 +237,36 @@ void TargetPoseTranslation(std::string& ss, PublisherVec& pubs)
 
     // pubs[4] is the publisher /MedImg/ToolPoseTrans
     pubs[4].publish(p);
+}
+
+void ICPDigitize(std::string& ss, PublisherVec& pubs)
+{
+    // /MedImg/ICPAct
+    std_msgs::String p;
+    p.data = "icp_digitize";
+    pubs[5].publish(p);
+}
+
+void ICPClearPrevPointCloud(std::string& ss, PublisherVec& pubs)
+{
+    // /MedImg/ICPAct
+    std_msgs::String p;
+    p.data = "icp_clear_prev";
+    pubs[5].publish(p);
+}
+
+void ICPClearAllPointClouds(std::string& ss, PublisherVec& pubs)
+{
+    // /MedImg/ICPAct
+    std_msgs::String p;
+    p.data = "icp_clear_all";
+    pubs[5].publish(p);
+}
+
+void ICPRegister(std::string& ss, PublisherVec& pubs)
+{
+    // /MedImg/ICPAct
+    std_msgs::String p;
+    p.data = "icp_register_" + ss;
+    pubs[5].publish(p);
 }

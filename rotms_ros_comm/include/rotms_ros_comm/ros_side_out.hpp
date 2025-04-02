@@ -37,6 +37,7 @@ using boost::asio::ip::udp;
 // data from config_ros.yaml
 struct ROSSideOutConfig
 {
+	std::string ip_out;
 	int port_out;
 	int verbose;
 	int msg_size;

@@ -1,7 +1,7 @@
 /***
 MIT License
 
-Copyright (c) 2022 Yihao Liu, Johns Hopkins University
+Copyright (c) 2023 Yihao Liu, Johns Hopkins University
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -120,6 +120,26 @@ int main(int argc, char **argv)
         "/TargetVizComm/msg_to_send_hi_f", 5);
     std_msgs::String msg_out;
 
+    // Initialize the result variable and its publisher
+    // Format:
+    // crnt_0000.0000000_0000.0000000_0000.0000000_0000.0000000_0000.0000000_0000.0000000_0000.0000000
+    // x, y, z, qx, qy, qz, qw in m
+    ros::Publisher pub_xr_body_tool = nh.advertise<std_msgs::String>(
+        "/XRComm/msg_to_send_hi_f", 5);
+    std_msgs::String msg_out_xr;
+
+    // Initialize the result variable and its publisher
+    // Format: geometry_msgs::Pose
+    ros::Publisher pub_posedata_body_tool = nh.advertise<geometry_msgs::Pose>(
+        "/PoseDataLog/body_tool", 5);
+    ros::Publisher pub_posedata_pol_body = nh.advertise<geometry_msgs::Pose>(
+        "/PoseDataLog/pol_body", 5);
+    ros::Publisher pub_posedata_pol_tool = nh.advertise<geometry_msgs::Pose>(
+        "/PoseDataLog/pol_tool", 5);
+    geometry_msgs::Pose msg_out_pose;
+    geometry_msgs::Pose msg_out_pose_body;
+    geometry_msgs::Pose msg_out_pose_tool;
+
     // Go in the loop, with the flag indicating wether do the calculation or not
     while (nh.ok())
     {
@@ -139,6 +159,23 @@ int main(int argc, char **argv)
                 FormatDouble2String(tr_body_tool_.getRotation().z(), 5) + "_" +
                 FormatDouble2String(tr_body_tool_.getRotation().w(), 5);
             pub_encode_body_tool.publish(msg_out);
+
+            msg_out_xr.data = "crnt_" + // convert to Unity convention (x,z,y,-rx,-rz,-ry,rw)
+                FormatDouble2String(tr_body_tool_.getOrigin().x(), 7) + "_" +
+                FormatDouble2String(tr_body_tool_.getOrigin().z(), 7) + "_" +
+                FormatDouble2String(tr_body_tool_.getOrigin().y(), 7) + "_" + 
+                FormatDouble2String(-tr_body_tool_.getRotation().x(), 7) + "_" + 
+                FormatDouble2String(-tr_body_tool_.getRotation().z(), 7) + "_" + 
+                FormatDouble2String(-tr_body_tool_.getRotation().y(), 7) + "_" +
+                FormatDouble2String(tr_body_tool_.getRotation().w(), 7);
+            pub_xr_body_tool.publish(msg_out_xr);
+
+            msg_out_pose = ConvertToGeometryPose(tr_body_tool_);
+            pub_posedata_body_tool.publish(msg_out_pose);
+            msg_out_pose_body = ConvertToGeometryPose(tr_pol_bodyref_ * tr_bodyref_body_);
+            pub_posedata_pol_body.publish(msg_out_pose_body);
+            msg_out_pose_tool = ConvertToGeometryPose(tr_pol_toolref_ * tr_tool_toolref_.inverse());
+            pub_posedata_pol_tool.publish(msg_out_pose_tool);
         }
         ros::spinOnce();
         rate.sleep();

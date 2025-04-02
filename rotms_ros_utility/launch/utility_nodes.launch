@@ -1,0 +1,4 @@
+<launch>
+    <node name="node_icp_digitization" pkg="rotms_ros_utility" type="node_icp_digitization" output="screen"/>
+    <node name="node_icp" pkg="rotms_ros_utility" type="node_icp.py" output="screen"/>
+</launch>

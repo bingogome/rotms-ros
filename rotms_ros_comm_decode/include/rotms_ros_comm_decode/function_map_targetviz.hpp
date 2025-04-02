@@ -44,3 +44,7 @@ FuncMap GetFuncMapTargetViz();
 void VisualizeStart(std::string& ss, PublisherVec& pubs);
 
 void VisualizeStop(std::string& ss, PublisherVec& pubs);
+
+void VisualizeSavePlanAndRealPose(std::string& ss, PublisherVec& pubs);
+
+void VisualizeSaveContinuousPose(std::string& ss, PublisherVec& pubs);

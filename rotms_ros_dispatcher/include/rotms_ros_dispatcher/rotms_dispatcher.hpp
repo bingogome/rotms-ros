@@ -1,7 +1,7 @@
 /***
 MIT License
 
-Copyright (c) 2022 Yihao Liu, Johns Hopkins University
+Copyright (c) 2023 Yihao Liu, Johns Hopkins University
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -43,10 +43,10 @@ SOFTWARE.
 
 struct StateSet
 {
-    const std::vector<StateRegistration*>& state_registration;
-    const std::vector<StateDigitization*>& state_digitization;
-    const std::vector<StateToolplan*>& state_toolplan;
-    const std::vector<StateRobot*>& state_robot;
+    const std::vector<StateRegistration*>&  state_registration;
+    const std::vector<StateDigitization*>&  state_digitization;
+    const std::vector<StateToolplan*>&      state_toolplan;
+    const std::vector<StateRobot*>&         state_robot;
 };
 
 class Dispatcher
@@ -61,73 +61,91 @@ private:
     ros::NodeHandle& n_;
     struct StateSet& states_set_;
     std::map<std::string, int> activated_state_{ 
-        {"REGISTRATION", 0}, 
-        {"DIGITIZATION", 0},
-        {"TOOLPLAN", 0},
-        {"ROBOT", 0}
+        {"REGISTRATION",    0}, 
+        {"DIGITIZATION",    0},
+        {"TOOLPLAN",        0},
+        {"ROBOT",           0}
     };
 
     // Dispatcher receiving query signals
-    ros::Subscriber sub_medimg_landmarkplanmeta_ = n_.subscribe(
+    ros::Subscriber sub_medimg_landmarkplanmeta_    = n_.subscribe(
         "/MedImg/LandmarkPlanMeta", 2, &Dispatcher::LandmarkPlanMetaCallBack, this);
-    ros::Subscriber sub_medimg_landmarkplanfids_ = n_.subscribe(
+    ros::Subscriber sub_medimg_landmarkplanfids_    = n_.subscribe(
         "/MedImg/LandmarkPlanFids", 10, &Dispatcher::LandmarkPlanLandmarksCallBack, this);
-    ros::Subscriber sub_medimg_autodigitization_ = n_.subscribe(
+    ros::Subscriber sub_medimg_autodigitization_    = n_.subscribe(
         "/MedImg/StartAct", 2, &Dispatcher::DigitizationCallBack, this);
-    ros::Subscriber sub_medimg_registration_ = n_.subscribe(
+    ros::Subscriber sub_medimg_registration_        = n_.subscribe(
         "/MedImg/StartAct", 2, &Dispatcher::RegistrationCallBack, this);
-    ros::Subscriber sub_medimg_tre_ = n_.subscribe(
+    ros::Subscriber sub_medimg_tre_                 = n_.subscribe(
         "/MedImg/StartAct", 2, &Dispatcher::TRECalculationCallBack, this);
-    ros::Subscriber sub_medimg_toolposeorient_ = n_.subscribe(
+    ros::Subscriber sub_medimg_toolposeorient_      = n_.subscribe(
         "/MedImg/ToolPoseOrient", 2, &Dispatcher::ToolPoseOrientCallBack, this);
-    ros::Subscriber sub_medimg_toolposetrans_ = n_.subscribe(
+    ros::Subscriber sub_medimg_toolposetrans_       = n_.subscribe(
         "/MedImg/ToolPoseTrans", 2, &Dispatcher::ToolPoseTransCallBack, this);
-    ros::Subscriber sub_robctrl_robconnect_ = n_.subscribe(
+    ros::Subscriber sub_medimg_icp_                 = n_.subscribe(
+        "/MedImg/ICPAct", 2, &Dispatcher::ICPCallBack, this);
+    ros::Subscriber sub_robctrl_robconnect_         = n_.subscribe(
         "/RobCtrl/RobConnection", 2, &Dispatcher::RobConnectCallBack, this);
-    ros::Subscriber sub_robctrl_robdisconnect_ = n_.subscribe(
+    ros::Subscriber sub_robctrl_robdisconnect_      = n_.subscribe(
         "/RobCtrl/RobConnection", 2, &Dispatcher::RobDisconnectCallBack, this);
-    ros::Subscriber sub_robctrl_getjnt_ = n_.subscribe(
+    ros::Subscriber sub_robctrl_getjnt_             = n_.subscribe(
         "/RobCtrl/GetInfo", 2, &Dispatcher::GetJntsCallBack, this);
-    ros::Subscriber sub_robctrl_geteff_ = n_.subscribe(
+    ros::Subscriber sub_robctrl_geteff_             = n_.subscribe(
         "/RobCtrl/GetInfo", 2, &Dispatcher::GetEFFCallBack, this);
-    ros::Subscriber sub_robconnstatus_ = n_.subscribe(
+    ros::Subscriber sub_robconnstatus_              = n_.subscribe(
         "/RobInterfaceOut/RobConnStatus", 2, &Dispatcher::UpdateRobotConnFlagCallBack, this);
-    ros::Subscriber sub_robctrl_execute_ = n_.subscribe(
+    ros::Subscriber sub_robctrl_execute_            = n_.subscribe(
         "/RobCtrl/Motion", 2, &Dispatcher::ExecuteMotionToOffsetCallBack, this);
-    ros::Subscriber sub_robctrl_executeconfirm_ = n_.subscribe(
+    ros::Subscriber sub_robctrl_executeconfirm_     = n_.subscribe(
         "/RobCtrl/Motion", 2, &Dispatcher::ExecuteConfirmMotionCallBack, this);
-    ros::Subscriber sub_robctrl_executebackto_ = n_.subscribe(
+    ros::Subscriber sub_robctrl_executebackto_      = n_.subscribe(
         "/RobCtrl/Motion", 2, &Dispatcher::ExecuteBackToCallBack, this);
-    ros::Subscriber sub_robctrl_executemanadjust_ = n_.subscribe(
+    ros::Subscriber sub_robctrl_executemanadjust_   = n_.subscribe(
         "/RobCtrl/MotionAdjust", 2, &Dispatcher::ExecuteManualAdjust, this);
-    ros::Subscriber sub_robctrl_sessionreinit_ = n_.subscribe(
+    ros::Subscriber sub_robctrl_sessionreinit_      = n_.subscribe(
         "/RobCtrl/Session", 2, &Dispatcher::SessionReinitCallBack, this);
-    ros::Subscriber sub_targetviz_ = n_.subscribe(
+    ros::Subscriber sub_targetviz_                  = n_.subscribe(
         "/TargetViz/Visualize", 2, &Dispatcher::TargetVizCallBack, this);
+    ros::Subscriber sub_savetargetplanandreal_      = n_.subscribe(
+        "/TargetViz/DataRecord", 2, &Dispatcher::TargetVizSavePlanAndRealPoseCallBack, this);
+    ros::Subscriber sub_mep_savetargetplanandreal_  = n_.subscribe(
+        "/Mep/DataRecord", 2, &Dispatcher::MepDataRecordCallBack, this);
+    ros::Subscriber sub_extern_requesteff_  = n_.subscribe(
+        "/External/RequestEFFCalc", 2, &Dispatcher::ExternalRequestEFFCalc, this);
 
     // Dispatcher sending query response signals
-    ros::Publisher pub_robctrlcomm_ = n_.advertise<std_msgs::String>(
+    ros::Publisher pub_robctrlcomm_                 = n_.advertise<std_msgs::String>(
         "/RobCtrlComm/msg_to_send", 2);
-    ros::Publisher pub_medplancomm_ = n_.advertise<std_msgs::String>(
+    ros::Publisher pub_medplancomm_                 = n_.advertise<std_msgs::String>(
         "/MedImgComm/msg_to_send", 2);
-    ros::Publisher pub_effold_ = n_.advertise<rotms_ros_msgs::PoseValid>( 
+    ros::Publisher pub_effold_                      = n_.advertise<rotms_ros_msgs::PoseValid>( 
         "/Kinematics/TR_robbase_effold", 1, true); // should only be called by ExecuteMotionToTargetEFFPose
+    ros::Publisher pub_expiredeffold_               = n_.advertise<geometry_msgs::Pose>( 
+        "/Kinematics/ExpiredEFFOld", 1); // just to show
+    ros::Publisher pub_extern_requesteff_           = n_.advertise<geometry_msgs::Pose>( 
+        "/External/ResponseEFFCalc", 1);
     
     // Dispatcher sending query
-    ros::Publisher pub_gettargeteff_ = n_.advertise<std_msgs::String>(
+    ros::Publisher pub_gettargeteff_                = n_.advertise<std_msgs::String>(
         "/Kinematics/Query_GetTargetEff", 2);
-    ros::Publisher pub_changeoffset_ = n_.advertise<geometry_msgs::Pose>(
+    ros::Publisher pub_changeoffset_                = n_.advertise<geometry_msgs::Pose>(
         "/Kinematics/Update_TR_cntct_offset", 2);
-    ros::Publisher pub_reinitoffset_ = n_.advertise<std_msgs::String>(
+    ros::Publisher pub_reinitoffset_                = n_.advertise<std_msgs::String>(
         "/Kinematics/Reinit_TR_cntct_offset", 2);
-    ros::Publisher pub_reinitcaldata_ = n_.advertise<std_msgs::String>(
+    ros::Publisher pub_reinitcaldata_               = n_.advertise<std_msgs::String>(
         "/Kinematics/Query_ReInit", 2);
-    ros::Publisher pub_flag_bodytoolviz_ = n_.advertise<std_msgs::String>(
+    ros::Publisher pub_flag_bodytoolviz_            = n_.advertise<std_msgs::String>(
         "/Kinematics/Flag_body_tool", 2);
-    ros::Publisher pub_flag_t_body_ptrtip_ = n_.advertise<std_msgs::String>(
+    ros::Publisher pub_flag_t_body_ptrtip_          = n_.advertise<std_msgs::String>(
         "/Kinematics/Flag_t_body_ptrtip", 2);
     ros::Publisher pub_run_opttracker_tr_bodyref_ptrtip_ = n_.advertise<std_msgs::String>(
         "/Kinematics/Flag_bodyref_ptrtip", 2);
+    ros::Publisher pub_icp_dig_                     = n_.advertise<std_msgs::String>(
+        "/ICP/digitization", 2);
+    ros::Publisher pub_icp_doicp_                   = n_.advertise<std_msgs::String>(
+        "/ICP/DoICP", 2);
+    ros::Publisher pub_save_continuous_pose_   = n_.advertise<std_msgs::String>(
+        "/PoseDataLog/DataRecord", 2);
         
     // Cruicial operations (operations that affect main user logic and its states/flags/operations)
     void LandmarkPlanMetaCallBack(const std_msgs::Int16::ConstPtr& msg);
@@ -140,8 +158,13 @@ private:
     void LandmarkPlanLandmarksCallBack(const std_msgs::Float32MultiArray::ConstPtr& msg);
     void SessionReinitCallBack(const std_msgs::String::ConstPtr& msg);
     void TargetVizCallBack(const std_msgs::String::ConstPtr& msg);
+    void TargetVizSavePlanAndRealPoseCallBack(const std_msgs::String::ConstPtr& msg);
     void RegistrationResidualCheck();
     void TRECalculationCallBack(const std_msgs::String::ConstPtr& msg);
+    void ICPCallBack(const std_msgs::String::ConstPtr& msg);
+    void MepDataRecordCallBack(const std_msgs::String::ConstPtr& msg);
+    void ExternalRequestEFFCalc(const std_msgs::String::ConstPtr& msg);
+    geometry_msgs::Pose RequestEFFPose();
 
     // Robot operations
     void UpdateRobotConnFlagCallBack(const std_msgs::Bool::ConstPtr& msg);
@@ -156,17 +179,17 @@ private:
     void ExecuteManualAdjust(const std_msgs::Float32MultiArray::ConstPtr& msg);
 
     // Robot interface
-    ros::Publisher pub_init_conn_ = n_.advertise<std_msgs::String>(
+    ros::Publisher pub_init_conn_       = n_.advertise<std_msgs::String>(
         "/RobInterface/Connection", 2);
-    ros::Publisher pub_disconn_ = n_.advertise<std_msgs::String>(
+    ros::Publisher pub_disconn_         = n_.advertise<std_msgs::String>(
         "/RobInterface/Connection", 2);
-    ros::ServiceClient clt_jnt_ = n_.serviceClient<rotms_ros_msgs::GetJnts>(
+    ros::ServiceClient clt_jnt_         = n_.serviceClient<rotms_ros_msgs::GetJnts>(
         "/RobInterface/GetJntsPos");
-    ros::ServiceClient clt_eff_ = n_.serviceClient<rotms_ros_msgs::GetEFF>(
+    ros::ServiceClient clt_eff_         = n_.serviceClient<rotms_ros_msgs::GetEFF>(
         "/RobInterface/GetEFFPose");
-    ros::Publisher pub_robeffmove_ = n_.advertise<geometry_msgs::Pose>(
+    ros::Publisher pub_robeffmove_      = n_.advertise<geometry_msgs::Pose>(
         "/RobInterface/MoveEFF", 2);
-    ros::Publisher pub_robjntmove_ = n_.advertise<std_msgs::Float32MultiArray>(
+    ros::Publisher pub_robjntmove_      = n_.advertise<std_msgs::Float32MultiArray>(
         "/RobInterface/MoveJnt", 2);
 
     // Temp data cache (volatile)
@@ -176,5 +199,10 @@ private:
 
     // Utility
     void StateTransitionCheck(int new_state, std::string s);
+    void ToolPoseTargetToXR();
+    void RegistrationToXR();
+
+    ros::Publisher pub_xr_ = n_.advertise<std_msgs::String>(
+        "/XRComm/msg_to_send_hi_f", 2);
 
 };

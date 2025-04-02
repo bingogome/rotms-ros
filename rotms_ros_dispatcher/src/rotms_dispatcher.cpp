@@ -1,7 +1,7 @@
 /***
 MIT License
 
-Copyright (c) 2022 Yihao Liu, Johns Hopkins University
+Copyright (c) 2023 Yihao Liu, Johns Hopkins University
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -32,6 +32,7 @@ SOFTWARE.
 
 #include <yaml-cpp/yaml.h>
 #include <iostream>
+#include <fstream>
 #include <ros/ros.h>
 #include <ros/package.h>
 #include <tf2/LinearMath/Transform.h>
@@ -168,7 +169,8 @@ void Dispatcher::DigitizationCallBack(const std_msgs::String::ConstPtr& msg)
         }
         if(msg->data.rfind("use_prev_digitize_digitize_one_",0)==0)
         {
-            int dig_idx = std::stoi(msg->data.substr(31));
+            std::string command_msgdata = "use_prev_digitize_digitize_one_";
+            int dig_idx = std::stoi(msg->data.substr(command_msgdata.length()));
             ROS_GREEN_STREAM("[ROTMS INFO] Digitize individual landmark: " + std::to_string(dig_idx));
             int new_state_digitization = states_set_.state_digitization[activated_state_["DIGITIZATION"]]->UsePrevDigAndRedigOneLandmark(dig_idx);
             Dispatcher::StateTransitionCheck(new_state_digitization, "DIGITIZATION");
@@ -191,6 +193,7 @@ void Dispatcher::RegistrationCallBack(const std_msgs::String::ConstPtr& msg)
             states_set_.state_registration[activated_state_["REGISTRATION"]]->UsePrevRegister();
         Dispatcher::StateTransitionCheck(new_state, "REGISTRATION");
         Dispatcher::RegistrationResidualCheck();
+        Dispatcher::RegistrationToXR();
     }
     if (msg->data.compare("_register__")==0)
     {
@@ -198,6 +201,7 @@ void Dispatcher::RegistrationCallBack(const std_msgs::String::ConstPtr& msg)
             states_set_.state_registration[activated_state_["REGISTRATION"]]->Registered();
         Dispatcher::StateTransitionCheck(new_state, "REGISTRATION");
         Dispatcher::RegistrationResidualCheck();
+        Dispatcher::RegistrationToXR();
     }
     
 }
@@ -220,7 +224,8 @@ void Dispatcher::RegistrationResidualCheck()
     pub_medplancomm_.publish(resid_msg);
 }
 
-void Dispatcher::TRECalculationCallBack(const std_msgs::String::ConstPtr& msg){
+void Dispatcher::TRECalculationCallBack(const std_msgs::String::ConstPtr& msg)
+{
     if (msg->data.compare("_starttre__")==0)
     {
         if(activated_state_["REGISTRATION"] != 0b111)
@@ -251,6 +256,61 @@ void Dispatcher::TRECalculationCallBack(const std_msgs::String::ConstPtr& msg){
     }
 }
 
+void Dispatcher::ICPCallBack(const std_msgs::String::ConstPtr& msg)
+{
+    if (msg->data.compare("icp_digitize")==0)
+    {
+        std_msgs::String msg_out;
+        msg_out.data = "_start__";
+        pub_icp_dig_.publish(msg_out);
+    }
+    if (msg->data.compare("icp_clear_prev")==0)
+    {
+        // Get the number of poins in a cloud
+        std::string packpath_utility    = ros::package::getPath("rotms_ros_utility");
+        YAML::Node node_icpconfig       = YAML::LoadFile(packpath_utility + "/icp_config.yaml");
+        int num_pnts_acloud             = node_icpconfig["NUM_PNTS_IN_ACLOUD"].as<int>();
+
+        // Get the number of clouds
+        std::string packpath_operations = ros::package::getPath("rotms_ros_operations");
+        YAML::Node node_icpdig          = YAML::LoadFile(packpath_operations + "/share/config/icpdig.yaml");
+        int cloudctr = 0;
+        for(YAML::const_iterator it=node_icpdig.begin(); it!=node_icpdig.end(); ++it) 
+        {
+            cloudctr++;
+        }
+        
+        // Overwrite the file with only the clouds except for the last one 
+        // (effectively "clear the previously digitized cloud")
+        std::ofstream fstream;
+        fstream.open(packpath_operations + "/share/config/icpdig.yaml");
+        for(int i = 0; i<cloudctr-1; i++)
+        {
+            fstream << "points" + std::to_string(i) + ": \"";
+            fstream << node_icpdig["points"+std::to_string(i)].as<std::string>();
+            fstream << "\"\n";
+        }
+        fstream.close();
+    }
+    if (msg->data.compare("icp_clear_all")==0)
+    {
+        std::ofstream f;
+        std::string packpath = ros::package::getPath("rotms_ros_operations");
+        std::string filename = packpath + "/share/config/icpdig.yaml";
+        f.open(filename);
+        f.close();
+    }
+    if (msg->data.rfind("icp_register_",0)==0)
+    {
+        std::string command_msgdata = "icp_register_";
+        std::string meshpath = msg->data.substr(command_msgdata.length());
+        ROS_GREEN_STREAM("[ROTMS INFO] Received meshpath: " + meshpath);
+        std_msgs::String msg_out;
+        msg_out.data = meshpath;
+        pub_icp_doicp_.publish(msg_out);
+    }
+}
+
 void Dispatcher::ToolPoseOrientCallBack(const geometry_msgs::Quaternion::ConstPtr& msg)
 {
     std::vector<double> toolpose_r{
@@ -270,6 +330,8 @@ void Dispatcher::ToolPoseOrientCallBack(const geometry_msgs::Quaternion::ConstPt
 
         int new_state = states_set_.state_toolplan[activated_state_["TOOLPLAN"]]->ToolPosePlanned();
         Dispatcher::StateTransitionCheck(new_state, "TOOLPLAN");
+
+        Dispatcher::ToolPoseTargetToXR();
     }
 }
 
@@ -291,7 +353,51 @@ void Dispatcher::ToolPoseTransCallBack(const geometry_msgs::Point::ConstPtr& msg
 
         int new_state = states_set_.state_toolplan[activated_state_["TOOLPLAN"]]->ToolPosePlanned();
         Dispatcher::StateTransitionCheck(new_state, "TOOLPLAN");
+
+        Dispatcher::ToolPoseTargetToXR();
     }
+}
+
+void Dispatcher::ToolPoseTargetToXR()
+{
+    std::string packpath    = ros::package::getPath("rotms_ros_operations");
+    YAML::Node f            = YAML::LoadFile(packpath + "/share/config/toolpose.yaml");
+    YAML::Node ff1          = f["TRANSLATION"];
+    YAML::Node ff2          = f["ROTATION"];
+
+    std_msgs::String msg;
+
+    msg.data = "trgt_" +
+        FormatDouble2String(ff1["x"].as<double>(), 7) + "_" +
+        FormatDouble2String(ff1["y"].as<double>(), 7) + "_" +
+        FormatDouble2String(ff1["z"].as<double>(), 7) + "_" + 
+        FormatDouble2String(ff2["x"].as<double>(), 7) + "_" + 
+        FormatDouble2String(ff2["y"].as<double>(), 7) + "_" + 
+        FormatDouble2String(ff2["z"].as<double>(), 7) + "_" +
+        FormatDouble2String(ff2["w"].as<double>(), 7);
+    
+    pub_xr_.publish(msg);
+}
+
+void Dispatcher::RegistrationToXR()
+{
+    std::string packpath    = ros::package::getPath("rotms_ros_operations");
+    YAML::Node f            = YAML::LoadFile(packpath + "/share/config/reg.yaml");
+    YAML::Node ff1          = f["TRANSLATION"];
+    YAML::Node ff2          = f["ROTATION"];
+
+    std_msgs::String msg;
+
+    msg.data = "regi_" + // convert to Unity convention (x,z,y,-rx,-rz,-ry,rw)
+        FormatDouble2String(ff1["x"].as<double>(), 7) + "_" +
+        FormatDouble2String(ff1["z"].as<double>(), 7) + "_" +
+        FormatDouble2String(ff1["y"].as<double>(), 7) + "_" + 
+        FormatDouble2String(-ff2["x"].as<double>(), 7) + "_" + 
+        FormatDouble2String(-ff2["z"].as<double>(), 7) + "_" + 
+        FormatDouble2String(-ff2["y"].as<double>(), 7) + "_" +
+        FormatDouble2String(ff2["w"].as<double>(), 7);
+    
+    pub_xr_.publish(msg);
 }
 
 void Dispatcher::UpdateRobotConnFlagCallBack(const std_msgs::Bool::ConstPtr& msg)
@@ -389,6 +495,7 @@ void Dispatcher::GetEFFCallBack(const std_msgs::String::ConstPtr& msg)
         str << std::to_string(eff.orientation.w) << "_";
         msg_out.data = str.str();
         pub_robctrlcomm_.publish(msg_out);
+        pub_expiredeffold_.publish(eff);
     }
 }
 
@@ -432,7 +539,7 @@ void Dispatcher::ExecuteConfirmMotionCallBack(const std_msgs::String::ConstPtr& 
         return;
     }
     geometry_msgs::Pose changeoffset;
-    changeoffset.position.x = 0.0; changeoffset.position.y = 0.0; changeoffset.position.z = 0.0;
+    changeoffset.position.x = 0.0; changeoffset.position.y = 0.0; changeoffset.position.z = 0.010; // 1cm offset to make sure safety 
     changeoffset.orientation.x = 0.0; changeoffset.orientation.y = 0.0; changeoffset.orientation.z = 0.0;
     changeoffset.orientation.w = 1.0;
     pub_changeoffset_.publish(changeoffset);
@@ -492,12 +599,44 @@ void Dispatcher::ExecuteMotionToTargetEFFPose()
         return;
     }
 
+    geometry_msgs::Pose tr_targeteff_ = Dispatcher::RequestEFFPose();
+
+    // Send to robot interface and move
+    pub_robeffmove_.publish(tr_targeteff_);
+
+    ROS_GREEN_STREAM("[ROTMS INFO] Send to robot interface. ");
+
+    // Stop old EFF pose publisher latch
+    rotms_ros_msgs::PoseValid pv;
+    pv.valid = false;
+    pub_effold_.publish(pv);
+
+    ROS_GREEN_STREAM("[ROTMS INFO] End of robot motion call. ");
+}
+
+geometry_msgs::Pose Dispatcher::RequestEFFPose()
+{
+    geometry_msgs::Pose tr_targeteff_;
+
+    if(!states_set_.state_robot[activated_state_["ROBOT"]]->flags_.GetFlagRobotConnStatus())
+    {
+        ROS_RED_STREAM("[ROTMS WARNING] Robot cabinet connection has not been established!");
+        return tr_targeteff_; 
+    }
+    if(
+        activated_state_["TOOLPLAN"]!=0b1 || 
+        activated_state_["ROBOT"]!=0b1 ||
+        activated_state_["REGISTRATION"]!=0b111)
+    {
+        ROS_YELLOW_STREAM("[ROTMS WARNING] The prerequisites are not met. Check before robot motion. (code 0)");
+        return tr_targeteff_;
+    }
     // Query for current EFF pose and publish (latch)
     rotms_ros_msgs::GetEFF srv;
     if(!clt_eff_.call(srv))
     {
-        ROS_YELLOW_STREAM("[ROTMS WARNING] Could not request current EFF from robot cabinet!");
-        return;
+        ROS_RED_STREAM("[ROTMS WARNING] Could not request current EFF from robot cabinet!");
+        return tr_targeteff_;
     }
     geometry_msgs::Pose effold = srv.response.eff;
     rotms_ros_msgs::PoseValid pv_old;
@@ -526,7 +665,6 @@ void Dispatcher::ExecuteMotionToTargetEFFPose()
     
     ROS_GREEN_STREAM("[ROTMS INFO] Target pose valid. ");
 
-    geometry_msgs::Pose tr_targeteff_;
     tr_targeteff_.position.x = tr_targeteff->pose.position.x;
     tr_targeteff_.position.y = tr_targeteff->pose.position.y;
     tr_targeteff_.position.z = tr_targeteff->pose.position.z;
@@ -535,17 +673,7 @@ void Dispatcher::ExecuteMotionToTargetEFFPose()
     tr_targeteff_.orientation.z = tr_targeteff->pose.orientation.z;
     tr_targeteff_.orientation.w = tr_targeteff->pose.orientation.w;
 
-    // Send to robot interface and move
-    pub_robeffmove_.publish(tr_targeteff_);
-
-    ROS_GREEN_STREAM("[ROTMS INFO] Send to robot interface. ");
-
-    // Stop old EFF pose publisher latch
-    rotms_ros_msgs::PoseValid pv;
-    pv.valid = false;
-    pub_effold_.publish(pv);
-
-    ROS_GREEN_STREAM("[ROTMS INFO] End of robot motion call. ");
+    return tr_targeteff_;
 }
 
 void Dispatcher::ExecuteBackToCallBack(const std_msgs::String::ConstPtr& msg)
@@ -599,7 +727,6 @@ void Dispatcher::ExecuteBackToCallBack(const std_msgs::String::ConstPtr& msg)
         msg_out.data.insert(msg_out.data.end(), vec.begin(), vec.end());
         pub_robjntmove_.publish(msg_out);
     }
-    
 }
 
 void Dispatcher::TargetVizCallBack(const std_msgs::String::ConstPtr& msg)
@@ -623,8 +750,63 @@ void Dispatcher::TargetVizCallBack(const std_msgs::String::ConstPtr& msg)
         msg_out.data = "_end__";
         pub_flag_bodytoolviz_.publish(msg_out);
     }
-    
+}
 
+void Dispatcher::TargetVizSavePlanAndRealPoseCallBack(const std_msgs::String::ConstPtr& msg)
+{
+    if(msg->data.compare("_save_plan_real__")==0)
+    {
+        ROS_GREEN_STREAM("[ROTMS INFO] Saving the planned pose and the real pose. ");
+
+        // Get the current pose from the visualization module interface
+        std_msgs::StringConstPtr tr_measure = ros::topic::waitForMessage<std_msgs::String>(
+            "/TargetVizComm/msg_to_send_hi_f"); 
+        std::string str_ = tr_measure->data.substr(11);
+        std::vector<double> str_arr = SubStringTokenize2Double(str_);
+
+        geometry_msgs::Pose tr_measure_;
+        tr_measure_.position.x = str_arr[0] / 1000.0;
+        tr_measure_.position.y = str_arr[1] / 1000.0;
+        tr_measure_.position.z = str_arr[2] / 1000.0;
+        tr_measure_.orientation.x = str_arr[3] ;
+        tr_measure_.orientation.y = str_arr[4] ;
+        tr_measure_.orientation.z = str_arr[5] ;
+        tr_measure_.orientation.w = str_arr[6] ;
+
+        std::string packpath = ros::package::getPath("rotms_ros");
+        SaveToolPosePlannedAndMeasured(packpath + "/saveddata/toolpose_" + GetTimeString() + ".yaml", tr_measure_);
+
+        ROS_GREEN_STREAM("[ROTMS INFO] Saved the planned pose and the real pose. ");
+    }
+    else if(msg->data.compare("_save_continuous_pose__")==0)
+    {
+        ROS_GREEN_STREAM("[ROTMS INFO] Sent request saving the planned pose and the real pose. ");
+        ROS_GREEN_STREAM("[ROTMS INFO] Saving the planned pose and the real pose, in continuous time. ");
+        std_msgs::String msg_out;
+        msg_out.data = "_start__";
+        pub_save_continuous_pose_.publish(msg_out);
+    }
+}
+
+void Dispatcher::MepDataRecordCallBack(const std_msgs::String::ConstPtr& msg)
+{
+    if(msg->data.compare("_save_plan_real__")==0)
+    {
+        ROS_GREEN_STREAM("[ROTMS INFO] Sent request saving the planned pose and the real pose. ");
+        ROS_GREEN_STREAM("[ROTMS INFO] Saving the planned pose and the real pose, in continuous time. ");
+        std_msgs::String msg_out;
+        msg_out.data = "_start__";
+        pub_save_continuous_pose_.publish(msg_out);
+    }
+}
+
+void Dispatcher::ExternalRequestEFFCalc(const std_msgs::String::ConstPtr& msg)
+{
+    if(msg->data.compare("_eff_calc__")==0)
+    {
+        geometry_msgs::Pose tr_targeteff_ = Dispatcher::RequestEFFPose();
+        pub_extern_requesteff_.publish(tr_targeteff_);
+    }
 }
 
 void Dispatcher::StateTransitionCheck(int new_state, std::string s)

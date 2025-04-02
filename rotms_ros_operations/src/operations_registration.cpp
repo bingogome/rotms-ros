@@ -83,9 +83,9 @@ void OperationsRegistration::OperationPlanLandmarks()
             {
                 filesave << "    p" << i << ": ";
                 filesave << "{";
-                filesave << "x: " << nan("1") << ", ";
-                filesave << "y: " << nan("1") << ", ";
-                filesave << "z: " << nan("1");
+                filesave << "x: " << "0.0" << ", "; // not optimal, need to think a way to init
+                filesave << "y: " << "0.0" << ", ";
+                filesave << "z: " << "0.0";
                 if (i==num_of_landmarks-1)
                     filesave << "}\n";
                 else
@@ -159,8 +159,16 @@ void OperationsRegistration::OperationRegistration()
     pv.pose = res;
     pub_registration_.publish(pv);
 
-    // Write the registration result to cache files
+    // Save data
     SaveRegistrationData(quat, p, packpath + "/share/data/reg_" + GetTimeString() + ".yaml"); // record
+    std::ifstream  srcdig(packpath + "/share/cache/landmarkdig" + ".yaml", std::ios::binary);
+    std::ofstream  dstdig(packpath + "/share/data/landmarkdig_"+ GetTimeString() + ".yaml",   std::ios::binary);
+    dstdig << srcdig.rdbuf();
+    std::ifstream  srcplan(packpath + "/share/cache/landmarkplan" + ".yaml", std::ios::binary);
+    std::ofstream  dstplan(packpath + "/share/data/landmarkplan_"+ GetTimeString() + ".yaml",   std::ios::binary);
+    dstplan << srcplan.rdbuf();
+
+    // Write the registration result to cache files
     SaveRegistrationData(quat, p, packpath + "/share/config/reg" + ".yaml"); // use
 
 }

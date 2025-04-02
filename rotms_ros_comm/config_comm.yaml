@@ -8,6 +8,9 @@ CONNECT: 1 # ROS1 connection flag
 PORT_OUT_MEDIMG: 8059 # Port number for data stream out from ROS
 PORT_IN_MEDIMG: 8057 # Port number for data stream into ROS
 PORT_OUT_NNBLC_MEDIMG: 8083 # Port number for data stream out from ROS in high frequency
+IP_OUT_NNBLC_MEDIMG: "127.0.0.1"
+IP_OUT_MEDIMG: "127.0.0.1"
+IP_IN_MEDIMG: "127.0.0.1"
 MSG_END_MEDIMG: "_msg_end__" # communication messege starts with this means end the port
 MSG_SIZE_MEDIMG: 256 # change the ros_side_in.hpp and ros_side_out.hpp {boost::array<char, ...> recv_buffer_} field when chaning this number
 PUBLISHER_NAME_MEDIMG: "/MedImgComm/msg_received" # Messege ROS publisher name (ROSSideIn received)
@@ -20,6 +23,8 @@ VERBOSE_HIF_MEDIMG: 0
 
 PORT_OUT_ROBCTRL: 8063 # Port number for data stream out from ROS
 PORT_IN_ROBCTRL: 8072 # Port number for data stream into ROS
+IP_OUT_ROBCTRL: "127.0.0.1"
+IP_IN_ROBCTRL: "127.0.0.1"
 MSG_END_ROBCTRL: "_msg_end__" # communication messege starts with this means end the port
 MSG_SIZE_ROBCTRL: 256 # change the ros_side_in.hpp and ros_side_out.hpp {boost::array<char, ...> recv_buffer_} field when chaning this number
 PUBLISHER_NAME_ROBCTRL: "/RobCtrlComm/msg_received" # Messege ROS publisher name (ROSSideIn received)
@@ -31,6 +36,9 @@ VERBOSE_ROBCTRL: 1
 PORT_OUT_TARGETVIZ: 8069 # Port number for data stream out from ROS
 PORT_IN_TARGETVIZ: 8077 # Port number for data stream into ROS
 PORT_OUT_NNBLC_TARGETVIZ: 8079 # Port number for data stream out from ROS in high frequency
+IP_OUT_NNBLC_TARGETVIZ: "127.0.0.1"
+IP_OUT_TARGETVIZ: "127.0.0.1"
+IP_IN_TARGETVIZ: "127.0.0.1"
 MSG_END_TARGETVIZ: "_msg_end__" # communication messege starts with this means end the port
 MSG_SIZE_TARGETVIZ: 256 # change the ros_side_in.hpp and ros_side_out.hpp {boost::array<char, ...> recv_buffer_} field when chaning this number
 PUBLISHER_NAME_TARGETVIZ: "/TargetVizComm/msg_received" # Messege ROS publisher name (ROSSideIn received)
@@ -38,3 +46,25 @@ SUBSCRIBER_NAME_TARGETVIZ: "/TargetVizComm/msg_to_send" # Messege ROS subscriber
 SUBSCRIBER_HIF_NAME_TARGETVIZ: "/TargetVizComm/msg_to_send_hi_f" # Messege ROS subscriber name (ROSSideOut to send at high frequency)
 VERBOSE_TARGETVIZ: 1
 VERBOSE_HIF_TARGETVIZ: 0
+
+# XR module communication configs
+
+PORT_OUT_XR: 28051
+PORT_OUT_NNBLC_XR: 8051
+IP_OUT_XR: "192.168.1.102"
+IP_OUT_NNBLC_XR: "192.168.1.102"
+MSG_SIZE_XR: 256
+PUBLISHER_NAME_XR: "/XRComm/msg_received"
+SUBSCRIBER_NAME_XR: "/XRComm/msg_to_send"
+SUBSCRIBER_HIF_NAME_XR: "/XRComm/msg_to_send_hi_f"
+VERBOSE_XR: 1
+VERBOSE_HIF_XR: 0
+
+# MEP module communication configs
+
+PORT_IN_MEP: 8085 # Port number for data stream into ROS
+IP_IN_MEP: "0.0.0.0"
+MSG_END_MEP: "_msg_end__" # communication messege starts with this means end the port
+MSG_SIZE_MEP: 256 # change the ros_side_in.hpp and ros_side_out.hpp {boost::array<char, ...> recv_buffer_} field when chaning this number
+PUBLISHER_NAME_MEP: "/Mep/msg_received" # Messege ROS publisher name (ROSSideIn received)
+VERBOSE_MEP: 1

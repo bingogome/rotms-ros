@@ -36,6 +36,7 @@ ROSSideOutAndAck CommNodeOutAndAckIniter(ros::NodeHandle& n, std::string modules
 	YAML::Node f = YAML::LoadFile(packpath + "/config_comm.yaml");
 
     struct ROSSideOutAndAckConfig cfg;
+	cfg.ip_out = f["IP_OUT_"+modulesuffix].as<std::string>();
 	cfg.port_out = f["PORT_OUT_"+modulesuffix].as<int>();
 	cfg.msg_size = f["MSG_SIZE_"+modulesuffix].as<int>();
 	cfg.subscriber_name = f["SUBSCRIBER_NAME_"+modulesuffix].as<std::string>();
